@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchoolStack.ai - The Back Office Your School Deserves</title>
+  <meta name="description" content="SchoolStack.ai combines financial management, student information, and AI coaching into one platform built for small schools and K-12 programs. Coming soon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber: #D97706;
+      --amber-light: #F59E0B;
+      --amber-50: #FFFBEB;
+      --teal: #18B2A6;
+      --teal-dark: #0D9488;
+      --slate: #4A5568;
+      --charcoal: #2D3748;
+      --cream: #FAF9F7;
+      --white: #FFFFFF;
+      --rose: #BE185D;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--charcoal);
+      background: var(--cream);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Quicksand', 'Nunito', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--charcoal);
+    }
+    .nav-brand svg { width: 32px; height: 32px; }
+    .nav-brand span {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    .nav-cta {
+      background: var(--amber);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #B45309; }
+
+    /* HERO */
+    .hero {
+      padding: 8rem 2rem 5rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amber-50);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+    .hero-badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      color: var(--charcoal);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .highlight {
+      color: var(--amber);
+    }
+    .hero p.subtitle {
+      font-size: 1.2rem;
+      color: var(--slate);
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* CTA SECTION */
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--amber);
+      color: white;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover { background: #B45309; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--slate);
+      border: 2px solid #E2E8F0;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* PROBLEM SECTION */
+    .section {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+    .section h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      margin-bottom: 1.25rem;
+      color: var(--charcoal);
+    }
+    .section p.section-desc {
+      font-size: 1.1rem;
+      color: var(--slate);
+      max-width: 700px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .stat-number {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--amber);
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--slate);
+      margin-top: 0.25rem;
+    }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .feature-icon.amber { background: var(--amber-50); }
+    .feature-icon.teal { background: #E6FAF8; }
+    .feature-icon.slate { background: #EDF2F7; }
+    .feature-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+      color: var(--charcoal);
+    }
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* HOW IT WORKS */
+    .how-it-works {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 3rem;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .step {
+      text-align: center;
+      position: relative;
+    }
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--amber);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 0 auto 1rem;
+    }
+    .step h4 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .step p { font-size: 0.9rem; color: var(--slate); }
+
+    /* SIGNUP SECTION */
+    .signup-section {
+      background: var(--charcoal);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .signup-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .signup-section h2 {
+      color: var(--white);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin-bottom: 0.75rem;
+    }
+    .signup-section p {
+      color: #A0AEC0;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* FORM */
+    .signup-form {
+      display: grid;
+      gap: 0.75rem;
+      text-align: left;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #A0AEC0;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group input, .form-group select {
+      padding: 0.75rem 1rem;
+      border: 1px solid #4A5568;
+      border-radius: 8px;
+      background: #1A202C;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input::placeholder { color: #718096; }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--amber);
+    }
+    .form-group select option { background: #1A202C; }
+    .form-submit {
+      background: var(--amber);
+      color: white;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .form-submit:hover { background: #B45309; }
+    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .form-success {
+      background: #065F46;
+      border: 1px solid var(--teal);
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: white;
+      display: none;
+    }
+    .form-success h3 { color: white; margin-bottom: 0.5rem; }
+    .form-error {
+      background: #7F1D1D;
+      border: 1px solid #EF4444;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: white;
+      font-size: 0.9rem;
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    /* POWERED BY */
+    .powered-by-section {
+      padding: 4rem 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .powered-by-section .section-label { margin-bottom: 1rem; }
+    .powered-by-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      border: 1px solid rgba(0,0,0,0.06);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .powered-by-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+    .powered-by-card p {
+      font-size: 0.95rem;
+      color: var(--slate);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .powered-by-card a {
+      color: var(--amber);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .powered-by-card a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      background: var(--charcoal);
+      color: #A0AEC0;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    footer .footer-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    footer .footer-brand {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    footer p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
+    footer a { color: var(--amber); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--amber);
+      margin: 1.5rem auto;
+      opacity: 0.5;
+    }
+    .footer-fundraising {
+      background: rgba(217, 119, 6, 0.1);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1.5rem auto;
+      max-width: 400px;
+    }
+    .footer-fundraising p {
+      color: var(--amber-light);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 0.75rem 1rem; }
+      .hero { padding: 6rem 1.25rem 3rem; }
+      .section { padding: 3rem 1.25rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .signup-section { padding: 3rem 1.25rem; margin: 0; }
+      .how-it-works { padding: 2rem 1.25rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .features-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="10" fill="#D97706"/>
+        <path d="M12 28V16L20 12L28 16V28L20 24L12 28Z" fill="white" opacity="0.9"/>
+        <path d="M20 12V24" stroke="white" stroke-width="1.5"/>
+      </svg>
+      <span>SchoolStack.ai</span>
+    </a>
+    <a href="#signup" class="nav-cta">Get Early Access</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="pulse"></span>
+      Currently in Development
+    </div>
+    <h1>The Back Office <span class="highlight">Your School Deserves</span></h1>
+    <p class="subtitle">
+      SchoolStack combines financial management, student information, and AI coaching 
+      into one platform built specifically for small schools and K-12 programs.
+    </p>
+    <p class="subtitle" style="margin-top: -1.5rem; font-size: 1.05rem;">
+      Powered by <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer" style="color: var(--amber); text-decoration: none; font-weight: 700;">Building Hope Impact Fund</a>, a 501(c)(3).
+    </p>
+    <div class="hero-cta">
+      <a href="#signup" class="btn-primary">
+        Be the First to Know
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#features" class="btn-secondary">See What We're Building</a>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section class="section" id="problem">
+    <div class="section-label">The Problem</div>
+    <h2>Small Schools Shouldn't Need a Full-Time Bookkeeper</h2>
+    <p class="section-desc">
+      Microschools, learning pods, and small private schools are transforming education, 
+      but their back offices are held together with spreadsheets, sticky notes, and goodwill. 
+      Educators spend 8+ hours per week on administration instead of teaching.
+    </p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-number">90K+</span>
+        <div class="stat-label">Small schools in the U.S. with under 150 students</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">8+</span>
+        <div class="stat-label">Hours per week educators spend on admin tasks</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">$0</span>
+        <div class="stat-label">Platforms purpose-built for schools this size</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-label">What We're Building</div>
+    <h2>Three Systems. One Platform. Zero Complexity.</h2>
+    <p class="section-desc">
+      No platform combines financial management, student information, and AI coaching 
+      for small schools and K-12 programs. We're building the first.
+    </p>
+    <div class="features-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="feature-card" style="display: flex; flex-direction: column;">
+        <div class="feature-icon amber">&#128176;</div>
+        <h3>Financial Management</h3>
+        <p style="flex: 1;">Tuition tracking, expense categorization, cash flow forecasting, and budget tools, 
+        designed for how small schools actually handle money.</p>
+        <p style="font-size: 0.82rem; color: var(--amber); font-weight: 700; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(0,0,0,0.06);">Requires a QuickBooks Online account as the accounting platform.</p>
+      </div>
+      <div class="feature-card" style="display: flex; flex-direction: column;">
+        <div class="feature-icon teal">&#127891;</div>
+        <h3>Student Information System</h3>
+        <p style="flex: 1;">Enrollment, attendance, family communication, and compliance documentation, 
+        all in one place instead of scattered across five different apps.</p>
+      </div>
+      <div class="feature-card" style="display: flex; flex-direction: column;">
+        <div class="feature-icon slate">&#129302;</div>
+        <h3>AI Coaching (Meet Hank)</h3>
+        <p style="flex: 1;">Your AI-powered administrative assistant that explains finances in plain English, 
+        flags concerns before they become problems, and coaches you through decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <div class="how-it-works">
+      <div class="section-label">How It Works</div>
+      <h2>From Overwhelmed to In Control</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4>Tell Us About Your School</h4>
+          <p>Answer a few simple questions. We personalize everything from your school profile.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4>Connect Your Accounts</h4>
+          <p>Link your bank, payment processor, or just start entering data manually. Your choice.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4>Let SchoolStack Work</h4>
+          <p>Automated categorization, compliance tracking, and AI insights, all without a bookkeeper.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section class="signup-section" id="signup">
+    <div class="signup-inner">
+      <h2>Be the First to Try SchoolStack</h2>
+      <p>We're building something new, and we want your voice in it. 
+      Sign up for early access and you'll be the first to know when our alpha is ready for testing.</p>
+
+      <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Your last name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="you@yourschool.org" required>
+        </div>
+        <div class="form-group">
+          <label for="schoolName">School or Organization Name</label>
+          <input type="text" id="schoolName" name="schoolName" placeholder="Optional">
+        </div>
+        <div class="form-group">
+          <label for="state">State</label>
+          <select id="state" name="state">
+            <option value="">Select your state (optional)</option>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="DC">District of Columbia</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+          </select>
+          <label for="role">Your Role</label>
+          <select id="role" name="role">
+            <option value="">Select your role (optional)</option>
+            <option value="School Founder/Director">School Founder / Director</option>
+            <option value="Teacher/Educator">Teacher / Educator</option>
+            <option value="Administrator">Administrator</option>
+            <option value="Parent">Parent</option>
+            <option value="Investor/Donor">Investor / Donor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <button type="submit" class="form-submit" id="submitBtn">Get Early Access</button>
+        <div class="form-error" id="formError"></div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <h3>You're on the list!</h3>
+        <p>Thank you for your interest in SchoolStack. We'll reach out as soon as our alpha is ready for early testers. In the meantime, feel free to reach out at <a href="mailto:allison@schoolstack.ai" style="color: var(--amber);">allison@schoolstack.ai</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="section" style="text-align: center; padding-bottom: 2rem;">
+    <div class="section-label">Our Partners</div>
+    <h2>Backed by Organizations That Believe in Education</h2>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 4rem; flex-wrap: wrap; margin-top: 2rem;">
+      <a href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <img src="images/stand-together-trust-logo.webp" alt="Stand Together Trust" style="height: 80px; object-fit: contain;">
+      </a>
+      <a href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <img src="images/curry-foundation-logo.png" alt="The Beth and Ravenel Curry Foundation" style="height: 50px; object-fit: contain;">
+      </a>
+    </div>
+  </section>
+
+  <!-- POWERED BY -->
+  <section class="powered-by-section">
+    <div class="section-label">Our Foundation</div>
+    <div class="powered-by-card">
+      <h3>Powered by Building Hope Impact Fund</h3>
+      <p>SchoolStack.ai is powered by Building Hope Impact Fund, a 501(c)(3) nonprofit
+      dedicated to strengthening the infrastructure that small schools and K-12 programs depend on.
+      We believe every school, regardless of size, deserves access to the same
+      operational tools as large districts.</p>
+      <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">
+        Learn more about Building Hope Impact Fund
+      </a>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="section" style="text-align: center;">
+    <div class="section-label">Our Team</div>
+    <h2>Built by People Who Care About Schools</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 700px; margin: 2rem auto 0;">
+      <div style="background: var(--white); border-radius: 16px; padding: 2rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--charcoal);">Leadership</h3>
+        <div style="width: 40px; height: 2px; background: var(--amber); margin: 0.75rem auto;"></div>
+        <p style="font-size: 0.95rem; color: var(--charcoal); font-weight: 700;">Allison Serafin</p>
+        <p style="font-size: 0.85rem; color: var(--slate);">Founder</p>
+        <div style="margin-top: 0.75rem;"></div>
+        <p style="font-size: 0.95rem; color: var(--charcoal); font-weight: 700;">Daniel Crook</p>
+        <p style="font-size: 0.85rem; color: var(--slate);">Chief Technology Officer</p>
+      </div>
+      <div style="background: var(--white); border-radius: 16px; padding: 2rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--charcoal);">Development</h3>
+        <div style="width: 40px; height: 2px; background: var(--teal); margin: 0.75rem auto;"></div>
+        <p style="font-size: 0.95rem; color: var(--charcoal); font-weight: 700;">School Harbor</p>
+        <p style="font-size: 0.85rem; color: var(--slate);">Technology Partner</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">SchoolStack.ai</div>
+      <p>The back office your school deserves.</p>
+      <div class="footer-fundraising">
+        <p>We are actively fundraising to bring SchoolStack to more schools and K-12 programs. Interested in supporting our mission? Reach out.</p>
+      </div>
+      <div class="footer-divider"></div>
+      <p>Questions? Say hello: <a href="mailto:allison@schoolstack.ai">allison@schoolstack.ai</a></p>
+      <p style="font-size: 0.8rem; margin-top: 1rem; opacity: 0.6;">&copy; 2026 SchoolStack.ai. Powered by Building Hope Impact Fund, a 501(c)(3)</p>
+    </div>
+  </footer>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('signupForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = document.getElementById('submitBtn');
+      var errorEl = document.getElementById('formError');
+      var successEl = document.getElementById('formSuccess');
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+      errorEl.style.display = 'none';
+
+      var formData = new FormData(form);
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      })
+      .then(function(res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          successEl.style.display = 'block';
+        } else {
+          throw new Error('Something went wrong. Please try again.');
+        }
+      })
+      .catch(function(err) {
+        errorEl.textContent = err.message || 'Something went wrong. Please email allison@schoolstack.ai directly.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Get Early Access';
+      });
+    });
+  }
+});
+</script>
+
+
+</body>
+</html>
