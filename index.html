@@ -379,6 +379,8 @@
       font-size: 0.95rem;
       transition: border-color 0.2s;
     }
+    .form-group textarea::placeholder { color: #718096; }
+    .form-group textarea:focus { outline: none; border-color: var(--amber); }
     .form-group input::placeholder { color: #718096; }
     .form-group input:focus, .form-group select:focus {
       outline: none;
@@ -544,7 +546,7 @@
         Get Early Access
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#features" class="btn-secondary">See What We're Building</a>
+      <a href="#features" class="btn-secondary">See What We're Working On</a>
     </div>
     <div class="dashboard-preview">
       <img src="images/dashboard-preview.png" alt="SchoolStack.ai dashboard preview showing financial KPIs, student tracking, and AI coaching features" loading="eager">
@@ -554,35 +556,32 @@
   <!-- THE PROBLEM -->
   <section class="section" id="problem">
     <div class="section-label">The Problem</div>
-    <h2>Small Schools Shouldn't Need a Full-Time Bookkeeper</h2>
+    <h2>School Founders Deserve Better Than Spreadsheets and Guesswork</h2>
     <p class="section-desc">
-      Microschools, learning pods, and small private schools are doing incredible work, but their 
-      back offices are held together with spreadsheets, sticky notes, and goodwill. 
-      Educators spend 8+ hours per week on administration instead of teaching.
+      Last summer we met over 100 school founders. Passionate people who'd quit careers, invested savings, and signed personal guarantees to open schools. Many of them didn't have the tools to see where their financial health was headed or how much cash runway they had. Accounting platforms tell you the past and the present, but they don't forecast. And without enrollment data, expense management, and contract tracking, to name a few, they don't tell the whole story. We wake up every day thinking about this.
     </p>
     <div class="stats-row">
       <div class="stat-card">
         <span class="stat-number">90K+</span>
-        <div class="stat-label">Schools like yours navigating this without help</div>
+        <div class="stat-label">Schools like yours navigating this with little support</div>
       </div>
       <div class="stat-card">
         <span class="stat-number">8+</span>
-        <div class="stat-label">Hours per week educators spend on admin tasks</div>
+        <div class="stat-label">Hours per week founders spend on admin instead of students</div>
       </div>
       <div class="stat-card">
         <span class="stat-number">$0</span>
-        <div class="stat-label">That's how many platforms exist for schools your size. Until now.</div>
+        <div class="stat-label">What most school founders have budgeted for back-office tools</div>
       </div>
     </div>
   </section>
 
   <!-- FEATURES -->
   <section class="section" id="features">
-    <div class="section-label">What We're Building</div>
-    <h2>Three Systems. One Platform. Zero Complexity.</h2>
+    <div class="section-label">What We're Testing</div>
+    <h2>Here's What We're Testing — And We Want Your Input</h2>
     <p class="section-desc">
-      No platform combines financial management, student information, and AI coaching 
-      for small schools and K-12 programs. We're building the first.
+      We believe small school founders need three things working together: financial clarity, student management, and a guide who helps make sense of it all. Here's our current approach. We're testing it with real schools and iterating based on what we learn.
     </p>
     <div class="features-grid" style="grid-template-columns: repeat(3, 1fr);">
       <div class="feature-card" style="display: flex; flex-direction: column;">
@@ -594,17 +593,32 @@
       <div class="feature-card" style="display: flex; flex-direction: column;">
         <div class="feature-icon teal">&#127891;</div>
         <h3>Student Information System</h3>
-        <p style="flex: 1;">Enrollment, attendance, family communication, and compliance documentation, 
-        all in one place instead of scattered across five different apps.</p>
+        <p style="flex: 1;">Enrollment, attendance, family communication, and compliance documentation, connected instead of scattered across multiple apps.</p>
       </div>
       <div class="feature-card" style="display: flex; flex-direction: column;">
         <div class="feature-icon slate">&#129302;</div>
         <h3>AI Coaching (Meet Hank)</h3>
-        <p style="flex: 1;">Think of Hank as the CFO friend you wish you had. He explains your finances in plain English, 
-        flags problems before they become emergencies, and coaches you through every decision.</p>
+        <p style="flex: 1;">Think of Hank as the finance-savvy colleague you wish you had. He explains your numbers in plain English, flags concerns before they become emergencies, and coaches you through decisions, so you can spend your energy on students.</p>
       </div>
     </div>
-    <p style="font-size: 0.8rem; color: var(--slate); text-align: center; margin-top: 1.5rem; opacity: 0.7;">* Financial Management currently integrates with QuickBooks Online as the accounting platform.</p>
+    <p style="font-size: 0.8rem; color: var(--slate); text-align: center; margin-top: 1.5rem; opacity: 0.7;">Financial Management currently integrates with QuickBooks Online as the accounting platform.</p>
+  </section>
+
+  <!-- HOW WE BUILD -->
+  <section class="section" style="padding-top: 0;">
+    <div class="how-it-works" style="background: var(--amber-50); border-color: rgba(217,119,6,0.15);">
+      <div class="section-label">How We Build</div>
+      <h2 style="margin-bottom: 1.25rem;">We Learn by Building</h2>
+      <p style="font-size: 1rem; color: var(--slate); line-height: 1.75; margin-bottom: 1rem;">
+        SchoolStack is being built alongside real school founders, testing ideas early and following what we learn. We take a Lean Impact approach: every feature starts as a hypothesis, gets tested with real schools, and earns its place by actually making founders' lives better.
+      </p>
+      <p style="font-size: 1rem; color: var(--slate); line-height: 1.75; margin-bottom: 1rem;">
+        We'd rather learn fast than launch perfect. If something helps you see June's financial picture in December, it stays. If it doesn't, we rework it.
+      </p>
+      <p style="font-size: 1rem; color: var(--slate); line-height: 1.75;">
+        This is a long game. We're here to figure out what it actually takes for early-stage school founders to build resilient programs where children flourish. That's the mission. Everything else is a tool in service of it.
+      </p>
+    </div>
   </section>
 
   <!-- HOW IT WORKS -->
@@ -636,8 +650,7 @@
   <section class="signup-section" id="signup">
     <div class="signup-inner">
       <h2>Get Early Access to SchoolStack</h2>
-      <p>We're building something new, and we want your voice in it. 
-      Sign up for early access and you'll be the first to know when our alpha is ready for testing.</p>
+      <p>We're looking for school founders who want to build this with us. Thought partners who'll tell us what's working, what's missing, and what would actually change their Monday morning. If that sounds like you, we'd love to hear from you.</p>
       <p style="font-size: 0.9rem; color: #A0AEC0; margin-bottom: 1.5rem; margin-top: -1rem;">No cost, no commitment. We'll reach out when the alpha is ready.</p>
 
       <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
@@ -728,6 +741,34 @@
             <option value="Other">Other</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="finances">How do you manage your finances today?</label>
+          <select id="finances" name="finances">
+            <option value="">Select an option (optional)</option>
+            <option value="QuickBooks">QuickBooks</option>
+            <option value="Xero">Xero</option>
+            <option value="Wave">Wave</option>
+            <option value="Excel or Google Sheets">Excel or Google Sheets</option>
+            <option value="No system yet">I don't really have a system yet</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="enrollment">How do you handle enrollment and student info?</label>
+          <select id="enrollment" name="enrollment">
+            <option value="">Select an option (optional)</option>
+            <option value="Gradelink">Gradelink</option>
+            <option value="SchoolMint">SchoolMint</option>
+            <option value="Transparent Classroom">Transparent Classroom</option>
+            <option value="Google Sheets or Excel">Google Sheets or Excel</option>
+            <option value="Paper or manual tracking">Paper or manual tracking</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="headache">What's your biggest back-office headache?</label>
+          <textarea id="headache" name="headache" rows="3" placeholder="e.g., I never know if I'll make payroll in March" style="padding: 0.75rem 1rem; border: 1px solid #4A5568; border-radius: 8px; background: #1A202C; color: white; font-family: 'Nunito', sans-serif; font-size: 0.95rem; transition: border-color 0.2s; resize: vertical; width: 100%;"></textarea>
+        </div>
         <button type="submit" class="form-submit" id="submitBtn">Get Early Access</button>
         <div class="form-error" id="formError"></div>
       </form>
@@ -795,13 +836,37 @@
   </section>
 
 
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="section-label">FAQ</div>
+    <h2>Common Questions</h2>
+    <div style="display: grid; gap: 1rem; max-width: 750px; margin-top: 2rem;">
+      <div style="background: var(--white); border-radius: 12px; padding: 1.75rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h4 style="font-size: 1rem; color: var(--charcoal); margin-bottom: 0.5rem;">Is this really free?</h4>
+        <p style="font-size: 0.95rem; color: var(--slate); line-height: 1.65;">During our testing phase, yes. We're funded by philanthropic partners so we can focus on getting this right, with pricing kept accessible for the schools that need it most.</p>
+      </div>
+      <div style="background: var(--white); border-radius: 12px; padding: 1.75rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h4 style="font-size: 1rem; color: var(--charcoal); margin-bottom: 0.5rem;">Do I need QuickBooks?</h4>
+        <p style="font-size: 0.95rem; color: var(--slate); line-height: 1.65;">Our initial integrations connect with QuickBooks Online. We're exploring additional accounting platforms based on what our founders use. Let us know what you need.</p>
+      </div>
+      <div style="background: var(--white); border-radius: 12px; padding: 1.75rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h4 style="font-size: 1rem; color: var(--charcoal); margin-bottom: 0.5rem;">When can I start using it?</h4>
+        <p style="font-size: 0.95rem; color: var(--slate); line-height: 1.65;">We're actively testing with a small group of schools. Sign up and we'll reach out as spots open up.</p>
+      </div>
+      <div style="background: var(--white); border-radius: 12px; padding: 1.75rem; border: 1px solid rgba(0,0,0,0.06);">
+        <h4 style="font-size: 1rem; color: var(--charcoal); margin-bottom: 0.5rem;">Is my data safe?</h4>
+        <p style="font-size: 0.95rem; color: var(--slate); line-height: 1.65;">Yes. We're building with enterprise-grade security standards including SOC 2 and FERPA compliance, because school data demands that level of care.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">SchoolStack.ai</div>
       <p>The back office your school deserves.</p>
       <div class="footer-fundraising">
-        <p>SchoolStack is funded by people who believe every school deserves great tools.</p>
+        <p>SchoolStack is backed by philanthropists who believe in solving hard problems through learning, testing, and staying close to the people doing the work. Every dollar gets us closer to a full-service back office platform that helps school founders build resilient, sustainable businesses.</p>
       </div>
       <div class="footer-divider"></div>
       <p>Questions? Say hello: <a href="mailto:allison@schoolstack.ai">allison@schoolstack.ai</a></p>
