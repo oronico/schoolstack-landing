@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchoolStack - The Back Office Your School Can't Afford to Hire</title>
-  <meta name="description" content="Four free tools for small-school founders: Space for facilities and community, Budget for financial modeling, Access for funding information, and Lending Lab for financing. SchoolStack BI launches in November. A program of Building Hope Impact Fund, a 501(c)(3) nonprofit.">
+  <title>SchoolStack - Serious Tools for Serious Small-School Entrepreneurs</title>
+  <meta name="description" content="Small doesn't mean you aren't a serious entrepreneur. Four free tools for small-school founders: Space for facilities and community, Budget for financial modeling, Access for funding information, and Lending Lab for financing. SchoolStack BI, a full service accounting platform with real time budget versus actual and accrual frameworks built in, goes live in November for schools of 10 to 500 students. A program of Building Hope Impact Fund, a 501(c)(3) nonprofit.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" type="image/png" href="favicon.png">
-  <meta property="og:title" content="SchoolStack - The Back Office Your School Can't Afford to Hire">
-  <meta property="og:description" content="Four tools you can use today for facilities, financial modeling, funding, and financing.">
+  <meta property="og:title" content="SchoolStack - Serious Tools for Serious Small-School Entrepreneurs">
+  <meta property="og:description" content="Stay ready, so you are not scrambling to get ready. Four free tools now, and the full platform in November.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schoolstack.ai/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -107,7 +107,7 @@
       gap: 1rem;
     }
     .nav-brand { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
-    .nav-brand svg { height: 27px; width: auto; display: block; }
+    .nav-brand img { height: 27px; width: auto; display: block; }
     .nav-links { display: flex; align-items: center; gap: 1.6rem; }
     .nav-links a { text-decoration: none; font-weight: 700; font-size: 0.93rem; color: var(--muted); transition: color 0.2s; }
     .nav-links a:hover { color: var(--ink); }
@@ -190,7 +190,9 @@
       height: 4px;
       background: linear-gradient(90deg, var(--c-light), var(--c-mid) 50%, var(--c-dark));
     }
-    .tool-logo { height: 26px; width: auto; display: block; margin-bottom: 0.9rem; }
+    /* align-self keeps the lockup at its intrinsic width; the flex column's
+       default stretch would otherwise widen it and centre the artwork */
+    .tool-logo { height: 26px; width: auto; display: block; align-self: flex-start; margin-bottom: 0.9rem; }
     .tool-role {
       font-weight: 800;
       font-size: 0.72rem;
@@ -206,6 +208,24 @@
       border-left: 3px solid var(--c-light);
       padding-left: 0.8rem;
       margin-bottom: 1.2rem;
+    }
+    /* Muted, not the product accent: at this size the darker product steps
+       would fall short of AA (see Brand Kit accessibility note). */
+    .tool-note {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .tool-note::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 3px;
+      background: var(--c-mid);
+      flex-shrink: 0;
     }
     .tool-link {
       margin-top: auto;
@@ -228,6 +248,36 @@
     .card-budget  { --c-light: var(--budget-light);  --c-mid: var(--budget-mid);  --c-dark: var(--budget-dark);  --c-accent: var(--budget-dark); }
     .card-access  { --c-light: var(--access-light);  --c-mid: var(--access-mid);  --c-dark: var(--access-dark);  --c-accent: var(--access-dark); }
     .card-lending { --c-light: var(--lending-light); --c-mid: var(--lending-mid); --c-dark: var(--lending-dark); --c-accent: var(--lending-word); }
+
+    /* FOUNDER QUOTE */
+    .founder-quote {
+      background: var(--panel);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-lg);
+      padding: 2rem 2.25rem;
+      max-width: 760px;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .founder-quote .bars { margin-bottom: 1.1rem; }
+    .founder-quote .quote-lead {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+    .founder-quote blockquote p + p {
+      font-family: var(--font-body);
+      font-size: 1.03rem;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    .founder-quote blockquote { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.5rem; }
+    .founder-quote figcaption { font-size: 0.92rem; border-top: 1px solid var(--hairline); padding-top: 1.1rem; }
+    .founder-quote figcaption strong { color: var(--ink); display: block; margin-bottom: 0.15rem; }
+    .founder-quote figcaption span { color: var(--muted); display: block; max-width: 62ch; line-height: 1.55; }
 
     /* PROOF STRIP */
     .proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
@@ -254,16 +304,41 @@
     }
     .bi-hero h2 { color: #fff; font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin-bottom: 0.75rem; }
     .bi-hero > p { color: var(--on-navy-text); font-size: 1.05rem; max-width: 56ch; margin: 0 auto 1.6rem; }
-    .bi-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
-    .bi-chips span {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
-      border-radius: 50px;
-      padding: 0.35rem 0.95rem;
-      font-size: 0.85rem;
-      font-weight: 700;
+    /* What BI handles day to day */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.15rem 1.75rem;
+      max-width: 900px;
+      margin: 2.25rem auto 0;
+      text-align: left;
     }
+    .feature-item { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .feature-item i {
+      width: 6px; height: 6px;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+    }
+    .feature-item:nth-child(3n+1) i { background: var(--on-navy-sky); }
+    .feature-item:nth-child(3n+2) i { background: var(--on-navy-mint); }
+    .feature-item:nth-child(3n+3) i { background: var(--on-navy-gold); }
+    .feature-item strong { color: #fff; font-weight: 700; font-size: 0.95rem; display: block; }
+    .feature-item span { color: var(--on-navy-dim); font-size: 0.87rem; }
+
+    /* "Stay ready" - what readiness looks like when someone asks */
+    .ready-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 3rem auto 0;
+      text-align: left;
+    }
+    .ready-item { border-top: 2px solid rgba(255,255,255,0.16); padding-top: 1rem; }
+    .ready-item h4 { color: #fff; font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .ready-item p { color: var(--on-navy-dim); font-size: 0.9rem; }
+
     .bi-preview { max-width: 840px; margin: 2.75rem auto 0; }
     .bi-preview img {
       width: 100%;
@@ -294,7 +369,8 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
-    .form-group input[type="text"], .form-group input[type="email"], .form-group textarea {
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .form-group input[type="text"], .form-group input[type="email"], .form-group select, .form-group textarea {
       padding: 0.75rem 1rem;
       border: 1px solid #33415C;
       border-radius: var(--r-sm);
@@ -307,11 +383,12 @@
     }
     .form-group textarea { resize: vertical; }
     .form-group input::placeholder, .form-group textarea::placeholder { color: #6B7A93; }
-    .form-group input:focus, .form-group textarea:focus {
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       outline: 2px solid var(--on-navy-sky);
       outline-offset: 1px;
       border-color: var(--on-navy-sky);
     }
+    .form-group select option { background: #0E1626; }
     .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; }
     .checkbox-item {
       display: flex;
@@ -343,7 +420,21 @@
     }
     .form-submit:hover { transform: translateY(-1px); }
     .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .form-note { font-size: 0.8rem; color: var(--on-navy-dim); }
+    .consent-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      background: #0E1626;
+      border: 1px solid #33415C;
+      border-radius: var(--r-sm);
+      padding: 0.8rem 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .consent-item:hover { border-color: var(--on-navy-sky); }
+    .consent-item input { width: 17px; height: 17px; accent-color: var(--ss-sky); flex-shrink: 0; margin-top: 1px; }
+    .consent-item span { font-size: 0.88rem; color: var(--on-navy-text); line-height: 1.5; }
+    .consent-item strong { color: #fff; font-weight: 700; }
     .form-success {
       background: #0E2A22;
       border: 1px solid var(--budget-mid);
@@ -375,7 +466,14 @@
     .backing { text-align: center; }
     .backing p { color: var(--muted); font-size: 0.98rem; max-width: 60ch; margin: 0 auto 1.5rem; }
     .backing p a { color: var(--space-dark); font-weight: 700; text-decoration: none; }
-    .partner-row { display: flex; justify-content: center; align-items: center; gap: 3.5rem; flex-wrap: wrap; margin-top: 2rem; }
+    .bhif-mark { display: inline-block; margin-bottom: 1.25rem; }
+    .bhif-mark img { height: 120px; width: auto; display: block; }
+    .partner-row { display: flex; justify-content: center; align-items: flex-start; gap: 4rem; flex-wrap: wrap; margin-top: 2.25rem; }
+    .partner { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-decoration: none; max-width: 240px; }
+    .partner-mark { height: 76px; display: flex; align-items: center; justify-content: center; }
+    .partner-mark img { object-fit: contain; }
+    .partner-name { font-size: 0.9rem; font-weight: 700; color: var(--muted); transition: color 0.2s; }
+    .partner:hover .partner-name { color: var(--ink); }
     .team-row { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 2.25rem; }
     .team-item { font-size: 0.9rem; }
     .team-item strong { display: block; color: var(--ink); font-weight: 700; }
@@ -385,7 +483,7 @@
     footer { background: var(--navy); color: var(--on-navy-text); padding: 3.25rem 2rem 2.25rem; }
     .footer-inner { max-width: 1080px; margin: 0 auto; }
     .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2.5rem; padding-bottom: 2.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .footer-brand svg { height: 28px; width: auto; display: block; margin-bottom: 0.8rem; }
+    .footer-brand img { height: 28px; width: auto; display: block; margin-bottom: 0.8rem; }
     .footer-brand p { font-size: 0.9rem; max-width: 40ch; }
     .footer-col h4 { color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
     .footer-col ul { list-style: none; display: grid; gap: 0.5rem; }
@@ -397,6 +495,7 @@
 
     /* RESPONSIVE */
     @media (max-width: 900px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
       .footer-top { grid-template-columns: 1fr 1fr; }
       .footer-brand { grid-column: 1 / -1; }
     }
@@ -409,6 +508,11 @@
       .signup { padding: 3rem 1.25rem; }
       .stack-grid { grid-template-columns: 1fr; }
       .proof { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .ready-grid { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2rem; }
+      .founder-quote { padding: 1.5rem 1.35rem; }
+      .founder-quote blockquote p { font-size: 1.08rem; }
+      .form-row { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; gap: 1.6rem; }
       .partner-row { gap: 2rem; }
       .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
@@ -429,12 +533,7 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-brand" aria-label="SchoolStack home">
-      <svg width="470" height="71" viewBox="0 0 470 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack">
-        <rect x="0" y="0" width="40" height="16" rx="8" fill="#38BDF8"/>
-        <rect x="0" y="27" width="53" height="16" rx="8" fill="#34D399"/>
-        <rect x="0" y="55" width="64" height="16" rx="8" fill="#FBBF24"/>
-        <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan></text>
-      </svg>
+      <img src="assets/logos/schoolstack-logo.svg" alt="SchoolStack" width="357" height="71">
     </a>
     <div class="nav-links">
       <a href="#tools">The tools</a>
@@ -448,19 +547,19 @@
   <section class="hero">
     <div class="hero-badge">
       <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
-      Four tools open now
+      Free to use now. SchoolStack BI launches in November.
     </div>
-    <h1>The back office your school can't afford to hire.</h1>
+    <h1>The back office platform your school deserves.</h1>
     <p class="subtitle">
-      Clarity on money, community, funding, and financing. Four tools are open to you today,
-      and SchoolStack BI brings them together in November.
+      Small doesn't mean you aren't serious. You deserve tools that match, and that help you
+      <strong>stay ready</strong>, so you aren't scrambling to get ready when opportunity arrives.
     </p>
     <div class="hero-cta">
-      <a href="#tools" class="btn-primary">
-        See the four tools
+      <a href="#signup" class="btn-primary">
+        Sign up for early access
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#signup" class="btn-secondary">Get early access</a>
+      <a href="#tools" class="btn-secondary">Use the free tools now</a>
     </div>
     <p class="boilerplate">
       A program of <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a>, a 501(c)(3) nonprofit.
@@ -469,22 +568,22 @@
 
   <!-- THE TOOLS -->
   <section class="section" id="tools">
-    <div class="label">The stack</div>
-    <h2>Start with the question in front of you</h2>
-    <p class="section-desc">Each tool works on its own. Pick the one that matches today, and start there.</p>
+    <div class="label">Free right now</div>
+    <h2>Built to meet the moment</h2>
+    <p class="section-desc">
+      Schools were heading into a new year and needed a budget tool, so we built one. Then we kept
+      going. Each of these works on its own and all of it is free today, so start with whichever
+      question is in front of you.
+    </p>
 
     <div class="stack-grid">
 
       <article class="tool-card card-space">
-        <svg class="tool-logo" width="560" height="71" viewBox="0 0 560 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack Space">
-          <rect x="0" y="0" width="40" height="16" rx="8" fill="#7DD3FC"/>
-          <rect x="0" y="27" width="53" height="16" rx="8" fill="#38BDF8"/>
-          <rect x="0" y="55" width="64" height="16" rx="8" fill="#2563EB"/>
-          <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan> <tspan font-weight="400" fill="#2563EB">Space</tspan></text>
-        </svg>
+        <img class="tool-logo" src="assets/logos/schoolstack-space-logo.svg" alt="SchoolStack Space" width="499" height="71">
         <div class="tool-role">Facilities and community</div>
         <p class="tool-body">See your community and the seat gap, then size and cost the building.</p>
-        <p class="tool-guardrail">A free planning tool with the math shown, never a verdict on your building.</p>
+        <p class="tool-guardrail">Free to use, and it shows its math, so the call stays yours.</p>
+        <p class="tool-note">Grows into SchoolStack BI in November</p>
         <a class="tool-link" href="https://space.schoolstack.ai" target="_blank" rel="noopener noreferrer">
           Open Space
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -492,15 +591,11 @@
       </article>
 
       <article class="tool-card card-budget">
-        <svg class="tool-logo" width="575" height="71" viewBox="0 0 575 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack Budget">
-          <rect x="0" y="0" width="40" height="16" rx="8" fill="#86EFAC"/>
-          <rect x="0" y="27" width="53" height="16" rx="8" fill="#22C55E"/>
-          <rect x="0" y="55" width="64" height="16" rx="8" fill="#15803D"/>
-          <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan> <tspan font-weight="400" fill="#15803D">Budget</tspan></text>
-        </svg>
+        <img class="tool-logo" src="assets/logos/schoolstack-budget-logo.svg" alt="SchoolStack Budget" width="522" height="71">
         <div class="tool-role">Financial modeling</div>
         <p class="tool-body">Build a five-year model a lender can read, and get a plain read on your school's financial health.</p>
-        <p class="tool-guardrail">A financial-health read, not a lending decision.</p>
+        <p class="tool-guardrail">A clear read on your financial health, in a form a lender will recognize.</p>
+        <p class="tool-note">Grows into SchoolStack BI in November</p>
         <a class="tool-link" href="https://budget.schoolstack.ai" target="_blank" rel="noopener noreferrer">
           Open Budget
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -508,15 +603,10 @@
       </article>
 
       <article class="tool-card card-access">
-        <svg class="tool-logo" width="565" height="71" viewBox="0 0 565 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack Access">
-          <rect x="0" y="0" width="40" height="16" rx="8" fill="#C4B5FD"/>
-          <rect x="0" y="27" width="53" height="16" rx="8" fill="#8B5CF6"/>
-          <rect x="0" y="55" width="64" height="16" rx="8" fill="#5B21B6"/>
-          <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan> <tspan font-weight="400" fill="#5B21B6">Access</tspan></text>
-        </svg>
+        <img class="tool-logo" src="assets/logos/schoolstack-access-logo.svg" alt="SchoolStack Access" width="511" height="71">
         <div class="tool-role">Funding and policy</div>
         <p class="tool-body">State-by-state information on school-choice funding and the new federal tax credit.</p>
-        <p class="tool-guardrail">Information, not tax advice. Sourced, dated, and it depends on your state.</p>
+        <p class="tool-guardrail">Sourced and dated for your state. Information, not tax advice.</p>
         <a class="tool-link" href="https://access.schoolstack.ai" target="_blank" rel="noopener noreferrer">
           Open Access
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -524,15 +614,10 @@
       </article>
 
       <article class="tool-card card-lending">
-        <svg class="tool-logo" width="610" height="71" viewBox="0 0 610 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack Lending Lab">
-          <rect x="0" y="0" width="40" height="16" rx="8" fill="#BFDBFE"/>
-          <rect x="0" y="27" width="53" height="16" rx="8" fill="#3B82F6"/>
-          <rect x="0" y="55" width="64" height="16" rx="8" fill="#F59E0B"/>
-          <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan> <tspan font-weight="400" fill="#B45309">Lending Lab</tspan></text>
-        </svg>
+        <img class="tool-logo" src="assets/logos/schoolstack-lendinglab-logo.svg" alt="SchoolStack Lending Lab" width="631" height="71">
         <div class="tool-role">Financing</div>
         <p class="tool-body">A financing pathway for select small independent schools, with real underwriting by a mission lender.</p>
-        <p class="tool-guardrail">See if you're a fit. No promise of approval, a rate, or terms before underwriting.</p>
+        <p class="tool-guardrail">See if you're a fit in a few minutes, then real underwriting by people who read school finances.</p>
         <a class="tool-link" href="https://www.lendinglab.org/screener" target="_blank" rel="noopener noreferrer">
           Start the screener
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -546,19 +631,41 @@
   <section class="signup" id="signup">
     <div class="bi-hero">
       <span class="bars on-navy" aria-hidden="true"><span></span><span></span><span></span></span>
-      <div class="bi-status">Launching in November</div>
-      <h2>The whole back office, finally in one place</h2>
+      <div class="bi-status">Live in November</div>
+      <h2>One solution to run a school of 10 to 500 students</h2>
       <p>
-        SchoolStack BI brings your day-to-day operations together on QuickBooks Online, so the
-        numbers, the students, and the paperwork stop living in five different tabs.
+        In November it all comes together. Space and Budget join a full service accounting
+        platform on QuickBooks Online, with accrual frameworks built in so a cash-based school
+        can see the real picture and build a path toward lasting business health.
       </p>
-      <div class="bi-chips">
-        <span>Budgeting</span>
-        <span>Accounting</span>
-        <span>Recruitment</span>
-        <span>Enrollment</span>
-        <span>Compliance</span>
+
+      <div class="feature-grid">
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Budget versus actual</strong><span>In real time, so you see the gap while you can still do something about it.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Accrual frameworks</strong><span>Built in for cash-based schools, so the picture matches what really happened.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Expense reconciliation</strong><span>Categorized and reconciled against your books, not at year end.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Tuition capture</strong><span>What you actually collected against what you billed, every month.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Receivables</strong><span>What is owed, how old it is, and who to follow up with.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Payroll management</strong><span>Your largest expense tracked against the budget as the year moves.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Contract reminders</strong><span>A heads up before a contract renews or expires, while you can still act.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Lease analysis</strong><span>What the lease costs across its full term, with the math shown.</span></div></div>
+        <div class="feature-item"><i aria-hidden="true"></i><div><strong>Enrollment</strong><span>Students and revenue in one place, instead of two systems that disagree.</span></div></div>
       </div>
+
+      <div class="ready-grid">
+        <div class="ready-item">
+          <h4>When a lender asks</h4>
+          <p>Prequalify through Lending Lab and know where you stand before you apply. Fit first, with real underwriting after.</p>
+        </div>
+        <div class="ready-item">
+          <h4>When an accreditor asks</h4>
+          <p>Reporting that is already assembled, sourced, and current, instead of a scramble through last year's files.</p>
+        </div>
+        <div class="ready-item">
+          <h4>When your board asks</h4>
+          <p>Reports that are easy to digest and tell the story of how your financial resources fuel the mission.</p>
+        </div>
+      </div>
+
       <figure class="bi-preview">
         <img src="images/dashboard-preview.png" alt="Preview of the SchoolStack BI dashboard showing financial indicators, cash runway, student counts, and coaching prompts" loading="lazy">
         <figcaption>A work in progress, shown with sample data.</figcaption>
@@ -567,27 +674,130 @@
 
     <div class="signup-form-wrap">
       <div class="label">Early access</div>
-      <h3>Build it with us</h3>
+      <h3>Sign up now, use the free tools today</h3>
       <p>
-        We want founders who will tell us what is working and what is missing. Two minutes now,
-        and we will reach out when the alpha is ready.
+        Early access opens ahead of the November launch, and we will reach out as spots come free.
+        Until then the MVP features above are yours to use at no cost.
       </p>
       <div>
         <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="early-access">
           <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
 
-          <div class="form-group">
-            <label for="firstName">Your name *</label>
-            <input type="text" id="firstName" name="firstName" placeholder="First name" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First name *</label>
+              <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last name</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Your last name">
+            </div>
           </div>
           <div class="form-group">
-            <label for="email">Email *</label>
+            <label for="email">Email address *</label>
             <input type="email" id="email" name="email" placeholder="you@yourschool.org" required>
           </div>
           <div class="form-group">
             <label for="schoolName">School name</label>
             <input type="text" id="schoolName" name="schoolName" placeholder="Or what you're planning to call it">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="state">State</label>
+              <select id="state" name="state">
+                <option value="">Select your state (optional)</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="role">Your role</label>
+              <select id="role" name="role">
+                <option value="">Select your role (optional)</option>
+                <option value="School Founder/Director">School Founder / Director</option>
+                <option value="Teacher/Educator">Teacher / Educator</option>
+                <option value="Administrator">Administrator</option>
+                <option value="Parent">Parent</option>
+                <option value="Investor/Donor">Investor / Donor</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="finances">How do you manage your finances today?</label>
+            <select id="finances" name="finances">
+              <option value="">Select an option (optional)</option>
+              <option value="QuickBooks">QuickBooks</option>
+              <option value="Xero">Xero</option>
+              <option value="Wave">Wave</option>
+              <option value="Excel or Google Sheets">Excel or Google Sheets</option>
+              <option value="No system yet">I don't really have a system yet</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="enrollment">How do you handle enrollment and student info?</label>
+            <select id="enrollment" name="enrollment">
+              <option value="">Select an option (optional)</option>
+              <option value="Gradelink">Gradelink</option>
+              <option value="SchoolMint">SchoolMint</option>
+              <option value="Transparent Classroom">Transparent Classroom</option>
+              <option value="Google Sheets or Excel">Google Sheets or Excel</option>
+              <option value="Paper or manual tracking">Paper or manual tracking</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -603,13 +813,17 @@
           </div>
 
           <div class="form-group">
-            <label for="headache">Your biggest back-office headache</label>
-            <textarea id="headache" name="headache" rows="2" placeholder="e.g., I never know if I'll make payroll in March"></textarea>
+            <label for="headache">What's your biggest back-office headache?</label>
+            <textarea id="headache" name="headache" rows="3" placeholder="e.g., I never know if I'll make payroll in March"></textarea>
           </div>
+
+          <label class="consent-item">
+            <input type="checkbox" name="emailConsent" value="Yes" required>
+            <span><strong>Yes, email me.</strong> Send product releases, beta test invitations, and upcoming events. Unsubscribe any time, and we will never sell your details.</span>
+          </label>
 
           <button type="submit" class="form-submit" id="submitBtn">Get early access</button>
           <div class="form-error" id="formError" role="alert"></div>
-          <p class="form-note">No cost and no commitment. Please leave out student records and bank details.</p>
         </form>
 
         <div class="form-success" id="formSuccess" role="status">
@@ -629,11 +843,30 @@
   <!-- WHY -->
   <section class="section">
     <div class="label">Why we build</div>
-    <h2>Founders deserve better than spreadsheets and guesswork</h2>
+    <h2>Built by a founder, for founders</h2>
+    <figure class="founder-quote">
+      <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      <blockquote>
+        <p class="quote-lead">I've been there.</p>
+        <p>
+          I started out in a middle school classroom, and everything I know about the business
+          side I learned the hard way. I've watched a lot of good school leaders learn it the same
+          way. None of it is intuitive.
+        </p>
+        <p>
+          I've also raised more than $100 million in philanthropy and public grants, so I know
+          what funders and lenders want to see. We built SchoolStack so you don't have to guess.
+        </p>
+      </blockquote>
+      <figcaption>
+        <strong>Allison Serafin</strong>
+        <span>Founder, SchoolStack. Built a nonprofit from the ground up and launched a charter network in a new region.</span>
+      </figcaption>
+    </figure>
     <p class="section-desc">
-      Last summer we met over 100 school founders who had quit careers and signed personal guarantees
-      to open schools. Most could not see where their financial health was headed. Accounting tells
-      you the past. We wanted founders to see what is coming.
+      Last summer we met over 100 school founders who had quit careers and signed personal
+      guarantees to open schools. Most could not see where their financial health was headed.
+      Accounting tells you the past. We wanted founders to see what is coming.
     </p>
     <div class="proof">
       <div class="proof-item">
@@ -668,11 +901,15 @@
       </div>
       <div class="faq-item">
         <h4>Is it free?</h4>
-        <p>The tools are free to use today. Philanthropic partners fund our work so we can focus on getting it right, and we intend to keep SchoolStack BI within reach of the schools that need it most.</p>
+        <p>Yes. Every MVP feature above is free between now and the November launch. Philanthropic partners fund our work so we can focus on getting it right, and we intend to keep SchoolStack BI within reach of the schools that need it most.</p>
       </div>
       <div class="faq-item">
-        <h4>Does using a tool mean I can get a loan?</h4>
-        <p>No. Space, Budget, and Access are planning and information tools, and none of them decide financing. Lending Lab is a separate pathway with real underwriting, and its screener tells you whether you are a fit.</p>
+        <h4>What happens to Space and Budget in November?</h4>
+        <p>They grow into it. Both were built to meet an immediate need, and in November they become part of the full accounting and enrollment platform rather than staying separate tools. Access and Lending Lab stay where they are. We will walk you through what changes well before the launch.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What does prequalifying tell me?</h4>
+        <p>Where you stand today and what to strengthen before you apply. Real underwriting comes after, done by people who read school finances for a living. Space, Budget, and Access are there to help you plan and prepare.</p>
       </div>
       <div class="faq-item">
         <h4>Is my data safe?</h4>
@@ -681,23 +918,34 @@
     </div>
   </section>
 
-  <!-- BACKING -->
+  <!-- PARTNERS -->
+  <section class="section backing" style="padding-top: 0;">
+    <div class="label" style="text-align:center;">Our partners</div>
+    <h2>Backed by organizations that believe in education</h2>
+    <div class="partner-row">
+      <a class="partner" href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
+        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" style="height: 72px;" loading="lazy"></span>
+        <span class="partner-name">Stand Together Trust</span>
+      </a>
+      <a class="partner" href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer">
+        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" style="height: 46px;" loading="lazy"></span>
+        <span class="partner-name">The Beth and Ravenel Curry Foundation</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOUNDATION -->
   <section class="section backing" style="padding-top: 0;">
     <div class="label" style="text-align:center;">Who is behind this</div>
+    <a class="bhif-mark" href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">
+      <img src="images/bhif-logo.webp" alt="Building Hope Impact Fund" width="400" height="400">
+    </a>
     <h2>A program of Building Hope Impact Fund</h2>
     <p>
       SchoolStack is a program of Building Hope Impact Fund, a 501(c)(3) nonprofit strengthening the
       infrastructure small schools depend on.
       <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Learn more</a>
     </p>
-    <div class="partner-row">
-      <a href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
-        <img src="images/stand-together-trust-logo.webp" alt="Stand Together Trust" style="height: 68px; object-fit: contain;" loading="lazy">
-      </a>
-      <a href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer">
-        <img src="images/curry-foundation-logo.png" alt="The Beth and Ravenel Curry Foundation" style="height: 44px; object-fit: contain;" loading="lazy">
-      </a>
-    </div>
     <div class="team-row">
       <div class="team-item"><strong>Allison Serafin</strong><span>Founder</span></div>
       <div class="team-item"><strong>Daniel Crook</strong><span>Chief Technology Officer</span></div>
@@ -713,13 +961,8 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
-          <svg width="470" height="71" viewBox="0 0 470 71" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SchoolStack">
-            <rect x="0" y="0" width="40" height="16" rx="8" fill="#7DD3FC"/>
-            <rect x="0" y="27" width="53" height="16" rx="8" fill="#6EE7B7"/>
-            <rect x="0" y="55" width="64" height="16" rx="8" fill="#FCD34D"/>
-            <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#ffffff"><tspan font-weight="700">SchoolStack</tspan></text>
-          </svg>
-          <p>The back office your school can't afford to hire. Built with founders, not for them.</p>
+          <img src="assets/logos/schoolstack-logo-white.svg" alt="SchoolStack" width="357" height="71">
+          <p>The back office your school can't afford to hire. Built by a founder, for founders.</p>
         </div>
         <div class="footer-col">
           <h4>The tools</h4>
