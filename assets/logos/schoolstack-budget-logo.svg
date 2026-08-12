@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 575 71" width="575" height="71">
+  <rect x="0" y="0" width="40" height="16" rx="8" fill="#86EFAC"></rect>
+  <rect x="0" y="27" width="53" height="16" rx="8" fill="#22C55E"></rect>
+  <rect x="0" y="55" width="64" height="16" rx="8" fill="#15803D"></rect>
+  <text x="88" y="52" font-family="Quicksand, 'Trebuchet MS', sans-serif" font-size="44" fill="#1E293B"><tspan font-weight="700">SchoolStack</tspan> <tspan font-weight="400" fill="#15803D">Budget</tspan></text>
+</svg>
