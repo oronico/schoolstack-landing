@@ -23,27 +23,31 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /* ---------------------------------------------------------------------------
    Brand geometry - the single source of truth for the mark.
 
-   Three stacked rounded bars (sky / emerald / amber) on brand navy. The bars
-   span 36 x 39 units inside a 64-unit square and are centred on both axes.
+   Deliberately identical to the Space and Budget favicons so the three
+   products read as one family: off-white ground, left-aligned bars, tight
+   gaps, and a mark that fills ~80% of the box. Lifted from Budget's
+   favicon.svg, which uses a 40-unit box.
+
+   SchoolStack is the parent brand, so unlike the single-hue product marks it
+   carries all three founding hues. The amber is the 600-weight (#F59E0B)
+   rather than the 400 used on dark backgrounds - the lighter tone washes out
+   against an off-white ground at 16px.
    --------------------------------------------------------------------------- */
-const NAVY = '#141E33';
+const GROUND = '#FAF9F7';
+const BOX = 40;
+const CORNER = 9;
+const BAR_H = 7;
+const BAR_X = 4;
 const BARS = [
-  { w: 22, fill: '#7DD3FC' },
-  { w: 29, fill: '#6EE7B7' },
-  { w: 36, fill: '#FCD34D' },
+  { y: 6, w: 20, fill: '#38BDF8' },
+  { y: 16, w: 27, fill: '#34D399' },
+  { y: 26, w: 32, fill: '#F59E0B' },
 ];
-const BAR_H = 9;
-const BAR_GAP = 6;
-const BOX = 64;
 
 function markGroup(scale = 1) {
-  const blockH = BARS.length * BAR_H + (BARS.length - 1) * BAR_GAP; // 39
-  const blockW = Math.max(...BARS.map((b) => b.w)); // 36
-  const x0 = (BOX - blockW) / 2;
-  const y0 = (BOX - blockH) / 2;
   const bars = BARS.map(
-    (b, i) =>
-      `<rect x="${x0}" y="${y0 + i * (BAR_H + BAR_GAP)}" width="${b.w}" height="${BAR_H}" rx="${BAR_H / 2}" fill="${b.fill}"></rect>`,
+    (b) =>
+      `<rect x="${BAR_X}" y="${b.y}" width="${b.w}" height="${BAR_H}" rx="${BAR_H / 2}" fill="${b.fill}"></rect>`,
   ).join('');
   if (scale === 1) return bars;
   const c = BOX / 2;
@@ -55,14 +59,15 @@ function markGroup(scale = 1) {
  *   rounded  - browser tab favicons, nothing masks them, so keep the radius
  *   square   - apple-touch-icon; iOS applies its own corner radius, and a
  *              pre-rounded source would double-round
- *   maskable - Android adaptive icons; the mark is scaled into the inner
- *              safe zone so a circular mask never clips it
+ *   maskable - Android adaptive icons. The family geometry runs to ~80% of the
+ *              box, which a circular mask would clip, so the mark is scaled
+ *              into the inner safe zone here and only here.
  */
 function iconSvg(variant) {
-  const radius = variant === 'rounded' ? 14 : 0;
-  const scale = variant === 'maskable' ? 0.82 : 1;
+  const radius = variant === 'rounded' ? CORNER : 0;
+  const scale = variant === 'maskable' ? 0.72 : 1;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${BOX} ${BOX}" width="${BOX}" height="${BOX}">`
-    + `<rect width="${BOX}" height="${BOX}" rx="${radius}" fill="${NAVY}"></rect>`
+    + `<rect width="${BOX}" height="${BOX}" rx="${radius}" fill="${GROUND}"></rect>`
     + markGroup(scale)
     + `</svg>`;
 }
