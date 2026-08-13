@@ -1,0 +1,7 @@
+# https://securitytxt.org - RFC 9116
+# Where to report a vulnerability in schoolstack.ai or any SchoolStack tool.
+
+Contact: mailto:allison@schoolstack.ai
+Expires: 2027-08-13T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://schoolstack.ai/.well-known/security.txt

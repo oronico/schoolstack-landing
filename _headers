@@ -1,0 +1,31 @@
+# Netlify response headers. Any partner, funder, or district that runs a
+# security scan against schoolstack.ai checks for exactly these.
+
+/*
+  # Clickjacking: nothing may frame this site.
+  X-Frame-Options: DENY
+  # Never let a browser second-guess a declared Content-Type.
+  X-Content-Type-Options: nosniff
+  # Send the full referrer to ourselves, origin-only cross-site, nothing over http.
+  Referrer-Policy: strict-origin-when-cross-origin
+  # We ask for none of these, so turn them all off.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  # One year of HTTPS-only. Deliberately without includeSubDomains: the tool
+  # subdomains are separate Netlify sites and this header should not speak for
+  # them. Add it there, on each site, rather than widening it from here.
+  Strict-Transport-Security: max-age=31536000
+  # 'unsafe-inline' is load-bearing, not laziness: the page ships its stylesheet
+  # and its form handler inline. Tighten to hashes only alongside extracting
+  # those into files, and re-run tools/verify-headers.mjs afterwards.
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'self'
+
+# Fingerprinted brand assets never change under the same name.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=604800
+
+# Icons carry a ?v= query, so they can be cached hard.
+/*.png
+  Cache-Control: public, max-age=604800
