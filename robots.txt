@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Build-time source for og-image.png, not a page.
+Disallow: /tools/
+
+Sitemap: https://schoolstack.ai/sitemap.xml

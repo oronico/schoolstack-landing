@@ -4,16 +4,129 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SchoolStack - Serious Tools for Serious Small-School Entrepreneurs</title>
-  <meta name="description" content="Small doesn't mean you aren't a serious entrepreneur. Four free tools for small-school founders: Space for facilities and community, Budget for financial modeling, Access for funding information, and Lending Lab for financing. SchoolStack BI, a full service accounting platform with real time budget versus actual and accrual frameworks built in, goes live in November for schools of 10 to 500 students. A program of Building Hope Impact Fund, a 501(c)(3) nonprofit.">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="alternate icon" type="image/png" href="favicon.png">
-  <meta property="og:title" content="SchoolStack - Serious Tools for Serious Small-School Entrepreneurs">
-  <meta property="og:description" content="Stay ready, so you are not scrambling to get ready. Four free tools now, and the full platform in November.">
+  <meta name="description" content="Free planning tools for small-school founders: facilities, budgets, funding, and financing. Full accounting for schools of 10 to 500 launches in November.">
+  <link rel="canonical" href="https://schoolstack.ai/">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#141E33">
+
+  <!-- Icons. The ?v= query busts the long-lived favicon cache browsers keep;
+       bump it whenever tools/build-images.mjs changes the mark. -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Open Graph. The title and description here are deliberately warmer and
+       shorter than the SEO <title> above: this is the text a person reads in an
+       iMessage or Slack preview, where the job is to earn the tap. -->
+  <meta property="og:title" content="Small school? You still deserve real tools.">
+  <meta property="og:description" content="Space, budget, funding, and financing - four free tools for schools of 10 to 500. A program of Building Hope Impact Fund, a 501(c)(3) nonprofit.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schoolstack.ai/">
+  <meta property="og:site_name" content="SchoolStack">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://schoolstack.ai/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SchoolStack: small school? You still deserve real tools. Space, budget, funding, and financing, free for schools of 10 to 500.">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Small school? You still deserve real tools.">
+  <meta name="twitter:description" content="Space, budget, funding, and financing - four free tools for schools of 10 to 500. A program of Building Hope Impact Fund, a 501(c)(3) nonprofit.">
+  <meta name="twitter:image" content="https://schoolstack.ai/og-image.png">
+  <meta name="twitter:image:alt" content="SchoolStack: small school? You still deserve real tools. Space, budget, funding, and financing, free for schools of 10 to 500.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Structured data. The FAQ entries below must stay word-for-word identical
+       to the visible #faq section; Google drops markup that does not match. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://schoolstack.ai/#organization",
+        "name": "SchoolStack",
+        "url": "https://schoolstack.ai/",
+        "email": "allison@schoolstack.ai",
+        "description": "Free planning tools for small-school founders: facilities, budgets, funding, and financing.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://schoolstack.ai/icon-512.png",
+          "width": 512,
+          "height": 512
+        },
+        "parentOrganization": {
+          "@type": "NGO",
+          "name": "Building Hope Impact Fund",
+          "url": "https://www.buildinghopeimpactfund.org"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://schoolstack.ai/#website",
+        "url": "https://schoolstack.ai/",
+        "name": "SchoolStack",
+        "inLanguage": "en-US",
+        "publisher": { "@id": "https://schoolstack.ai/#organization" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://schoolstack.ai/#faq",
+        "isPartOf": { "@id": "https://schoolstack.ai/#website" },
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What can I use today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "All four: Space for facilities and community, Budget for financial modeling, Access for funding information, and Lending Lab for financing. No need to wait for the platform."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is it free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Every MVP feature above is free between now and the November launch. Philanthropic partners fund our work so we can focus on getting it right, and we intend to keep SchoolStack BI within reach of the schools that need it most."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens to Space and Budget in November?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "They grow into it. Both were built to meet an immediate need, and in November they become part of the full accounting and enrollment platform rather than staying separate tools. Access and Lending Lab stay where they are. We will walk you through what changes well before the launch."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does prequalifying tell me?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Where you stand today and what to strengthen before you apply. Real underwriting comes after, done by people who read school finances for a living. Space, Budget, and Access are there to help you plan and prepare."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my data safe?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "School data deserves real care. We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
