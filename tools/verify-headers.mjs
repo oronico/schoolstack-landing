@@ -53,10 +53,15 @@ if (!rules.length) {
   process.exit(1);
 }
 
+// Must cover every extension the site serves. An unknown type falls through to
+// application/octet-stream, which the nosniff header above then makes Chromium
+// reject outright - producing a CSP-shaped failure that is really a gap here.
 const TYPES = {
-  '.html': 'text/html', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+  '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
+  '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2', '.woff': 'font/woff',
   '.webmanifest': 'application/manifest+json', '.xml': 'application/xml', '.txt': 'text/plain',
-  '.json': 'application/json', '.ico': 'image/x-icon',
+  '.json': 'application/json',
 };
 
 const server = createServer((req, res) => {
