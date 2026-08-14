@@ -43,8 +43,8 @@
        in the request path, and no blocking round trip to another origin before
        the first headline can paint. Regenerate with tools/fetch-fonts.mjs.
        Only the latin files are preloaded; latin-ext loads on demand. -->
-  <link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/quicksand-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
 
   <!-- Structured data. The FAQ entries below must stay word-for-word identical
@@ -166,10 +166,12 @@
       --on-navy-mint: #86EFAC;
       --on-navy-gold: #FCD34D;
 
-      /* Both are variable fonts covering every weight the page uses, so a
-         heavier headline costs no extra download. */
-      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      /* Quicksand and Nunito are the SchoolStack brand faces, shared with
+         Space, Budget and Access. Do not substitute them. Both are served as
+         variable fonts covering every weight the page uses, so a heavier
+         headline costs no extra download. */
+      --font-display: 'Quicksand', 'Trebuchet MS', sans-serif;
+      --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
 
       --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
       --shadow-card: 0 1px 2px rgba(20,30,51,0.04), 0 8px 24px rgba(20,30,51,0.06);
