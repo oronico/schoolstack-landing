@@ -190,7 +190,12 @@
     h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.2; color: var(--ink); }
     h3 { font-weight: 600; }
     a { color: inherit; }
-    img { max-width: 100%; }
+    /* height:auto is the required companion to the width/height attributes on
+       <img>. Without it those attributes act as presentational hints, so an
+       image whose CSS sets only width ends up with BOTH dimensions fixed,
+       aspect-ratio is ignored, and the picture stretches. Rules that set an
+       explicit height (the logos) still win on specificity. */
+    img { max-width: 100%; height: auto; }
 
     .label {
       font-weight: 800;
@@ -1096,11 +1101,11 @@
     <h2>Backed by organizations that believe in education</h2>
     <div class="partner-row">
       <a class="partner" href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" width="813" height="500" style="height: 72px; width: auto;" loading="lazy"></span>
+        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" width="813" height="500" style="max-height: 72px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
         <span class="partner-name">Stand Together Trust</span>
       </a>
       <a class="partner" href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" width="600" height="65" style="height: 46px; width: auto;" loading="lazy"></span>
+        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" width="600" height="65" style="max-height: 46px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
         <span class="partner-name">The Beth and Ravenel Curry Foundation</span>
       </a>
     </div>
