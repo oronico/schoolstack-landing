@@ -39,9 +39,13 @@
   <meta name="twitter:image" content="https://schoolstack.ai/og-image.png">
   <meta name="twitter:image:alt" content="SchoolStack: small school? You still deserve real tools. Space, budget, funding, and financing, free for schools of 10 to 500.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Self-hosted rather than linked from fonts.googleapis.com: no third party
+       in the request path, and no blocking round trip to another origin before
+       the first headline can paint. Regenerate with tools/fetch-fonts.mjs.
+       Only the latin files are preloaded; latin-ext loads on demand. -->
+  <link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
 
   <!-- Structured data. The FAQ entries below must stay word-for-word identical
        to the visible #faq section; Google drops markup that does not match. -->
@@ -157,13 +161,15 @@
 
       /* On navy, switch to light steps for accents and links */
       --on-navy-text: #C7D2E1;
-      --on-navy-dim:  #8A97AB;
+      --on-navy-dim:  #909DB1;
       --on-navy-sky:  #7DD3FC;
       --on-navy-mint: #86EFAC;
       --on-navy-gold: #FCD34D;
 
-      --font-display: 'Quicksand', 'Trebuchet MS', sans-serif;
-      --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* Both are variable fonts covering every weight the page uses, so a
+         heavier headline costs no extra download. */
+      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
       --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
       --shadow-card: 0 1px 2px rgba(20,30,51,0.04), 0 8px 24px rgba(20,30,51,0.06);
@@ -282,7 +288,9 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      transition: all 0.2s;
+      /* Named rather than `all`: `all` also animated the focus outline, so the
+         keyboard ring faded in over 200ms instead of appearing at once. */
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
     .btn-primary { background: var(--ss-amber); color: var(--ink); box-shadow: 0 6px 18px rgba(251,191,36,0.35); }
     .btn-primary:hover { background: #F5B31C; transform: translateY(-1px); }
@@ -470,7 +478,7 @@
       text-align: left;
     }
     .ready-item { border-top: 2px solid rgba(255,255,255,0.16); padding-top: 1rem; }
-    .ready-item h4 { color: #fff; font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .ready-item h3 { color: #fff; font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; margin-bottom: 0.35rem; }
     .ready-item p { color: var(--on-navy-dim); font-size: 0.9rem; }
 
     .bi-preview { max-width: 840px; margin: 2.75rem auto 0; }
@@ -517,6 +525,27 @@
     }
     .form-group textarea { resize: vertical; }
     .form-group input::placeholder, .form-group textarea::placeholder { color: #6B7A93; }
+    /* Keyboard focus. Only the form fields had an indicator, so tabbing through
+       the nav, tool links, and footer moved an invisible cursor. :focus-visible
+       rather than :focus so a mouse click does not leave a ring behind. */
+    a:focus-visible,
+    button:focus-visible,
+    label:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--ss-sky);
+      outline-offset: 3px;
+    }
+    /* On the navy sections the sky ring is the readable one; on light ground it
+       still clears contrast against every panel colour used here. */
+    .footer a:focus-visible,
+    .bi-section a:focus-visible,
+    .checkbox-item:focus-within {
+      outline-color: var(--on-navy-sky);
+    }
+
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       outline: 2px solid var(--on-navy-sky);
       outline-offset: 1px;
@@ -592,7 +621,7 @@
     /* FAQ */
     .faq-grid { display: grid; gap: 0.9rem; max-width: 760px; }
     .faq-item { background: var(--panel); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 1.4rem 1.5rem; }
-    .faq-item h4 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.4rem; }
     .faq-item p { font-size: 0.94rem; color: var(--muted); }
     .faq-item a { color: var(--space-dark); font-weight: 700; }
 
@@ -626,7 +655,7 @@
     .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2.5rem; padding-bottom: 2.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .footer-brand img { height: 28px; width: auto; display: block; margin-bottom: 0.8rem; }
     .footer-brand p { font-size: 0.9rem; max-width: 40ch; }
-    .footer-col h4 { color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .footer-col h3 { color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
     .footer-col ul { list-style: none; display: grid; gap: 0.5rem; }
     .footer-col a { color: var(--on-navy-text); text-decoration: none; font-size: 0.91rem; transition: color 0.2s; }
     .footer-col a:hover { color: var(--on-navy-sky); }
@@ -796,21 +825,21 @@
 
       <div class="ready-grid">
         <div class="ready-item">
-          <h4>When a lender asks</h4>
+          <h3>When a lender asks</h3>
           <p>Prequalify through Lending Lab and know where you stand before you apply. Fit first, with real underwriting after.</p>
         </div>
         <div class="ready-item">
-          <h4>When an accreditor asks</h4>
+          <h3>When an accreditor asks</h3>
           <p>Reporting that is already assembled, sourced, and current, instead of a scramble through last year's files.</p>
         </div>
         <div class="ready-item">
-          <h4>When your board asks</h4>
+          <h3>When your board asks</h3>
           <p>Reports that are easy to digest and tell the story of how your financial resources fuel the mission.</p>
         </div>
       </div>
 
       <figure class="bi-preview">
-        <img src="images/dashboard-preview.png" alt="Preview of the SchoolStack BI dashboard showing financial indicators, cash runway, student counts, and coaching prompts" loading="lazy">
+        <img src="images/dashboard-preview.webp" alt="Preview of the SchoolStack BI dashboard showing financial indicators, cash runway, student counts, and coaching prompts" width="1408" height="768" loading="lazy">
         <figcaption>A work in progress, shown with sample data.</figcaption>
       </figure>
     </div>
@@ -1033,7 +1062,7 @@
     <h2>Common questions</h2>
     <div class="faq-grid" style="margin-top: 1.75rem;">
       <div class="faq-item">
-        <h4>What can I use today?</h4>
+        <h3>What can I use today?</h3>
         <p>
           All four:
           <a href="https://space.schoolstack.ai" target="_blank" rel="noopener noreferrer">Space</a> for facilities and community,
@@ -1043,19 +1072,19 @@
         </p>
       </div>
       <div class="faq-item">
-        <h4>Is it free?</h4>
+        <h3>Is it free?</h3>
         <p>Yes. Every MVP feature above is free between now and the November launch. Philanthropic partners fund our work so we can focus on getting it right, and we intend to keep SchoolStack BI within reach of the schools that need it most.</p>
       </div>
       <div class="faq-item">
-        <h4>What happens to Space and Budget in November?</h4>
+        <h3>What happens to Space and Budget in November?</h3>
         <p>They grow into it. Both were built to meet an immediate need, and in November they become part of the full accounting and enrollment platform rather than staying separate tools. Access and Lending Lab stay where they are. We will walk you through what changes well before the launch.</p>
       </div>
       <div class="faq-item">
-        <h4>What does prequalifying tell me?</h4>
+        <h3>What does prequalifying tell me?</h3>
         <p>Where you stand today and what to strengthen before you apply. Real underwriting comes after, done by people who read school finances for a living. Space, Budget, and Access are there to help you plan and prepare.</p>
       </div>
       <div class="faq-item">
-        <h4>Is my data safe?</h4>
+        <h3>Is my data safe?</h3>
         <p>School data deserves real care. We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are.</p>
       </div>
     </div>
@@ -1067,11 +1096,11 @@
     <h2>Backed by organizations that believe in education</h2>
     <div class="partner-row">
       <a class="partner" href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" style="height: 72px;" loading="lazy"></span>
+        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" width="813" height="500" style="height: 72px; width: auto;" loading="lazy"></span>
         <span class="partner-name">Stand Together Trust</span>
       </a>
       <a class="partner" href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" style="height: 46px;" loading="lazy"></span>
+        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" width="600" height="65" style="height: 46px; width: auto;" loading="lazy"></span>
         <span class="partner-name">The Beth and Ravenel Curry Foundation</span>
       </a>
     </div>
@@ -1108,7 +1137,7 @@
           <p>The back office your school can't afford to hire. Built by a founder, for founders.</p>
         </div>
         <div class="footer-col">
-          <h4>The tools</h4>
+          <h3>The tools</h3>
           <ul>
             <li><a href="https://space.schoolstack.ai" target="_blank" rel="noopener noreferrer">Space</a></li>
             <li><a href="https://budget.schoolstack.ai" target="_blank" rel="noopener noreferrer">Budget</a></li>
@@ -1117,7 +1146,7 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h4>About</h4>
+          <h3>About</h3>
           <ul>
             <li><a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a></li>
             <li><a href="#signup">Early access</a></li>

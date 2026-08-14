@@ -8,8 +8,11 @@
  *   node tools/build-images.mjs
  *
  * Chromium is located via CHROME_BIN, then the Playwright browser cache, then
- * a few common system paths. Rendering the OG card pulls Quicksand and Nunito
- * from Google Fonts, so that run needs network access; the icons do not.
+ * a few common system paths. Nothing here touches the network: the OG card uses
+ * the self-hosted fonts in fonts/, and the run asserts they actually loaded
+ * rather than trusting that they did.
+ *
+ * Run tools/fetch-fonts.mjs first if fonts/ is empty.
  */
 
 import { spawn } from 'node:child_process';
@@ -200,7 +203,7 @@ const { sessionId } = await cdp.send('Target.attachToTarget', { targetId, flatte
 await cdp.send('Page.enable', {}, sessionId);
 
 /** Screenshot an HTML file at an exact pixel size. */
-async function shoot(htmlPath, outPath, width, height) {
+async function shoot(htmlPath, outPath, width, height, expectFonts) {
   await cdp.send(
     'Emulation.setDeviceMetricsOverride',
     { width, height, deviceScaleFactor: 1, mobile: false },
@@ -217,6 +220,30 @@ async function shoot(htmlPath, outPath, width, height) {
     { expression: 'document.fonts.ready.then(() => 0)', awaitPromise: true },
     sessionId,
   );
+
+  // Then prove they actually arrived. A missing font does not throw - the text
+  // simply renders in DejaVu Sans and the card looks subtly, shippably wrong.
+  // That exact failure reached production once; it does not get to happen twice.
+  if (expectFonts?.length) {
+    const { result } = await cdp.send(
+      'Runtime.evaluate',
+      {
+        expression: `JSON.stringify([...document.fonts].filter(f => f.status === 'loaded').map(f => f.family))`,
+        returnByValue: true,
+      },
+      sessionId,
+    );
+    const loaded = new Set(JSON.parse(result.value));
+    const missing = expectFonts.filter((f) => !loaded.has(f));
+    if (missing.length) {
+      throw new Error(
+        `${outPath}: webfont(s) never loaded: ${missing.join(', ')}.\n`
+        + `Loaded: ${[...loaded].join(', ') || '(none)'}.\n`
+        + `Run "node tools/fetch-fonts.mjs" to populate fonts/, and check that\n`
+        + `tools/og-image.html points at it by relative path.`,
+      );
+    }
+  }
 
   const { data } = await cdp.send(
     'Page.captureScreenshot',
@@ -258,7 +285,8 @@ built.push(await renderIcon('maskable', 512, 'icon-512.png'));
 built.push(await renderIcon('rounded', 180, 'favicon.png'));
 
 // The OG card. Rendered last because it is the only step that needs the network.
-await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 1200, 630);
+await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 1200, 630,
+  ['Plus Jakarta Sans', 'Inter']);
 built.push('og-image.png');
 
 socket.close();

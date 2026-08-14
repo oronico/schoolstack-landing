@@ -6,9 +6,11 @@
 <!-- Netlify publishes the repo root, so this template is reachable over HTTP.
      It is a rendering source, not a page - keep it out of the index. -->
 <meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+<!-- The site's own self-hosted fonts, by relative path. This template used to
+     pull from fonts.googleapis.com, which the render sandbox cannot reach: the
+     fetch failed silently, Chromium fell back to DejaVu Sans, and an off-brand
+     card shipped. Local files cannot fail that way. -->
+<link rel="stylesheet" href="../fonts/fonts.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,7 +31,7 @@
     /* Light and warm rather than the dark navy of the site chrome: a share
        card is a first impression, and this one has to feel welcoming. */
     background: linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 45%, #ECFDF5 100%);
-    font-family: 'Nunito', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -61,7 +63,7 @@
   }
 
   h1 {
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 700;
     font-size: 58px;
     line-height: 1.1;

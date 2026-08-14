@@ -1,0 +1,3 @@
+# Canonicalise on the apex. <link rel="canonical"> already points there, and a
+# www copy that also answers 200 splits ranking signals between two hostnames.
+https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
