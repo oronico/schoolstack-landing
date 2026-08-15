@@ -12,6 +12,10 @@
  *     check that only looked for the attributes reported success.
  *  2. Heading levels never skip (h2 -> h4).
  *  3. Nothing overflows horizontally.
+ *  4. The page is actually there. See EXPECT below - without it, every check
+ *     above reports only on elements it finds, so a page that failed to load
+ *     has nothing to stretch, no headings to skip and nothing to overflow,
+ *     and passes.
  *
  * Exits non-zero on any failure, naming the element and the numbers.
  */
@@ -26,6 +30,20 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const VIEWPORTS = [1440, 820, 390];
 const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
+
+/* The floor: what has to be on the page before a green run means anything.
+   Deliberately floors and landmarks rather than exact counts, so ordinary copy
+   and layout edits do not trip it - the failure being caught here is a blank
+   or half-rendered page, not a paragraph that moved. Update these when the
+   page genuinely changes shape. */
+const EXPECT = {
+  minImages: 8,      // logo, four tool marks, two funders, BHIF, footer logo
+  h1: 1,
+  minTextChars: 4000,
+  // Landmarks: the two anchor targets the nav points at, plus the form the
+  // whole page exists to feed.
+  ids: ['tools', 'signup', 'faq', 'signupForm', 'submitBtn'],
+};
 
 const TYPES = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
@@ -100,7 +118,11 @@ const failures = [];
 
 for (const width of VIEWPORTS) {
   await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 }, sessionId);
-  await send('Page.navigate', { url: base + '/' }, sessionId);
+  const nav = await send('Page.navigate', { url: base + '/' }, sessionId);
+  if (nav.errorText) {
+    failures.push(`${width}px  navigation failed: ${nav.errorText}`);
+    continue;
+  }
   await new Promise((r) => setTimeout(r, 3000));
 
   const { result } = await send('Runtime.evaluate', {
@@ -145,6 +167,10 @@ for (const width of VIEWPORTS) {
 
       return JSON.stringify({
         stretched, skips, goLinks,
+        title: document.title.trim(),
+        h1: document.querySelectorAll('h1').length,
+        textChars: (document.body.innerText || '').trim().length,
+        missingIds: ${JSON.stringify(EXPECT.ids)}.filter((id) => !document.getElementById(id)),
         overflow: document.documentElement.scrollWidth > window.innerWidth + 1
           ? document.documentElement.scrollWidth + ' > ' + window.innerWidth : null,
         images: document.images.length,
@@ -155,7 +181,18 @@ for (const width of VIEWPORTS) {
   const r = JSON.parse(result.value);
   console.log(`${String(width).padStart(4)}px  ${r.images} images  `
     + `stretched: ${r.stretched.length || 'none'}  heading skips: ${r.skips.length || 'none'}  `
-    + `overflow: ${r.overflow || 'none'}`);
+    + `overflow: ${r.overflow || 'none'}  `
+    + `${r.textChars} chars of copy  ${r.h1} h1`);
+
+  if (!r.title) failures.push(`${width}px  the page has no <title> - did it load?`);
+  if (r.images < EXPECT.minImages) {
+    failures.push(`${width}px  ${r.images} images rendered, expected at least ${EXPECT.minImages} - did the page load?`);
+  }
+  if (r.h1 !== EXPECT.h1) failures.push(`${width}px  ${r.h1} h1 elements, expected exactly ${EXPECT.h1}`);
+  if (r.textChars < EXPECT.minTextChars) {
+    failures.push(`${width}px  only ${r.textChars} characters of visible copy, expected at least ${EXPECT.minTextChars}`);
+  }
+  for (const id of r.missingIds) failures.push(`${width}px  #${id} is missing from the page`);
   for (const s of r.stretched) {
     failures.push(`${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
   }
@@ -172,8 +209,14 @@ for (const width of VIEWPORTS) {
         .map((l) => l.trim().split(/\s+/)[0]),
     );
     const dead = r.goLinks.filter((h) => !declared.has(h));
-    console.log(`        ${r.goLinks.length} /go/ CTAs, unmatched in _redirects: ${dead.length || 'none'}`);
+    // And the other direction. A rule with no link is a CTA that fell off the
+    // page - the tool is still reachable, nobody can get to it from here, and
+    // the link-to-rule check above stays perfectly green about it.
+    const unlinked = [...declared].filter((p) => p.startsWith('/go/') && !r.goLinks.includes(p));
+    console.log(`        ${r.goLinks.length} /go/ CTAs, unmatched in _redirects: ${dead.length || 'none'}`
+      + `, redirect rules with no CTA: ${unlinked.length || 'none'}`);
     for (const d of dead) failures.push(`${d} has no rule in _redirects - dead call to action`);
+    for (const u of unlinked) failures.push(`${u} is declared in _redirects but nothing on the page links to it`);
   }
 }
 

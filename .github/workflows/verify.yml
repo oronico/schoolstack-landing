@@ -1,0 +1,60 @@
+# Runs the two browser-driven checks in tools/ on every pull request.
+#
+# Both of them exist because the failures they catch are invisible in a diff:
+# a CSP that blocks the page's own stylesheet only at the edge, an image that
+# stretches only once the browser lays it out, a /go/ CTA with no matching
+# redirect rule. Neither runs unless something runs it, hence this file.
+
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push to the same branch makes the first run's answer irrelevant.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      # Node 22 for the global WebSocket the checks drive Chromium over.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      # findChrome() in both scripts reads CHROME_BIN first, then the
+      # Playwright cache, then the usual system paths. The runner image
+      # already ships Chrome; the download is only a fallback for when a
+      # future image drops it.
+      - name: Locate a browser
+        run: |
+          for candidate in /usr/bin/google-chrome /usr/bin/chromium-browser /usr/bin/chromium; do
+            if [ -x "$candidate" ]; then
+              echo "Using $candidate"
+              echo "CHROME_BIN=$candidate" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          done
+          echo "No system browser found, installing Chromium via Playwright"
+          npx --yes playwright@1.49.1 install --with-deps chromium
+          echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
+
+      - name: Headers and CSP
+        run: npm run verify:headers
+
+      # Runs even when the headers check failed: two red checks in one run
+      # beat two round trips to find out about the second.
+      - name: Render at three viewports
+        if: ${{ !cancelled() }}
+        run: npm run verify:render
