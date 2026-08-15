@@ -43,23 +43,38 @@ strengths, not their gaps.
 office your school can't afford to hire" is retired: it is deficit-framed and
 sits at the bottom of the value pyramid.
 
-Positioning is anchored on Bain's B2B Elements of Value, and climbs out of the
-**Functional** tier (cost reduction) that "affordable back office" was stuck
-in. Name the value received, and name which element it is:
+Positioning is anchored on Bain's **Elements of Value** (the consumer
+pyramid: 30 elements across Functional, Emotional, Life changing, Social
+impact). Not the B2B pyramid - our buyer is one founder making a personal
+decision, not a procurement committee.
+
+Name the value received, and name the element, using Bain's exact wording:
 
 - **Short line / merch / sign-off:** `Stay ready.`
-  Tier 4 (reduced anxiety) + tier 3 (risk reduction).
-- **Positioning line:** `The back office small schools run on.`
-  Tier 3 operational: organization, integration, stability.
+  Reduces anxiety (Emotional) + Reduces risk (Functional).
 - **Campaign line:** `Know your numbers. Show your numbers.`
-  Tier 3 transparency resolving into tier 4 reputational assurance.
+  Informs (Functional) resolving into Badge value (Emotional). "Know" is
+  the private value, "show" is the public one - it climbs a tier in four
+  words.
+- **Positioning line:** `The back office small schools run on.`
+  Organizes + Integrates, both Functional. Honest but bottom-tier; a
+  replacement that reaches Emotional or Life changing would be stronger.
+
+The base tier has to be real before anything above it lands, and ours is:
+Organizes, Simplifies, Informs, Saves time, Reduces risk. What is unclaimed
+is the top: **Provides hope** and **Self-actualization** (Life changing) and
+**Self-transcendence** (Social impact) are all genuinely available to a
+501(c)(3) whose customers are schools that serve children. Bain's finding is
+that products delivering more elements, and higher ones, earn more loyalty -
+so leaving the top three tiers empty is the real gap, not the wording.
 
 State the value delivered, never the customer's shortfall. Two framings are
 both out: "can't afford" names what they lack, and "deserves" names what they
-are owed. Neither is a value received. The highest ground here is tier 4
-reputational assurance - the founder walks into the lender, accreditor or
-board meeting already holding the answer - and it is worth more than the cost
-argument and harder for anyone to copy.
+are owed. Neither is a value received.
+
+Do not write "reputational assurance" into these notes: it belongs to Bain's
+B2B pyramid, not the consumer one we use. The element for "walks into the
+lender meeting already holding the answer" is **Badge value**.
 
 Other standing rules: no fake user counts, no em dashes in generated copy, and
 `Estimates are for planning only and are not loan eligibility` stays wherever
