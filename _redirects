@@ -1,3 +1,19 @@
 # Canonicalise on the apex. <link rel="canonical"> already points there, and a
 # www copy that also answers 200 splits ranking signals between two hostnames.
 https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
+
+# Outbound CTA instrumentation.
+#
+# Netlify Analytics is built from CDN request logs, so it can only ever see
+# requests to this domain. Every tool CTA points off-site, which means clicking
+# "Open Space" is invisible to it - the one number worth having. Routing those
+# clicks through /go/* makes each one a logged first-party request.
+#
+# 302, deliberately, NOT 301: a 301 is cached by the browser, so the second and
+# every later click never reaches the CDN and never gets counted. 302 keeps
+# every click observable. robots.txt disallows /go/ so crawlers do not inflate it.
+/go/space          https://space.schoolstack.ai          302
+/go/budget         https://budget.schoolstack.ai         302
+/go/access         https://access.schoolstack.ai         302
+/go/lending-lab    https://www.lendinglab.org            302
+/go/screener       https://www.lendinglab.org/screener   302
