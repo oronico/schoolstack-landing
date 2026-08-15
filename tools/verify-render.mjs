@@ -137,8 +137,14 @@ for (const width of VIEWPORTS) {
         if (cur - prev > 1) skips.push('h' + prev + ' -> h' + cur + ' at "' + hs[i].textContent.trim().slice(0, 40) + '"');
       }
 
+      // Every /go/* CTA depends on a matching rule in _redirects. A typo there
+      // is a dead call-to-action on a live marketing page, and nothing else
+      // would catch it: the link looks perfectly valid in the markup.
+      const goLinks = [...new Set([...document.querySelectorAll('a[href^="/go/"]')]
+        .map(a => a.getAttribute('href')))];
+
       return JSON.stringify({
-        stretched, skips,
+        stretched, skips, goLinks,
         overflow: document.documentElement.scrollWidth > window.innerWidth + 1
           ? document.documentElement.scrollWidth + ' > ' + window.innerWidth : null,
         images: document.images.length,
@@ -155,6 +161,20 @@ for (const width of VIEWPORTS) {
   }
   for (const s of r.skips) failures.push(`${width}px  heading skip: ${s}`);
   if (r.overflow) failures.push(`${width}px  horizontal overflow: ${r.overflow}`);
+
+  if (width === VIEWPORTS[0] && r.goLinks?.length) {
+    const rules = existsSync(join(ROOT, '_redirects'))
+      ? readFileSync(join(ROOT, '_redirects'), 'utf8')
+      : '';
+    const declared = new Set(
+      rules.split('\n')
+        .filter((l) => l.trim() && !l.trim().startsWith('#'))
+        .map((l) => l.trim().split(/\s+/)[0]),
+    );
+    const dead = r.goLinks.filter((h) => !declared.has(h));
+    console.log(`        ${r.goLinks.length} /go/ CTAs, unmatched in _redirects: ${dead.length || 'none'}`);
+    for (const d of dead) failures.push(`${d} has no rule in _redirects - dead call to action`);
+  }
 }
 
 ws.close(); chrome.kill(); server.close();
@@ -164,8 +184,13 @@ try { rmSync(profile, { recursive: true, force: true }); } catch { /* best effor
 if (failures.length) {
   console.log(`\n${failures.length} failure(s):`);
   for (const f of failures) console.log('  ! ' + f);
-  console.log('\nA stretched image usually means its CSS sets one dimension while the\n'
-    + 'width/height attributes set the other. Add `height: auto`.');
+  if (failures.some((f) => f.includes('naturally'))) {
+    console.log('\nA stretched image usually means its CSS sets one dimension while the\n'
+      + 'width/height attributes set the other. Add `height: auto`.');
+  }
+  if (failures.some((f) => f.includes('dead call to action'))) {
+    console.log('\nAdd the missing path to _redirects, or point the link somewhere real.');
+  }
   process.exit(1);
 }
 console.log('\nAll render checks passed');

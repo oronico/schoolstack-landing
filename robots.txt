@@ -4,4 +4,7 @@ Allow: /
 # Build-time source for og-image.png, not a page.
 Disallow: /tools/
 
+# Click-tracking redirects, not pages. Crawling them would inflate the counts.
+Disallow: /go/
+
 Sitemap: https://schoolstack.ai/sitemap.xml
