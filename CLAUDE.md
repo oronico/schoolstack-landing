@@ -72,9 +72,37 @@ State the value delivered, never the customer's shortfall. Two framings are
 both out: "can't afford" names what they lack, and "deserves" names what they
 are owed. Neither is a value received.
 
-Do not write "reputational assurance" into these notes: it belongs to Bain's
-B2B pyramid, not the consumer one we use. The element for "walks into the
-lender meeting already holding the answer" is **Badge value**.
+### Which pyramid depends on who is reading
+
+Bain publishes two frameworks and SchoolStack needs both, because it speaks
+to two audiences with different buying logic. Match the framework to the
+reader rather than picking one house-wide.
+
+**Founders (the consumer pyramid).** One person deciding, personally and
+emotionally. Nobody signs off. Win them on the top tiers: Provides hope,
+Self-actualization, Affiliation and belonging, Reduces anxiety. On this
+pyramid the element for "walks into the lender meeting already holding the
+answer" is **Badge value** - "reputational assurance" does not exist here and
+should not be written into founder-facing copy.
+
+**Banks, funders and accrediting partners (the B2B pyramid).** Committees,
+mandates and downside risk. Lead with Risk reduction, Reputational assurance,
+Stability and Expertise.
+
+The part worth being deliberate about: for a lender our value is not only that
+the founder looks prepared. **A SchoolStack-equipped school is a better
+borrower** - cleaner books, faster underwriting, fewer surprises after close.
+That is value delivered to the bank, not just to the school, and it is a
+different sentence than the one that wins a founder.
+
+Follow that through and the strategic prize is the third position: if lenders
+and accreditors come to expect SchoolStack-shaped books, SchoolStack stops
+being a tool a founder chose and becomes the format the sector reads. Copy
+aimed at partners should be written with that end in view.
+
+Practically: the landing hero, the tools grid and the signup form are founder
+surfaces. The partner and funder sections are not - do not reuse founder lines
+there, and do not water down the founder lines to make them serve both.
 
 Other standing rules: no fake user counts, no em dashes in generated copy, and
 `Estimates are for planning only and are not loan eligibility` stays wherever
