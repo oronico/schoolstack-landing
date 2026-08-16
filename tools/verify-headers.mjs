@@ -18,14 +18,9 @@
  * have actually rendered.
  */
 
-import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
-import { readFileSync, existsSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';
-import { join, extname, dirname, resolve } from 'node:path';
-import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 
 /* ---------------------------------------------------------------------------
    Parse _headers - Netlify's format: a path pattern, then indented `Key: value`
@@ -58,17 +53,6 @@ if (!rules.length) {
   console.error('No _headers rules found - nothing to verify.');
   process.exit(1);
 }
-
-// Must cover every extension the site serves. An unknown type falls through to
-// application/octet-stream, which the nosniff header above then makes Chromium
-// reject outright - producing a CSP-shaped failure that is really a gap here.
-const TYPES = {
-  '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
-  '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.woff': 'font/woff',
-  '.webmanifest': 'application/manifest+json', '.xml': 'application/xml', '.txt': 'text/plain',
-  '.json': 'application/json',
-};
 
 /* Presence is not protection: `X-Frame-Options: ALLOWALL` is present, and a CSP
    mangled down to `default-src *` is present. These say what each header has to
@@ -117,74 +101,31 @@ function cspFaults(value) {
 /* Absence of errors only counts as a pass if the page was really there. */
 const FLOOR = { responses: 10, images: 8, textChars: 4000 };
 
-const server = createServer((req, res) => {
-  const path = decodeURIComponent(req.url.split('?')[0]);
-  const file = join(ROOT, path === '/' ? 'index.html' : path);
-  const headers = {};
-  for (const rule of rules) {
-    if (matches(rule.pattern, path)) for (const [k, v] of rule.headers) headers[k] = v;
-  }
-  if (!file.startsWith(ROOT) || !existsSync(file)) {
-    res.writeHead(404, headers);
-    return res.end('not found');
-  }
-  headers['Content-Type'] = TYPES[extname(file)] || 'application/octet-stream';
-  res.writeHead(200, headers);
-  res.end(readFileSync(file));
+/* Apply the real _headers rules to every response, which is the whole point:
+   these headers exist at Netlify's edge and nowhere in the repo's own output. */
+const site = await serveSite({
+  headersFor: (path) => {
+    const headers = {};
+    for (const rule of rules) {
+      if (matches(rule.pattern, path)) for (const [k, v] of rule.headers) headers[k] = v;
+    }
+    return headers;
+  },
 });
-await new Promise((r) => server.listen(0, '127.0.0.1', r));
-const base = `http://127.0.0.1:${server.address().port}`;
+const base = site.base;
+
 
 /* ---------------------------------------------------------------------------
    Chromium
    --------------------------------------------------------------------------- */
-function findChrome() {
-  const candidates = [process.env.CHROME_BIN].filter(Boolean);
-  const pwRoot = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
-  if (existsSync(pwRoot)) {
-    for (const entry of readdirSync(pwRoot)) {
-      if (entry.startsWith('chromium-')) candidates.push(join(pwRoot, entry, 'chrome-linux', 'chrome'));
-    }
-  }
-  candidates.push('/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome');
-  const found = candidates.find((p) => p && existsSync(p));
-  if (!found) throw new Error('Could not find Chromium. Set CHROME_BIN and re-run.');
-  return found;
-}
+const browser = await launchBrowser();
 
-const profile = mkdtempSync(join(tmpdir(), 'ss-headers-'));
-const chrome = spawn(findChrome(), [
-  '--headless', '--disable-gpu', '--no-sandbox', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank',
-], { stdio: ['ignore', 'pipe', 'pipe'] });
-
-const wsUrl = await new Promise((res, rej) => {
-  let buf = '';
-  const t = setTimeout(() => rej(new Error('Timed out waiting for DevTools')), 30000);
-  chrome.stderr.on('data', (c) => {
-    buf += c;
-    const m = buf.match(/DevTools listening on (ws:\/\/\S+)/);
-    if (m) { clearTimeout(t); res(m[1]); }
-  });
-  chrome.on('exit', (code) => { clearTimeout(t); rej(new Error(`Chromium exited ${code}`)); });
-});
-
-const ws = new WebSocket(wsUrl);
-await new Promise((r) => ws.addEventListener('open', r, { once: true }));
-
-let seq = 0;
-const pending = new Map();
 const violations = [];
 const consoleErrors = [];
 const failedRequests = [];
 let responsesSeen = 0;
 
-ws.addEventListener('message', (ev) => {
-  const m = JSON.parse(ev.data);
-  if (m.id && pending.has(m.id)) {
-    const p = pending.get(m.id); pending.delete(m.id);
-    m.error ? p.reject(new Error(m.error.message)) : p.resolve(m.result);
-    return;
-  }
+browser.on((m) => {
   switch (m.method) {
     case 'Log.entryAdded': {
       const e = m.params.entry;
@@ -207,32 +148,19 @@ ws.addEventListener('message', (ev) => {
   }
 });
 
-const send = (method, params = {}, sid) => new Promise((resolve, reject) => {
-  const id = ++seq;
-  pending.set(id, { resolve, reject });
-  ws.send(JSON.stringify(sid ? { id, method, params, sessionId: sid } : { id, method, params }));
-});
-
-const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
-const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
-await send('Log.enable', {}, sessionId);
-await send('Runtime.enable', {}, sessionId);
-await send('Network.enable', {}, sessionId);
-await send('Page.enable', {}, sessionId);
-const nav = await send('Page.navigate', { url: base + '/' }, sessionId);
-await new Promise((r) => setTimeout(r, 5000));
+for (const domain of ['Log', 'Runtime', 'Network', 'Page']) {
+  await browser.send(`${domain}.enable`);
+}
+const navError = await browser.navigate(base + '/');
+await sleep(5000);
 
 // What the browser ended up with, rather than what it was sent.
-const { result: domResult } = await send('Runtime.evaluate', {
-  returnByValue: true,
-  expression: `JSON.stringify({
-    title: document.title.trim(),
-    images: document.images.length,
-    textChars: (document.body.innerText || '').trim().length,
-    hasForm: !!document.getElementById('signupForm'),
-  })`,
-}, sessionId);
-const dom = JSON.parse(domResult.value);
+const dom = await browser.evaluate(`JSON.stringify({
+  title: document.title.trim(),
+  images: document.images.length,
+  textChars: (document.body.innerText || '').trim().length,
+  hasForm: !!document.getElementById('signupForm'),
+})`);
 
 // Confirm the headers actually reached the browser rather than trusting the parser.
 const probe = await fetch(base + '/');
@@ -242,9 +170,8 @@ const seen = Object.fromEntries(
     .map((h) => [h, probe.headers.get(h)]),
 );
 
-ws.close(); chrome.kill(); server.close();
-await new Promise((r) => { chrome.once('exit', r); setTimeout(r, 4000); });
-try { rmSync(profile, { recursive: true, force: true }); } catch { /* best effort */ }
+await browser.close();
+site.close();
 
 console.log('Headers served on /:');
 const weak = [];
@@ -261,7 +188,7 @@ const missing = Object.entries(seen).filter(([, v]) => !v).map(([k]) => k);
 /* The floor. Everything above this line reports on what the browser saw; none
    of it can tell a clean page from an absent one. */
 const short = [];
-if (nav.errorText) short.push(`navigation failed: ${nav.errorText}`);
+if (navError) short.push(`navigation failed: ${navError}`);
 if (probe.status !== 200) short.push(`/ answered ${probe.status}, expected 200`);
 if (!probeBody.includes('id="signupForm"')) short.push('/ did not serve the signup form');
 if (responsesSeen < FLOOR.responses) short.push(`only ${responsesSeen} responses, expected at least ${FLOOR.responses}`);
