@@ -53,8 +53,12 @@ jobs:
       - name: Headers and CSP
         run: npm run verify:headers
 
-      # Runs even when the headers check failed: two red checks in one run
-      # beat two round trips to find out about the second.
+      # These run even when an earlier check failed: three red checks in one
+      # run beat three round trips to find out about the next one.
       - name: Render at three viewports
         if: ${{ !cancelled() }}
         run: npm run verify:render
+
+      - name: Signup form
+        if: ${{ !cancelled() }}
+        run: npm run verify:form

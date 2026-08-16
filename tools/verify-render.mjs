@@ -20,14 +20,10 @@
  * Exits non-zero on any failure, naming the element and the numbers.
  */
 
-import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
-import { readFileSync, existsSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';
-import { join, extname, dirname, resolve } from 'node:path';
-import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const VIEWPORTS = [1440, 820, 390];
 const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
 
@@ -45,89 +41,22 @@ const EXPECT = {
   ids: ['tools', 'signup', 'faq', 'signupForm', 'submitBtn'],
 };
 
-const TYPES = {
-  '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
-  '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json',
-  '.xml': 'application/xml', '.txt': 'text/plain', '.json': 'application/json',
-};
-
-const server = createServer((req, res) => {
-  const path = decodeURIComponent(req.url.split('?')[0]);
-  const file = join(ROOT, path === '/' ? 'index.html' : path);
-  if (!file.startsWith(ROOT) || !existsSync(file)) { res.writeHead(404); return res.end('not found'); }
-  res.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream' });
-  res.end(readFileSync(file));
-});
-await new Promise((r) => server.listen(0, '127.0.0.1', r));
-const base = `http://127.0.0.1:${server.address().port}`;
-
-function findChrome() {
-  const candidates = [process.env.CHROME_BIN].filter(Boolean);
-  const pwRoot = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
-  if (existsSync(pwRoot)) {
-    for (const e of readdirSync(pwRoot)) {
-      if (e.startsWith('chromium-')) candidates.push(join(pwRoot, e, 'chrome-linux', 'chrome'));
-    }
-  }
-  candidates.push('/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome');
-  const found = candidates.find((p) => p && existsSync(p));
-  if (!found) throw new Error('Could not find Chromium. Set CHROME_BIN and re-run.');
-  return found;
-}
-
-const profile = mkdtempSync(join(tmpdir(), 'ss-render-'));
-const chrome = spawn(findChrome(), [
-  '--headless', '--disable-gpu', '--no-sandbox', '--hide-scrollbars',
-  '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank',
-], { stdio: ['ignore', 'pipe', 'pipe'] });
-
-const wsUrl = await new Promise((res, rej) => {
-  let buf = '';
-  const t = setTimeout(() => rej(new Error('Timed out waiting for Chromium')), 30000);
-  chrome.stderr.on('data', (c) => {
-    buf += c;
-    const m = buf.match(/DevTools listening on (ws:\/\/\S+)/);
-    if (m) { clearTimeout(t); res(m[1]); }
-  });
-  chrome.on('exit', (code) => { clearTimeout(t); rej(new Error(`Chromium exited ${code}`)); });
-});
-
-const ws = new WebSocket(wsUrl);
-await new Promise((r) => ws.addEventListener('open', r, { once: true }));
-let seq = 0;
-const pending = new Map();
-ws.addEventListener('message', (ev) => {
-  const m = JSON.parse(ev.data);
-  if (m.id && pending.has(m.id)) {
-    const q = pending.get(m.id); pending.delete(m.id);
-    m.error ? q.reject(new Error(m.error.message)) : q.resolve(m.result);
-  }
-});
-const send = (method, params = {}, sid) => new Promise((resolve, reject) => {
-  const id = ++seq;
-  pending.set(id, { resolve, reject });
-  ws.send(JSON.stringify(sid ? { id, method, params, sessionId: sid } : { id, method, params }));
-});
-
-const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
-const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
-await send('Page.enable', {}, sessionId);
+const site = await serveSite();
+const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
+await browser.send('Page.enable');
 
 const failures = [];
 
 for (const width of VIEWPORTS) {
-  await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 }, sessionId);
-  const nav = await send('Page.navigate', { url: base + '/' }, sessionId);
-  if (nav.errorText) {
-    failures.push(`${width}px  navigation failed: ${nav.errorText}`);
+  await browser.send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
+  const navError = await browser.navigate(site.base + '/');
+  if (navError) {
+    failures.push(`${width}px  navigation failed: ${navError}`);
     continue;
   }
-  await new Promise((r) => setTimeout(r, 3000));
+  await sleep(3000);
 
-  const { result } = await send('Runtime.evaluate', {
-    returnByValue: true, awaitPromise: true,
-    expression: `(async () => {
+  const r = await browser.evaluate(`(async () => {
       await document.fonts.ready;
       // Force lazy images in: naturalWidth stays 0 until they load, and an
       // unloaded image cannot be ratio-checked.
@@ -175,10 +104,8 @@ for (const width of VIEWPORTS) {
           ? document.documentElement.scrollWidth + ' > ' + window.innerWidth : null,
         images: document.images.length,
       });
-    })()`,
-  }, sessionId);
+    })()`, { awaitPromise: true });
 
-  const r = JSON.parse(result.value);
   console.log(`${String(width).padStart(4)}px  ${r.images} images  `
     + `stretched: ${r.stretched.length || 'none'}  heading skips: ${r.skips.length || 'none'}  `
     + `overflow: ${r.overflow || 'none'}  `
@@ -220,9 +147,8 @@ for (const width of VIEWPORTS) {
   }
 }
 
-ws.close(); chrome.kill(); server.close();
-await new Promise((r) => { chrome.once('exit', r); setTimeout(r, 4000); });
-try { rmSync(profile, { recursive: true, force: true }); } catch { /* best effort */ }
+await browser.close();
+site.close();
 
 if (failures.length) {
   console.log(`\n${failures.length} failure(s):`);
