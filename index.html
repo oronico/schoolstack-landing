@@ -1205,12 +1205,25 @@ document.addEventListener('DOMContentLoaded', function() {
       body: new URLSearchParams(new FormData(form)).toString()
     })
     .then(function(res) {
-      if (!res.ok) throw new Error('Something went wrong. Please try again.');
+      if (!res.ok) {
+        // Flagged as ours so the catch below knows this text was written for a
+        // person to read. Anything unflagged came from the browser.
+        var rejected = new Error('Something went wrong. Please try again.');
+        rejected.forVisitor = true;
+        throw rejected;
+      }
       form.style.display = 'none';
       successEl.style.display = 'block';
     })
     .catch(function(err) {
-      errorEl.textContent = err.message || 'Something went wrong. Please email allison@schoolstack.ai directly.';
+      // A fetch that never reached the network still carries a message, and it
+      // is a browser string: "Failed to fetch". Showing err.message whenever it
+      // exists meant the friendly line below, and the address in it, could
+      // never appear - the visitor least able to get through was the one told
+      // the least. Only our own wording is shown as-is.
+      errorEl.textContent = (err && err.forVisitor)
+        ? err.message
+        : 'Something went wrong. Please email allison@schoolstack.ai directly.';
       errorEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Get early access';
