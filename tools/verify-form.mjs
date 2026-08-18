@@ -26,6 +26,9 @@
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 
+// Asserted in the error path below, so it is named once rather than inline.
+const SUPPORT_EMAIL = 'allison@schoolstack.ai';
+
 const site = await serveSite();
 const browser = await launchBrowser();
 await browser.send('Page.enable');
@@ -183,6 +186,8 @@ if (bad) {
   console.log(`Server error: error ${bad.errorShown ? 'shown' : 'MISSING'} "${bad.errorText}", `
     + `button ${bad.disabled ? 'STILL DISABLED' : 'usable'}, label "${bad.label}"`);
   check(bad.errorShown && bad.errorText.length > 0, 'a rejected submit showed no error message');
+  check(!/failed to fetch|networkerror|load failed/i.test(bad.errorText),
+    `a rejected submit showed the browser's own words: "${bad.errorText}"`);
   check(!bad.successShown, 'a rejected submit showed the confirmation panel anyway');
   check(bad.formShown, 'a rejected submit hid the form, leaving nothing to retry with');
   check(!bad.disabled, 'the submit button stayed disabled after an error - the visitor cannot retry');
@@ -196,15 +201,17 @@ if (bad) {
 const dropped = await run('network-error');
 if (dropped) {
   console.log(`Network failure: error ${dropped.errorShown ? 'shown' : 'MISSING'} "${dropped.errorText}"`);
-  /* NOTE, found by writing this check: the handler reads
-     `err.message || 'Something went wrong. Please email ... directly.'`, and a
-     fetch that never reached the network still has a message - "Failed to
-     fetch". So the friendly fallback, and the email address in it, cannot be
-     reached, and a visitor who drops off wifi mid-submit reads a raw browser
-     string. Asserting only that SOMETHING is shown, deliberately: making this
-     demand the friendly copy would fail against the page as it ships today.
-     The fix belongs in index.html, not here. */
   check(dropped.errorShown && dropped.errorText.length > 0, 'a failed request showed no error message');
+  /* The message a visitor reads when their connection died has to be one we
+     wrote. This check was added the other way round - it first recorded that
+     the page showed the browser's own "Failed to fetch", because the handler
+     read `err.message || <friendly fallback>` and a failed fetch always has a
+     message, so the fallback and the support address in it were unreachable.
+     The person least able to get through was told the least. */
+  check(!/failed to fetch|networkerror|load failed/i.test(dropped.errorText),
+    `a dropped connection showed the browser's own words: "${dropped.errorText}"`);
+  check(dropped.errorText.includes(SUPPORT_EMAIL),
+    `a dropped connection showed "${dropped.errorText}", which does not offer ${SUPPORT_EMAIL} as a way through`);
   check(!dropped.successShown, 'a failed request showed the confirmation panel anyway');
   check(!dropped.disabled, 'the submit button stayed disabled after a failed request');
   check(dropped.label === dropped.initialLabel,
