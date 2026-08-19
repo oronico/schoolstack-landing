@@ -50,7 +50,13 @@ jobs:
           npx --yes playwright@1.49.1 install --with-deps chromium
           echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
 
+      # First because it needs no browser: a wrong redirect code or a renamed
+      # share card fails in under a second, before Chromium starts.
+      - name: Content, redirects and metadata
+        run: npm run verify:content
+
       - name: Headers and CSP
+        if: ${{ !cancelled() }}
         run: npm run verify:headers
 
       # These run even when an earlier check failed: three red checks in one
