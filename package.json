@@ -6,7 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form",
+    "test:unit": "node --test 'tools/**/*.test.mjs'",
+    "test": "npm run test:unit && npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form",
     "verify:headers": "node tools/verify-headers.mjs",
     "verify:render": "node tools/verify-render.mjs",
     "verify:form": "node tools/verify-form.mjs",
