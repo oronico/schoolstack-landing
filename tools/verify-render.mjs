@@ -88,6 +88,12 @@ for (const width of VIEWPORTS) {
         if (cur - prev > 1) skips.push('h' + prev + ' -> h' + cur + ' at "' + hs[i].textContent.trim().slice(0, 40) + '"');
       }
 
+      // A bare href="#" is a link that goes nowhere: it appends a fragment to
+      // the URL and leaves the visitor where they were. The nav logo shipped
+      // this way, so clicking the wordmark did not go home.
+      const deadAnchors = [...document.querySelectorAll('a[href="#"], a[href=""]')]
+        .map(a => (a.getAttribute('aria-label') || a.textContent.trim() || a.className || 'link').slice(0, 40));
+
       // Every /go/* CTA depends on a matching rule in _redirects. A typo there
       // is a dead call-to-action on a live marketing page, and nothing else
       // would catch it: the link looks perfectly valid in the markup.
@@ -95,7 +101,7 @@ for (const width of VIEWPORTS) {
         .map(a => a.getAttribute('href')))];
 
       return JSON.stringify({
-        stretched, skips, goLinks,
+        stretched, skips, goLinks, deadAnchors,
         title: document.title.trim(),
         h1: document.querySelectorAll('h1').length,
         textChars: (document.body.innerText || '').trim().length,
@@ -120,6 +126,7 @@ for (const width of VIEWPORTS) {
     failures.push(`${width}px  only ${r.textChars} characters of visible copy, expected at least ${EXPECT.minTextChars}`);
   }
   for (const id of r.missingIds) failures.push(`${width}px  #${id} is missing from the page`);
+  for (const a of r.deadAnchors) failures.push(`${width}px  "${a}" links to "#", which goes nowhere`);
   for (const s of r.stretched) {
     failures.push(`${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
   }
