@@ -7,10 +7,11 @@
   },
   "scripts": {
     "test:unit": "node --test 'tools/**/*.test.mjs'",
-    "test": "npm run test:unit && npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form",
+    "test": "npm run test:unit && npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form && npm run verify:a11y",
     "verify:headers": "node tools/verify-headers.mjs",
     "verify:render": "node tools/verify-render.mjs",
     "verify:form": "node tools/verify-form.mjs",
+    "verify:a11y": "node tools/verify-a11y.mjs",
     "verify:content": "node tools/verify-content.mjs",
     "build:images": "node tools/build-images.mjs",
     "fetch:fonts": "node tools/fetch-fonts.mjs",

@@ -73,3 +73,7 @@ jobs:
       - name: Signup form
         if: ${{ !cancelled() }}
         run: npm run verify:form
+
+      - name: Accessibility
+        if: ${{ !cancelled() }}
+        run: npm run verify:a11y

@@ -229,6 +229,24 @@
     .bars.on-navy span:nth-child(2) { background: var(--on-navy-mint); }
     .bars.on-navy span:nth-child(3) { background: var(--on-navy-gold); }
 
+    /* The first thing a keyboard reaches. Off screen until focused, then it
+       sits above the fixed nav so it is visible where it lands. */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 200;
+      background: var(--navy);
+      color: #fff;
+      padding: 0.7rem 1.1rem;
+      border-radius: 0 0 var(--r-sm) 0;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .skip-link:focus {
+      left: 0;
+    }
+
     /* NAV */
     nav {
       position: fixed;
@@ -717,6 +735,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- NAV -->
   <nav>
@@ -730,6 +749,8 @@
       <a href="#signup" class="nav-cta">Get early access</a>
     </div>
   </nav>
+
+  <main id="main">
 
   <!-- HERO -->
   <div class="hero-wrap">
@@ -873,20 +894,20 @@
           <div class="form-row">
             <div class="form-group">
               <label for="firstName">First name *</label>
-              <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+              <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="Your first name" required>
             </div>
             <div class="form-group">
               <label for="lastName">Last name</label>
-              <input type="text" id="lastName" name="lastName" placeholder="Your last name">
+              <input type="text" id="lastName" name="lastName" autocomplete="family-name" placeholder="Your last name">
             </div>
           </div>
           <div class="form-group">
             <label for="email">Email address *</label>
-            <input type="email" id="email" name="email" placeholder="you@yourschool.org" required>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@yourschool.org" required>
           </div>
           <div class="form-group">
             <label for="schoolName">School name</label>
-            <input type="text" id="schoolName" name="schoolName" placeholder="Or what you're planning to call it">
+            <input type="text" id="schoolName" name="schoolName" autocomplete="organization" placeholder="Or what you're planning to call it">
           </div>
 
           <div class="form-row">
@@ -1143,6 +1164,8 @@
   </section>
 
   <!-- FOOTER -->
+  </main>
+
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
