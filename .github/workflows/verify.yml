@@ -50,9 +50,14 @@ jobs:
           npx --yes playwright@1.49.1 install --with-deps chromium
           echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
 
-      # First because it needs no browser: a wrong redirect code or a renamed
-      # share card fails in under a second, before Chromium starts.
+      # These two need no browser and finish in about a second, so they run
+      # before Chromium starts. The unit tests come first of all: they cover
+      # the logic the header check depends on to be telling the truth.
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Content, redirects and metadata
+        if: ${{ !cancelled() }}
         run: npm run verify:content
 
       - name: Headers and CSP
@@ -68,3 +73,7 @@ jobs:
       - name: Signup form
         if: ${{ !cancelled() }}
         run: npm run verify:form
+
+      - name: Accessibility
+        if: ${{ !cancelled() }}
+        run: npm run verify:a11y
