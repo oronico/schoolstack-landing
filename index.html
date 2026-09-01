@@ -284,6 +284,12 @@
 
     /* LAYOUT */
     .section { padding: 4.5rem var(--gutter); max-width: var(--container); margin: 0 auto; }
+    /* A band whose content wants the reading measure rather than the full
+       container takes its heading with it. Without this the heading sat on the
+       container edge while the cards under it stopped 256px short of the right
+       edge, so the page had a ragged right margin going down the screen. Two
+       measures, both centred: --container for grids, --measure for prose. */
+    .section-narrow { max-width: calc(var(--measure) + 2 * var(--gutter)); }
     .section h2 { font-size: clamp(1.65rem, 3.4vw, 2.25rem); margin-bottom: 0.75rem; }
     .section-desc { font-size: 1.02rem; color: var(--muted); max-width: 60ch; margin-bottom: 2.5rem; }
 
@@ -424,7 +430,6 @@
       border: 1px solid var(--hairline);
       border-radius: var(--r-lg);
       padding: 2rem 2.25rem;
-      max-width: 760px;
       margin-bottom: 2.5rem;
       box-shadow: var(--shadow-card);
     }
@@ -468,14 +473,14 @@
 
     /* SCHOOLSTACK BI + SIGNUP (navy) */
     .signup {
-      padding: 4.5rem 2rem;
+      padding: 4.5rem var(--gutter);
       background:
         radial-gradient(62% 70% at 18% 0%,   rgba(56,189,248,0.22), transparent 62%),
         radial-gradient(58% 66% at 86% 18%,  rgba(52,211,153,0.15), transparent 62%),
         radial-gradient(54% 50% at 50% 104%, rgba(251,191,36,0.12), transparent 64%),
         linear-gradient(180deg, #1A2740 0%, #141E33 52%, #111A2C 100%);
     }
-    .bi-hero { max-width: 760px; margin: 0 auto; text-align: center; }
+    .bi-hero { max-width: var(--measure); margin: 0 auto; text-align: center; }
     .bi-status {
       font-weight: 800;
       font-size: 0.74rem;
@@ -491,7 +496,6 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.15rem 1.75rem;
-      max-width: 900px;
       margin: 2.25rem auto 0;
       text-align: left;
     }
@@ -513,7 +517,6 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
-      max-width: 900px;
       margin: 3rem auto 0;
       text-align: left;
     }
@@ -650,7 +653,7 @@
     }
 
     /* FAQ */
-    .faq-grid { display: grid; gap: 0.9rem; max-width: 760px; }
+    .faq-grid { display: grid; gap: 0.9rem; }
     .faq-item { background: var(--panel); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 1.4rem 1.5rem; }
     .faq-item h3 { font-size: 1rem; margin-bottom: 0.4rem; }
     .faq-item p { font-size: 0.94rem; color: var(--muted); }
@@ -1048,7 +1051,7 @@
   </section>
 
   <!-- WHY -->
-  <section class="section">
+  <section class="section section-narrow">
     <div class="label">Why we build</div>
     <h2>Built by a founder, for founders</h2>
     <figure class="founder-quote">
@@ -1092,7 +1095,7 @@
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="faq" style="padding-top: 0;">
+  <section class="section section-narrow" id="faq" style="padding-top: 0;">
     <div class="label">FAQ</div>
     <h2>Common questions</h2>
     <div class="faq-grid" style="margin-top: 1.75rem;">

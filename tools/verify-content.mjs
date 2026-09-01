@@ -86,7 +86,9 @@ const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\
 if (ld) {
   const graph = ld['@graph'] || [ld];
   const faqNode = graph.find((n) => n['@type'] === 'FAQPage');
-  const faqSection = html.match(/<section class="section" id="faq"[\s\S]*?<\/section>/);
+  // Keyed on the id, not the class list: the section's classes are a layout
+  // decision and changing one should not silently stop this check running.
+  const faqSection = html.match(/<section[^>]*\bid="faq"[\s\S]*?<\/section>/);
 
   if (check(faqNode, 'the JSON-LD declares no FAQPage')
       && check(faqSection, 'index.html has no #faq section to compare the FAQPage against')) {
