@@ -146,6 +146,14 @@ which resolves to `.section`'s left edge at every width, no wrapper needed.
 gutter on individual bands, which is how the page previously ended up with
 three different left edges going down a phone screen.
 
+A band that wants the reading measure instead of the full container takes
+`.section-narrow` alongside `.section`, so the heading moves in with the
+content. Do not cap a block inside a container-width band instead: the founder
+quote and the FAQ cards each carried their own `max-width: 760px`, which left
+them hanging 256px short of the right edge while the heading above them sat on
+the container edge, and gave the page a ragged right margin. There are two
+measures and no others.
+
 ## 5. Netlify specifics
 
 - `_headers` carries the CSP and cache rules. It allows **no external origin** —
