@@ -576,7 +576,7 @@
        still clears contrast against every panel colour used here. */
     .footer a:focus-visible,
     .bi-section a:focus-visible,
-    .checkbox-item:focus-within {
+    .consent-item:focus-within {
       outline-color: var(--on-navy-sky);
     }
 
@@ -586,21 +586,6 @@
       border-color: var(--on-navy-sky);
     }
     .form-group select option { background: #0E1626; }
-    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; }
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #0E1626;
-      border: 1px solid #33415C;
-      border-radius: var(--r-sm);
-      padding: 0.55rem 0.75rem;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .checkbox-item:hover { border-color: var(--on-navy-sky); }
-    .checkbox-item input { width: 16px; height: 16px; accent-color: var(--ss-sky); flex-shrink: 0; }
-    .checkbox-item span { font-size: 0.88rem; color: #fff; font-weight: 600; }
     .form-submit {
       background: #fff;
       color: var(--navy);
@@ -729,7 +714,6 @@
     @media (max-width: 400px) {
       .nav-brand svg { height: 22px; }
       .nav-cta { font-size: 0.8rem; padding: 0.45rem 0.8rem; }
-      .checkbox-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1008,18 +992,6 @@
               <option value="Paper or manual tracking">Paper or manual tracking</option>
               <option value="Other">Other</option>
             </select>
-          </div>
-
-          <div class="form-group">
-            <span class="group-label" id="toolsLabel">What would help most?</span>
-            <div class="checkbox-grid" role="group" aria-labelledby="toolsLabel">
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="Space"><span>Space</span></label>
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="Budget"><span>Budget</span></label>
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="Access"><span>Access</span></label>
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="Lending Lab"><span>Lending Lab</span></label>
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="SchoolStack BI"><span>SchoolStack BI</span></label>
-              <label class="checkbox-item"><input type="checkbox" name="interest" value="Not sure yet"><span>Not sure yet</span></label>
-            </div>
           </div>
 
           <div class="form-group">
