@@ -187,13 +187,16 @@ if (orphans.length) {
       Markdown and so bound whoever remembered to read it.
    --------------------------------------------------------------------------- */
 const voice = voiceFaults(html);
-console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), entitlement debt ${voice.debt.length}/${KNOWN_DEBT.entitlement}`);
+const ratchet = KNOWN_DEBT.entitlement === 0
+  ? `entitlement framing: ${voice.debt.length || 'none'}`
+  : `entitlement debt ${voice.debt.length}/${KNOWN_DEBT.entitlement}`;
+console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), ${ratchet}`);
 for (const f of voice.faults) fail(f);
 
 /* Printed on every run, passing or failing. A ratchet nobody reads is a
    ratchet that never turns. */
 if (voice.debt.length) {
-  console.log(`  "deserves" still on ${voice.debt.length} lines - CLAUDE.md retires it:`);
+  console.log(`  "deserves" on ${voice.debt.length} line(s) - CLAUDE.md retires it:`);
   for (const d of voice.debt) console.log(`    line ${d.line}: ${d.text.slice(0, 96)}`);
 }
 
