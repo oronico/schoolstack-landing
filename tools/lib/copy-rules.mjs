@@ -141,11 +141,13 @@ export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
    the check fails the moment one rises. Never raise one to make a run green -
    that is the whole point of the ratchet. */
 export const KNOWN_DEBT = {
-  // Paid off. This was 8 when the ratchet went in: 4 share-metadata fields, the
-  // h1, the hero subtitle, and the "School data deserves real care" FAQ answer
-  // in both its copies. At zero the ratchet is a wall - any new instance fails
-  // the run - which is what it was counting down to. Never raise it.
-  entitlement: 0,
+  // The owner restored this copy deliberately: "deserves" is back in the hero,
+  // the share metadata and the FAQ, on 8 lines. CLAUDE.md section 2 still
+  // retires the word, so the file and the page now disagree - that is the
+  // owner's call to settle, not this check's. Recorded here so the ratchet
+  // stops blocking their decision while still catching a NINTH instance
+  // nobody meant to add.
+  entitlement: 8,
 };
 
 /**

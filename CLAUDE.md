@@ -113,25 +113,22 @@ numbers appear.
 remembered to read this file — and they did not hold: "The back office
 platform your school deserves." reached production through two green runs.
 
-`deserves` went in as a ratchet rather than a hard failure, because taking it
-off the page was a positioning decision for the owner rather than a side
-effect of adding a test. `KNOWN_DEBT.entitlement` recorded the count, every
-run printed the remaining lines, and the check failed when the count **rose**.
+`deserves` is a ratchet rather than a hard failure. `KNOWN_DEBT.entitlement`
+records how many lines carry it, every run prints them, and the check fails
+when the count **rises**.
 
-**That debt is now paid: the count is 0 and the ratchet is a wall.** Any new
-`deserves` fails the run. Never raise `KNOWN_DEBT` to get a run green - the
-mechanism is still there for the next rule that needs to be paid down
-gradually, not for reopening this one.
-
-The lines that replaced it follow the role each one is given above: the
-campaign line carries the share card, and the hero takes the positioning line
-with the Emotional lift this section asks for.
+The count was taken to 0 and then restored to 8 at the owner's instruction:
+the original hero, share metadata and FAQ copy are back on the page. **So this
+section and the live page now disagree** - section 2 above retires the word,
+the page uses it in eight places. Settling that is the owner's call, and until
+they do, the check tracks the page rather than the preference. It still
+catches a ninth instance nobody meant to add.
 
 | Surface | Reads |
 | --- | --- |
-| `<h1>` | The back office that keeps small schools ready. |
-| Hero subtitle | Know your numbers, and show them ... so you **stay ready** for the lender, the accreditor, and the board. |
-| `og:title`, `twitter:title`, OG card | Know your numbers. Show your numbers. |
+| `<h1>` | The back office platform your school deserves. |
+| Hero subtitle | Small doesn't mean you aren't serious. You deserve tools that match ... |
+| `og:title`, `twitter:title`, OG card | Small school? You still deserve real tools. |
 
 ## 3. Checks — run these, they have each caught a real bug
 

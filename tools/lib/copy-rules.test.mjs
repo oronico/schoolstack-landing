@@ -142,28 +142,26 @@ test('the disclaimer counts even when the footer wraps it across lines', () => {
    The ratchet
    --------------------------------------------------------------------------- */
 
-test('the ratchet is closed: KNOWN_DEBT is zero', () => {
-  // It was 8. The copy was rewritten, so the wall is up. If this ever needs
-  // raising, the copy is going backwards.
-  assert.equal(KNOWN_DEBT.entitlement, 0);
+test('the ratchet records the debt the owner chose to keep', () => {
+  // Was 0 for a few hours. The owner restored the original hero and share
+  // copy, which puts "deserves" back on 8 lines. CLAUDE.md section 2 still
+  // retires the word: the file and the page disagree, and settling that is
+  // the owner's call. This number tracks the page, not the preference.
+  assert.equal(KNOWN_DEBT.entitlement, 8);
 });
 
-test('any entitlement framing is now a fault, and names its line', () => {
+test('entitlement framing is reported as debt, not as a fault, while debt remains', () => {
   const { faults, debt } = voiceFaults(`${clean}\n<p>the tools you deserve</p>`);
+  assert.deepEqual(faults, []);
   assert.equal(debt.length, 1);
-  assert.equal(faults.length, 1);
-  assert.match(faults[0], /entitlement framing/);
-  assert.match(faults[0], /line\(s\) 2/);
+  assert.equal(debt[0].line, 2);
 });
 
-test('the ratchet still counts, so a future debt can be recorded and paid down', () => {
-  // The mechanism outlives this one rule: debt entries are always returned,
-  // whatever the recorded ceiling, so the next rule to need a ratchet can use
-  // the same shape rather than inventing one.
-  const lines = Array.from({ length: 3 }, () => '<p>you deserve better</p>').join('\n');
-  const { debt } = voiceFaults(`${clean}\n${lines}`);
-  assert.equal(debt.length, 3);
-  assert.deepEqual(debt.map((d) => d.line), [2, 3, 4]);
+test('the ratchet fails when the count rises above what is recorded', () => {
+  const lines = Array.from({ length: KNOWN_DEBT.entitlement + 1 }, () => '<p>you deserve better</p>').join('\n');
+  const { faults } = voiceFaults(`${clean}\n${lines}`);
+  assert.equal(faults.length, 1);
+  assert.match(faults[0], /up from the recorded/);
 });
 
 test('ENTITLEMENT_WORDS matches the forms that actually appear', () => {
