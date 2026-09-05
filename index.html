@@ -122,7 +122,7 @@
             "name": "Is my data safe?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We handle school data with real care. We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are."
+              "text": "We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are."
             }
           }
         ]
@@ -313,6 +313,9 @@
       box-shadow: var(--shadow-card);
     }
     .hero h1 { font-size: clamp(2.05rem, 5vw, 3.2rem); letter-spacing: -0.02em; margin-bottom: 1.1rem; }
+    /* No element carries this today: the hero subtitle was removed rather than
+       replaced, because the copy that sat here was not the owner's. The rule
+       stays so the slot is ready the moment there is a line to put in it. */
     .hero .subtitle { font-size: 1.12rem; color: var(--muted); max-width: 56ch; margin: 0 auto 1.9rem; }
     .hero-cta { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .hero .boilerplate { font-size: 0.9rem; color: var(--muted); margin-top: 1.5rem; }
@@ -751,11 +754,7 @@
       <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
       Free to use now. SchoolStack BI launches in 2027.
     </div>
-    <h1>The back office that keeps small schools ready.</h1>
-    <p class="subtitle">
-      Know your numbers, and show them. Four free tools keep the picture current, so you
-      <strong>stay ready</strong> for the lender, the accreditor, and the board.
-    </p>
+    <h1>The back office small schools run on.</h1>
     <div class="hero-cta">
       <a href="#signup" class="btn-primary">
         Sign up for early access
@@ -873,12 +872,12 @@
 
     <div class="signup-form-wrap">
       <div class="label">Design partners</div>
-      <h3>Help shape what we build</h3>
+      <h3>Sign up now, use the free tools today</h3>
       <p>
-        The SchoolStack platform launches in 2027, and we need design partners to help us
-        be ready for a smooth launch in the new year. Sign up below if you want first access
-        and the opportunity to shape what we are building for small schools across the
-        country. Until then the free tools above are yours to use at no cost.
+        The SchoolStack platform launches in 2027. We need design partners to help us ensure
+        we are ready for a smooth launch in the new year. Sign up here if you want first
+        access and the opportunity to shape what we are building for small schools across
+        the country. Until then the free tools above are yours to use at no cost.
       </p>
       <div>
         <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
@@ -934,7 +933,7 @@
         </div>
       </div>
 
-      <p class="signup-signoff">Because schools that know their numbers outlast those that don't.</p>
+      <p class="signup-signoff">Schools that know their numbers outlast schools that don't.</p>
     </div>
   </section>
 
@@ -1011,7 +1010,7 @@
       </div>
       <div class="faq-item">
         <h3>Is my data safe?</h3>
-        <p>We handle school data with real care. We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are.</p>
+        <p>We follow FERPA expectations for student information, encrypt sensitive data at rest, and are working toward SOC 2. Ask us for specifics and we will tell you plainly where we are.</p>
       </div>
     </div>
   </section>
