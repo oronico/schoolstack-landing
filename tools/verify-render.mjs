@@ -100,8 +100,41 @@ for (const width of VIEWPORTS) {
       const goLinks = [...new Set([...document.querySelectorAll('a[href^="/go/"]')]
         .map(a => a.getAttribute('href')))];
 
+      // The brand faces, checked as USED rather than as requested. A drift
+      // between the family names in fonts/fonts.css and the ones :root asks
+      // for renders the whole site in Trebuchet MS: the files still load, so
+      // no request 4xxs and every other check stays green. This is the same
+      // silent fallback that once shipped the OG card in DejaVu Sans.
+      //
+      // NOT document.fonts.check(): it answers "could this text be painted",
+      // and a fallback always can, so it returned true for a family name that
+      // did not exist. Two questions that do discriminate:
+      //   1. is a face with that family actually in the loaded set, and
+      //   2. does the text measure differently from the same text in the
+      //      generic fallback alone?
+      // Both must hold. (1) alone misses a face that loads but is never
+      // applied; (2) alone would trip on a face with fallback-like metrics.
+      const ctx = document.createElement('canvas').getContext('2d');
+      const SAMPLE = 'Handgloves 0123456789';
+      const widthIn = (stack) => { ctx.font = '700 40px ' + stack; return ctx.measureText(SAMPLE).width; };
+
+      const fontsApplied = {};
+      for (const [role, sel] of [['display', 'h1'], ['body', 'p']]) {
+        const el = document.querySelector(sel);
+        const want = getComputedStyle(document.documentElement)
+          .getPropertyValue('--font-' + role).trim().split(',')[0].replace(/['"]/g, '');
+        const faces = [...document.fonts].filter((f) => f.family === want);
+        fontsApplied[role] = {
+          want,
+          inFaceSet: faces.length > 0,
+          faceStatus: faces.map((f) => f.status).join(',') || 'none',
+          distinctFromFallback: !!want && widthIn('"' + want + '", monospace') !== widthIn('monospace'),
+          computed: el ? getComputedStyle(el).fontFamily.split(',')[0].replace(/['"]/g, '') : null,
+        };
+      }
+
       return JSON.stringify({
-        stretched, skips, goLinks, deadAnchors,
+        stretched, skips, goLinks, deadAnchors, fontsApplied,
         title: document.title.trim(),
         h1: document.querySelectorAll('h1').length,
         textChars: (document.body.innerText || '').trim().length,
@@ -125,6 +158,19 @@ for (const width of VIEWPORTS) {
   if (r.textChars < EXPECT.minTextChars) {
     failures.push(`${width}px  only ${r.textChars} characters of visible copy, expected at least ${EXPECT.minTextChars}`);
   }
+  const ok = (f) => f.inFaceSet && f.distinctFromFallback && f.computed === f.want;
+  console.log('        fonts  ' + Object.entries(r.fontsApplied)
+    .map(([role, f]) => `${role}: ${f.computed} [${f.faceStatus}]${ok(f) ? '' : ' FALLING BACK'}`).join('  '));
+  for (const [role, f] of Object.entries(r.fontsApplied)) {
+    if (!f.inFaceSet) {
+      failures.push(`${width}px  --font-${role} asks for '${f.want}' but no @font-face with that family is loaded (faces: ${f.faceStatus}) - the page is painting in a fallback`);
+    } else if (!f.distinctFromFallback) {
+      failures.push(`${width}px  --font-${role} '${f.want}' measures identically to the generic fallback - it is not being applied`);
+    } else if (f.computed !== f.want) {
+      failures.push(`${width}px  --font-${role} is '${f.want}' but the element computes to '${f.computed}'`);
+    }
+  }
+
   for (const id of r.missingIds) failures.push(`${width}px  #${id} is missing from the page`);
   for (const a of r.deadAnchors) failures.push(`${width}px  "${a}" links to "#", which goes nowhere`);
   for (const s of r.stretched) {

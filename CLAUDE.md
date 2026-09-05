@@ -108,13 +108,39 @@ Other standing rules: no fake user counts, no em dashes in generated copy, and
 `Estimates are for planning only and are not loan eligibility` stays wherever
 numbers appear.
 
+**These rules are now code.** `tools/lib/copy-rules.mjs` enforces them and
+`npm run verify:content` runs it, because until then they bound only whoever
+remembered to read this file — and they did not hold: "The back office
+platform your school deserves." reached production through two green runs.
+
+One rule is a ratchet rather than a hard failure. `deserves` is on the page in
+eight places, and taking it off is a positioning decision for the owner, not a
+side effect of adding a test. So `KNOWN_DEBT.entitlement` records the count,
+every run prints the remaining lines, and the check fails when the count
+**rises**. Lower it as the copy improves. Never raise it to get a run green.
+
 ## 3. Checks — run these, they have each caught a real bug
 
 ```
+npm test                        # everything below, in order, plus the feature suite
+node tools/verify-content.mjs   # files: redirects, structured data, voice rules, anchors, fonts
 node tools/verify-render.mjs    # layout: stretched images, heading order, overflow, dead CTAs
 node tools/verify-headers.mjs   # the CSP does not block the page it protects
 node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts loaded
+npx cucumber-js                 # the same checks, read as specifications
 ```
+
+Cucumber is the repo's **only** dependency, and it is a devDependency: it
+never reaches a browser, so the CSP goes on forbidding every external origin
+and the site still ships as one static file. `node_modules/` is gitignored
+because Netlify publishes from the repo root — anything committed there is
+served.
+
+The feature files under `features/` are a readable front door, not a second
+suite. Their steps import the same modules under `tools/lib/` that the scripts
+import, so nothing is asserted by two implementations that could drift. When
+you add a check, put the logic in `tools/lib/`, call it from the script, and
+add the step only if the rule is worth stating in English.
 
 Why each exists:
 
@@ -129,6 +155,20 @@ Why each exists:
 - **build-images** — the OG card once shipped in DejaVu Sans because the
   render sandbox could not reach Google Fonts and the failure was silent. The
   build now asserts the expected families actually loaded and exits non-zero.
+- **verify-content** — the file-level rules no browser can see: a 301 where a
+  302 is load-bearing, JSON-LD that has drifted from the visible FAQ, and now
+  the voice rules from section 2 above. It also derives anchors from the links
+  rather than checking a hardcoded list, so a nav item pointing at an id
+  nobody wrote fails instead of silently scrolling nowhere.
+- **the font pair** — `verify-content` checks the families `:root` asks for
+  against the `@font-face` families `fonts/fonts.css` serves; `verify-render`
+  then asks the browser which face it actually painted. Both halves are needed.
+  A name drift between those two files loads every file with a 200 and paints
+  the whole site in Trebuchet MS, which is the page-wide version of the DejaVu
+  Sans incident above. Note that `document.fonts.check()` cannot answer this:
+  it reports whether text *could* be painted, and a fallback always can, so it
+  returns true for a family that does not exist. The check compares the loaded
+  face set and canvas metrics instead.
 
 ## 4. Layout: one measure
 

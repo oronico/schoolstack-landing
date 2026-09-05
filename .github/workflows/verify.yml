@@ -32,6 +32,13 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+          cache: npm
+
+      # The site itself still has no runtime dependency - these are dev tools
+      # (Cucumber and its Gherkin parser) that never reach a browser, so the
+      # CSP can go on forbidding every external origin.
+      - name: Install dev dependencies
+        run: npm ci
 
       # findChrome() in both scripts reads CHROME_BIN first, then the
       # Playwright cache, then the usual system paths. The runner image
@@ -77,3 +84,10 @@ jobs:
       - name: Accessibility
         if: ${{ !cancelled() }}
         run: npm run verify:a11y
+
+      # The Gherkin suite last, because it is the slowest: it drives the same
+      # shared modules as the checks above, so a failure here after those pass
+      # points at a step definition rather than at the site.
+      - name: Feature suite
+        if: ${{ !cancelled() }}
+        run: npm run test:features

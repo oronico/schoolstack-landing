@@ -25,6 +25,7 @@
  */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
+import { scenario } from './lib/form-scenario.mjs';
 
 // Asserted in the error path below, so it is named once rather than inline.
 const SUPPORT_EMAIL = 'allison@schoolstack.ai';
@@ -104,53 +105,6 @@ if (await load()) {
    window.fetch is replaced per scenario, so the page's own handler runs
    untouched and every assertion is about what it did.
    --------------------------------------------------------------------------- */
-const FILL = `
-  form.querySelector('#firstName').value = 'Ada';
-  form.querySelector('#email').value = 'ada@example.org';
-  form.querySelector('[name="emailConsent"]').checked = true;
-`;
-
-function scenario(mode, { fill = true } = {}) {
-  return `(async () => {
-    const form = document.getElementById('signupForm');
-    const btn = document.getElementById('submitBtn');
-    const errorEl = document.getElementById('formError');
-    const successEl = document.getElementById('formSuccess');
-    const initialLabel = btn.textContent;
-    const calls = [];
-
-    window.fetch = (url, opts = {}) => {
-      const headers = opts.headers || {};
-      calls.push({
-        url: String(url),
-        method: opts.method,
-        contentType: headers['Content-Type'] || headers['content-type'],
-        body: String(opts.body || ''),
-      });
-      if ('${mode}' === 'ok') return Promise.resolve({ ok: true, status: 200 });
-      if ('${mode}' === 'server-error') return Promise.resolve({ ok: false, status: 500 });
-      if ('${mode}' === 'network-error') return Promise.reject(new TypeError('Failed to fetch'));
-      return new Promise(() => {});          // in flight, never settles
-    };
-
-    ${fill ? FILL : ''}
-    btn.click();
-    await new Promise((r) => setTimeout(r, 150));
-
-    const shown = (el) => getComputedStyle(el).display !== 'none';
-    return JSON.stringify({
-      calls,
-      initialLabel,
-      label: btn.textContent,
-      disabled: btn.disabled,
-      formShown: shown(form),
-      successShown: shown(successEl),
-      errorShown: shown(errorEl),
-      errorText: errorEl.textContent.trim(),
-    });
-  })()`;
-}
-
 const run = async (mode, opts) => (await load())
   ? browser.evaluate(scenario(mode, opts), { awaitPromise: true })
   : null;
