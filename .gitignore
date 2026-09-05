@@ -1,0 +1,9 @@
+# Netlify publishes this repo from its root: what is committed is what ships.
+# So an installed dependency tree here is not just clutter, it is 87 packages
+# served from the CDN. The site itself still has no runtime dependency - the
+# only ones are dev tools (Cucumber) that never reach a browser.
+node_modules/
+
+# Local run output.
+*.log
+.DS_Store

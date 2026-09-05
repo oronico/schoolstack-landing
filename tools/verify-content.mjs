@@ -27,6 +27,8 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
+import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies } from './lib/page-audit.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -178,6 +180,45 @@ if (orphans.length) {
   const kb = orphans.reduce((n, p) => n + statSync(join(ROOT, p)).size, 0) / 1024;
   console.log(`\nUnreferenced in assets/ and images/: ${orphans.length} files, ${kb.toFixed(0)} KB (not a failure)`);
   for (const o of orphans) console.log('  - ' + o);
+}
+
+/* ---------------------------------------------------------------------------
+   4. Voice. The rules in CLAUDE.md section 2, which until now lived only in
+      Markdown and so bound whoever remembered to read it.
+   --------------------------------------------------------------------------- */
+const voice = voiceFaults(html);
+console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), entitlement debt ${voice.debt.length}/${KNOWN_DEBT.entitlement}`);
+for (const f of voice.faults) fail(f);
+
+/* Printed on every run, passing or failing. A ratchet nobody reads is a
+   ratchet that never turns. */
+if (voice.debt.length) {
+  console.log(`  "deserves" still on ${voice.debt.length} lines - CLAUDE.md retires it:`);
+  for (const d of voice.debt) console.log(`    line ${d.line}: ${d.text.slice(0, 96)}`);
+}
+
+/* ---------------------------------------------------------------------------
+   5. Structure nothing else derives: anchors that scroll nowhere, outbound
+      links missing rel=noopener, and the font families the page asks for
+      against the ones fonts.css actually serves.
+   --------------------------------------------------------------------------- */
+const dangling = danglingAnchors(html);
+const unsafe = unsafeBlankLinks(html);
+const wanted = declaredFontFamilies(html);
+const served = servedFontFamilies(read('fonts/fonts.css'));
+
+console.log(`Anchors: ${dangling.length || 'none'} dangling  |  target=_blank without noopener: ${unsafe.length || 'none'}`);
+console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.css serves ${[...served].join(' + ')}`);
+
+for (const d of dangling) {
+  fail(`href="#${d.target}" on line(s) ${d.lines.join(', ')} points at an id that does not exist - the link scrolls nowhere`);
+}
+for (const u of unsafe) {
+  fail(`line ${u.line} opens a new tab without rel="noopener": ${u.tag}`);
+}
+for (const [role, family] of Object.entries(wanted)) {
+  check(served.has(family),
+    `--font-${role} asks for '${family}' but fonts/fonts.css serves no such @font-face - the page would render in the fallback with every other check green`);
 }
 
 if (failures.length) {

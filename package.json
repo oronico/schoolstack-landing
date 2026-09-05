@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test:unit": "node --test 'tools/**/*.test.mjs'",
-    "test": "npm run test:unit && npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form && npm run verify:a11y",
+    "test:features": "cucumber-js",
+    "test": "npm run test:unit && npm run verify:content && npm run verify:headers && npm run verify:render && npm run verify:form && npm run verify:a11y && npm run test:features",
     "verify:headers": "node tools/verify-headers.mjs",
     "verify:render": "node tools/verify-render.mjs",
     "verify:form": "node tools/verify-form.mjs",
@@ -16,5 +17,8 @@
     "build:images": "node tools/build-images.mjs",
     "fetch:fonts": "node tools/fetch-fonts.mjs",
     "optimize:images": "node tools/optimize-images.mjs"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.2.1"
   }
 }
