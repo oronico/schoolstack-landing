@@ -113,11 +113,25 @@ numbers appear.
 remembered to read this file — and they did not hold: "The back office
 platform your school deserves." reached production through two green runs.
 
-One rule is a ratchet rather than a hard failure. `deserves` is on the page in
-eight places, and taking it off is a positioning decision for the owner, not a
-side effect of adding a test. So `KNOWN_DEBT.entitlement` records the count,
-every run prints the remaining lines, and the check fails when the count
-**rises**. Lower it as the copy improves. Never raise it to get a run green.
+`deserves` went in as a ratchet rather than a hard failure, because taking it
+off the page was a positioning decision for the owner rather than a side
+effect of adding a test. `KNOWN_DEBT.entitlement` recorded the count, every
+run printed the remaining lines, and the check failed when the count **rose**.
+
+**That debt is now paid: the count is 0 and the ratchet is a wall.** Any new
+`deserves` fails the run. Never raise `KNOWN_DEBT` to get a run green - the
+mechanism is still there for the next rule that needs to be paid down
+gradually, not for reopening this one.
+
+The lines that replaced it follow the role each one is given above: the
+campaign line carries the share card, and the hero takes the positioning line
+with the Emotional lift this section asks for.
+
+| Surface | Reads |
+| --- | --- |
+| `<h1>` | The back office that keeps small schools ready. |
+| Hero subtitle | Know your numbers, and show them ... so you **stay ready** for the lender, the accreditor, and the board. |
+| `og:title`, `twitter:title`, OG card | Know your numbers. Show your numbers. |
 
 ## 3. Checks — run these, they have each caught a real bug
 

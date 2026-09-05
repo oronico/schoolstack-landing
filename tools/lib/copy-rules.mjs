@@ -141,10 +141,11 @@ export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
    the check fails the moment one rises. Never raise one to make a run green -
    that is the whole point of the ratchet. */
 export const KNOWN_DEBT = {
-  // "deserves" on 8 lines: 4 share-metadata fields, the h1, the hero subtitle,
-  // and the "School data deserves real care" FAQ answer in both its copies
-  // (visible and JSON-LD, which must stay identical to each other).
-  entitlement: 8,
+  // Paid off. This was 8 when the ratchet went in: 4 share-metadata fields, the
+  // h1, the hero subtitle, and the "School data deserves real care" FAQ answer
+  // in both its copies. At zero the ratchet is a wall - any new instance fails
+  // the run - which is what it was counting down to. Never raise it.
+  entitlement: 0,
 };
 
 /**
@@ -181,9 +182,12 @@ export function voiceFaults(html) {
      when the count grows past what was recorded. */
   const debt = locate(copy, ENTITLEMENT_WORDS);
   if (debt.length > KNOWN_DEBT.entitlement) {
-    faults.push(
-      `entitlement framing ("deserves") is on ${debt.length} lines, up from the recorded ${KNOWN_DEBT.entitlement}. ` +
-      'CLAUDE.md retires it; do not raise KNOWN_DEBT to get green.');
+    faults.push(KNOWN_DEBT.entitlement === 0
+      // The debt is paid, so this reads as the plain rule it now is.
+      ? `entitlement framing ("deserves") is back, on line(s) ${debt.map((d) => d.line).join(', ')}. `
+        + 'CLAUDE.md retires it: name the value received, not what the reader is owed.'
+      : `entitlement framing ("deserves") is on ${debt.length} lines, up from the recorded ${KNOWN_DEBT.entitlement}. `
+        + 'CLAUDE.md retires it; do not raise KNOWN_DEBT to get green.');
   }
 
   return { faults, debt };
