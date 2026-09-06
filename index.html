@@ -536,8 +536,11 @@
     .signup-form-wrap h3 { color: #fff; text-align: center; font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; margin-bottom: 0.5rem; }
     .signup-form-wrap h3 { margin-bottom: 1.4rem; }
     /* Fixed nav: a hash link to the form heading would land it under the bar
-       without this. The extra room keeps the eyebrow above it in view. */
+       without this. The extra room keeps the eyebrow above it in view. The
+       legacy #signup anchor sits one element lower, on the form wrapper, so
+       it needs more room still: enough for the nav and the heading above. */
     #apply-heading { scroll-margin-top: 6.5rem; }
+    #signup { scroll-margin-top: 9rem; }
     /* The honeypot. display:none keeps it out of the tab order and away from
        screen readers as well as off the screen; only a bot filling every
        field it can find in the source will reach it. */
