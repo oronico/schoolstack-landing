@@ -280,6 +280,10 @@
     .section-narrow { max-width: calc(var(--measure) + 2 * var(--gutter)); }
     .section h2 { font-size: clamp(1.65rem, 3.4vw, 2.25rem); margin-bottom: 0.75rem; }
     .section-desc { font-size: 1.02rem; color: var(--muted); max-width: 60ch; margin-bottom: 2.5rem; }
+    /* Inside a narrow band the measure already is the reading width, so the
+       paragraph runs to the same right edge as the card or grid beside it.
+       Capped at 60ch it stopped short and left the band ragged. */
+    .section-narrow .section-desc { max-width: none; }
 
     /* HERO */
     .hero-wrap {
@@ -423,7 +427,7 @@
       border: 1px solid var(--hairline);
       border-radius: var(--r-lg);
       padding: 2rem 2.25rem;
-      margin-bottom: 2.5rem;
+      margin: 1.75rem 0 2.5rem;
       box-shadow: var(--shadow-card);
     }
     .founder-quote .bars { margin-bottom: 1.1rem; }
@@ -447,13 +451,14 @@
     .founder-quote figcaption span { color: var(--muted); display: block; max-width: 62ch; line-height: 1.55; }
 
     /* THE PLATFORM: the six areas named in the paragraph above them, as a
-       grid so the band has shape at a glance. Muted text, brand-hue dots. */
+       grid so the band has shape at a glance. The band takes the reading
+       measure (.section-narrow), so the tiles fill it edge to edge in three
+       equal columns rather than stopping short of a container-width heading. */
     .platform-areas {
       list-style: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem 1.25rem;
-      max-width: 60ch;
+      gap: 0.8rem 1rem;
       margin-top: -1rem;
     }
     .platform-areas li {
@@ -466,6 +471,7 @@
       padding: 0.65rem 0.9rem;
       font-weight: 700;
       font-size: 0.93rem;
+      white-space: nowrap;
     }
     .platform-areas li::before {
       content: '';
@@ -842,7 +848,7 @@
   </section>
 
   <!-- THE PLATFORM -->
-  <section class="section" id="platform">
+  <section class="section section-narrow" id="platform" style="padding-top: 0;">
     <div class="label">Arriving 2027</div>
     <h2>One back office, built for small schools</h2>
     <p class="section-desc">
