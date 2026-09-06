@@ -278,11 +278,17 @@
        edge, so the page had a ragged right margin going down the screen. Two
        measures, both centred: --container for grids, --measure for prose. */
     .section-narrow { max-width: calc(var(--measure) + 2 * var(--gutter)); }
+    /* One axis. The hero and the cohort band are centred, so every other
+       band's header is too: eyebrow, heading and intro sit on the page's
+       centre line, and the grid or cards below hang from the same line.
+       Left-aligned headers over a capped intro left the right half of each
+       header row empty and gave the page four alignments going down. Body
+       text inside cards and tiles stays left-aligned. */
+    .section .label, .section h2, .section-desc, .platform-note { text-align: center; }
     .section h2 { font-size: clamp(1.65rem, 3.4vw, 2.25rem); margin-bottom: 0.75rem; }
-    .section-desc { font-size: 1.02rem; color: var(--muted); max-width: 60ch; margin-bottom: 2.5rem; }
+    .section-desc { font-size: 1.02rem; color: var(--muted); max-width: 60ch; margin: 0 auto 2.5rem; }
     /* Inside a narrow band the measure already is the reading width, so the
-       paragraph runs to the same right edge as the card or grid beside it.
-       Capped at 60ch it stopped short and left the band ragged. */
+       paragraph runs to the same edges as the card or grid beside it. */
     .section-narrow .section-desc { max-width: none; }
 
     /* HERO */
@@ -294,7 +300,7 @@
         var(--ground);
       border-bottom: 1px solid var(--hairline);
     }
-    .hero { padding: 8rem var(--gutter) 0; max-width: var(--measure); margin: 0 auto; text-align: center; }
+    .hero { padding: 8rem var(--gutter) 3rem; max-width: var(--measure); margin: 0 auto; text-align: center; }
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -459,7 +465,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.8rem 1rem;
-      margin-top: -1rem;
+      margin-top: -0.75rem;
     }
     .platform-areas li {
       display: flex;
@@ -716,7 +722,7 @@
       body { font-size: 16px; }
       nav { padding-block: 0.65rem; }
       .nav-links a:not(.nav-cta) { display: none; }
-      .hero { padding: 6.75rem var(--gutter) 0; }
+      .hero { padding: 6.75rem var(--gutter) 2.25rem; }
       .section { padding: 3rem var(--gutter); }
       .signup { padding: 3rem var(--gutter); }
       .stack-grid { grid-template-columns: 1fr; }
@@ -1072,7 +1078,7 @@
 
   <!-- PARTNERS -->
   <section class="section backing" style="padding-top: 0;">
-    <div class="label" style="text-align:center;">Our partners</div>
+    <div class="label">Our partners</div>
     <h2>Backed by organizations that believe in education</h2>
     <div class="partner-row">
       <a class="partner" href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
@@ -1088,7 +1094,7 @@
 
   <!-- FOUNDATION -->
   <section class="section backing" style="padding-top: 0;">
-    <div class="label" style="text-align:center;">Who is behind this</div>
+    <div class="label">Who is behind this</div>
     <a class="bhif-mark" href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">
       <img src="images/bhif-logo.webp" alt="Building Hope Impact Fund" width="400" height="400">
     </a>
