@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict';
 import { When, Then } from '@cucumber/cucumber';
 import { ctx, loadPage } from '../support/world.mjs';
-import { scenario } from '../../tools/lib/form-scenario.mjs';
+import { scenario, ANSWERS } from '../../tools/lib/form-scenario.mjs';
 
 const MODE_FOR = {
   'the submission succeeds': 'ok',
@@ -54,6 +54,18 @@ Then('it declares a honeypot field', async function () {
   assert.ok(exists, `the honeypot is declared as "${field}" but no such input exists`);
 });
 
+Then('the {string} field is not required', async function (name) {
+  const required = await ctx.browser.evaluate(
+    `JSON.stringify(!!document.querySelector('#signupForm [name=${JSON.stringify(name)}][required]'))`);
+  assert.equal(required, false, `${name} is required; it must stay optional and separate from the application`);
+});
+
+Then('the {string} field is required', async function (name) {
+  const required = await ctx.browser.evaluate(
+    `JSON.stringify(!!document.querySelector('#signupForm [name=${JSON.stringify(name)}][required]'))`);
+  assert.equal(required, true, `${name} is not required`);
+});
+
 /* --- what the page did ----------------------------------------------------- */
 
 Then('exactly one request is sent', function () {
@@ -86,6 +98,12 @@ Then('the form is replaced by the confirmation', function () {
 Then('an error is shown', function () {
   assert.equal(this.result.errorShown, true, 'no error was shown');
   assert.ok(this.result.errorText.length, 'the error element is empty');
+});
+
+Then("the visitor's answers are still in the form", function () {
+  for (const [name, value] of Object.entries(ANSWERS)) {
+    assert.equal(this.result.values[name], value, `${name} was cleared by the error path`);
+  }
 });
 
 Then('the button is usable again with its original label', function () {

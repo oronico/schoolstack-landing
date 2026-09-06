@@ -16,7 +16,7 @@
  *   FAULTS are hard failures. The page satisfies all of them today, so this
  *   locks in wins rather than reporting an outstanding mess.
  *
- *   DEBT is the ratchet. "deserves" is on the page eight times and taking it
+ *   DEBT is the ratchet. "deserve" is in the hero headline and taking it
  *   off is a positioning decision for the owner, not a side effect of adding
  *   a test. So the count is recorded here and the check fails when it RISES.
  *   It can only go down. Every run prints the remaining instances by line, so
@@ -141,13 +141,14 @@ export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
    the check fails the moment one rises. Never raise one to make a run green -
    that is the whole point of the ratchet. */
 export const KNOWN_DEBT = {
-  // The owner restored this copy deliberately: "deserves" is back in the hero,
-  // the share metadata and the FAQ, on 8 lines. CLAUDE.md section 2 still
-  // retires the word, so the file and the page now disagree - that is the
-  // owner's call to settle, not this check's. Recorded here so the ratchet
-  // stops blocking their decision while still catching a NINTH instance
+  // One line: the hero headline the owner specified for the September 2026
+  // redesign, "The back office small schools deserve. Built with the people
+  // who run them." The share metadata and FAQ instances went with that
+  // redesign. CLAUDE.md section 2 still retires the word, so the file and the
+  // page disagree on this one line - that is the owner's call to settle, not
+  // this check's. Recorded here so the ratchet still catches a SECOND instance
   // nobody meant to add.
-  entitlement: 8,
+  entitlement: 1,
 };
 
 /**

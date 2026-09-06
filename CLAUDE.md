@@ -117,18 +117,16 @@ platform your school deserves." reached production through two green runs.
 records how many lines carry it, every run prints them, and the check fails
 when the count **rises**.
 
-The count was taken to 0 and then restored to 8 at the owner's instruction:
-the original hero, share metadata and FAQ copy are back on the page. **So this
-section and the live page now disagree** - section 2 above retires the word,
-the page uses it in eight places. Settling that is the owner's call, and until
-they do, the check tracks the page rather than the preference. It still
-catches a ninth instance nobody meant to add.
+The count was taken to 0, restored to 8 at the owner's instruction, and
+brought to 1 by the September 2026 homepage redesign, whose hero headline the
+owner specified. **So this section and the live page still disagree on one
+line** - section 2 above retires the word, the page uses it once. Settling
+that is the owner's call, and until they do, the check tracks the page rather
+than the preference. It still catches a second instance nobody meant to add.
 
 | Surface | Reads |
 | --- | --- |
-| `<h1>` | The back office platform your school deserves. |
-| Hero subtitle | Small doesn't mean you aren't serious. You deserve tools that match ... |
-| `og:title`, `twitter:title`, OG card | Small school? You still deserve real tools. |
+| `<h1>` | The back office small schools deserve. Built with the people who run them. |
 
 ## 3. Checks — run these, they have each caught a real bug
 
@@ -216,8 +214,12 @@ measures and no others.
   silently undercount. Netlify Analytics reads CDN request logs, which is the
   only reason outbound clicks are countable at all.
 - `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
-- The lead form is Netlify Forms (`name="early-access"`). Submissions live in
-  the Netlify dashboard. **Do not add a third-party form handler** without
+- The lead form is Netlify Forms (`name="early-access"`). It is the design
+  partner application: the name predates the cohort and stays, because a
+  rename creates a second form in the dashboard and orphans the first one's
+  notifications. Netlify reads the field list off the deployed HTML, so a new
+  `<input name>` becomes a stored column on the next deploy with no other
+  change. Submissions live in the Netlify dashboard. **Do not add a third-party form handler** without
   talking to the owner: the list is a company asset and it stays first-party.
 
 ## 6. Working agreements

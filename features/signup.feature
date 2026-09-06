@@ -1,11 +1,11 @@
-Feature: The early-access signup form
+Feature: The design partner application form
 
   The form is the only behaviour on the site and the only thing the page is
   ultimately for. Every way it breaks, it breaks quietly:
 
   Netlify pairs a submission to a form by the hidden form-name field. If that
   stops matching the form's name, Netlify answers 200, the visitor reads
-  "You're on the list", and the lead is discarded. Nothing goes red.
+  "Thanks for applying", and the application is discarded. Nothing goes red.
 
   The error path is the one visitors meet on a bad day, and it is the least
   likely to have been opened in a browser.
@@ -18,6 +18,10 @@ Feature: The early-access signup form
     And it posts with a hidden form-name of "early-access"
     And it declares a honeypot field
 
+  Scenario: The marketing consent is a separate, optional ask
+    Then the "emailConsent" field is not required
+    And the "schoolName" field is required
+
   Scenario: A good submission reaches Netlify and thanks the visitor
     When a visitor submits the form and the submission succeeds
     Then exactly one request is sent
@@ -28,6 +32,7 @@ Feature: The early-access signup form
   Scenario: A server error keeps the visitor's details and lets them retry
     When a visitor submits the form and the server answers 500
     Then an error is shown
+    And the visitor's answers are still in the form
     And the button is usable again with its original label
 
   Scenario: A dropped network points the visitor at a human
