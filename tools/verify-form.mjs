@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Drives the early-access signup form in headless Chromium:
+ * Drives the design partner application form in headless Chromium:
  *
  *   node tools/verify-form.mjs
  *
@@ -9,11 +9,11 @@
  *
  *  - Netlify pairs a submission to a form by the hidden `form-name` field. If
  *    it stops matching the form's `name`, Netlify answers 200, the visitor
- *    sees "You're on the list", and the lead is discarded. Nothing anywhere
- *    goes red.
- *  - The submit handler restores the button label from a string literal. If
- *    the markup's label is edited and the literal is not, every visitor who
- *    hits a submission error gets a button relabelled to the old wording.
+ *    reads "Thanks for applying", and the application is discarded. Nothing
+ *    anywhere goes red.
+ *  - The submit handler restores the button label after an error. If that
+ *    label drifts from the markup, every visitor who hits a submission error
+ *    gets a button relabelled to the old wording.
  *  - The error path is the one visitors meet on a bad day, and it is the least
  *    likely to have been opened in a browser.
  *
@@ -25,7 +25,7 @@
  */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
-import { scenario } from './lib/form-scenario.mjs';
+import { scenario, ANSWERS } from './lib/form-scenario.mjs';
 
 // Asserted in the error path below, so it is named once rather than inline.
 const SUPPORT_EMAIL = 'allison@schoolstack.ai';
@@ -76,6 +76,8 @@ if (await load()) {
       // hiding style can sit anywhere above the field.
       potHidden: pot ? (pot.offsetParent === null && pot.getBoundingClientRect().height === 0) : false,
       required: [...form.querySelectorAll('[required]')].map((el) => el.name),
+      consentRequired: !!form.querySelector('[name="emailConsent"][required]'),
+      potAriaHidden: pot ? !!pot.closest('[aria-hidden="true"]') : false,
       unlabelled: labelled,
       action: form.getAttribute('action'),
     };
@@ -94,8 +96,13 @@ if (await load()) {
   );
   check(f.potName ? f.potPresent : true, `netlify-honeypot names "${f.potName}" but no such field exists`);
   check(f.potName ? f.potHidden : true, `the ${f.potName} honeypot is visible to people, not just bots`);
-  check(f.required.includes('firstName') && f.required.includes('email'),
-    `required fields are ${JSON.stringify(f.required)}, expected at least firstName and email`);
+  check(f.potName ? f.potAriaHidden : true, `the ${f.potName} honeypot is not aria-hidden, so a screen reader announces it as a real field`);
+  // The application proper. The marketing consent is deliberately NOT here: it
+  // is a separate ask and must never gate the submit.
+  for (const name of ['firstName', 'email', 'schoolName', 'schoolState', 'accountingPlatform', 'headache']) {
+    check(f.required.includes(name), `required fields are ${JSON.stringify(f.required)}, expected ${name} among them`);
+  }
+  check(!f.consentRequired, 'the marketing consent checkbox is required - it must stay optional and separate from the application');
   for (const el of f.unlabelled) fail(`the ${el} field has no <label for>`);
 }
 
@@ -126,8 +133,9 @@ if (ok) {
     // The field Netlify routes on has to survive the trip through FormData.
     check(body.get('form-name') === 'early-access',
       `the posted body carries form-name="${body.get('form-name')}", expected "early-access"`);
-    check(body.get('firstName') === 'Ada' && body.get('email') === 'ada@example.org',
-      'the posted body lost the values that were typed into it');
+    for (const [name, value] of Object.entries(ANSWERS)) {
+      check(body.get(name) === value, `the posted body carries ${name}="${body.get(name)}", expected "${value}" - the answer was typed and not sent`);
+    }
     check(body.get('emailConsent') === 'Yes', 'the posted body lost the email consent');
   }
   check(!ok.formShown, 'the form is still on screen after a successful submit');
@@ -144,6 +152,12 @@ if (bad) {
     `a rejected submit showed the browser's own words: "${bad.errorText}"`);
   check(!bad.successShown, 'a rejected submit showed the confirmation panel anyway');
   check(bad.formShown, 'a rejected submit hid the form, leaving nothing to retry with');
+  // "Your answers are still here" is a promise the error copy makes.
+  for (const [name, value] of Object.entries(ANSWERS)) {
+    check(bad.values[name] === value, `after a server error ${name} reads "${bad.values[name]}", expected the typed "${value}"`);
+  }
+  check(bad.errorText.includes(SUPPORT_EMAIL),
+    `a rejected submit showed "${bad.errorText}", which does not offer ${SUPPORT_EMAIL} as a way through`);
   check(!bad.disabled, 'the submit button stayed disabled after an error - the visitor cannot retry');
   // The handler restores this label from a literal. If the markup is reworded
   // and the literal is not, this is where the two drift apart.

@@ -14,8 +14,22 @@
 export const FILL = `
   form.querySelector('#firstName').value = 'Ada';
   form.querySelector('#email').value = 'ada@example.org';
+  form.querySelector('#schoolName').value = 'Lovelace Microschool';
+  form.querySelector('#schoolState').value = 'Ohio';
+  form.querySelector('#accountingPlatform').value = 'QuickBooks Online';
+  form.querySelector('#headache').value = 'Knowing in January whether we make payroll in March.';
   form.querySelector('[name="emailConsent"]').checked = true;
 `;
+
+/** The answers FILL typed, read back off the form after a submit attempt. */
+export const ANSWERS = {
+  firstName: 'Ada',
+  email: 'ada@example.org',
+  schoolName: 'Lovelace Microschool',
+  schoolState: 'Ohio',
+  accountingPlatform: 'QuickBooks Online',
+  headache: 'Knowing in January whether we make payroll in March.',
+};
 
 /** The four outcomes a visitor can meet, named as the page experiences them. */
 export const MODES = {
@@ -58,8 +72,14 @@ export function scenario(mode, { fill = true } = {}) {
     await new Promise((r) => setTimeout(r, 150));
 
     const shown = (el) => getComputedStyle(el).display !== 'none';
+    const values = {};
+    for (const el of form.querySelectorAll('input:not([type="hidden"]), select, textarea')) {
+      if (el.type === 'checkbox') values[el.name] = el.checked;
+      else if (el.name) values[el.name] = el.value;
+    }
     return JSON.stringify({
       calls,
+      values,
       initialLabel,
       label: btn.textContent,
       disabled: btn.disabled,

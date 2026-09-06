@@ -143,11 +143,12 @@ test('the disclaimer counts even when the footer wraps it across lines', () => {
    --------------------------------------------------------------------------- */
 
 test('the ratchet records the debt the owner chose to keep', () => {
-  // Was 0 for a few hours. The owner restored the original hero and share
-  // copy, which puts "deserves" back on 8 lines. CLAUDE.md section 2 still
-  // retires the word: the file and the page disagree, and settling that is
-  // the owner's call. This number tracks the page, not the preference.
-  assert.equal(KNOWN_DEBT.entitlement, 8);
+  // Was 0 for a few hours, then 8 when the owner restored the original hero
+  // and share copy. The September 2026 redesign took it to 1: the hero
+  // headline the owner specified. CLAUDE.md section 2 still retires the word:
+  // the file and the page disagree on that line, and settling it is the
+  // owner's call. This number tracks the page, not the preference.
+  assert.equal(KNOWN_DEBT.entitlement, 1);
 });
 
 test('entitlement framing is reported as debt, not as a fault, while debt remains', () => {

@@ -36,9 +36,9 @@ const EXPECT = {
   minImages: 8,      // logo, four tool marks, two funders, BHIF, footer logo
   h1: 1,
   minTextChars: 4000,
-  // Landmarks: the two anchor targets the nav points at, plus the form the
-  // whole page exists to feed.
-  ids: ['tools', 'signup', 'faq', 'signupForm', 'submitBtn'],
+  // Landmarks: the anchor targets the nav points at, plus the form the whole
+  // page exists to feed.
+  ids: ['tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
 };
 
 const site = await serveSite();
