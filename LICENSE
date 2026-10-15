@@ -1,0 +1,30 @@
+SchoolStack Proprietary License
+
+Copyright (c) 2026 Building Hope Impact Fund. All rights reserved.
+
+SchoolStack and the SchoolStack tools (SchoolStack Access, SchoolStack Space,
+SchoolStack Budget and the schoolstack.ai site) are proprietary software and
+content owned by Building Hope Impact Fund (the "Owner").
+
+This repository and everything in it, including source code, documentation,
+designs, images, data files, generated exports and tests, is not open source.
+Access to the repository is granted for viewing and for work the Owner has
+authorized. No other license is granted, by implication or otherwise. Without
+the Owner's prior written permission you may not copy, modify, merge, publish,
+distribute, sublicense, sell, host, or create derivative works from any part
+of this repository.
+
+Access to this repository does not transfer any right, title, or interest in
+the software or in the SchoolStack name and marks, which remain the property
+of the Owner.
+
+Third-party components included in or referenced by this repository remain
+under their own licenses, which are noted alongside them where they apply.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+OWNER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE USE
+OF THE SOFTWARE.
+
+Licensing questions: allison@schoolstack.ai
