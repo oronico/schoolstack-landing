@@ -33,6 +33,14 @@ from Budget's favicon so the products read as one family — the numbers live in
 than drifting to look good alone. SchoolStack is the parent brand, so it
 carries all three founding hues where the product marks each use one.
 
+**The wordmark is owner-supplied artwork.** It lives as outlined paths in
+`assets/logos/schoolstack-logo.<hash>.svg` with a white-on-navy twin for the
+footer, so the site loads no font for it. Its bars are tighter and longer than
+the icon geometry above; the icons keep the family geometry until the owner
+says otherwise. `_headers` caches `/assets/*` for a year as immutable, so a
+changed logo takes a new hash in its name. A same-name swap leaves returning
+visitors on the old file.
+
 ## 2. Voice: asset-based, never deficit-framed
 
 The reader is a capable founder running a real business. Write to their
