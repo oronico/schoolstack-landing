@@ -85,6 +85,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: npm run verify:a11y
 
+      - name: Budget calculator
+        if: ${{ !cancelled() }}
+        run: npm run verify:calculator
+
       # The Gherkin suite last, because it is the slowest: it drives the same
       # shared modules as the checks above, so a failure here after those pass
       # points at a step definition rather than at the site.
