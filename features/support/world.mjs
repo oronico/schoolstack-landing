@@ -57,6 +57,8 @@ class SchoolStackWorld extends World {
   /* Scenario-scoped scratch space: the sample copy a Scenario Outline supplies,
      and the result of the last form submission. */
   sample = null;
+  // The budget calculator inputs a Scenario Outline row supplies.
+  calcInput = {};
   result = null;
 }
 

@@ -38,7 +38,7 @@ const EXPECT = {
   minTextChars: 4000,
   // Landmarks: the anchor targets the nav points at, plus the form the whole
   // page exists to feed.
-  ids: ['tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
+  ids: ['budget-calculator', 'tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
 };
 
 const site = await serveSite();
