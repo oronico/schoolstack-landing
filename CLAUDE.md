@@ -143,7 +143,7 @@ npm test                        # everything below, in order, plus the feature s
 node tools/verify-content.mjs   # files: redirects, structured data, voice rules, anchors, fonts
 node tools/verify-render.mjs    # layout: stretched images, heading order, overflow, dead CTAs
 node tools/verify-headers.mjs   # the CSP does not block the page it protects
-node tools/verify-calculator.mjs # the budget calculator, driven by keyboard and typing
+node tools/verify-calculator.mjs # the durability snapshot, driven by keyboard and typing
 node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts loaded
 npx cucumber-js                 # the same checks, read as specifications
 ```
@@ -168,11 +168,14 @@ Why each exists:
   attributes passed happily. This one compares each image's *rendered* aspect
   ratio to its natural one, and cross-checks every `/go/` link against
   `_redirects` so a typo cannot become a dead CTA on a live page.
-- **verify-calculator** — the budget calculator's math lives in
+- **verify-calculator** — the durability snapshot's math lives in
   `js/budget-calculator.js`, the one file the page, the unit tests and the
   feature steps all load. A blocked or missing script leaves the
   server-rendered defaults on screen, which look right and never move, so
-  this check drives the real page: typing, slider keys, past 100%, reset.
+  this check drives the real page: typing, free seats and discount, slider
+  keys, the 15% facilities ceiling, past 100%, reset. It is called a
+  snapshot, not a budget, on purpose: Budget is where the five-year plan is
+  built, and the CTA under it says so.
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local
   development nor the diff will tell you it blocked your own stylesheet.
 - **build-images** — the OG card once shipped in DejaVu Sans because the

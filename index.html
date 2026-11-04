@@ -428,7 +428,7 @@
     .card-access  { --c-light: var(--access-light);  --c-mid: var(--access-mid);  --c-dark: var(--access-dark);  --c-accent: var(--access-dark);  --c-tint: rgba(196,181,253,0.32); }
     .card-lending { --c-light: var(--lending-light); --c-mid: var(--lending-mid); --c-dark: var(--lending-dark); --c-accent: var(--lending-word); --c-tint: rgba(253,205,132,0.34); }
 
-    /* BUDGET CALCULATOR. Behaviour lives in js/budget-calculator.js; this is
+    /* DURABILITY SNAPSHOT. Behaviour lives in js/budget-calculator.js; this is
        layout only. The three segment colours are the three founding hues of
        the mark (sky, emerald, amber), so the bar reads as the stack motif. */
     .calc-lead {
@@ -492,6 +492,19 @@
     .calc-money input { padding-left: 1.85rem; }
     .calc-field input:focus { border-color: var(--space-dark); }
     .calc-field input[aria-invalid="true"] { border-color: #B91C1C; }
+    .calc-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .calc-pair-hint { margin-top: -0.95rem; }
+    .calc-discount input[type="range"] { accent-color: var(--lending-word); }
+    /* Always takes its line, shown or not, so nothing below jumps when
+       facilities cross the ceiling. */
+    .calc-flag {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #B91C1C;
+      margin-top: 0.2rem;
+      visibility: hidden;
+    }
+    .calc-flag[data-on] { visibility: visible; }
     .calc-error { color: #B91C1C; font-size: 0.88rem; font-weight: 700; margin-top: 0.35rem; }
 
     .calc-slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
@@ -1058,23 +1071,25 @@
   </section>
   </div>
 
-  <!-- BUDGET CALCULATOR. A founder surface: it names what the numbers show
-       and invites the next question, rather than asking a yes/no one. The
-       values in the markup are the defaults, so the section reads correctly
-       before js/budget-calculator.js runs and nothing moves when it does. -->
+  <!-- DURABILITY SNAPSHOT. A founder surface, and deliberately not called a
+       budget: it is a one-year pressure test of facilities and staffing
+       against the tuition a school actually collects, and SchoolStack Budget
+       is where the five-year plan gets built. The values in the markup are
+       the defaults, so the section reads correctly before
+       js/budget-calculator.js runs and nothing moves when it does. -->
   <section class="section" id="budget-calculator" aria-labelledby="calc-heading">
-    <div class="label">Free school budget calculator</div>
-    <h2 id="calc-heading">What can your tuition build?</h2>
+    <div class="label">Free durability snapshot</div>
+    <h2 id="calc-heading">How far does your tuition go?</h2>
     <p class="calc-lead">Know your numbers before you make your next big decision.</p>
     <p class="section-desc">
-      Enter your tuition and enrollment to explore how much revenue your school could generate,
-      and how you might share it across staffing, facilities, and everything else.
+      Pressure-test your facilities and staffing against the tuition you actually collect, after
+      free seats and discounts. It is not a budget. It is a quick read on where you stand today.
     </p>
 
     <div class="calc" data-budget-calculator data-status="ok">
       <div class="calc-inputs" role="group" aria-label="Your numbers">
         <div class="calc-field">
-          <label for="calcTuition">Annual tuition or funding per student</label>
+          <label for="calcTuition">Full annual tuition or funding per student</label>
           <div class="calc-money">
             <span aria-hidden="true">$</span>
             <input id="calcTuition" data-calc="tuition" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="10,000" aria-describedby="calcTuitionError">
@@ -1082,30 +1097,48 @@
           <p class="calc-error" id="calcTuitionError" data-calc="tuition-error" hidden></p>
         </div>
 
-        <div class="calc-field">
-          <label for="calcStudents">Number of students</label>
-          <input id="calcStudents" data-calc="students" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="50" aria-describedby="calcStudentsError">
-          <p class="calc-error" id="calcStudentsError" data-calc="students-error" hidden></p>
+        <div class="calc-pair">
+          <div class="calc-field">
+            <label for="calcStudents">Students enrolled</label>
+            <input id="calcStudents" data-calc="students" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="50" aria-describedby="calcStudentsError">
+            <p class="calc-error" id="calcStudentsError" data-calc="students-error" hidden></p>
+          </div>
+          <div class="calc-field">
+            <label for="calcFreeSeats">Attending free</label>
+            <input id="calcFreeSeats" data-calc="free-seats" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="2" aria-describedby="calcFreeSeatsHint calcFreeSeatsError">
+            <p class="calc-error" id="calcFreeSeatsError" data-calc="free-seats-error" hidden></p>
+          </div>
+        </div>
+        <p class="calc-hint calc-pair-hint" id="calcFreeSeatsHint">Free seats: children of staff, full scholarships, anyone who pays nothing.</p>
+
+        <div class="calc-slider calc-discount">
+          <div class="calc-slider-head">
+            <label for="calcDiscount">Average discount for paying students</label>
+            <output for="calcDiscount" data-out="discount-pct">10%</output>
+          </div>
+          <input id="calcDiscount" data-calc="discount" type="range" min="0" max="75" step="1" value="10" aria-describedby="calcDiscountHint" aria-valuetext="10 percent, $68,000 less than full tuition">
+          <p class="calc-hint" id="calcDiscountHint">Financial aid, sibling and early-payment discounts, averaged across everyone who pays.</p>
         </div>
 
         <div class="calc-slider calc-facilities">
           <div class="calc-slider-head">
-            <label for="calcFacilities">Facilities</label>
+            <label for="calcFacilities">All-in facilities</label>
             <output for="calcFacilities" data-out="facilities-pct">15%</output>
           </div>
-          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
-          <p class="calc-figures"><span data-out="facilities-annual">$75,000</span> a year &middot; <span data-out="facilities-monthly">$6,250</span> a month</p>
-          <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs.</p>
+          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $64,800 a year">
+          <p class="calc-figures"><span data-out="facilities-annual">$64,800</span> a year &middot; <span data-out="facilities-monthly">$5,400</span> a month</p>
+          <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs. We suggest 15% as a ceiling.</p>
+          <p class="calc-flag" data-calc="facilities-flag">Above 15%, facilities start to crowd out program.</p>
         </div>
 
         <div class="calc-slider calc-staffing">
           <div class="calc-slider-head">
-            <label for="calcStaffing">Staffing</label>
+            <label for="calcStaffing">All-in staffing</label>
             <output for="calcStaffing" data-out="staffing-pct">60%</output>
           </div>
-          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
-          <p class="calc-figures"><span data-out="staffing-annual">$300,000</span> a year &middot; <span data-out="staffing-monthly">$25,000</span> a month</p>
-          <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs.</p>
+          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $259,200 a year">
+          <p class="calc-figures"><span data-out="staffing-annual">$259,200</span> a year &middot; <span data-out="staffing-monthly">$21,600</span> a month</p>
+          <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs. Around 60% is a common starting point, and it moves with your model.</p>
         </div>
 
         <button type="button" class="calc-reset" data-calc="reset">Reset to starting values</button>
@@ -1113,29 +1146,30 @@
 
       <div class="calc-results">
         <div>
-          <p class="calc-k">Annual gross revenue</p>
-          <p class="calc-big" data-out="revenue">$500,000</p>
-          <p class="calc-sub"><span data-out="revenue-formula">$10,000 &times; 50 students</span> &middot; <span data-out="revenue-monthly">$41,667</span> a month</p>
+          <p class="calc-k">Tuition you collect each year</p>
+          <p class="calc-big" data-out="revenue">$432,000</p>
+          <p class="calc-sub"><span data-out="revenue-monthly">$36,000</span> a month &middot; <span data-out="per-student">$8,640</span> per student enrolled</p>
+          <p class="calc-sub">Full tuition <span data-out="full">$500,000</span> &middot; <span data-out="given-up">$68,000</span> in free seats and discounts &middot; <span data-out="paying">48 of 50</span> paying</p>
         </div>
 
         <div>
-          <div class="calc-bar" data-calc="bar" role="img" aria-label="Facilities 15%, staffing 60%, remaining 25%.">
+          <div class="calc-bar" data-calc="bar" role="img" aria-label="Facilities 15%, staffing 60%, left for program 25%.">
             <span class="seg seg-facilities"></span><span class="seg seg-staffing"></span><span class="seg seg-remaining"></span><span class="seg seg-deficit"></span><span class="calc-mark"></span>
           </div>
         </div>
 
         <ul class="calc-legend">
-          <li><span class="sw sw-facilities" aria-hidden="true"></span><span>Facilities</span><span class="pct" data-out="facilities-pct">15%</span><span class="amt" data-out="facilities-annual">$75,000</span></li>
-          <li><span class="sw sw-staffing" aria-hidden="true"></span><span>Staffing</span><span class="pct" data-out="staffing-pct">60%</span><span class="amt" data-out="staffing-annual">$300,000</span></li>
-          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Everything else</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$125,000</span></li>
-          <li class="is-deficit" data-calc="deficit-legend" hidden><span class="sw sw-deficit" aria-hidden="true"></span><span>Over revenue</span><span class="pct" data-out="deficit-pct">0%</span><span class="amt" data-out="deficit-annual">$0</span></li>
+          <li><span class="sw sw-facilities" aria-hidden="true"></span><span>Facilities</span><span class="pct" data-out="facilities-pct">15%</span><span class="amt" data-out="facilities-annual">$64,800</span></li>
+          <li><span class="sw sw-staffing" aria-hidden="true"></span><span>Staffing</span><span class="pct" data-out="staffing-pct">60%</span><span class="amt" data-out="staffing-annual">$259,200</span></li>
+          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Program and everything else</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$108,000</span></li>
+          <li class="is-deficit" data-calc="deficit-legend" hidden><span class="sw sw-deficit" aria-hidden="true"></span><span>Over collected tuition</span><span class="pct" data-out="deficit-pct">0%</span><span class="amt" data-out="deficit-annual">$0</span></li>
         </ul>
 
         <div class="calc-remaining">
-          <p class="calc-k">Remaining operating budget</p>
-          <p class="calc-remaining-figure"><span data-out="remaining-annual">$125,000</span> <small>a year</small></p>
-          <p><span data-out="remaining-pct">25%</span> of revenue &middot; <span data-out="remaining-monthly">$10,417</span> a month</p>
-          <p>This covers everything else your school runs on:</p>
+          <p class="calc-k">Available for program</p>
+          <p class="calc-remaining-figure"><span data-out="remaining-annual">$108,000</span> <small>a year</small></p>
+          <p><span data-out="remaining-pct">25%</span> of collected tuition &middot; <span data-out="remaining-monthly">$9,000</span> a month</p>
+          <p>This has to cover:</p>
           <ul class="calc-covers">
             <li>Instructional materials</li>
             <li>Technology</li>
@@ -1146,31 +1180,30 @@
             <li>Operating reserves</li>
             <li>All other expenses</li>
           </ul>
-          <p class="calc-caveat"><strong>This is not profit or available cash.</strong> It is the budget for everything listed above.</p>
+          <p class="calc-caveat"><strong>This is not profit or available cash.</strong> It is what is left for program and everything listed above.</p>
         </div>
 
         <div class="calc-guide" aria-hidden="true">
-          <p data-when="ok">This mix leaves room for your other expenses. Check it against your real costs and the reserves you want to hold.</p>
-          <p data-when="tight">Your remaining operating budget may be tight. Make sure it covers your other expenses and reserves.</p>
-          <p data-when="over">Your facilities and staffing allocations exceed your projected tuition revenue, before accounting for other operating expenses.</p>
+          <p data-when="ok">This mix leaves room for program today. Leases step up, salaries rise and enrollment moves, so check it again each year.</p>
+          <p data-when="tight">What is left for program may be tight. Make sure it covers your program, other expenses and reserves.</p>
+          <p data-when="over">Your facilities and staffing allocations exceed the tuition you expect to collect, before accounting for program and other operating expenses.</p>
         </div>
         <p class="sr-only" data-calc="alert" role="status" aria-live="polite"></p>
       </div>
     </div>
 
     <p class="platform-note calc-note">
-      Planning estimates only. Actual financial needs vary by school model, location, staffing,
-      enrollment, and funding sources. Calculations assume full collection of entered tuition or
-      funding and do not include other revenue sources. The 15% facilities and 60% staffing
-      starting points are illustrations, not standards; every school's cost structure is different.
-      Estimates are not loan eligibility.
+      A one-year snapshot for planning only. Actual needs vary by school model, location, staffing,
+      enrollment, and funding sources, and a mix that works today can change as leases, salaries and
+      enrollment do. It assumes you collect the tuition entered and leaves out other revenue such as
+      grants and fundraising. Estimates are not loan eligibility.
     </p>
 
     <div class="calc-cta">
-      <h3>Ready to build your full school budget?</h3>
-      <p>Explore enrollment scenarios, staffing costs, facilities expenses, and cash flow with SchoolStack Budget.</p>
+      <h3>Ready to see five years out?</h3>
+      <p>A snapshot shows one year. SchoolStack Budget builds your full five-year budget: enrollment growth, lease increases, staffing changes, and cash flow.</p>
       <a class="btn-primary" href="/go/budget" target="_blank" rel="noopener noreferrer">
-        Build my free school budget
+        Build my five-year budget
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>

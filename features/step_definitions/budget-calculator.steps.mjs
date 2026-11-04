@@ -21,6 +21,22 @@ Given('{int}% for facilities and {int}% for staffing', function (facilitiesPct, 
   this.calcInput = { ...this.calcInput, facilitiesPct, staffingPct };
 });
 
+Given('{int} students attend free and paying students average a {int}% discount', function (freeSeats, discountPct) {
+  this.calcInput = { ...this.calcInput, freeSeats, discountPct };
+});
+
+Given('every student pays full tuition', function () {
+  this.calcInput = { ...this.calcInput, freeSeats: 0, discountPct: 0 };
+});
+
+Then('{word} is given up against full tuition', function (want) {
+  assert.equal(calc.formatUSD(result(this).givenUp.annual), want);
+});
+
+Then('facilities are flagged as above the ceiling', function () {
+  assert.equal(result(this).facilitiesAboveCeiling, true);
+});
+
 Then('annual revenue is {word}', function (want) {
   assert.equal(calc.formatUSD(result(this).revenue.annual), want);
 });
@@ -46,8 +62,11 @@ Then('the deficit runs from the revenue mark to the end of the bar', function ()
     `mark at ${b.revenueMark}% plus deficit ${b.deficit}% does not reach the end`);
 });
 
-Then('{string} is refused as {word}', function (input, field) {
-  const r = field === 'students' ? calc.parseStudents(input) : calc.parseTuition(input);
+// Free seats are checked against the page's default enrollment of 50.
+Then('{string} is refused as {}', function (input, field) {
+  const r = field === 'students' ? calc.parseStudents(input)
+    : field === 'free seats' ? calc.parseFreeSeats(input, calc.DEFAULTS.students)
+      : calc.parseTuition(input);
   assert.equal(r.value, null, `"${input}" was accepted as ${r.value}`);
   assert.ok(r.error, `"${input}" was refused with no message for the founder`);
 });

@@ -1,5 +1,7 @@
 /**
- * The school budget calculator on the landing page.
+ * The durability snapshot on the landing page: a quick pressure test of
+ * facilities and staffing against the tuition a school actually collects.
+ * Not a budget; SchoolStack Budget is where the five-year plan gets built.
  *
  * One file, two readers. The browser loads it as a classic script (the CSP
  * allows script-src 'self', nothing else) and it mounts itself on
@@ -31,24 +33,29 @@
   'use strict';
 
   /* -------------------------------------------------------------------------
-     Settings. The defaults are illustrative starting points, not a standard:
-     cost structures differ by school model.
+     Settings. 15% is SchoolStack's suggested ceiling for facilities. 60% for
+     staffing is a starting point that moves with each school's model. The
+     free seats and discount defaults are there so the gap between full and
+     collected tuition is visible from the first view.
      ------------------------------------------------------------------------- */
-  var DEFAULTS = { tuition: 10000, students: 50, facilitiesPct: 15, staffingPct: 60 };
+  var DEFAULTS = { tuition: 10000, students: 50, freeSeats: 2, discountPct: 10, facilitiesPct: 15, staffingPct: 60 };
 
   var LIMITS = {
     tuition: { min: 0, max: 1000000 },     // per student, per year
     students: { min: 0, max: 10000 },
+    freeSeats: { min: 0, max: 10000 },
+    discountPct: { min: 0, max: 75 },
     facilitiesPct: { min: 0, max: 40 },
     staffingPct: { min: 0, max: 90 },
   };
 
-  // Below this share left for everything else, the page suggests a closer look.
+  var FACILITIES_CEILING_PCT = 15;
+  // Below this share left for program, the page suggests a closer look.
   var TIGHT_BELOW_PCT = 15;
 
   var MESSAGES = {
-    over: 'Your facilities and staffing allocations exceed your projected tuition revenue, before accounting for other operating expenses.',
-    tight: 'Your remaining operating budget may be tight. Make sure it covers your other expenses and reserves.',
+    over: 'Your facilities and staffing allocations exceed the tuition you expect to collect, before accounting for program and other operating expenses.',
+    tight: 'What is left for program may be tight. Make sure it covers your program, other expenses and reserves.',
   };
 
   /* -------------------------------------------------------------------------
@@ -58,7 +65,7 @@
   // Accepts "10000", "10,000", "$10,000.50", " 9500 ". Rejects anything else.
   function parseTuition(raw) {
     var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
-    if (s === '') return { value: null, error: 'Enter tuition or funding per student.' };
+    if (s === '') return { value: null, error: 'Enter full tuition or funding per student.' };
     if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
     if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: 'Use numbers only, like 10,000 or 9,500.50.' };
     var n = Number(s);
@@ -70,21 +77,30 @@
     return { value: Math.round(n * 100) / 100, error: null };
   }
 
-  function parseStudents(raw) {
+  function parseCount(raw, what, max) {
     var s = String(raw == null ? '' : raw).trim().replace(/[,\s]/g, '');
-    if (s === '') return { value: null, error: 'Enter the number of students.' };
-    if (/^-/.test(s)) return { value: null, error: 'Enter 0 or more students.' };
+    if (s === '') return { value: null, error: 'Enter the number of ' + what + ', or 0.' };
+    if (/^-/.test(s)) return { value: null, error: 'Enter 0 or more ' + what + '.' };
     if (/^\d*\.\d*$/.test(s) && s !== '.') {
       // "50.0" is a whole number written long; "50.5" is not.
       if (Number(s) === Math.floor(Number(s))) s = String(Math.floor(Number(s)));
-      else return { value: null, error: 'Enter a whole number of students.' };
+      else return { value: null, error: 'Enter a whole number of ' + what + '.' };
     }
     if (!/^\d+$/.test(s)) return { value: null, error: 'Use whole numbers only, like 50.' };
     var n = Number(s);
-    if (n > LIMITS.students.max) {
-      return { value: null, error: 'Enter up to ' + LIMITS.students.max.toLocaleString('en-US') + ' students.' };
-    }
+    if (n > max) return { value: null, error: 'Enter up to ' + max.toLocaleString('en-US') + ' ' + what + '.' };
     return { value: n, error: null };
+  }
+
+  function parseStudents(raw) { return parseCount(raw, 'students', LIMITS.students.max); }
+
+  // Free seats also have to fit inside enrollment, so it takes the student count.
+  function parseFreeSeats(raw, students) {
+    var r = parseCount(raw, 'free seats', LIMITS.freeSeats.max);
+    if (!r.error && students != null && r.value > students) {
+      return { value: null, error: 'Enter no more free seats than students enrolled (' + plain.format(students) + ').' };
+    }
+    return r;
   }
 
   // Sliders cannot leave their range in a browser, but the API can be called
@@ -97,18 +113,30 @@
 
   /* -------------------------------------------------------------------------
      The arithmetic. Pure: numbers in, numbers out.
+
+     Collected tuition = full tuition x paying students x (1 - average discount).
+     Every percentage after that is a share of what is collected, not of the
+     sticker price, because that is the money the school actually spends.
      ------------------------------------------------------------------------- */
   function calculate(input) {
     var tuition = Math.max(0, Number(input.tuition) || 0);
     var students = Math.max(0, Math.floor(Number(input.students) || 0));
+    var freeSeats = Math.min(students, Math.max(0, Math.floor(Number(input.freeSeats) || 0)));
+    var discountPct = clampPct(input.discountPct, 'discountPct');
     var facilitiesPct = clampPct(input.facilitiesPct, 'facilitiesPct');
     var staffingPct = clampPct(input.staffingPct, 'staffingPct');
 
-    var revenueCents = Math.round(tuition * 100) * students;
+    var tuitionCents = Math.round(tuition * 100);
+    var paying = students - freeSeats;
+    var fullCents = tuitionCents * students;
+    var revenueCents = Math.round(tuitionCents * paying * (100 - discountPct) / 100);
+    var givenUpCents = fullCents - revenueCents;
+
     var facilitiesCents = Math.round(revenueCents * facilitiesPct / 100);
     var staffingCents = Math.round(revenueCents * staffingPct / 100);
-    // Remaining is what is left after the two allocations, so the three parts
-    // always sum back to revenue exactly. Negative means a deficit.
+    // What is left for program is what remains after the two allocations, so
+    // the three parts always sum back to collected tuition exactly. Negative
+    // means a deficit.
     var remainingCents = revenueCents - facilitiesCents - staffingCents;
     var allocatedPct = facilitiesPct + staffingPct;
     var remainingPct = 100 - allocatedPct;
@@ -118,11 +146,18 @@
     return {
       tuition: tuition,
       students: students,
+      freeSeats: freeSeats,
+      paying: paying,
+      discountPct: discountPct,
+      full: { annual: fullCents / 100 },
+      givenUp: { annual: givenUpCents / 100, pct: fullCents ? Math.round(givenUpCents / fullCents * 100) : 0 },
+      perStudent: students ? revenueCents / students / 100 : 0,
       revenue: { annual: revenueCents / 100, monthly: revenueCents / 1200 },
       facilities: { pct: facilitiesPct, annual: facilitiesCents / 100, monthly: facilitiesCents / 1200 },
       staffing: { pct: staffingPct, annual: staffingCents / 100, monthly: staffingCents / 1200 },
       remaining: { pct: remainingPct, annual: remainingCents / 100, monthly: remainingCents / 1200 },
       allocatedPct: allocatedPct,
+      facilitiesAboveCeiling: facilitiesPct > FACILITIES_CEILING_PCT,
       status: status,
       message: status === 'ok' ? '' : MESSAGES[status],
       bar: barSegments(facilitiesPct, staffingPct),
@@ -179,15 +214,16 @@
     if (!el || el.__budgetCalc) return null;
     var q = function (name) { return el.querySelector('[data-calc="' + name + '"]'); };
     var parts = {
-      tuition: q('tuition'), students: q('students'),
+      tuition: q('tuition'), students: q('students'), freeSeats: q('free-seats'), discount: q('discount'),
       facilities: q('facilities'), staffing: q('staffing'),
-      tuitionError: q('tuition-error'), studentsError: q('students-error'),
+      tuitionError: q('tuition-error'), studentsError: q('students-error'), freeSeatsError: q('free-seats-error'),
       reset: q('reset'), alert: q('alert'), bar: q('bar'), deficitLegend: q('deficit-legend'),
-      remainingLegend: q('remaining-legend'),
+      remainingLegend: q('remaining-legend'), facilitiesFlag: q('facilities-flag'),
     };
-    if (!parts.tuition || !parts.students || !parts.facilities || !parts.staffing) return null;
+    if (!parts.tuition || !parts.students || !parts.freeSeats || !parts.discount
+        || !parts.facilities || !parts.staffing) return null;
 
-    var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students };
+    var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students, freeSeats: DEFAULTS.freeSeats };
 
     function setText(name, value) {
       var nodes = el.querySelectorAll('[data-out="' + name + '"]');
@@ -211,22 +247,32 @@
     function render() {
       var t = parseTuition(parts.tuition.value);
       var s = parseStudents(parts.students.value);
+      // Free seats are checked against the enrollment on screen, or the last
+      // good one while that field is being corrected.
+      var f = parseFreeSeats(parts.freeSeats.value, s.error ? last.students : s.value);
       showFieldError(parts.tuition, parts.tuitionError, t.error);
       showFieldError(parts.students, parts.studentsError, s.error);
+      showFieldError(parts.freeSeats, parts.freeSeatsError, f.error);
       // An invalid entry keeps the last good figure on screen rather than
       // flashing to $0, and the field says what to change.
       if (!t.error) last.tuition = t.value;
       if (!s.error) last.students = s.value;
-      el.toggleAttribute('data-stale', !!(t.error || s.error));
+      if (!f.error) last.freeSeats = f.value;
+      el.toggleAttribute('data-stale', !!(t.error || s.error || f.error));
 
       var r = calculate({
-        tuition: last.tuition, students: last.students,
+        tuition: last.tuition, students: last.students, freeSeats: last.freeSeats,
+        discountPct: parts.discount.value,
         facilitiesPct: parts.facilities.value, staffingPct: parts.staffing.value,
       });
 
+      setText('discount-pct', formatPct(r.discountPct));
       setText('revenue', formatUSD(r.revenue.annual));
       setText('revenue-monthly', formatUSD(r.revenue.monthly));
-      setText('revenue-formula', formatUSD(r.tuition) + ' × ' + plain.format(r.students) + (r.students === 1 ? ' student' : ' students'));
+      setText('full', formatUSD(r.full.annual));
+      setText('given-up', formatUSD(r.givenUp.annual));
+      setText('per-student', formatUSD(r.perStudent));
+      setText('paying', plain.format(r.paying) + ' of ' + plain.format(r.students));
 
       ['facilities', 'staffing', 'remaining'].forEach(function (k) {
         setText(k + '-pct', formatPct(r[k].pct));
@@ -236,10 +282,14 @@
       setText('deficit-pct', formatPct(Math.max(0, r.allocatedPct - 100)));
       setText('deficit-annual', formatUSD(Math.min(0, r.remaining.annual)));
 
+      parts.discount.setAttribute('aria-valuetext',
+        r.discountPct + ' percent, ' + formatUSD(r.givenUp.annual) + ' less than full tuition');
       parts.facilities.setAttribute('aria-valuetext',
-        r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year');
+        r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year'
+        + (r.facilitiesAboveCeiling ? ', above the 15 percent ceiling' : ''));
       parts.staffing.setAttribute('aria-valuetext',
         r.staffing.pct + ' percent, ' + formatUSD(r.staffing.annual) + ' a year');
+      if (parts.facilitiesFlag) parts.facilitiesFlag.toggleAttribute('data-on', r.facilitiesAboveCeiling);
 
       if (parts.bar) {
         parts.bar.style.setProperty('--w-facilities', r.bar.facilities + '%');
@@ -250,11 +300,11 @@
         parts.bar.setAttribute('aria-label',
           'Facilities ' + r.facilities.pct + '%, staffing ' + r.staffing.pct + '%, '
           + (r.status === 'over'
-            ? 'over revenue by ' + (r.allocatedPct - 100) + '%'
-            : 'remaining ' + r.remaining.pct + '%') + '.');
+            ? 'over collected tuition by ' + (r.allocatedPct - 100) + '%'
+            : 'left for program ' + r.remaining.pct + '%') + '.');
       }
       el.setAttribute('data-status', r.status);
-      // Past 100% the legend swaps "Everything else" for "Over revenue", so
+      // Past 100% the legend swaps "Program" for "Over collected tuition", so
       // the same shortfall is not listed twice.
       if (parts.deficitLegend) parts.deficitLegend.hidden = r.status !== 'over';
       if (parts.remainingLegend) parts.remainingLegend.hidden = r.status === 'over';
@@ -268,26 +318,29 @@
     function reset() {
       parts.tuition.value = formatTuitionField(DEFAULTS.tuition);
       parts.students.value = String(DEFAULTS.students);
+      parts.freeSeats.value = String(DEFAULTS.freeSeats);
+      parts.discount.value = String(DEFAULTS.discountPct);
       parts.facilities.value = String(DEFAULTS.facilitiesPct);
       parts.staffing.value = String(DEFAULTS.staffingPct);
       render();
     }
 
-    ['input', 'change'].forEach(function (ev) {
-      parts.tuition.addEventListener(ev, render);
-      parts.students.addEventListener(ev, render);
-      parts.facilities.addEventListener(ev, render);
-      parts.staffing.addEventListener(ev, render);
+    ['tuition', 'students', 'freeSeats', 'discount', 'facilities', 'staffing'].forEach(function (k) {
+      parts[k].addEventListener('input', render);
+      parts[k].addEventListener('change', render);
     });
-    // Tidy the tuition box once the visitor is done with it: "10000" -> "10,000".
+    // Tidy the boxes once the visitor is done with them: "10000" -> "10,000".
     parts.tuition.addEventListener('blur', function () {
       var t = parseTuition(parts.tuition.value);
       if (!t.error) parts.tuition.value = formatTuitionField(t.value);
     });
-    parts.students.addEventListener('blur', function () {
-      var s = parseStudents(parts.students.value);
-      if (!s.error) parts.students.value = String(s.value);
-    });
+    [['students', parseStudents], ['freeSeats', function (v) { return parseCount(v, 'free seats', LIMITS.freeSeats.max); }]]
+      .forEach(function (pair) {
+        parts[pair[0]].addEventListener('blur', function () {
+          var r = pair[1](parts[pair[0]].value);
+          if (!r.error) parts[pair[0]].value = String(r.value);
+        });
+      });
     if (parts.reset) parts.reset.addEventListener('click', reset);
 
     el.__budgetCalc = { render: render, reset: reset };
@@ -305,9 +358,11 @@
     DEFAULTS: DEFAULTS,
     LIMITS: LIMITS,
     TIGHT_BELOW_PCT: TIGHT_BELOW_PCT,
+    FACILITIES_CEILING_PCT: FACILITIES_CEILING_PCT,
     MESSAGES: MESSAGES,
     parseTuition: parseTuition,
     parseStudents: parseStudents,
+    parseFreeSeats: parseFreeSeats,
     calculate: calculate,
     barSegments: barSegments,
     formatUSD: formatUSD,
