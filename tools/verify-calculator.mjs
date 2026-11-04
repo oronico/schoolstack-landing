@@ -125,6 +125,26 @@ for (const width of [1440, 820, 390]) {
   check(r.cta === '/go/budget', at(`the calculator CTA points at ${r.cta}, expected /go/budget`));
   checkBar(r, at('defaults'));
 
+  /* 1b. Built for a thumb as well as a mouse: every control at least 44px
+         tall, the text boxes at 16px or more (iOS Safari zooms the page on
+         focus below that), and no copy smaller than 12px. */
+  const touch = await browser.evaluate(`JSON.stringify((() => {
+    const sec = document.getElementById('budget-calculator');
+    return {
+      short: [...sec.querySelectorAll('input, button, a')]
+        .filter((e) => e.getBoundingClientRect().height < 44)
+        .map((e) => (e.id || e.textContent.trim()).slice(0, 30) + ' ' + Math.round(e.getBoundingClientRect().height) + 'px'),
+      zooms: [...sec.querySelectorAll('input[type="text"]')]
+        .filter((e) => parseFloat(getComputedStyle(e).fontSize) < 16).map((e) => e.id),
+      tiny: [...sec.querySelectorAll('p, li, span, label, output')]
+        .filter((e) => e.offsetParent && e.textContent.trim() && parseFloat(getComputedStyle(e).fontSize) < 12)
+        .map((e) => e.textContent.trim().slice(0, 30)),
+    };
+  })())`);
+  for (const t of touch.short) check(false, at(`tap target under 44px: ${t}`));
+  for (const z of touch.zooms) check(false, at(`#${z} is under 16px, so iPhones zoom the page when it is tapped`));
+  for (const t of touch.tiny) check(false, at(`text under 12px: "${t}"`));
+
   /* 2. Typing updates instantly, decimals included. */
   await type('tuition', '12,500.50');
   await type('students', '80');
@@ -189,7 +209,7 @@ for (const width of [1440, 820, 390]) {
     at(`after Reset: ${r.revenue}, ${r.status}, errors "${r.tuitionError}" "${r.studentsError}"`));
   check(r.remainingRowShown && !r.deficitShown, at('after Reset the legend still shows the over-revenue row'));
 
-  console.log(`${String(width).padStart(4)}px  mounted, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
+  console.log(`${String(width).padStart(4)}px  mounted, tap targets, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
 }
 
 await browser.close();

@@ -514,22 +514,58 @@
       font-variant-numeric: tabular-nums;
       color: var(--ink);
     }
+    /* Sliders, styled by hand so a thumb on a phone gets a real target: the
+       input box is 44px tall (the whole box takes the tap, not just the
+       track) and the handle is 26px, 30px on touch screens. The filled part
+       of the track is painted from --fill, which the script keeps current. */
     .calc-slider input[type="range"] {
+      --range: var(--space-dark);
+      -webkit-appearance: none;
+      appearance: none;
       width: 100%;
-      height: 2rem;          /* a comfortable touch target around the native track */
-      margin: 0.15rem 0 0.1rem;
+      height: 44px;
+      margin: 0;
       cursor: pointer;
       background: transparent;
+      touch-action: pan-y;
     }
-    .calc-facilities input[type="range"] { accent-color: var(--space-dark); }
-    .calc-staffing input[type="range"] { accent-color: var(--budget-dark); }
+    .calc-staffing input[type="range"] { --range: var(--budget-dark); }
+    .calc-slider input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--range) 0 var(--fill, 50%), #D5DDE8 var(--fill, 50%) 100%);
+    }
+    .calc-slider input[type="range"]::-moz-range-track { height: 8px; border-radius: 4px; background: #D5DDE8; }
+    .calc-slider input[type="range"]::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--range); }
+    .calc-slider input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px; height: 26px;
+      margin-top: -9px;
+      border-radius: 50%;
+      background: var(--panel);
+      border: 3px solid var(--range);
+      box-shadow: 0 1px 4px rgba(20,30,51,0.25);
+    }
+    .calc-slider input[type="range"]::-moz-range-thumb {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--panel);
+      border: 3px solid var(--range);
+      box-shadow: 0 1px 4px rgba(20,30,51,0.25);
+    }
+    @media (pointer: coarse) {
+      .calc-slider input[type="range"]::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -11px; }
+      .calc-slider input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; }
+    }
     .calc-figures { font-size: 0.95rem; font-weight: 700; font-variant-numeric: tabular-nums; }
     .calc-hint { font-size: 0.86rem; color: var(--muted); margin-top: 0.2rem; }
     .calc-reset {
       justify-self: start;
       background: none;
       border: none;
-      padding: 0.3rem 0;
+      min-height: 44px;
+      padding: 0.5rem 0;
       font: 700 0.92rem var(--font-body);
       color: var(--space-dark);
       text-decoration: underline;
@@ -540,7 +576,7 @@
 
     .calc-k {
       font-weight: 800;
-      font-size: 0.74rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: var(--muted);
@@ -1107,7 +1143,7 @@
             <label for="calcFacilities">All-in facilities</label>
             <output for="calcFacilities" data-out="facilities-pct">15%</output>
           </div>
-          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
+          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" style="--fill: 37.5%" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
           <p class="calc-figures"><span data-out="facilities-annual">$75,000</span> a year &middot; <span data-out="facilities-monthly">$6,250</span> a month</p>
           <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs. We suggest 15% as a ceiling.</p>
           <p class="calc-flag" data-calc="facilities-flag">Above 15%, facilities start to crowd out program.</p>
@@ -1118,7 +1154,7 @@
             <label for="calcStaffing">All-in staffing</label>
             <output for="calcStaffing" data-out="staffing-pct">60%</output>
           </div>
-          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
+          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" style="--fill: 66.67%" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
           <p class="calc-figures"><span data-out="staffing-annual">$300,000</span> a year &middot; <span data-out="staffing-monthly">$25,000</span> a month</p>
           <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs. Around 60% is a common starting point, and it moves with your model.</p>
         </div>

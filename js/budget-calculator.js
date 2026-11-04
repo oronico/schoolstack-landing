@@ -251,6 +251,11 @@
       parts.staffing.setAttribute('aria-valuetext',
         r.staffing.pct + ' percent, ' + formatUSD(r.staffing.annual) + ' a year');
       if (parts.facilitiesFlag) parts.facilitiesFlag.toggleAttribute('data-on', r.facilitiesAboveCeiling);
+      // The filled part of each slider track, for the hand-styled sliders.
+      [parts.facilities, parts.staffing].forEach(function (input) {
+        var min = Number(input.min) || 0, max = Number(input.max) || 100;
+        input.style.setProperty('--fill', ((Number(input.value) - min) / (max - min) * 100) + '%');
+      });
 
       if (parts.bar) {
         parts.bar.style.setProperty('--w-facilities', r.bar.facilities + '%');
