@@ -172,8 +172,8 @@ Why each exists:
   `js/budget-calculator.js`, the one file the page, the unit tests and the
   feature steps all load. A blocked or missing script leaves the
   server-rendered defaults on screen, which look right and never move, so
-  this check drives the real page: typing, free seats and discount, slider
-  keys, the 15% facilities ceiling, past 100%, reset. It is called a
+  this check drives the real page: typing, slider keys, the 15% facilities
+  ceiling, past 100%, reset. It is called a
   snapshot, not a budget, on purpose: Budget is where the five-year plan is
   built, and the CTA under it says so.
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local

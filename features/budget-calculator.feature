@@ -1,30 +1,16 @@
 Feature: The durability snapshot
 
-  A founder enters full tuition, enrollment, free seats and an average
-  discount, and sees at once what they actually collect and what is left for
-  program once facilities and staffing are paid. It is a one-year snapshot,
+  A founder enters the average tuition they expect to collect and their
+  enrollment, and sees at once what is left for program once facilities and
+  staffing are paid. It is a one-year snapshot,
   not a budget. SchoolStack suggests 15% as a ceiling for facilities; around
   60% for staffing is a starting point that moves with each school's model.
 
   These steps call js/budget-calculator.js, the file the page runs, so the
   sentences below are checked against the shipped arithmetic.
 
-  Scenario Outline: Free seats and discounts come off before anything is allocated
-    Given tuition of <tuition> for <students> students
-    And <free> students attend free and paying students average a <discount>% discount
-    Then annual revenue is <collected>
-    And <given> is given up against full tuition
-
-    Examples:
-      | tuition | students | free | discount | collected | given    |
-      | 10000   | 50       | 2    | 10       | $432,000  | $68,000  |
-      | 10000   | 50       | 0    | 0        | $500,000  | $0       |
-      | 10000   | 50       | 50   | 0        | $0        | $500,000 |
-      | 12000   | 40       | 4    | 25       | $324,000  | $156,000 |
-
   Scenario Outline: Collected tuition and its three parts
     Given tuition of <tuition> for <students> students
-    And every student pays full tuition
     And <facilities>% for facilities and <staffing>% for staffing
     Then annual revenue is <revenue>
     And the remaining budget is <remaining>% or <left> a year
@@ -60,4 +46,3 @@ Feature: The durability snapshot
       | 5000000      | tuition |
       | 12.5         | students |
       | -3           | students |
-      | 51           | free seats |

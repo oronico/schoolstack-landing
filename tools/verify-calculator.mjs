@@ -64,15 +64,12 @@ const READ = `JSON.stringify((() => {
     deficitShown: !el.querySelector('[data-calc="deficit-legend"]').hidden,
     remainingRowShown: !el.querySelector('[data-calc="remaining-legend"]').hidden,
     tuition: el.querySelector('[data-calc="tuition"]').value,
-    freeSeats: el.querySelector('[data-calc="free-seats"]').value,
-    discount: el.querySelector('[data-calc="discount"]').value,
-    full: out('full'), givenUp: out('given-up'),
     facilitiesFlag: el.querySelector('[data-calc="facilities-flag"]').hasAttribute('data-on'),
     students: el.querySelector('[data-calc="students"]').value,
     facilities: el.querySelector('[data-calc="facilities"]').value,
     staffing: el.querySelector('[data-calc="staffing"]').value,
     tuitionInvalid: el.querySelector('[data-calc="tuition"]').getAttribute('aria-invalid'),
-    tuitionError: err('tuition'), studentsError: err('students'), freeSeatsError: err('free-seats'),
+    tuitionError: err('tuition'), studentsError: err('students'),
     barWidth: bar.width, segs,
     cta: (document.querySelector('#budget-calculator .calc-cta a') || {}).getAttribute?.('href') || null,
     overflow: document.documentElement.scrollWidth > innerWidth + 1
@@ -116,36 +113,23 @@ for (const width of [1440, 820, 390]) {
   await sleep(1500);
   const at = (m) => `${width}px  ${m}`;
 
-  /* 1. Mounted, with the defaults: 50 students, 2 free, a 10% discount. */
+  /* 1. Mounted, with the defaults: $10,000 x 50 students. */
   let r = await read();
   if (!check(r.ready, at('the calculator never mounted - is js/budget-calculator.js blocked or missing?'))) continue;
-  check(r.revenue === '$432,000', at(`default collected tuition reads ${r.revenue}, expected $432,000`));
-  check(r.full === '$500,000' && r.givenUp === '$68,000', at(`default full / given up read ${r.full} / ${r.givenUp}`));
-  check(r.facAnnual === '$64,800' && r.facMonthly === '$5,400', at(`default facilities read ${r.facAnnual} / ${r.facMonthly}`));
-  check(r.staffAnnual === '$259,200' && r.staffMonthly === '$21,600', at(`default staffing read ${r.staffAnnual} / ${r.staffMonthly}`));
-  check(r.remPct === '25%' && r.remAnnual === '$108,000', at(`default program reads ${r.remPct} / ${r.remAnnual}`));
+  check(r.revenue === '$500,000', at(`default tuition collected reads ${r.revenue}, expected $500,000`));
+  check(r.facAnnual === '$75,000' && r.facMonthly === '$6,250', at(`default facilities read ${r.facAnnual} / ${r.facMonthly}`));
+  check(r.staffAnnual === '$300,000' && r.staffMonthly === '$25,000', at(`default staffing read ${r.staffAnnual} / ${r.staffMonthly}`));
+  check(r.remPct === '25%' && r.remAnnual === '$125,000', at(`default program reads ${r.remPct} / ${r.remAnnual}`));
   check(!r.facilitiesFlag, at('the facilities ceiling flag is on at 15%'));
   check(r.status === 'ok' && r.alert === '', at(`default state is ${r.status} with alert "${r.alert}"`));
   check(r.cta === '/go/budget', at(`the calculator CTA points at ${r.cta}, expected /go/budget`));
   checkBar(r, at('defaults'));
 
-  /* 2. Typing updates instantly, decimals included. Full pay first, then
-        free seats and a discount by keyboard. */
+  /* 2. Typing updates instantly, decimals included. */
   await type('tuition', '12,500.50');
   await type('students', '80');
-  await type('free-seats', '0');
-  await key('discount', 'Home');
   r = await read();
-  check(r.revenue === '$1,000,040', at(`$12,500.50 x 80 full pay reads ${r.revenue}, expected $1,000,040`));
-  await type('free-seats', '10');
-  await key('discount', 'ArrowRight', 20);
-  r = await read();
-  check(r.discount === '20' && r.revenue === '$700,028',
-    at(`70 paying at 20% off reads ${r.revenue} (discount ${r.discount}), expected $700,028`));
-  await type('free-seats', '81');
-  r = await read();
-  check(r.freeSeatsError && r.revenue === '$700,028', at(`81 free seats of 80 gave error "${r.freeSeatsError}" and revenue ${r.revenue}`));
-  await type('free-seats', '10');
+  check(r.revenue === '$1,000,040', at(`$12,500.50 x 80 reads ${r.revenue}, expected $1,000,040`));
 
   /* 3. Keyboard: the sliders answer arrows, Home and End. */
   await key('facilities', 'ArrowRight', 3);
@@ -192,8 +176,6 @@ for (const width of [1440, 820, 390]) {
   /* 6. The largest accepted figures still fit at this width. */
   await type('tuition', '1000000');
   await type('students', '10000');
-  await type('free-seats', '0');
-  await key('discount', 'Home');
   r = await read();
   check(r.revenue === '$10,000,000,000', at(`the largest accepted inputs read ${r.revenue}`));
   check(!r.overflow, at(`horizontal overflow with the largest figures: ${r.overflow}`));
@@ -201,14 +183,13 @@ for (const width of [1440, 820, 390]) {
   /* 7. Reset restores every default. */
   await browser.evaluate(`(() => { document.querySelector('[data-calc="reset"]').click(); return 'null'; })()`);
   r = await read();
-  check(r.tuition === '10,000' && r.students === '50' && r.freeSeats === '2' && r.discount === '10'
-    && r.facilities === '15' && r.staffing === '60',
-    at(`Reset left ${r.tuition} / ${r.students} / ${r.freeSeats} free / ${r.discount}% / ${r.facilities}% / ${r.staffing}%`));
-  check(r.revenue === '$432,000' && r.status === 'ok' && !r.tuitionError && !r.studentsError && !r.freeSeatsError,
+  check(r.tuition === '10,000' && r.students === '50' && r.facilities === '15' && r.staffing === '60',
+    at(`Reset left ${r.tuition} / ${r.students} / ${r.facilities}% / ${r.staffing}%`));
+  check(r.revenue === '$500,000' && r.status === 'ok' && !r.tuitionError && !r.studentsError,
     at(`after Reset: ${r.revenue}, ${r.status}, errors "${r.tuitionError}" "${r.studentsError}"`));
   check(r.remainingRowShown && !r.deficitShown, at('after Reset the legend still shows the over-revenue row'));
 
-  console.log(`${String(width).padStart(4)}px  mounted, typed, free seats and discount, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
+  console.log(`${String(width).padStart(4)}px  mounted, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
 }
 
 await browser.close();

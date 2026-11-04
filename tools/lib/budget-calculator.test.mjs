@@ -11,32 +11,15 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const calc = require('../../js/budget-calculator.js');
-const { calculate, parseTuition, parseStudents, parseFreeSeats, barSegments, formatUSD, DEFAULTS, MESSAGES } = calc;
+const { calculate, parseTuition, parseStudents, barSegments, formatUSD, DEFAULTS, MESSAGES } = calc;
 
-// Full tuition from every student, so the allocation arithmetic below can be
-// read against round numbers. Free seats and discounts have their own tests.
-const run = (over = {}) => calculate({ ...DEFAULTS, freeSeats: 0, discountPct: 0, ...over });
+const run = (over = {}) => calculate({ ...DEFAULTS, ...over });
 
 /* ---------------------------------------------------------------------------
    The worked examples from the brief
    --------------------------------------------------------------------------- */
 
-test('the page defaults: 2 free seats and a 10% discount turn $500,000 into $432,000', () => {
-  const r = calculate(DEFAULTS);
-  assert.equal(r.full.annual, 500000);
-  assert.equal(r.paying, 48);
-  assert.equal(r.revenue.annual, 432000);          // 48 x $10,000 x 90%
-  assert.equal(r.revenue.monthly, 36000);
-  assert.equal(r.givenUp.annual, 68000);
-  assert.equal(r.perStudent, 8640);
-  assert.equal(r.facilities.annual, 64800);        // 15% of what is collected
-  assert.equal(r.staffing.annual, 259200);
-  assert.equal(r.remaining.annual, 108000);
-  assert.equal(r.status, 'ok');
-  assert.equal(r.facilitiesAboveCeiling, false);
-});
-
-test('full pay: $10,000 x 50 students is $500,000, split 15 / 60 / 25', () => {
+test('defaults: $10,000 x 50 students is $500,000, split 15 / 60 / 25', () => {
   const r = run();
   assert.equal(r.revenue.annual, 500000);
   assert.equal(r.facilities.annual, 75000);
@@ -110,44 +93,8 @@ test('the tight warning starts below 15% remaining, not at it', () => {
 });
 
 /* ---------------------------------------------------------------------------
-   Free seats and discounts
+   The 15% facilities ceiling
    --------------------------------------------------------------------------- */
-
-test('percentages are taken from collected tuition, not the sticker price', () => {
-  const r = run({ discountPct: 20 });
-  assert.equal(r.full.annual, 500000);
-  assert.equal(r.revenue.annual, 400000);
-  assert.equal(r.facilities.annual, 60000);
-  assert.equal(r.givenUp.pct, 20);
-});
-
-test('free seats pay nothing and the discount applies only to students who pay', () => {
-  const r = run({ freeSeats: 5, discountPct: 10 });
-  assert.equal(r.paying, 45);
-  assert.equal(r.revenue.annual, 405000);          // 45 x $10,000 x 90%
-  assert.equal(r.givenUp.annual, 95000);
-});
-
-test('every seat free means nothing collected, and no division by zero', () => {
-  const r = run({ freeSeats: 50 });
-  assert.equal(r.revenue.annual, 0);
-  assert.equal(r.perStudent, 0);
-  assert.equal(r.remaining.annual, 0);
-  assert.equal(run({ students: 0, freeSeats: 0 }).perStudent, 0);
-});
-
-test('more free seats than students are capped at enrollment by the math', () => {
-  assert.equal(run({ students: 10, freeSeats: 40 }).paying, 0);
-});
-
-test('free seats are refused when they outnumber enrollment', () => {
-  assert.deepEqual(parseFreeSeats('2', 50), { value: 2, error: null });
-  assert.deepEqual(parseFreeSeats('50', 50), { value: 50, error: null });
-  const over = parseFreeSeats('51', 50);
-  assert.equal(over.value, null);
-  assert.match(over.error, /no more free seats than students enrolled \(50\)/);
-  for (const raw of ['', '-1', '1.5', 'two']) assert.equal(parseFreeSeats(raw, 50).value, null, raw);
-});
 
 test('facilities above 15% are flagged against the suggested ceiling', () => {
   assert.equal(run({ facilitiesPct: 15 }).facilitiesAboveCeiling, false);

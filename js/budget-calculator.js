@@ -34,17 +34,16 @@
 
   /* -------------------------------------------------------------------------
      Settings. 15% is SchoolStack's suggested ceiling for facilities. 60% for
-     staffing is a starting point that moves with each school's model. The
-     free seats and discount defaults are there so the gap between full and
-     collected tuition is visible from the first view.
+     staffing is a starting point that moves with each school's model.
+     Tuition is the average a school expects to COLLECT per student, so a
+     founder with discounts or free seats enters the net figure; the snapshot
+     stays two inputs and two sliders on purpose.
      ------------------------------------------------------------------------- */
-  var DEFAULTS = { tuition: 10000, students: 50, freeSeats: 2, discountPct: 10, facilitiesPct: 15, staffingPct: 60 };
+  var DEFAULTS = { tuition: 10000, students: 50, facilitiesPct: 15, staffingPct: 60 };
 
   var LIMITS = {
     tuition: { min: 0, max: 1000000 },     // per student, per year
     students: { min: 0, max: 10000 },
-    freeSeats: { min: 0, max: 10000 },
-    discountPct: { min: 0, max: 75 },
     facilitiesPct: { min: 0, max: 40 },
     staffingPct: { min: 0, max: 90 },
   };
@@ -65,7 +64,7 @@
   // Accepts "10000", "10,000", "$10,000.50", " 9500 ". Rejects anything else.
   function parseTuition(raw) {
     var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
-    if (s === '') return { value: null, error: 'Enter full tuition or funding per student.' };
+    if (s === '') return { value: null, error: 'Enter tuition or funding per student.' };
     if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
     if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: 'Use numbers only, like 10,000 or 9,500.50.' };
     var n = Number(s);
@@ -94,15 +93,6 @@
 
   function parseStudents(raw) { return parseCount(raw, 'students', LIMITS.students.max); }
 
-  // Free seats also have to fit inside enrollment, so it takes the student count.
-  function parseFreeSeats(raw, students) {
-    var r = parseCount(raw, 'free seats', LIMITS.freeSeats.max);
-    if (!r.error && students != null && r.value > students) {
-      return { value: null, error: 'Enter no more free seats than students enrolled (' + plain.format(students) + ').' };
-    }
-    return r;
-  }
-
   // Sliders cannot leave their range in a browser, but the API can be called
   // with anything, so clamp and round rather than trust the caller.
   function clampPct(v, key) {
@@ -113,24 +103,14 @@
 
   /* -------------------------------------------------------------------------
      The arithmetic. Pure: numbers in, numbers out.
-
-     Collected tuition = full tuition x paying students x (1 - average discount).
-     Every percentage after that is a share of what is collected, not of the
-     sticker price, because that is the money the school actually spends.
      ------------------------------------------------------------------------- */
   function calculate(input) {
     var tuition = Math.max(0, Number(input.tuition) || 0);
     var students = Math.max(0, Math.floor(Number(input.students) || 0));
-    var freeSeats = Math.min(students, Math.max(0, Math.floor(Number(input.freeSeats) || 0)));
-    var discountPct = clampPct(input.discountPct, 'discountPct');
     var facilitiesPct = clampPct(input.facilitiesPct, 'facilitiesPct');
     var staffingPct = clampPct(input.staffingPct, 'staffingPct');
 
-    var tuitionCents = Math.round(tuition * 100);
-    var paying = students - freeSeats;
-    var fullCents = tuitionCents * students;
-    var revenueCents = Math.round(tuitionCents * paying * (100 - discountPct) / 100);
-    var givenUpCents = fullCents - revenueCents;
+    var revenueCents = Math.round(tuition * 100) * students;
 
     var facilitiesCents = Math.round(revenueCents * facilitiesPct / 100);
     var staffingCents = Math.round(revenueCents * staffingPct / 100);
@@ -146,12 +126,6 @@
     return {
       tuition: tuition,
       students: students,
-      freeSeats: freeSeats,
-      paying: paying,
-      discountPct: discountPct,
-      full: { annual: fullCents / 100 },
-      givenUp: { annual: givenUpCents / 100, pct: fullCents ? Math.round(givenUpCents / fullCents * 100) : 0 },
-      perStudent: students ? revenueCents / students / 100 : 0,
       revenue: { annual: revenueCents / 100, monthly: revenueCents / 1200 },
       facilities: { pct: facilitiesPct, annual: facilitiesCents / 100, monthly: facilitiesCents / 1200 },
       staffing: { pct: staffingPct, annual: staffingCents / 100, monthly: staffingCents / 1200 },
@@ -214,16 +188,15 @@
     if (!el || el.__budgetCalc) return null;
     var q = function (name) { return el.querySelector('[data-calc="' + name + '"]'); };
     var parts = {
-      tuition: q('tuition'), students: q('students'), freeSeats: q('free-seats'), discount: q('discount'),
+      tuition: q('tuition'), students: q('students'),
       facilities: q('facilities'), staffing: q('staffing'),
-      tuitionError: q('tuition-error'), studentsError: q('students-error'), freeSeatsError: q('free-seats-error'),
+      tuitionError: q('tuition-error'), studentsError: q('students-error'),
       reset: q('reset'), alert: q('alert'), bar: q('bar'), deficitLegend: q('deficit-legend'),
       remainingLegend: q('remaining-legend'), facilitiesFlag: q('facilities-flag'),
     };
-    if (!parts.tuition || !parts.students || !parts.freeSeats || !parts.discount
-        || !parts.facilities || !parts.staffing) return null;
+    if (!parts.tuition || !parts.students || !parts.facilities || !parts.staffing) return null;
 
-    var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students, freeSeats: DEFAULTS.freeSeats };
+    var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students };
 
     function setText(name, value) {
       var nodes = el.querySelectorAll('[data-out="' + name + '"]');
@@ -247,32 +220,22 @@
     function render() {
       var t = parseTuition(parts.tuition.value);
       var s = parseStudents(parts.students.value);
-      // Free seats are checked against the enrollment on screen, or the last
-      // good one while that field is being corrected.
-      var f = parseFreeSeats(parts.freeSeats.value, s.error ? last.students : s.value);
       showFieldError(parts.tuition, parts.tuitionError, t.error);
       showFieldError(parts.students, parts.studentsError, s.error);
-      showFieldError(parts.freeSeats, parts.freeSeatsError, f.error);
       // An invalid entry keeps the last good figure on screen rather than
       // flashing to $0, and the field says what to change.
       if (!t.error) last.tuition = t.value;
       if (!s.error) last.students = s.value;
-      if (!f.error) last.freeSeats = f.value;
-      el.toggleAttribute('data-stale', !!(t.error || s.error || f.error));
+      el.toggleAttribute('data-stale', !!(t.error || s.error));
 
       var r = calculate({
-        tuition: last.tuition, students: last.students, freeSeats: last.freeSeats,
-        discountPct: parts.discount.value,
+        tuition: last.tuition, students: last.students,
         facilitiesPct: parts.facilities.value, staffingPct: parts.staffing.value,
       });
 
-      setText('discount-pct', formatPct(r.discountPct));
       setText('revenue', formatUSD(r.revenue.annual));
       setText('revenue-monthly', formatUSD(r.revenue.monthly));
-      setText('full', formatUSD(r.full.annual));
-      setText('given-up', formatUSD(r.givenUp.annual));
-      setText('per-student', formatUSD(r.perStudent));
-      setText('paying', plain.format(r.paying) + ' of ' + plain.format(r.students));
+      setText('revenue-formula', formatUSD(r.tuition) + ' \u00d7 ' + plain.format(r.students) + (r.students === 1 ? ' student' : ' students'));
 
       ['facilities', 'staffing', 'remaining'].forEach(function (k) {
         setText(k + '-pct', formatPct(r[k].pct));
@@ -282,8 +245,6 @@
       setText('deficit-pct', formatPct(Math.max(0, r.allocatedPct - 100)));
       setText('deficit-annual', formatUSD(Math.min(0, r.remaining.annual)));
 
-      parts.discount.setAttribute('aria-valuetext',
-        r.discountPct + ' percent, ' + formatUSD(r.givenUp.annual) + ' less than full tuition');
       parts.facilities.setAttribute('aria-valuetext',
         r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year'
         + (r.facilitiesAboveCeiling ? ', above the 15 percent ceiling' : ''));
@@ -318,14 +279,12 @@
     function reset() {
       parts.tuition.value = formatTuitionField(DEFAULTS.tuition);
       parts.students.value = String(DEFAULTS.students);
-      parts.freeSeats.value = String(DEFAULTS.freeSeats);
-      parts.discount.value = String(DEFAULTS.discountPct);
       parts.facilities.value = String(DEFAULTS.facilitiesPct);
       parts.staffing.value = String(DEFAULTS.staffingPct);
       render();
     }
 
-    ['tuition', 'students', 'freeSeats', 'discount', 'facilities', 'staffing'].forEach(function (k) {
+    ['tuition', 'students', 'facilities', 'staffing'].forEach(function (k) {
       parts[k].addEventListener('input', render);
       parts[k].addEventListener('change', render);
     });
@@ -334,13 +293,10 @@
       var t = parseTuition(parts.tuition.value);
       if (!t.error) parts.tuition.value = formatTuitionField(t.value);
     });
-    [['students', parseStudents], ['freeSeats', function (v) { return parseCount(v, 'free seats', LIMITS.freeSeats.max); }]]
-      .forEach(function (pair) {
-        parts[pair[0]].addEventListener('blur', function () {
-          var r = pair[1](parts[pair[0]].value);
-          if (!r.error) parts[pair[0]].value = String(r.value);
-        });
-      });
+    parts.students.addEventListener('blur', function () {
+      var r = parseStudents(parts.students.value);
+      if (!r.error) parts.students.value = String(r.value);
+    });
     if (parts.reset) parts.reset.addEventListener('click', reset);
 
     el.__budgetCalc = { render: render, reset: reset };
@@ -362,7 +318,6 @@
     MESSAGES: MESSAGES,
     parseTuition: parseTuition,
     parseStudents: parseStudents,
-    parseFreeSeats: parseFreeSeats,
     calculate: calculate,
     barSegments: barSegments,
     formatUSD: formatUSD,

@@ -461,6 +461,7 @@
     .calc-inputs { display: grid; gap: 1.35rem; align-content: start; border-right: 1px solid var(--hairline); }
     .calc-results { display: grid; gap: 1.25rem; align-content: start; background: linear-gradient(180deg, rgba(134,239,172,0.16) 0%, rgba(255,255,255,0) 45%), var(--ground); }
 
+    .calc-field .calc-hint { margin-top: 0.35rem; }
     .calc-field > label, .calc-slider label {
       display: block;
       font-weight: 800;
@@ -492,9 +493,6 @@
     .calc-money input { padding-left: 1.85rem; }
     .calc-field input:focus { border-color: var(--space-dark); }
     .calc-field input[aria-invalid="true"] { border-color: #B91C1C; }
-    .calc-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .calc-pair-hint { margin-top: -0.95rem; }
-    .calc-discount input[type="range"] { accent-color: var(--lending-word); }
     /* Always takes its line, shown or not, so nothing below jumps when
        facilities cross the ceiling. */
     .calc-flag {
@@ -1082,42 +1080,26 @@
     <h2 id="calc-heading">How far does your tuition go?</h2>
     <p class="calc-lead">Know your numbers before you make your next big decision.</p>
     <p class="section-desc">
-      Pressure-test your facilities and staffing against the tuition you actually collect, after
-      free seats and discounts. It is not a budget. It is a quick read on where you stand today.
+      Pressure-test your facilities and staffing against the tuition you expect to collect. It is
+      not a budget. It is a quick read on where you stand today.
     </p>
 
     <div class="calc" data-budget-calculator data-status="ok">
       <div class="calc-inputs" role="group" aria-label="Your numbers">
         <div class="calc-field">
-          <label for="calcTuition">Full annual tuition or funding per student</label>
+          <label for="calcTuition">Average tuition or funding collected per student</label>
           <div class="calc-money">
             <span aria-hidden="true">$</span>
-            <input id="calcTuition" data-calc="tuition" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="10,000" aria-describedby="calcTuitionError">
+            <input id="calcTuition" data-calc="tuition" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="10,000" aria-describedby="calcTuitionHint calcTuitionError">
           </div>
+          <p class="calc-hint" id="calcTuitionHint">What you expect to collect each year, after any discounts or free seats.</p>
           <p class="calc-error" id="calcTuitionError" data-calc="tuition-error" hidden></p>
         </div>
 
-        <div class="calc-pair">
-          <div class="calc-field">
-            <label for="calcStudents">Students enrolled</label>
-            <input id="calcStudents" data-calc="students" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="50" aria-describedby="calcStudentsError">
-            <p class="calc-error" id="calcStudentsError" data-calc="students-error" hidden></p>
-          </div>
-          <div class="calc-field">
-            <label for="calcFreeSeats">Attending free</label>
-            <input id="calcFreeSeats" data-calc="free-seats" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="2" aria-describedby="calcFreeSeatsHint calcFreeSeatsError">
-            <p class="calc-error" id="calcFreeSeatsError" data-calc="free-seats-error" hidden></p>
-          </div>
-        </div>
-        <p class="calc-hint calc-pair-hint" id="calcFreeSeatsHint">Free seats: children of staff, full scholarships, anyone who pays nothing.</p>
-
-        <div class="calc-slider calc-discount">
-          <div class="calc-slider-head">
-            <label for="calcDiscount">Average discount for paying students</label>
-            <output for="calcDiscount" data-out="discount-pct">10%</output>
-          </div>
-          <input id="calcDiscount" data-calc="discount" type="range" min="0" max="75" step="1" value="10" aria-describedby="calcDiscountHint" aria-valuetext="10 percent, $68,000 less than full tuition">
-          <p class="calc-hint" id="calcDiscountHint">Financial aid, sibling and early-payment discounts, averaged across everyone who pays.</p>
+        <div class="calc-field">
+          <label for="calcStudents">Students enrolled</label>
+          <input id="calcStudents" data-calc="students" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="50" aria-describedby="calcStudentsError">
+          <p class="calc-error" id="calcStudentsError" data-calc="students-error" hidden></p>
         </div>
 
         <div class="calc-slider calc-facilities">
@@ -1125,8 +1107,8 @@
             <label for="calcFacilities">All-in facilities</label>
             <output for="calcFacilities" data-out="facilities-pct">15%</output>
           </div>
-          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $64,800 a year">
-          <p class="calc-figures"><span data-out="facilities-annual">$64,800</span> a year &middot; <span data-out="facilities-monthly">$5,400</span> a month</p>
+          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
+          <p class="calc-figures"><span data-out="facilities-annual">$75,000</span> a year &middot; <span data-out="facilities-monthly">$6,250</span> a month</p>
           <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs. We suggest 15% as a ceiling.</p>
           <p class="calc-flag" data-calc="facilities-flag">Above 15%, facilities start to crowd out program.</p>
         </div>
@@ -1136,8 +1118,8 @@
             <label for="calcStaffing">All-in staffing</label>
             <output for="calcStaffing" data-out="staffing-pct">60%</output>
           </div>
-          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $259,200 a year">
-          <p class="calc-figures"><span data-out="staffing-annual">$259,200</span> a year &middot; <span data-out="staffing-monthly">$21,600</span> a month</p>
+          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
+          <p class="calc-figures"><span data-out="staffing-annual">$300,000</span> a year &middot; <span data-out="staffing-monthly">$25,000</span> a month</p>
           <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs. Around 60% is a common starting point, and it moves with your model.</p>
         </div>
 
@@ -1147,9 +1129,8 @@
       <div class="calc-results">
         <div>
           <p class="calc-k">Tuition you collect each year</p>
-          <p class="calc-big" data-out="revenue">$432,000</p>
-          <p class="calc-sub"><span data-out="revenue-monthly">$36,000</span> a month &middot; <span data-out="per-student">$8,640</span> per student enrolled</p>
-          <p class="calc-sub">Full tuition <span data-out="full">$500,000</span> &middot; <span data-out="given-up">$68,000</span> in free seats and discounts &middot; <span data-out="paying">48 of 50</span> paying</p>
+          <p class="calc-big" data-out="revenue">$500,000</p>
+          <p class="calc-sub"><span data-out="revenue-formula">$10,000 &times; 50 students</span> &middot; <span data-out="revenue-monthly">$41,667</span> a month</p>
         </div>
 
         <div>
@@ -1159,16 +1140,16 @@
         </div>
 
         <ul class="calc-legend">
-          <li><span class="sw sw-facilities" aria-hidden="true"></span><span>Facilities</span><span class="pct" data-out="facilities-pct">15%</span><span class="amt" data-out="facilities-annual">$64,800</span></li>
-          <li><span class="sw sw-staffing" aria-hidden="true"></span><span>Staffing</span><span class="pct" data-out="staffing-pct">60%</span><span class="amt" data-out="staffing-annual">$259,200</span></li>
-          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Program and everything else</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$108,000</span></li>
+          <li><span class="sw sw-facilities" aria-hidden="true"></span><span>Facilities</span><span class="pct" data-out="facilities-pct">15%</span><span class="amt" data-out="facilities-annual">$75,000</span></li>
+          <li><span class="sw sw-staffing" aria-hidden="true"></span><span>Staffing</span><span class="pct" data-out="staffing-pct">60%</span><span class="amt" data-out="staffing-annual">$300,000</span></li>
+          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Program and everything else</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$125,000</span></li>
           <li class="is-deficit" data-calc="deficit-legend" hidden><span class="sw sw-deficit" aria-hidden="true"></span><span>Over collected tuition</span><span class="pct" data-out="deficit-pct">0%</span><span class="amt" data-out="deficit-annual">$0</span></li>
         </ul>
 
         <div class="calc-remaining">
           <p class="calc-k">Available for program</p>
-          <p class="calc-remaining-figure"><span data-out="remaining-annual">$108,000</span> <small>a year</small></p>
-          <p><span data-out="remaining-pct">25%</span> of collected tuition &middot; <span data-out="remaining-monthly">$9,000</span> a month</p>
+          <p class="calc-remaining-figure"><span data-out="remaining-annual">$125,000</span> <small>a year</small></p>
+          <p><span data-out="remaining-pct">25%</span> of collected tuition &middot; <span data-out="remaining-monthly">$10,417</span> a month</p>
           <p>This has to cover:</p>
           <ul class="calc-covers">
             <li>Instructional materials</li>
