@@ -93,6 +93,66 @@
 
   function parseStudents(raw) { return parseCount(raw, 'students', LIMITS.students.max); }
 
+  /* -------------------------------------------------------------------------
+     Break-even. The enrollment a year of running the school needs: total
+     yearly expenses (debt service included, one-time purchases left out, the
+     same basis SchoolStack Budget uses) divided by what each student brings
+     in, rounded up to a whole student. Held in cents like the snapshot.
+     ------------------------------------------------------------------------- */
+  var BE_DEFAULTS = { expenses: 600000, perStudent: 10000 };
+
+  var BE_LIMITS = {
+    expenses: { min: 0, max: 50000000 },   // per year
+    perStudent: { min: 1, max: 1000000 },  // per student, per year
+  };
+
+  // The money parser both break-even fields share. Same rules as tuition.
+  function parseAmount(raw, emptyMessage, max, perWhat) {
+    var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
+    if (s === '') return { value: null, error: emptyMessage };
+    if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
+    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: 'Use numbers only, like 600,000 or 9,500.50.' };
+    var n = Number(s);
+    if (!isFinite(n)) return { value: null, error: 'Use numbers only, like 600,000 or 9,500.50.' };
+    if (n > max) return { value: null, error: 'Enter an amount up to ' + formatUSD(max) + ' ' + perWhat + '.' };
+    return { value: Math.round(n * 100) / 100, error: null };
+  }
+
+  function parseExpenses(raw) {
+    return parseAmount(raw, 'Enter your total yearly expenses, including debt service.',
+      BE_LIMITS.expenses.max, 'a year');
+  }
+
+  function parsePerStudent(raw) {
+    var r = parseAmount(raw, 'Enter tuition or funding per student.',
+      BE_LIMITS.perStudent.max, 'per student');
+    if (!r.error && r.value < BE_LIMITS.perStudent.min) {
+      return { value: null, error: 'Enter at least $1 per student.' };
+    }
+    return r;
+  }
+
+  function breakEven(input) {
+    var e = Math.round(Math.max(0, Number(input.expenses) || 0) * 100);
+    var p = Math.round(Math.max(0, Number(input.perStudent) || 0) * 100);
+    if (p <= 0) return { students: null, expenses: e / 100, perStudent: 0, collected: 0, cushion: 0, exact: false };
+    // Whole cents in, so this is integer arithmetic: the smallest whole number
+    // of students whose collections reach the expenses. The two guards keep a
+    // float quotient that lands a hair off a whole number from moving it.
+    var q = Math.floor(e / p);
+    while (q > 0 && q * p > e) q--;
+    while (q * p < e) q++;
+    var collected = q * p;
+    return {
+      students: q,
+      expenses: e / 100,
+      perStudent: p / 100,
+      collected: collected / 100,
+      cushion: (collected - e) / 100,
+      exact: collected === e,
+    };
+  }
+
   // Sliders cannot leave their range in a browser, but the API can be called
   // with anything, so clamp and round rather than trust the caller.
   function clampPct(v, key) {
@@ -310,9 +370,91 @@
     return el.__budgetCalc;
   }
 
+  /* The break-even card. Its parts carry data-be attributes; its figures use
+     data-out names starting "be-", so it never collides with the snapshot. */
+  function breakEvenSentence(r) {
+    var who = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
+    if (r.exact) return 'At ' + who + ' you collect ' + formatUSD(r.collected) + ', exactly what a year costs.';
+    return 'At ' + who + ' you collect ' + formatUSD(r.collected) + ', ' + formatUSD(r.cushion) + ' above what a year costs.';
+  }
+
+  function mountBreakEven(el) {
+    if (!el || el.__breakEven) return null;
+    var q = function (name) { return el.querySelector('[data-be="' + name + '"]'); };
+    var parts = {
+      expenses: q('expenses'), perStudent: q('per-student'),
+      expensesError: q('expenses-error'), perStudentError: q('per-student-error'),
+      alert: q('alert'),
+    };
+    if (!parts.expenses || !parts.perStudent) return null;
+
+    var last = { expenses: BE_DEFAULTS.expenses, perStudent: BE_DEFAULTS.perStudent };
+
+    function setText(name, value) {
+      var nodes = el.querySelectorAll('[data-out="' + name + '"]');
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].textContent !== value) nodes[i].textContent = value;
+      }
+    }
+
+    function showFieldError(input, errorEl, message) {
+      if (message) {
+        input.setAttribute('aria-invalid', 'true');
+        errorEl.textContent = message;
+        errorEl.hidden = false;
+      } else {
+        input.removeAttribute('aria-invalid');
+        errorEl.textContent = '';
+        errorEl.hidden = true;
+      }
+    }
+
+    function render() {
+      var e = parseExpenses(parts.expenses.value);
+      var p = parsePerStudent(parts.perStudent.value);
+      showFieldError(parts.expenses, parts.expensesError, e.error);
+      showFieldError(parts.perStudent, parts.perStudentError, p.error);
+      // Like the snapshot: a bad entry keeps the last good answer on screen.
+      if (!e.error) last.expenses = e.value;
+      if (!p.error) last.perStudent = p.value;
+      el.toggleAttribute('data-stale', !!(e.error || p.error));
+
+      var r = breakEven(last);
+      var result = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
+      setText('be-result', result);
+      setText('be-formula', formatUSD(r.expenses) + ' ÷ ' + formatUSD(r.perStudent) + ' per student'
+        + (r.exact ? '' : ', rounded up'));
+      setText('be-sentence', breakEvenSentence(r));
+
+      var announce = result + ' to break even.';
+      if (parts.alert && parts.alert.textContent !== announce) parts.alert.textContent = announce;
+      return r;
+    }
+
+    ['expenses', 'perStudent'].forEach(function (k) {
+      parts[k].addEventListener('input', render);
+      parts[k].addEventListener('change', render);
+    });
+    parts.expenses.addEventListener('blur', function () {
+      var r = parseExpenses(parts.expenses.value);
+      if (!r.error) parts.expenses.value = formatTuitionField(r.value);
+    });
+    parts.perStudent.addEventListener('blur', function () {
+      var r = parsePerStudent(parts.perStudent.value);
+      if (!r.error) parts.perStudent.value = formatTuitionField(r.value);
+    });
+
+    el.__breakEven = { render: render };
+    el.setAttribute('data-ready', '');
+    render();
+    return el.__breakEven;
+  }
+
   function mountAll(doc) {
     var nodes = doc.querySelectorAll('[data-budget-calculator]');
     for (var i = 0; i < nodes.length; i++) mount(nodes[i]);
+    var be = doc.querySelectorAll('[data-break-even-calculator]');
+    for (var j = 0; j < be.length; j++) mountBreakEven(be[j]);
   }
 
   return {
@@ -330,5 +472,12 @@
     formatTuitionField: formatTuitionField,
     mount: mount,
     mountAll: mountAll,
+    BE_DEFAULTS: BE_DEFAULTS,
+    BE_LIMITS: BE_LIMITS,
+    parseExpenses: parseExpenses,
+    parsePerStudent: parsePerStudent,
+    breakEven: breakEven,
+    breakEvenSentence: breakEvenSentence,
+    mountBreakEven: mountBreakEven,
   };
 });

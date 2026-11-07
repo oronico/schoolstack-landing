@@ -51,7 +51,14 @@ Then('the deficit runs from the revenue mark to the end of the bar', function ()
 });
 
 Then('{string} is refused as {word}', function (input, field) {
-  const r = field === 'students' ? calc.parseStudents(input) : calc.parseTuition(input);
+  const parsers = {
+    tuition: calc.parseTuition,
+    students: calc.parseStudents,
+    expenses: calc.parseExpenses,
+    'per-student': calc.parsePerStudent,
+  };
+  assert.ok(parsers[field], `no field called "${field}"`);
+  const r = parsers[field](input);
   assert.equal(r.value, null, `"${input}" was accepted as ${r.value}`);
   assert.ok(r.error, `"${input}" was refused with no message for the founder`);
 });
