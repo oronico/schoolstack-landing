@@ -80,6 +80,30 @@ const READ = `JSON.stringify((() => {
 
 const read = () => browser.evaluate(READ);
 
+/* The break-even card: its figures, its fields and their errors. */
+const READ_BE = `JSON.stringify((() => {
+  const el = document.querySelector('[data-break-even-calculator]');
+  const out = (n) => el.querySelector('[data-out="' + n + '"]').textContent.trim();
+  const err = (n) => { const e = el.querySelector('[data-be="' + n + '-error"]'); return e.hidden ? '' : e.textContent; };
+  return {
+    ready: el.hasAttribute('data-ready'),
+    result: out('be-result'), formula: out('be-formula'), sentence: out('be-sentence'),
+    alert: el.querySelector('[data-be="alert"]').textContent,
+    expenses: el.querySelector('[data-be="expenses"]').value,
+    expensesError: err('expenses'), perStudentError: err('per-student'),
+    perStudentInvalid: el.querySelector('[data-be="per-student"]').getAttribute('aria-invalid'),
+    overflow: document.documentElement.scrollWidth > innerWidth + 1
+      ? document.documentElement.scrollWidth + ' > ' + innerWidth : null,
+  };
+})())`;
+const readBe = () => browser.evaluate(READ_BE);
+
+async function typeBe(name, text) {
+  await browser.evaluate(`(() => { const i = document.querySelector('[data-be="${name}"]'); i.focus(); i.select(); return 'null'; })()`);
+  await browser.send('Input.insertText', { text });
+  await sleep(50);
+}
+
 /* Type into a field as a person would: focus, select all, send the keys. */
 async function type(name, text) {
   await browser.evaluate(`(() => { const i = document.querySelector('[data-calc="${name}"]'); i.focus(); i.select(); return 'null'; })()`);
@@ -209,7 +233,43 @@ for (const width of [1440, 820, 390]) {
     at(`after Reset: ${r.revenue}, ${r.status}, errors "${r.tuitionError}" "${r.studentsError}"`));
   check(r.remainingRowShown && !r.deficitShown, at('after Reset the legend still shows the over-revenue row'));
 
-  console.log(`${String(width).padStart(4)}px  mounted, tap targets, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
+  /* 8. Break-even: mounted with its defaults, then typed. */
+  let b = await readBe();
+  if (check(b.ready, at('the break-even card never mounted - is js/budget-calculator.js blocked or missing?'))) {
+    check(b.result === '60 students', at(`default break-even reads "${b.result}", expected "60 students"`));
+    check(b.formula === '$600,000 ÷ $10,000 per student', at(`default break-even working reads "${b.formula}"`));
+    check(/exactly what a year costs/.test(b.sentence), at(`default break-even sentence reads "${b.sentence}"`));
+
+    await typeBe('expenses', '600,001');
+    b = await readBe();
+    check(b.result === '61 students', at(`$600,001 at $10,000 reads "${b.result}", expected it rounded UP to "61 students"`));
+    check(/rounded up/.test(b.formula), at(`a remainder did not say it rounded up: "${b.formula}"`));
+    check(b.sentence === 'At 61 students you collect $610,000, $9,999 above what a year costs.', at(`sentence reads "${b.sentence}"`));
+    check(b.alert === '61 students to break even.', at(`screen readers hear "${b.alert}"`));
+
+    // Bad input is named on the field and keeps the last good answer.
+    await typeBe('per-student', '0');
+    b = await readBe();
+    check(b.perStudentInvalid === 'true' && /at least \$1/.test(b.perStudentError), at(`$0 per student was not refused: "${b.perStudentError}"`));
+    check(b.result === '61 students', at(`a refused entry changed the answer to "${b.result}"`));
+    await typeBe('expenses', 'six hundred');
+    b = await readBe();
+    check(b.expensesError, at('non-numeric expenses were not flagged'));
+
+    // The largest accepted figures still fit at this width.
+    await typeBe('expenses', '50000000');
+    await typeBe('per-student', '1');
+    b = await readBe();
+    check(b.result === '50,000,000 students', at(`the largest break-even reads "${b.result}"`));
+    check(!b.overflow, at(`horizontal overflow with the largest break-even: ${b.overflow}`));
+
+    // The field tidies itself once the founder leaves it.
+    await browser.evaluate(`(() => { document.querySelector('[data-be="expenses"]').blur(); return 'null'; })()`);
+    b = await readBe();
+    check(b.expenses === '50,000,000', at(`expenses box reads "${b.expenses}" after blur, expected "50,000,000"`));
+  }
+
+  console.log(`${String(width).padStart(4)}px  mounted, tap targets, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset, break-even`);
 }
 
 await browser.close();
