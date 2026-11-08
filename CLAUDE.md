@@ -274,12 +274,16 @@ measures and no others.
 - **Three tools are promoted: Space, Budget, Access.** Lending Lab is not
   promoted on schoolstack.ai while it gets more work: no card, nav, footer,
   FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
-- **QuickBooks Online is the accounting system of record.** Plus is the
-  working assumption; never present Advanced as required.
+- **QuickBooks Online is the accounting system of record.** Never present
+  Advanced as required. The owner's guidance for nonprofits: review Advanced
+  for the categorization Form 990 preparation needs. The FAQ says so.
+- **The QBO integration rolls out with the design partner pilot** from
+  November 2026, cash-basis schools first; an accrual cohort follows. It
+  opens more widely with the platform in 2027.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
-  does not replace QuickBooks or Gusto. Do not claim either integration is
-  live, name Gusto actions nobody has confirmed, or promise every platform
-  capability ships at once. The platform is "in development for 2027".
+  does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
+  Gusto actions nobody has confirmed, or promise every platform capability
+  ships at once. The platform is "in development for 2027".
 - **The calculator's starting allocations are illustrations, not
   benchmarks.** No facilities ceiling, no staffing norm, and no message that
   reads a positive remainder as financial health. "Tuition and funding", not
