@@ -11,11 +11,15 @@
  * one implementation, three callers.
  */
 
-/* Skip the skip-link's own target and any bare "#" placeholder. */
-export function anchorTargets(html) {
+/* Skip the skip-link's own target and any bare "#" placeholder.
+ *
+ * `home: true` collects the other kind: "/#faq", a link from another page to
+ * an id on the home page. The About page's nav and footer use those. */
+export function anchorTargets(html, { home = false } = {}) {
   const out = new Map(); // id -> [line, ...]
+  const re = home ? /href="\/#([A-Za-z][\w:.-]*)"/g : /href="#([A-Za-z][\w:.-]*)"/g;
   html.split('\n').forEach((line, i) => {
-    for (const m of line.matchAll(/href="#([A-Za-z][\w:.-]*)"/g)) {
+    for (const m of line.matchAll(re)) {
       if (!out.has(m[1])) out.set(m[1], []);
       out.get(m[1]).push(i + 1);
     }
@@ -33,11 +37,47 @@ export function elementIds(html) {
  * Anchors whose target does not exist. Each entry names the lines that link to
  * it, so the failure points at the link rather than at the missing id.
  */
-export function danglingAnchors(html) {
+export function danglingAnchors(html, homeHtml = html) {
   const ids = elementIds(html);
+  const homeIds = elementIds(homeHtml);
   const out = [];
   for (const [target, lines] of anchorTargets(html)) {
     if (!ids.has(target)) out.push({ target, lines });
+  }
+  // "/#faq" from any page has to land on an id the home page carries.
+  for (const [target, lines] of anchorTargets(html, { home: true })) {
+    if (!homeIds.has(target)) out.push({ target: '/#' + target, lines });
+  }
+  return out;
+}
+
+/**
+ * The site has no templating, so the nav and footer are written out on every
+ * page. This is what stops the copies drifting: it returns each page's
+ * <nav> and <footer>, normalised for the two differences that are meant to
+ * be there - the home page links "#faq" where other pages link "/#faq", and
+ * each page marks its own nav item aria-current.
+ */
+export function pageChrome(html) {
+  const pick = (tag) => (html.match(new RegExp(`<${tag}\\b[\\s\\S]*?</${tag}>`)) || [''])[0]
+    .replace(/href="\/#/g, 'href="#')
+    .replace(/\s+aria-current="page"/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return { nav: pick('nav'), footer: pick('footer') };
+}
+
+/** Where two pages' nav or footer differ, as short readable excerpts. */
+export function chromeDrift(htmlA, htmlB) {
+  const a = pageChrome(htmlA);
+  const b = pageChrome(htmlB);
+  const out = [];
+  for (const part of ['nav', 'footer']) {
+    if (!a[part] || !b[part]) { out.push(`${part}: missing on one page`); continue; }
+    if (a[part] === b[part]) continue;
+    let i = 0;
+    while (i < a[part].length && a[part][i] === b[part][i]) i++;
+    out.push(`${part}: first differs at "${a[part].slice(Math.max(0, i - 30), i + 50)}" vs "${b[part].slice(Math.max(0, i - 30), i + 50)}"`);
   }
   return out;
 }

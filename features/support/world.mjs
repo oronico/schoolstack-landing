@@ -24,6 +24,7 @@ export const ctx = {
   browser: null,
   html: null,
   css: null,
+  siteCss: null,
 };
 
 export const read = (f) => readFileSync(join(ROOT, f), 'utf8');
@@ -31,6 +32,7 @@ export const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 BeforeAll(async () => {
   ctx.html = read('index.html');
   ctx.css = read('fonts/fonts.css');
+  ctx.siteCss = read('css/site.css');
   ctx.site = await serveSite();
   ctx.browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
   await ctx.browser.send('Page.enable');

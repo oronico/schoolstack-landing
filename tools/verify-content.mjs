@@ -28,10 +28,12 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift } from './lib/page-audit.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
+const aboutHtml = read('about.html');
+const siteCss = read('css/site.css');
 
 const failures = [];
 const fail = (msg) => failures.push(msg);
@@ -152,7 +154,7 @@ if (ogImage) {
 const referenced = new Set();
 const note = (p) => { if (p && !/^(https?:|mailto:|data:|#)/.test(p)) referenced.add(p.split('?')[0].replace(/^\//, '')); };
 
-for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1]);
+for (const m of (html + aboutHtml).matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
 // Absolute metadata URLs on our own domain are still our files.
 for (const m of html.matchAll(/content="https:\/\/schoolstack\.ai\/([^"]+\.(?:png|svg|webp|ico))"/g)) note(m[1]);
 for (const i of manifest.icons) note(i.src);
@@ -162,7 +164,10 @@ for (const m of read('fonts/fonts.css').matchAll(/url\(([^)]+)\)/g)) {
   note(href.startsWith('/') ? href : join('fonts', href));
 }
 
-const missing = [...referenced].filter((p) => !p.startsWith('go/') && !existsSync(join(ROOT, p)));
+// Netlify serves about.html at /about, so a clean URL counts when its .html
+// file exists.
+const missing = [...referenced].filter((p) => !p.startsWith('go/')
+  && !existsSync(join(ROOT, p)) && !existsSync(join(ROOT, p + '.html')));
 console.log(`Referenced files: ${referenced.size}, missing: ${missing.length || 'none'}`);
 for (const p of missing) fail(`${p} is referenced but is not in the repo`);
 
@@ -192,6 +197,12 @@ const ratchet = KNOWN_DEBT.entitlement === 0
   : `entitlement debt ${voice.debt.length}/${KNOWN_DEBT.entitlement}`;
 console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), ${ratchet}`);
 for (const f of voice.faults) fail(f);
+// The About page meets the same rules. Its "deserves" count is its own, so a
+// first instance there fails here rather than hiding under the home page's.
+const aboutVoice = voiceFaults(aboutHtml);
+console.log(`Voice on about.html: ${aboutVoice.faults.length || 'no'} fault(s), "deserves" on ${aboutVoice.debt.length} line(s)`);
+for (const f of aboutVoice.faults) fail(`about.html: ${f}`);
+if (aboutVoice.debt.length) fail(`about.html carries "deserves" on line(s) ${aboutVoice.debt.map((d) => d.line).join(', ')} - CLAUDE.md retires it`);
 
 /* Printed on every run, passing or failing. A ratchet nobody reads is a
    ratchet that never turns. */
@@ -205,14 +216,20 @@ if (voice.debt.length) {
       links missing rel=noopener, and the font families the page asks for
       against the ones fonts.css actually serves.
    --------------------------------------------------------------------------- */
-const dangling = danglingAnchors(html);
-const unsafe = unsafeBlankLinks(html);
-const wanted = declaredFontFamilies(html);
+const dangling = [
+  ...danglingAnchors(html),
+  ...danglingAnchors(aboutHtml, html).map((d) => ({ ...d, target: d.target + ' (about.html)' })),
+];
+const unsafe = [...unsafeBlankLinks(html), ...unsafeBlankLinks(aboutHtml)];
+const wanted = declaredFontFamilies(siteCss);
+const drift = chromeDrift(html, aboutHtml);
 const served = servedFontFamilies(read('fonts/fonts.css'));
 
 console.log(`Anchors: ${dangling.length || 'none'} dangling  |  target=_blank without noopener: ${unsafe.length || 'none'}`);
 console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.css serves ${[...served].join(' + ')}`);
 
+console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on index.html and about.html`);
+for (const d of drift) fail(`the ${d} - the nav and footer are written out on each page and must match`);
 for (const d of dangling) {
   fail(`href="#${d.target}" on line(s) ${d.lines.join(', ')} points at an id that does not exist - the link scrolls nowhere`);
 }

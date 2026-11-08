@@ -1,10 +1,10 @@
 Feature: The durability snapshot
 
-  A founder enters the average tuition they expect to collect and their
-  enrollment, and sees at once what is left for program once facilities and
-  staffing are paid. It is a one-year snapshot,
-  not a budget. SchoolStack suggests 15% as a ceiling for facilities; around
-  60% for staffing is a starting point that moves with each school's model.
+  A founder enters the average tuition or funding they expect per student and
+  their enrollment, and sees at once what remains for other expenses and
+  reserves once facilities and staffing are paid. It is a one-year
+  illustration, not a budget. The starting allocations (15% facilities, 60%
+  staffing) are illustrations to adjust, not benchmarks.
 
   These steps call js/budget-calculator.js, the file the page runs, so the
   sentences below are checked against the shipped arithmetic.
@@ -25,10 +25,6 @@ Feature: The durability snapshot
       | 10000     | 50       | 26         | 60       | $500,000 | 14        | $70,000   | tight  |
       | 10000     | 50       | 40         | 60       | $500,000 | 0         | $0        | tight  |
       | 10000     | 50       | 40         | 90       | $500,000 | -30       | −$150,000 | over   |
-
-  Scenario: Facilities above the 15% ceiling are flagged
-    Given 16% for facilities and 60% for staffing
-    Then facilities are flagged as above the ceiling
 
   Scenario: Past 100%, the bar shows the deficit without a negative segment
     Given 40% for facilities and 90% for staffing

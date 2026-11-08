@@ -1,8 +1,16 @@
 # CLAUDE.md — agent contract for schoolstack-landing
 
-This repo is the marketing site at **https://schoolstack.ai**. It is a single
-static `index.html` plus assets, published by Netlify straight from the repo
-root. There is no build step: what is committed is what ships.
+This repo is the marketing site at **https://schoolstack.ai**. It is two
+static pages, `index.html` and `about.html` (served at `/about`), sharing one
+stylesheet (`css/site.css`), one small script (`js/site.js`) and the assets,
+published by Netlify straight from the repo root. There is no build step: what
+is committed is what ships.
+
+There is no templating either, so the nav and footer are written out on each
+page. `chromeDrift()` in `tools/lib/page-audit.mjs` fails `verify-content` if
+the copies differ in anything but the intended two ways (`#faq` on the home
+page is `/#faq` elsewhere; each page marks its own nav item `aria-current`).
+Change both, or the check stops you.
 
 Read this before changing anything. Every rule below exists because it was
 broken once and cost a round trip.
@@ -144,6 +152,8 @@ node tools/verify-content.mjs   # files: redirects, structured data, voice rules
 node tools/verify-render.mjs    # layout: stretched images, heading order, overflow, dead CTAs
 node tools/verify-headers.mjs   # the CSP does not block the page it protects
 node tools/verify-calculator.mjs # the durability snapshot, driven by keyboard and typing
+node tools/verify-a11y.mjs      # contrast, landmarks, skip link, labels, on both pages
+node tools/verify-form.mjs      # the design partner application, all four submit outcomes
 node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts loaded
 npx cucumber-js                 # the same checks, read as specifications
 ```
@@ -167,22 +177,26 @@ Why each exists:
   to 768px tall and squashed it. A source-level check that only looked for the
   attributes passed happily. This one compares each image's *rendered* aspect
   ratio to its natural one, and cross-checks every `/go/` link against
-  `_redirects` so a typo cannot become a dead CTA on a live page.
+  `_redirects` so a typo cannot become a dead CTA on a live page. It renders
+  `/` and `/about`, fails if retired words ("Lending Lab", "four tools")
+  reach a reader, and fails if a nav link lands its heading under the fixed
+  nav.
 - **verify-calculator** — the durability snapshot's math lives in
   `js/budget-calculator.js`, the one file the page, the unit tests and the
   feature steps all load. A blocked or missing script leaves the
   server-rendered defaults on screen, which look right and never move, so
-  this check drives the real page: typing, slider keys, the 15% facilities
-  ceiling, past 100%, reset. It is called a
-  snapshot, not a budget, on purpose: Budget is where the five-year plan is
-  built, and the CTA under it says so. The same file carries the
-  **break-even card** beside it (owner request, November 2026): total yearly
-  expenses including debt service, divided by tuition or per-pupil funding
-  per student, rounded UP to a whole student. One-time purchases stay out,
-  the same basis SchoolStack Budget uses for break-even. Its arithmetic is
-  unit tested in `tools/lib/break-even.test.mjs`, stated in
-  `features/break-even.feature`, and driven in the browser by the same
-  verify-calculator run.
+  this check drives the real page: typing, slider keys, labels that match
+  the chart, past 100%, reset, tap targets. It is called a snapshot, not a
+  budget, on purpose: Budget is where the five-year plan is built, and the
+  CTA under it says so. Wording changes must not move a number: compare
+  `calculate()` against `main` over a grid of inputs before merging. The
+  same file carries the **break-even card** beside it (owner request,
+  November 2026): total yearly expenses including debt service, divided by
+  tuition or per-pupil funding per student, rounded UP to a whole student.
+  One-time purchases stay out, the same basis SchoolStack Budget uses for
+  break-even. Its arithmetic is unit tested in
+  `tools/lib/break-even.test.mjs`, stated in `features/break-even.feature`,
+  and driven in the browser by the same verify-calculator run.
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local
   development nor the diff will tell you it blocked your own stylesheet.
 - **build-images** — the OG card once shipped in DejaVu Sans because the
@@ -237,6 +251,12 @@ measures and no others.
   first click per person would ever reach the CDN and the counts would
   silently undercount. Netlify Analytics reads CDN request logs, which is the
   only reason outbound clicks are countable at all.
+- `/go/lending-lab` and `/go/screener` stay in `_redirects` although nothing
+  on the site links them: Lending Lab is off the public site for now, and
+  links already shared must keep working. `verify-render` names them as the
+  only rules allowed to have no CTA.
+- `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
+  rule states it). The local harness does the same.
 - `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
 - The lead form is Netlify Forms (`name="early-access"`). It is the design
   partner application: the name predates the cohort and stays, because a
@@ -254,3 +274,26 @@ measures and no others.
   table rows. If there is no real screenshot, ship no screenshot.
 - Social/profile URLs cannot be verified from the build sandbox. When adding
   one, say so and ask for a click-through check before merge.
+
+## 7. Product facts copy must not contradict (November 2026)
+
+- **Three tools are promoted: Space, Budget, Access.** Lending Lab is not
+  promoted on schoolstack.ai while it gets more work: no card, nav, footer,
+  FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
+- **QuickBooks Online is the accounting system of record.** Plus is the
+  working assumption; never present Advanced as required.
+- **Gusto is a planned integration.** SchoolStack does not run payroll and
+  does not replace QuickBooks or Gusto. Do not claim either integration is
+  live, name Gusto actions nobody has confirmed, or promise every platform
+  capability ships at once. The platform is "in development for 2027".
+- **The calculator's starting allocations are illustrations, not
+  benchmarks.** No facilities ceiling, no staffing norm, and no message that
+  reads a positive remainder as financial health. "Tuition and funding", not
+  "tuition", because the input covers per-student funding too.
+- **Contact:** every Allison contact link is `allison@schoolstack.ai`.
+  Daniel's is `daniel@schoolharbor.com`. LinkedIn and other profile URLs need
+  a human click-through before merge (section 6).
+- **Who is who:** SchoolStack is a program of Building Hope Impact Fund (its
+  incubator), not a separate legal or tax-exempt entity, so never put a
+  501(c)(3) badge next to the SchoolStack name alone. School Harbor is the
+  technology development partner; Daniel leads development through it.
