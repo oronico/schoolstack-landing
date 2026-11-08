@@ -32,14 +32,34 @@ const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
    and layout edits do not trip it - the failure being caught here is a blank
    or half-rendered page, not a paragraph that moved. Update these when the
    page genuinely changes shape. */
-const EXPECT = {
-  minImages: 8,      // logo, four tool marks, two funders, BHIF, footer logo
-  h1: 1,
-  minTextChars: 4000,
-  // Landmarks: the anchor targets the nav points at, plus the form the whole
-  // page exists to feed.
-  ids: ['budget-calculator', 'tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
+const PAGES = {
+  '/': {
+    minImages: 8,    // logo, three tool marks, two funders, BHIF, footer logo
+    h1: 1,
+    minTextChars: 4000,
+    // Landmarks: the anchor targets the nav points at, plus the form the whole
+    // page exists to feed.
+    ids: ['budget-calculator', 'tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
+  },
+  // Loaded by its clean URL, as a visitor opening or refreshing it would.
+  '/about': {
+    minImages: 3,    // logo, BHIF, footer logo
+    h1: 1,
+    minTextChars: 3000,
+    ids: ['people', 'values', 'contact', 'allison-name', 'daniel-name'],
+  },
 };
+
+/* Lending Lab is not promoted on schoolstack.ai for now. Its two /go/ rules
+   stay in _redirects so links already shared keep working, and they are the
+   only rules allowed to have no CTA on the page. Anything else unlinked is
+   still a CTA that fell off. */
+const UNLINKED_ON_PURPOSE = new Set(['/go/lending-lab', '/go/screener']);
+
+/* Words that must not reach a reader while Lending Lab is off the site, and
+   the tool count it took with it. Checked against rendered text, which is
+   what a visitor sees, so a comment in the source does not trip it. */
+const RETIRED = [/lending lab/i, /\bfour tools\b/i, /\ball four\b/i, /check your fit/i];
 
 const site = await serveSite();
 const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
@@ -47,14 +67,15 @@ await browser.send('Page.enable');
 
 const failures = [];
 
+for (const [path, EXPECT] of Object.entries(PAGES))
 for (const width of VIEWPORTS) {
   await browser.send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
-  const navError = await browser.navigate(site.base + '/');
+  const navError = await browser.navigate(site.base + path);
   if (navError) {
-    failures.push(`${width}px  navigation failed: ${navError}`);
+    failures.push(`${path} ${width}px  navigation failed: ${navError}`);
     continue;
   }
-  await sleep(3000);
+  await sleep(2000);
 
   const r = await browser.evaluate(`(async () => {
       await document.fonts.ready;
@@ -133,8 +154,30 @@ for (const width of VIEWPORTS) {
         };
       }
 
+      const bodyText = document.body.innerText || '';
+      const retired = ${JSON.stringify(RETIRED.map((r) => r.source))}
+        .filter((src) => new RegExp(src, 'i').test(bodyText));
+
+      // Every in-page destination in the nav and footer, scrolled to the way
+      // a click does it (scroll-margin respected): its first heading has to
+      // sit below the fixed nav, not under it.
+      const nav = document.querySelector('nav');
+      const hidden = [];
+      const targets = [...new Set([...document.querySelectorAll('nav a[href*="#"], footer a[href*="#"], .hero a[href^="#"]')]
+        .map((a) => a.getAttribute('href').split('#')[1]))];
+      for (const id of targets) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.scrollIntoView({ block: 'start', behavior: 'instant' });
+        const heading = el.querySelector('h2, h3') || el;
+        const top = heading.getBoundingClientRect().top;
+        const navBottom = nav.getBoundingClientRect().bottom;
+        if (top < navBottom) hidden.push(id + ' (' + Math.round(top) + 'px, nav ends ' + Math.round(navBottom) + 'px)');
+      }
+      window.scrollTo(0, 0);
+
       return JSON.stringify({
-        stretched, skips, goLinks, deadAnchors, fontsApplied,
+        stretched, skips, goLinks, deadAnchors, fontsApplied, retired, hidden,
         title: document.title.trim(),
         h1: document.querySelectorAll('h1').length,
         textChars: (document.body.innerText || '').trim().length,
@@ -145,41 +188,43 @@ for (const width of VIEWPORTS) {
       });
     })()`, { awaitPromise: true });
 
-  console.log(`${String(width).padStart(4)}px  ${r.images} images  `
+  console.log(`${path.padEnd(7)}${String(width).padStart(4)}px  ${r.images} images  `
     + `stretched: ${r.stretched.length || 'none'}  heading skips: ${r.skips.length || 'none'}  `
     + `overflow: ${r.overflow || 'none'}  `
     + `${r.textChars} chars of copy  ${r.h1} h1`);
 
-  if (!r.title) failures.push(`${width}px  the page has no <title> - did it load?`);
+  if (!r.title) failures.push(`${path} ${width}px  the page has no <title> - did it load?`);
   if (r.images < EXPECT.minImages) {
-    failures.push(`${width}px  ${r.images} images rendered, expected at least ${EXPECT.minImages} - did the page load?`);
+    failures.push(`${path} ${width}px  ${r.images} images rendered, expected at least ${EXPECT.minImages} - did the page load?`);
   }
-  if (r.h1 !== EXPECT.h1) failures.push(`${width}px  ${r.h1} h1 elements, expected exactly ${EXPECT.h1}`);
+  if (r.h1 !== EXPECT.h1) failures.push(`${path} ${width}px  ${r.h1} h1 elements, expected exactly ${EXPECT.h1}`);
   if (r.textChars < EXPECT.minTextChars) {
-    failures.push(`${width}px  only ${r.textChars} characters of visible copy, expected at least ${EXPECT.minTextChars}`);
+    failures.push(`${path} ${width}px  only ${r.textChars} characters of visible copy, expected at least ${EXPECT.minTextChars}`);
   }
   const ok = (f) => f.inFaceSet && f.distinctFromFallback && f.computed === f.want;
   console.log('        fonts  ' + Object.entries(r.fontsApplied)
     .map(([role, f]) => `${role}: ${f.computed} [${f.faceStatus}]${ok(f) ? '' : ' FALLING BACK'}`).join('  '));
   for (const [role, f] of Object.entries(r.fontsApplied)) {
     if (!f.inFaceSet) {
-      failures.push(`${width}px  --font-${role} asks for '${f.want}' but no @font-face with that family is loaded (faces: ${f.faceStatus}) - the page is painting in a fallback`);
+      failures.push(`${path} ${width}px  --font-${role} asks for '${f.want}' but no @font-face with that family is loaded (faces: ${f.faceStatus}) - the page is painting in a fallback`);
     } else if (!f.distinctFromFallback) {
-      failures.push(`${width}px  --font-${role} '${f.want}' measures identically to the generic fallback - it is not being applied`);
+      failures.push(`${path} ${width}px  --font-${role} '${f.want}' measures identically to the generic fallback - it is not being applied`);
     } else if (f.computed !== f.want) {
-      failures.push(`${width}px  --font-${role} is '${f.want}' but the element computes to '${f.computed}'`);
+      failures.push(`${path} ${width}px  --font-${role} is '${f.want}' but the element computes to '${f.computed}'`);
     }
   }
 
-  for (const id of r.missingIds) failures.push(`${width}px  #${id} is missing from the page`);
-  for (const a of r.deadAnchors) failures.push(`${width}px  "${a}" links to "#", which goes nowhere`);
+  for (const id of r.missingIds) failures.push(`${path} ${width}px  #${id} is missing from the page`);
+  for (const w of r.retired) failures.push(`${path} ${width}px  the page shows "${w}" - Lending Lab is off the public site and three tools are promoted`);
+  for (const h of r.hidden) failures.push(`${path} ${width}px  the nav link to #${h} lands its heading under the fixed nav`);
+  for (const a of r.deadAnchors) failures.push(`${path} ${width}px  "${a}" links to "#", which goes nowhere`);
   for (const s of r.stretched) {
-    failures.push(`${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
+    failures.push(`${path} ${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
   }
-  for (const s of r.skips) failures.push(`${width}px  heading skip: ${s}`);
-  if (r.overflow) failures.push(`${width}px  horizontal overflow: ${r.overflow}`);
+  for (const s of r.skips) failures.push(`${path} ${width}px  heading skip: ${s}`);
+  if (r.overflow) failures.push(`${path} ${width}px  horizontal overflow: ${r.overflow}`);
 
-  if (width === VIEWPORTS[0] && r.goLinks?.length) {
+  if (path === '/' && width === VIEWPORTS[0] && r.goLinks?.length) {
     const rules = existsSync(join(ROOT, '_redirects'))
       ? readFileSync(join(ROOT, '_redirects'), 'utf8')
       : '';
@@ -192,7 +237,7 @@ for (const width of VIEWPORTS) {
     // And the other direction. A rule with no link is a CTA that fell off the
     // page - the tool is still reachable, nobody can get to it from here, and
     // the link-to-rule check above stays perfectly green about it.
-    const unlinked = [...declared].filter((p) => p.startsWith('/go/') && !r.goLinks.includes(p));
+    const unlinked = [...declared].filter((p) => p.startsWith('/go/') && !r.goLinks.includes(p) && !UNLINKED_ON_PURPOSE.has(p));
     console.log(`        ${r.goLinks.length} /go/ CTAs, unmatched in _redirects: ${dead.length || 'none'}`
       + `, redirect rules with no CTA: ${unlinked.length || 'none'}`);
     for (const d of dead) failures.push(`${d} has no rule in _redirects - dead call to action`);

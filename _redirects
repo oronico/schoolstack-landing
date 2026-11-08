@@ -15,5 +15,13 @@ https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
 /go/space          https://space.schoolstack.ai          302
 /go/budget         https://budget.schoolstack.ai         302
 /go/access         https://access.schoolstack.ai         302
+# Lending Lab is not promoted on schoolstack.ai while it gets more work, so
+# nothing on the site links these two. They stay so that links already shared
+# (emails, decks) keep working; tools/verify-render.mjs lists them as the only
+# rules allowed to have no CTA on the page.
 /go/lending-lab    https://www.lendinglab.org            302
 /go/screener       https://www.lendinglab.org/screener   302
+
+# Clean URL for the About page. Netlify already serves about.html at /about;
+# this states it rather than relying on the default.
+/about             /about.html                           200

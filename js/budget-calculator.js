@@ -1,6 +1,6 @@
 /**
- * The durability snapshot on the landing page: a quick pressure test of
- * facilities and staffing against the tuition a school actually collects.
+ * The durability snapshot on the landing page: a one-year illustration of
+ * facilities and staffing against the tuition and funding a school enters.
  * Not a budget; SchoolStack Budget is where the five-year plan gets built.
  *
  * One file, two readers. The browser loads it as a classic script (the CSP
@@ -33,8 +33,9 @@
   'use strict';
 
   /* -------------------------------------------------------------------------
-     Settings. 15% is SchoolStack's suggested ceiling for facilities. 60% for
-     staffing is a starting point that moves with each school's model.
+     Settings. The starting allocations (15% facilities, 60% staffing) are
+     illustrative assumptions for a founder to adjust, not benchmarks: the
+     page says so, and nothing here treats either as a ceiling or a norm.
      Tuition is the average a school expects to COLLECT per student, so a
      founder with discounts or free seats enters the net figure; the snapshot
      stays two inputs and two sliders on purpose.
@@ -48,13 +49,13 @@
     staffingPct: { min: 0, max: 90 },
   };
 
-  var FACILITIES_CEILING_PCT = 15;
-  // Below this share left for program, the page suggests a closer look.
+  // Below this share remaining, the page suggests a closer look at what it
+  // still has to cover. It never reads a larger remainder as healthy.
   var TIGHT_BELOW_PCT = 15;
 
   var MESSAGES = {
-    over: 'Your facilities and staffing allocations exceed the tuition you expect to collect, before accounting for program and other operating expenses.',
-    tight: 'What is left for program may be tight. Make sure it covers your program, other expenses and reserves.',
+    over: 'Your facilities and staffing allocations exceed the annual tuition and funding entered, before other operating expenses.',
+    tight: 'What remains may be tight. Make sure it covers your other operating expenses and reserves.',
   };
 
   /* -------------------------------------------------------------------------
@@ -114,9 +115,9 @@
 
     var facilitiesCents = Math.round(revenueCents * facilitiesPct / 100);
     var staffingCents = Math.round(revenueCents * staffingPct / 100);
-    // What is left for program is what remains after the two allocations, so
-    // the three parts always sum back to collected tuition exactly. Negative
-    // means a deficit.
+    // What remains after the two allocations, for other expenses and reserves,
+    // so the three parts always sum back to revenue exactly. Negative means a
+    // deficit.
     var remainingCents = revenueCents - facilitiesCents - staffingCents;
     var allocatedPct = facilitiesPct + staffingPct;
     var remainingPct = 100 - allocatedPct;
@@ -131,7 +132,6 @@
       staffing: { pct: staffingPct, annual: staffingCents / 100, monthly: staffingCents / 1200 },
       remaining: { pct: remainingPct, annual: remainingCents / 100, monthly: remainingCents / 1200 },
       allocatedPct: allocatedPct,
-      facilitiesAboveCeiling: facilitiesPct > FACILITIES_CEILING_PCT,
       status: status,
       message: status === 'ok' ? '' : MESSAGES[status],
       bar: barSegments(facilitiesPct, staffingPct),
@@ -192,7 +192,7 @@
       facilities: q('facilities'), staffing: q('staffing'),
       tuitionError: q('tuition-error'), studentsError: q('students-error'),
       reset: q('reset'), alert: q('alert'), bar: q('bar'), deficitLegend: q('deficit-legend'),
-      remainingLegend: q('remaining-legend'), facilitiesFlag: q('facilities-flag'),
+      remainingLegend: q('remaining-legend'),
     };
     if (!parts.tuition || !parts.students || !parts.facilities || !parts.staffing) return null;
 
@@ -246,11 +246,9 @@
       setText('deficit-annual', formatUSD(Math.min(0, r.remaining.annual)));
 
       parts.facilities.setAttribute('aria-valuetext',
-        r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year'
-        + (r.facilitiesAboveCeiling ? ', above the 15 percent ceiling' : ''));
+        r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year');
       parts.staffing.setAttribute('aria-valuetext',
         r.staffing.pct + ' percent, ' + formatUSD(r.staffing.annual) + ' a year');
-      if (parts.facilitiesFlag) parts.facilitiesFlag.toggleAttribute('data-on', r.facilitiesAboveCeiling);
       // The filled part of each slider track, for the hand-styled sliders.
       [parts.facilities, parts.staffing].forEach(function (input) {
         var min = Number(input.min) || 0, max = Number(input.max) || 100;
@@ -266,11 +264,12 @@
         parts.bar.setAttribute('aria-label',
           'Facilities ' + r.facilities.pct + '%, staffing ' + r.staffing.pct + '%, '
           + (r.status === 'over'
-            ? 'over collected tuition by ' + (r.allocatedPct - 100) + '%'
-            : 'left for program ' + r.remaining.pct + '%') + '.');
+            ? 'over the tuition and funding entered by ' + (r.allocatedPct - 100) + '%'
+            : 'remaining for other expenses and reserves ' + r.remaining.pct + '%') + '.');
       }
       el.setAttribute('data-status', r.status);
-      // Past 100% the legend swaps "Program" for "Over collected tuition", so
+      // Past 100% the legend swaps "Other expenses and reserves" for "Over the
+      // tuition and funding entered", so
       // the same shortfall is not listed twice.
       if (parts.deficitLegend) parts.deficitLegend.hidden = r.status !== 'over';
       if (parts.remainingLegend) parts.remainingLegend.hidden = r.status === 'over';
@@ -319,7 +318,6 @@
     DEFAULTS: DEFAULTS,
     LIMITS: LIMITS,
     TIGHT_BELOW_PCT: TIGHT_BELOW_PCT,
-    FACILITIES_CEILING_PCT: FACILITIES_CEILING_PCT,
     MESSAGES: MESSAGES,
     parseTuition: parseTuition,
     parseStudents: parseStudents,

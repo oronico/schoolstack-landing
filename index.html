@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SchoolStack.ai | Back-Office Tools for Small Schools</title>
-  <meta name="description" content="Use SchoolStack's facilities, budgeting, funding, and financing tools today, or apply to help shape the connected back-office platform launching in 2027.">
+  <meta name="description" content="Use SchoolStack's free community, budgeting, and funding tools today, or apply to help shape the connected back-office platform in development for 2027.">
   <link rel="canonical" href="https://schoolstack.ai/">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#141E33">
@@ -21,7 +21,7 @@
        the text a person reads in an iMessage or Slack preview, where the job is
        to earn the tap. -->
   <meta property="og:title" content="Back-office tools for small schools, built with the people who run them.">
-  <meta property="og:description" content="Use SchoolStack's facilities, budgeting, funding, and financing tools today, or apply to help shape the connected back-office platform launching in 2027.">
+  <meta property="og:description" content="Use SchoolStack's free community, budgeting, and funding tools today, or apply to help shape the connected back-office platform in development for 2027.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schoolstack.ai/">
   <meta property="og:site_name" content="SchoolStack">
@@ -30,14 +30,14 @@
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="SchoolStack: the back office small schools run on. Four tools open now. Design partner applications open for November 2026.">
+  <meta property="og:image:alt" content="SchoolStack: the back office small schools run on. Three free tools open now. Design partner applications open for November 2026.">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Back-office tools for small schools, built with the people who run them.">
-  <meta name="twitter:description" content="Use SchoolStack's facilities, budgeting, funding, and financing tools today, or apply to help shape the connected back-office platform launching in 2027.">
+  <meta name="twitter:description" content="Use SchoolStack's free community, budgeting, and funding tools today, or apply to help shape the connected back-office platform in development for 2027.">
   <meta name="twitter:image" content="https://schoolstack.ai/og-image.png">
-  <meta name="twitter:image:alt" content="SchoolStack: the back office small schools run on. Four tools open now. Design partner applications open for November 2026.">
+  <meta name="twitter:image:alt" content="SchoolStack: the back office small schools run on. Three free tools open now. Design partner applications open for November 2026.">
 
   <!-- Self-hosted rather than linked from fonts.googleapis.com: no third party
        in the request path, and no blocking round trip to another origin before
@@ -60,7 +60,7 @@
         "url": "https://schoolstack.ai/",
         "email": "allison@schoolstack.ai",
         "sameAs": ["https://www.instagram.com/schoolstack.ai/"],
-        "description": "Back-office tools for small schools: facilities, budgeting, funding, and financing today, with a connected platform launching in 2027.",
+        "description": "Back-office tools for small schools: community, budgeting, and funding tools today, with a connected platform in development for 2027.",
         "logo": {
           "@type": "ImageObject",
           "url": "https://schoolstack.ai/icon-512.png",
@@ -91,7 +91,7 @@
             "name": "What can I use today?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "All four tools: Space for facilities and community, Budget for five-year financial planning, Access for funding and policy guidance, and Lending Lab for financing. Each works on its own."
+              "text": "Three tools: Space for community intelligence and facilities, Budget for five-year financial planning, and Access for funding and policy guidance. Each works on its own and is free to use today."
             }
           },
           {
@@ -99,7 +99,7 @@
             "name": "What does it cost?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The four tools available today cost nothing to use. Pricing for the 2027 SchoolStack platform has not been finalized. QuickBooks Online Advanced is a separate paid subscription."
+              "text": "Space, Budget, and Access cost nothing to use today. Pricing for the 2027 SchoolStack platform has not been finalized."
             }
           },
           {
@@ -107,15 +107,15 @@
             "name": "What happens in 2027?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Space, Budget, and Lending Lab will connect with the SchoolStack platform. Access will remain a stand-alone guide. We will explain any account or data changes before launch."
+              "text": "Our connected platform is in development for 2027. Space and Budget will connect with it, and Access will remain a stand-alone guide. We will explain any account or data changes before launch."
             }
           },
           {
             "@type": "Question",
-            "name": "What does checking my Lending Lab fit tell me?",
+            "name": "Does SchoolStack replace QuickBooks or Gusto?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "It provides an initial indication of whether the school may fit the program and what may need to be strengthened. It is not loan approval. Human underwriting and a credit decision come later."
+              "text": "No. QuickBooks Online remains your accounting system of record, and SchoolStack does not process payroll. A QuickBooks Online integration and a Gusto integration are planned for the connected platform. Neither is live yet, and you will not need QuickBooks Online Advanced."
             }
           }
         ]
@@ -124,957 +124,36 @@
   }
   </script>
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ---------------------------------------------------------------
-       TOKENS - SchoolStack Brand Kit (source of truth: the final
-       rebrand logo assets). Every hex below is read from those SVGs.
-       --------------------------------------------------------------- */
-    :root {
-      /* Master brand: the one place all three founding hues appear */
-      --ss-sky:      #38BDF8;
-      --ss-emerald:  #34D399;
-      --ss-amber:    #FBBF24;
-
-      /* Product ramps: light -> mid -> dark */
-      --space-light: #7DD3FC;  --space-mid: #38BDF8;  --space-dark: #2563EB;
-      --budget-light: #86EFAC; --budget-mid: #22C55E; --budget-dark: #15803D;
-      --access-light: #C4B5FD; --access-mid: #8B5CF6; --access-dark: #5B21B6;
-      --lending-light: #BFDBFE; --lending-mid: #3B82F6; --lending-dark: #F59E0B;
-      --lending-word: #B45309;
-
-      /* Neutrals */
-      --navy: #141E33;
-      --ink: #1E293B;
-      --muted: #5B677A;
-      --hairline: #E3E9F1;
-      --ground: #F6F8FB;
-      --panel: #FFFFFF;
-
-      /* On navy, switch to light steps for accents and links */
-      --on-navy-text: #C7D2E1;
-      --on-navy-dim:  #909DB1;
-      --on-navy-sky:  #7DD3FC;
-      --on-navy-mint: #86EFAC;
-      --on-navy-gold: #FCD34D;
-
-      /* Quicksand and Nunito are the SchoolStack brand faces, shared with
-         Space, Budget and Access. Do not substitute them. Both are served as
-         variable fonts covering every weight the page uses, so a heavier
-         headline costs no extra download. */
-      --font-display: 'Quicksand', 'Trebuchet MS', sans-serif;
-      --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-
-      /* One page measure. Every full-width band aligns to --container with
-         --gutter inside it, so content edges line up from nav to footer.
-         Deliberately narrow centred blocks (hero, cohort) use --measure. */
-      --container: 1080px;
-      --gutter: 2rem;
-      --measure: 824px;
-
-      --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
-      --shadow-card: 0 1px 2px rgba(20,30,51,0.04), 0 8px 24px rgba(20,30,51,0.06);
-      --shadow-lift: 0 12px 36px rgba(20,30,51,0.10);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      color: var(--ink);
-      background: var(--ground);
-      font-size: 17px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.2; color: var(--ink); }
-    h3 { font-weight: 600; }
-    a { color: inherit; }
-    /* height:auto is the required companion to the width/height attributes on
-       <img>. Without it those attributes act as presentational hints, so an
-       image whose CSS sets only width ends up with BOTH dimensions fixed,
-       aspect-ratio is ignored, and the picture stretches. Rules that set an
-       explicit height (the logos) still win on specificity. */
-    img { max-width: 100%; height: auto; }
-
-    .label {
-      font-weight: 800;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
-    }
-
-    /* THE STACK MOTIF: three growing rounded bars */
-    .bars { display: inline-flex; align-items: flex-end; gap: 3px; }
-    .bars span { width: 5px; border-radius: 2.5px; display: block; }
-    .bars span:nth-child(1) { height: 8px;  background: var(--ss-sky); }
-    .bars span:nth-child(2) { height: 12px; background: var(--ss-emerald); }
-    .bars span:nth-child(3) { height: 16px; background: var(--ss-amber); }
-    .bars.on-navy span:nth-child(1) { background: var(--on-navy-sky); }
-    .bars.on-navy span:nth-child(2) { background: var(--on-navy-mint); }
-    .bars.on-navy span:nth-child(3) { background: var(--on-navy-gold); }
-
-    /* The first thing a keyboard reaches. Off screen until focused, then it
-       sits above the fixed nav so it is visible where it lands. */
-    .skip-link {
-      position: absolute;
-      left: -9999px;
-      top: 0;
-      z-index: 200;
-      background: var(--navy);
-      color: #fff;
-      padding: 0.7rem 1.1rem;
-      border-radius: 0 0 var(--r-sm) 0;
-      font-weight: 700;
-      text-decoration: none;
-    }
-    .skip-link:focus {
-      left: 0;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(255,255,255,0.94);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--hairline);
-      /* Full-bleed bar, container-aligned contents. The max() resolves to the
-         same left edge as .section at every width, and falls back to a plain
-         gutter once the viewport is narrower than the container. */
-      padding-block: 0.7rem;
-      padding-inline: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-    .nav-brand { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
-    .nav-brand img { height: 27px; width: auto; display: block; }
-    .nav-links { display: flex; align-items: center; gap: 1.6rem; }
-    .nav-links a { text-decoration: none; font-weight: 700; font-size: 0.93rem; color: var(--muted); transition: color 0.2s; }
-    .nav-links a:hover { color: var(--ink); }
-    .nav-cta {
-      background: var(--ss-amber);
-      color: var(--ink) !important;
-      padding: 0.5rem 1.1rem;
-      border-radius: var(--r-sm);
-      font-size: 0.88rem;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-    .nav-cta:hover { background: #F5B31C; }
-
-    /* LAYOUT */
-    .section { padding: 4.5rem var(--gutter); max-width: var(--container); margin: 0 auto; }
-    /* A band whose content wants the reading measure rather than the full
-       container takes its heading with it. Without this the heading sat on the
-       container edge while the cards under it stopped 256px short of the right
-       edge, so the page had a ragged right margin going down the screen. Two
-       measures, both centred: --container for grids, --measure for prose. */
-    .section-narrow { max-width: calc(var(--measure) + 2 * var(--gutter)); }
-    /* One axis. The hero and the cohort band are centred, so every other
-       band's header is too: eyebrow, heading and intro sit on the page's
-       centre line, and the grid or cards below hang from the same line.
-       Left-aligned headers over a capped intro left the right half of each
-       header row empty and gave the page four alignments going down. Body
-       text inside cards and tiles stays left-aligned. */
-    .section .label, .section h2, .section-desc, .platform-note { text-align: center; }
-    .section h2 { font-size: clamp(1.65rem, 3.4vw, 2.25rem); margin-bottom: 0.75rem; }
-    .section-desc { font-size: 1.02rem; color: var(--muted); max-width: 60ch; margin: 0 auto 2.5rem; }
-    /* Inside a narrow band the measure already is the reading width, so the
-       paragraph runs to the same edges as the card or grid beside it. */
-    .section-narrow .section-desc { max-width: none; }
-
-    /* HERO */
-    .hero-wrap {
-      background:
-        radial-gradient(58% 70% at 12% 0%,  rgba(56,189,248,0.20), transparent 62%),
-        radial-gradient(52% 64% at 88% 6%,  rgba(52,211,153,0.17), transparent 62%),
-        radial-gradient(46% 54% at 50% 0%,  rgba(251,191,36,0.14), transparent 66%),
-        var(--ground);
-      border-bottom: 1px solid var(--hairline);
-    }
-    .hero { padding: 8rem var(--gutter) 3rem; max-width: var(--measure); margin: 0 auto; text-align: center; }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      background: var(--panel);
-      border: 1px solid rgba(56,189,248,0.45);
-      padding: 0.4rem 1rem 0.4rem 0.8rem;
-      border-radius: 50px;
-      font-size: 0.76rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 1.6rem;
-      box-shadow: var(--shadow-card);
-    }
-    /* Capped so the first sentence fills line one at desktop widths and the
-       <br> puts the second on line two. At 3.2rem it needed 919px of a 760px
-       measure and broke mid-sentence. */
-    .hero h1 { font-size: clamp(2.05rem, 5vw, 2.55rem); letter-spacing: -0.02em; margin-bottom: 1.1rem; }
-    .hero .subtitle { font-size: 1.12rem; color: var(--muted); max-width: 56ch; margin: 0 auto 1.9rem; }
-    .hero-cta { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
-    .hero .boilerplate { font-size: 0.9rem; color: var(--muted); margin-top: 1.5rem; }
-    .hero .boilerplate a { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-
-    .btn-primary, .btn-secondary {
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.8rem 1.8rem;
-      border-radius: 10px;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      /* Named rather than `all`: `all` also animated the focus outline, so the
-         keyboard ring faded in over 200ms instead of appearing at once. */
-      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-primary { background: var(--ss-amber); color: var(--ink); box-shadow: 0 6px 18px rgba(251,191,36,0.35); }
-    .btn-primary:hover { background: #F5B31C; transform: translateY(-1px); }
-    .btn-secondary { background: var(--panel); color: var(--ink); border-color: var(--hairline); }
-    .btn-secondary:hover { border-color: var(--muted); transform: translateY(-1px); }
-
-    /* THE STACK: 2 x 2 on desktop, one column once a card would be cramped */
-    .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 1.35rem; }
-    .tool-card {
-      background: linear-gradient(180deg, var(--c-tint) 0%, rgba(255,255,255,0) 58%), var(--panel);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-lg);
-      padding: 1.6rem;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .tool-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, var(--c-light), var(--c-mid) 50%, var(--c-dark));
-    }
-    /* align-self keeps the lockup at its intrinsic width; the flex column's
-       default stretch would otherwise widen it and centre the artwork */
-    .tool-logo { height: 26px; width: auto; display: block; align-self: flex-start; margin-bottom: 0.9rem; }
-    .tool-role {
-      font-weight: 800;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--c-accent);
-      margin-bottom: 0.5rem;
-    }
-    .tool-body { font-size: 0.97rem; margin-bottom: 0.85rem; }
-    .tool-guardrail {
-      font-size: 0.86rem;
-      color: var(--muted);
-      border-left: 3px solid var(--c-light);
-      padding-left: 0.8rem;
-      margin-bottom: 1.2rem;
-    }
-    /* Muted, not the product accent: at this size the darker product steps
-       would fall short of AA (see Brand Kit accessibility note). */
-    .tool-note {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.83rem;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-    .tool-note::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 3px;
-      background: var(--c-mid);
-      flex-shrink: 0;
-    }
-    .tool-link {
-      margin-top: auto;
-      align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-weight: 800;
-      font-size: 0.96rem;
-      color: var(--c-accent);
-      text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition: border-color 0.2s;
-    }
-    .tool-link:hover { border-bottom-color: var(--c-accent); }
-    .tool-link svg { transition: transform 0.2s; }
-    .tool-link:hover svg { transform: translateX(3px); }
-
-    .card-space   { --c-light: var(--space-light);   --c-mid: var(--space-mid);   --c-dark: var(--space-dark);   --c-accent: var(--space-dark);   --c-tint: rgba(125,211,252,0.30); }
-    .card-budget  { --c-light: var(--budget-light);  --c-mid: var(--budget-mid);  --c-dark: var(--budget-dark);  --c-accent: var(--budget-dark);  --c-tint: rgba(134,239,172,0.34); }
-    .card-access  { --c-light: var(--access-light);  --c-mid: var(--access-mid);  --c-dark: var(--access-dark);  --c-accent: var(--access-dark);  --c-tint: rgba(196,181,253,0.32); }
-    .card-lending { --c-light: var(--lending-light); --c-mid: var(--lending-mid); --c-dark: var(--lending-dark); --c-accent: var(--lending-word); --c-tint: rgba(253,205,132,0.34); }
-
-    /* DURABILITY SNAPSHOT. Behaviour lives in js/budget-calculator.js; this is
-       layout only. The three segment colours are the three founding hues of
-       the mark (sky, emerald, amber), so the bar reads as the stack motif. */
-    .calc-lead {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--ink);
-      text-align: center;
-      margin: -0.25rem auto 0.6rem;
-    }
-    .calc {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-      gap: 0;
-      background: var(--panel);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-lg);
-      box-shadow: var(--shadow-card);
-      overflow: hidden;
-      position: relative;
-    }
-    .calc::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, var(--ss-sky), var(--ss-emerald) 50%, var(--ss-amber));
-    }
-    .calc-inputs, .calc-results { padding: 1.9rem 1.75rem 1.6rem; min-width: 0; }
-    .calc-inputs { display: grid; gap: 1.35rem; align-content: start; border-right: 1px solid var(--hairline); }
-    .calc-results { display: grid; gap: 1.25rem; align-content: start; background: linear-gradient(180deg, rgba(134,239,172,0.16) 0%, rgba(255,255,255,0) 45%), var(--ground); }
-
-    .calc-field .calc-hint { margin-top: 0.35rem; }
-    .calc-field > label, .calc-slider label {
-      display: block;
-      font-weight: 800;
-      font-size: 0.95rem;
-      color: var(--ink);
-      margin-bottom: 0.4rem;
-    }
-    .calc-money { position: relative; }
-    .calc-money span {
-      position: absolute;
-      left: 1rem; top: 50%;
-      transform: translateY(-50%);
-      font-weight: 700;
-      color: var(--muted);
-      pointer-events: none;
-    }
-    .calc-field input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      /* 16px or more stops iOS Safari zooming the page on focus. */
-      font: 700 1.05rem/1.4 var(--font-body);
-      color: var(--ink);
-      background: var(--panel);
-      border: 1px solid #C9D3E0;
-      border-radius: var(--r-sm);
-      font-variant-numeric: tabular-nums;
-      transition: border-color 0.2s;
-    }
-    .calc-money input { padding-left: 1.85rem; }
-    .calc-field input:focus { border-color: var(--space-dark); }
-    .calc-field input[aria-invalid="true"] { border-color: #B91C1C; }
-    /* Always takes its line, shown or not, so nothing below jumps when
-       facilities cross the ceiling. */
-    .calc-flag {
-      font-size: 0.86rem;
-      font-weight: 800;
-      color: #B91C1C;
-      margin-top: 0.2rem;
-      visibility: hidden;
-    }
-    .calc-flag[data-on] { visibility: visible; }
-    .calc-error { color: #B91C1C; font-size: 0.88rem; font-weight: 700; margin-top: 0.35rem; }
-
-    .calc-slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-    .calc-slider-head label { margin-bottom: 0; }
-    .calc-slider-head output {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.2rem;
-      font-variant-numeric: tabular-nums;
-      color: var(--ink);
-    }
-    /* Sliders, styled by hand so a thumb on a phone gets a real target: the
-       input box is 44px tall (the whole box takes the tap, not just the
-       track) and the handle is 26px, 30px on touch screens. The filled part
-       of the track is painted from --fill, which the script keeps current. */
-    .calc-slider input[type="range"] {
-      --range: var(--space-dark);
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 44px;
-      margin: 0;
-      cursor: pointer;
-      background: transparent;
-      touch-action: pan-y;
-    }
-    .calc-staffing input[type="range"] { --range: var(--budget-dark); }
-    .calc-slider input[type="range"]::-webkit-slider-runnable-track {
-      height: 8px;
-      border-radius: 4px;
-      background: linear-gradient(90deg, var(--range) 0 var(--fill, 50%), #D5DDE8 var(--fill, 50%) 100%);
-    }
-    .calc-slider input[type="range"]::-moz-range-track { height: 8px; border-radius: 4px; background: #D5DDE8; }
-    .calc-slider input[type="range"]::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--range); }
-    .calc-slider input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 26px; height: 26px;
-      margin-top: -9px;
-      border-radius: 50%;
-      background: var(--panel);
-      border: 3px solid var(--range);
-      box-shadow: 0 1px 4px rgba(20,30,51,0.25);
-    }
-    .calc-slider input[type="range"]::-moz-range-thumb {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--panel);
-      border: 3px solid var(--range);
-      box-shadow: 0 1px 4px rgba(20,30,51,0.25);
-    }
-    @media (pointer: coarse) {
-      .calc-slider input[type="range"]::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -11px; }
-      .calc-slider input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; }
-    }
-    .calc-figures { font-size: 0.95rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .calc-hint { font-size: 0.86rem; color: var(--muted); margin-top: 0.2rem; }
-    .calc-reset {
-      justify-self: start;
-      background: none;
-      border: none;
-      min-height: 44px;
-      padding: 0.5rem 0;
-      font: 700 0.92rem var(--font-body);
-      color: var(--space-dark);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      cursor: pointer;
-    }
-    .calc-reset:hover { color: var(--ink); }
-
-    .calc-k {
-      font-weight: 800;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-    .calc-big {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(2rem, 4.4vw, 2.6rem);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      font-variant-numeric: tabular-nums;
-      overflow-wrap: anywhere;
-    }
-    .calc-sub { font-size: 0.93rem; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 0.3rem; }
-
-    .calc-bar {
-      position: relative;
-      display: flex;
-      height: 22px;
-      border-radius: 11px;
-      background: var(--hairline);
-      overflow: hidden;
-    }
-    .calc-bar .seg { display: block; height: 100%; min-width: 0; transition: width 0.2s; }
-    .calc-bar .seg + .seg { box-shadow: inset 2px 0 0 var(--panel); }
-    .seg-facilities { width: var(--w-facilities, 15%); background: var(--ss-sky); }
-    .seg-staffing   { width: var(--w-staffing, 60%);   background: var(--ss-emerald); }
-    .seg-remaining  { width: var(--w-remaining, 25%);  background: var(--ss-amber); }
-    /* The deficit lies OVER the allocations, from the revenue mark to the end
-       of the track, hatched so it reads without relying on colour alone. */
-    .calc-bar .seg-deficit {
-      position: absolute;
-      top: 0; right: 0;
-      width: var(--w-deficit, 0%);
-      background: repeating-linear-gradient(135deg, rgba(185,28,28,0.9) 0 5px, rgba(185,28,28,0.25) 5px 10px);
-      box-shadow: none;
-    }
-    /* Where revenue runs out. Shown only once the allocations pass it. */
-    .calc-mark {
-      position: absolute;
-      top: 0; bottom: 0;
-      left: var(--revenue-mark, 100%);
-      width: 3px;
-      margin-left: -1.5px;
-      background: var(--ink);
-      display: none;
-    }
-    .calc[data-status="over"] .calc-mark { display: block; }
-
-    .calc-legend { list-style: none; display: grid; gap: 0.45rem; }
-    .calc-legend li {
-      display: grid;
-      grid-template-columns: 12px 1fr auto auto;
-      align-items: center;
-      gap: 0.65rem;
-      font-size: 0.94rem;
-      font-variant-numeric: tabular-nums;
-    }
-    .calc-legend li[hidden] { display: none; }
-    .calc-legend .sw { width: 12px; height: 12px; border-radius: 3px; }
-    .calc-legend .pct { font-weight: 800; min-width: 3.4em; text-align: right; }
-    .calc-legend .amt { font-weight: 700; min-width: 7.5em; text-align: right; }
-    .sw-facilities { background: var(--ss-sky); }
-    .sw-staffing { background: var(--ss-emerald); }
-    .sw-remaining { background: var(--ss-amber); }
-    .sw-deficit { background: repeating-linear-gradient(135deg, #DC2626 0 3px, #F87171 3px 6px); }
-    .calc-legend li.is-deficit, .calc-legend li.is-deficit .amt { color: #B91C1C; font-weight: 800; }
-
-    .calc-remaining {
-      background: var(--panel);
-      border: 1px solid var(--hairline);
-      border-left: 4px solid var(--ss-amber);
-      border-radius: var(--r-md);
-      padding: 1.1rem 1.2rem;
-    }
-    .calc[data-status="over"] .calc-remaining { border-left-color: #DC2626; }
-    .calc-remaining-figure {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.6rem;
-      line-height: 1.2;
-      font-variant-numeric: tabular-nums;
-      overflow-wrap: anywhere;
-    }
-    .calc[data-status="over"] .calc-remaining-figure { color: #B91C1C; }
-    .calc-remaining-figure small { font-family: var(--font-body); font-size: 0.95rem; color: var(--muted); font-weight: 700; }
-    .calc-remaining > p:not(.calc-k):not(.calc-remaining-figure) { margin-top: 0.55rem; font-size: 0.93rem; }
-    .calc-covers {
-      list-style: none;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.25rem 1rem;
-      margin-top: 0.45rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-    .calc-covers li { display: flex; gap: 0.5rem; align-items: baseline; }
-    .calc-covers li::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--ss-amber);
-      flex-shrink: 0;
-      transform: translateY(-2px);
-    }
-    .calc-caveat { color: var(--ink); }
-
-    /* Guidance. All three messages share one grid cell, so the box is always
-       as tall as the longest and nothing below it moves when the state
-       changes. Screen readers get the live region instead, which is
-       rewritten only when the message changes. */
-    .calc-guide {
-      display: grid;
-      border-radius: var(--r-md);
-      padding: 0.85rem 1rem 0.85rem 2.6rem;
-      font-size: 0.92rem;
-      font-weight: 700;
-      line-height: 1.5;
-      position: relative;
-      background: #EEF6FF;
-      border: 1px solid #BFDBFE;
-      color: var(--ink);
-    }
-    .calc-guide::before {
-      content: '';
-      position: absolute;
-      left: 1rem; top: 1.05rem;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--space-dark);
-    }
-    .calc-guide p { grid-area: 1 / 1; visibility: hidden; }
-    .calc[data-status="ok"] .calc-guide [data-when="ok"],
-    .calc[data-status="tight"] .calc-guide [data-when="tight"],
-    .calc[data-status="over"] .calc-guide [data-when="over"] { visibility: visible; }
-    .calc[data-status="tight"] .calc-guide { background: #FFFBEB; border-color: #FCD34D; }
-    .calc[data-status="tight"] .calc-guide::before { background: var(--lending-dark); }
-    .calc[data-status="over"] .calc-guide { background: #FEF2F2; border-color: #FCA5A5; color: #7F1D1D; }
-    .calc[data-status="over"] .calc-guide::before { background: #DC2626; }
-
-    .sr-only {
-      position: absolute;
-      width: 1px; height: 1px;
-      padding: 0; margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    .calc-note { max-width: 72ch; margin-inline: auto; }
-    .calc-cta {
-      text-align: center;
-      margin-top: 2.25rem;
-    }
-    .calc-cta h3 { font-size: clamp(1.3rem, 2.6vw, 1.55rem); margin-bottom: 0.45rem; }
-    .calc-cta p { color: var(--muted); max-width: 56ch; margin: 0 auto 1.25rem; }
-    .calc-cta .btn-primary { justify-content: center; }
-
-    /* FOUNDER QUOTE */
-    .founder-quote {
-      background: linear-gradient(180deg, rgba(125,211,252,0.20) 0%, rgba(255,255,255,0) 40%), var(--panel);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-lg);
-      padding: 2rem 2.25rem;
-      margin: 1.75rem 0 2.5rem;
-      box-shadow: var(--shadow-card);
-    }
-    .founder-quote .bars { margin-bottom: 1.1rem; }
-    .founder-quote .quote-lead {
-      font-family: var(--font-display);
-      font-size: 1.65rem;
-      font-weight: 700;
-      line-height: 1.25;
-      color: var(--ink);
-    }
-    .founder-quote blockquote p + p {
-      font-family: var(--font-body);
-      font-size: 1.03rem;
-      font-weight: 400;
-      line-height: 1.65;
-      color: var(--muted);
-    }
-    .founder-quote blockquote { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.5rem; }
-    .founder-quote figcaption { font-size: 0.92rem; border-top: 1px solid var(--hairline); padding-top: 1.1rem; }
-    .founder-quote figcaption strong { color: var(--ink); display: block; margin-bottom: 0.15rem; }
-    .founder-quote figcaption span { color: var(--muted); display: block; max-width: 62ch; line-height: 1.55; }
-
-    /* THE PLATFORM: the six areas named in the paragraph above them, as a
-       grid so the band has shape at a glance. The band takes the reading
-       measure (.section-narrow), so the tiles fill it edge to edge in three
-       equal columns rather than stopping short of a container-width heading. */
-    .platform-areas {
-      list-style: none;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem 1rem;
-      margin-top: -0.75rem;
-    }
-    .platform-areas li {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--panel);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-sm);
-      padding: 0.65rem 0.9rem;
-      font-weight: 700;
-      font-size: 0.93rem;
-      white-space: nowrap;
-    }
-    .platform-areas li::before {
-      content: '';
-      width: 8px; height: 8px;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-    .platform-areas li:nth-child(3n+1)::before { background: var(--ss-sky); }
-    .platform-areas li:nth-child(3n+2)::before { background: var(--ss-emerald); }
-    .platform-areas li:nth-child(3n+3)::before { background: var(--ss-amber); }
-    .platform-note { font-size: 0.9rem; color: var(--muted); margin-top: 1.5rem; }
-
-    /* DESIGN PARTNER COHORT + APPLICATION (navy) */
-    .signup {
-      padding: 4.5rem var(--gutter);
-      background:
-        radial-gradient(62% 70% at 18% 0%,   rgba(56,189,248,0.22), transparent 62%),
-        radial-gradient(58% 66% at 86% 18%,  rgba(52,211,153,0.15), transparent 62%),
-        radial-gradient(54% 50% at 50% 104%, rgba(251,191,36,0.12), transparent 64%),
-        linear-gradient(180deg, #1A2740 0%, #141E33 52%, #111A2C 100%);
-    }
-    .cohort-hero { max-width: var(--measure); margin: 0 auto; text-align: center; }
-    .cohort-status {
-      font-weight: 800;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--on-navy-gold);
-      margin: 0.9rem 0 0.55rem;
-    }
-    .cohort-hero h2 { color: #fff; font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin-bottom: 0.75rem; }
-    .cohort-hero > p { color: var(--on-navy-text); font-size: 1.05rem; max-width: 56ch; margin: 0 auto 1rem; }
-    /* The value exchange: what a partner gets, what we ask. Two cards, the
-       same panel colours as the form fields below so the band reads as one. */
-    .exchange {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin: 2.25rem auto 0;
-      text-align: left;
-    }
-    .exchange-card {
-      background: #0E1626;
-      border: 1px solid #33415C;
-      border-radius: var(--r-md);
-      padding: 1.4rem 1.5rem;
-    }
-    .exchange-card h3 { color: #fff; font-size: 1.05rem; margin-bottom: 0.8rem; }
-    .exchange-card ul { list-style: none; display: grid; gap: 0.55rem; }
-    .exchange-card li { display: flex; gap: 0.7rem; align-items: flex-start; color: var(--on-navy-text); font-size: 0.95rem; }
-    .exchange-card li::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 3px;
-      margin-top: 0.6rem;
-      flex-shrink: 0;
-    }
-    .exchange-card:nth-child(1) li::before { background: var(--on-navy-mint); }
-    .exchange-card:nth-child(2) li::before { background: var(--on-navy-sky); }
-
-    .signup-form-wrap {
-      max-width: 560px;
-      margin: 3.5rem auto 0;
-      padding-top: 3rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .signup-form-wrap .label { color: var(--on-navy-sky); text-align: center; }
-    .signup-form-wrap h3 { color: #fff; text-align: center; font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .signup-form-wrap h3 { margin-bottom: 1.4rem; }
-    /* Fixed nav: a hash link to the form heading would land it under the bar
-       without this. The extra room keeps the eyebrow above it in view. The
-       legacy #signup anchor sits one element lower, on the form wrapper, so
-       it needs more room still: enough for the nav and the heading above. */
-    #apply-heading { scroll-margin-top: 6.5rem; }
-    #signup { scroll-margin-top: 9rem; }
-    /* The honeypot. display:none keeps it out of the tab order and away from
-       screen readers as well as off the screen; only a bot filling every
-       field it can find in the source will reach it. */
-    .hp { display: none; }
-
-    .signup-form { display: grid; gap: 0.8rem; text-align: left; }
-    .form-group { display: flex; flex-direction: column; }
-    .form-group > label, .group-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--on-navy-text);
-      margin-bottom: 0.35rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-    .form-group input[type="text"], .form-group input[type="email"], .form-group select, .form-group textarea {
-      padding: 0.75rem 1rem;
-      border: 1px solid #33415C;
-      border-radius: var(--r-sm);
-      background: #0E1626;
-      color: #fff;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      width: 100%;
-      transition: border-color 0.2s;
-    }
-    .form-group textarea { resize: vertical; }
-    .form-group input::placeholder, .form-group textarea::placeholder { color: #6B7A93; }
-    /* Keyboard focus. Only the form fields had an indicator, so tabbing through
-       the nav, tool links, and footer moved an invisible cursor. :focus-visible
-       rather than :focus so a mouse click does not leave a ring behind. */
-    a:focus-visible,
-    button:focus-visible,
-    label:focus-visible,
-    input:focus-visible,
-    select:focus-visible,
-    textarea:focus-visible,
-    [tabindex]:focus-visible {
-      outline: 3px solid var(--ss-sky);
-      outline-offset: 3px;
-    }
-    /* On the navy sections the sky ring is the readable one; on light ground it
-       still clears contrast against every panel colour used here. */
-    .footer a:focus-visible,
-    .signup a:focus-visible,
-    .signup h3:focus-visible,
-    .consent-item:focus-within {
-      outline-color: var(--on-navy-sky);
-    }
-
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      outline: 2px solid var(--on-navy-sky);
-      outline-offset: 1px;
-      border-color: var(--on-navy-sky);
-    }
-    .form-group select option { background: #0E1626; }
-    .form-submit {
-      background: #fff;
-      color: var(--navy);
-      border: none;
-      padding: 0.85rem 2rem;
-      border-radius: 10px;
-      font-family: var(--font-body);
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 0.35rem;
-      transition: transform 0.2s;
-    }
-    .form-submit:hover { transform: translateY(-1px); }
-    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .form-help { color: var(--on-navy-text); font-size: 0.88rem; text-align: center; margin-top: 0.4rem; }
-    .consent-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      background: #0E1626;
-      border: 1px solid #33415C;
-      border-radius: var(--r-sm);
-      padding: 0.8rem 0.9rem;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .consent-item:hover { border-color: var(--on-navy-sky); }
-    .consent-item input { width: 17px; height: 17px; accent-color: var(--ss-sky); flex-shrink: 0; margin-top: 1px; }
-    .consent-item span { font-size: 0.88rem; color: var(--on-navy-text); line-height: 1.5; }
-    .consent-item strong { color: #fff; font-weight: 700; }
-    .form-success {
-      background: #0E2A22;
-      border: 1px solid var(--budget-mid);
-      border-radius: var(--r-md);
-      padding: 1.5rem;
-      display: none;
-    }
-    .form-success h3 { color: #fff; margin-bottom: 0.5rem; }
-    .form-success p { color: var(--on-navy-text); font-size: 0.94rem; }
-    .form-success a { color: var(--on-navy-mint); font-weight: 700; }
-    .form-error {
-      background: #3B1416;
-      border: 1px solid #F87171;
-      border-radius: var(--r-sm);
-      padding: 0.7rem 1rem;
-      color: #fff;
-      font-size: 0.9rem;
-      display: none;
-    }
-    .form-error a { color: #fff; font-weight: 700; }
-
-    /* FAQ */
-    .faq-grid { display: grid; gap: 0.9rem; }
-    .faq-item { background: var(--panel); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 1.4rem 1.5rem; }
-    .faq-item h3 { font-size: 1rem; margin-bottom: 0.4rem; }
-    .faq-item p { font-size: 0.94rem; color: var(--muted); }
-    .faq-item a { color: var(--space-dark); font-weight: 700; }
-
-    /* BACKING */
-    .backing { text-align: center; }
-    .backing p { color: var(--muted); font-size: 0.98rem; max-width: 60ch; margin: 0 auto 1.5rem; }
-    .backing p a { color: var(--space-dark); font-weight: 700; text-decoration: none; }
-    .bhif-mark { display: inline-block; margin-bottom: 1.25rem; }
-    .bhif-mark img { height: 120px; width: auto; display: block; }
-    .partner-row { display: flex; justify-content: center; align-items: flex-start; gap: 4rem; flex-wrap: wrap; margin-top: 2.25rem; }
-    .partner { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-decoration: none; max-width: 240px; }
-    .partner-mark { height: 76px; display: flex; align-items: center; justify-content: center; }
-    .partner-mark img { object-fit: contain; }
-    .partner-name { font-size: 0.9rem; font-weight: 700; color: var(--muted); transition: color 0.2s; }
-    .partner:hover .partner-name { color: var(--ink); }
-    .team-row { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 2.25rem; }
-    .team-item { font-size: 0.9rem; }
-    .team-item strong { display: block; color: var(--ink); font-weight: 700; }
-    .team-item span { color: var(--muted); }
-
-    /* FOOTER */
-    footer {
-      color: var(--on-navy-text);
-      padding: 3.25rem 0 2.25rem;
-      background:
-        radial-gradient(60% 80% at 15% 0%, rgba(56,189,248,0.15), transparent 60%),
-        radial-gradient(50% 70% at 85% 0%, rgba(52,211,153,0.10), transparent 60%),
-        linear-gradient(180deg, #17223A 0%, #141E33 100%);
-    }
-    .footer-inner { max-width: var(--container); padding-inline: var(--gutter); margin: 0 auto; }
-    .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2.5rem; padding-bottom: 2.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .footer-brand img { height: 28px; width: auto; display: block; margin-bottom: 0.8rem; }
-    .footer-brand p { font-size: 0.9rem; max-width: 40ch; }
-    .footer-col h3 { color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
-    .footer-col ul { list-style: none; display: grid; gap: 0.5rem; }
-    .footer-col a { color: var(--on-navy-text); text-decoration: none; font-size: 0.91rem; transition: color 0.2s; }
-    .footer-col a:hover { color: var(--on-navy-sky); }
-    .footer-bottom { padding-top: 1.75rem; text-align: center; }
-    .footer-bottom a { color: var(--on-navy-sky); text-decoration: none; font-weight: 700; }
-    .footer-legal { font-size: 0.78rem; color: var(--on-navy-dim); margin-top: 1rem; }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .calc { grid-template-columns: 1fr; }
-      .calc-inputs { border-right: none; border-bottom: 1px solid var(--hairline); }
-      .platform-areas { grid-template-columns: 1fr 1fr; }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .footer-brand { grid-column: 1 / -1; }
-    }
-    @media (max-width: 640px) {
-      /* Narrow the page measure in one place. Previously nav (1rem), the
-         sections (1.25rem) and the footer (2rem, inherited) each carried their
-         own mobile gutter, so the left edge moved three times down the page. */
-      :root { --gutter: 1.25rem; }
-      body { font-size: 16px; }
-      nav { padding-block: 0.65rem; }
-      .nav-links a:not(.nav-cta) { display: none; }
-      .hero { padding: 6.75rem var(--gutter) 2.25rem; }
-      .section { padding: 3rem var(--gutter); }
-      .signup { padding: 3rem var(--gutter); }
-      .stack-grid { grid-template-columns: 1fr; }
-      .platform-areas { grid-template-columns: 1fr; }
-      .exchange { grid-template-columns: 1fr; margin-top: 1.75rem; }
-      .founder-quote { padding: 1.5rem 1.35rem; }
-      .founder-quote blockquote p { font-size: 1.08rem; }
-      .form-row { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr; gap: 1.6rem; }
-      .partner-row { gap: 2rem; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-      .calc-inputs, .calc-results { padding: 1.5rem 1.2rem 1.3rem; }
-      .calc-legend li { grid-template-columns: 12px 1fr auto; }
-      .calc-legend .amt { grid-column: 2 / -1; text-align: left; min-width: 0; margin-top: -0.35rem; color: var(--muted); }
-      .calc-covers { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 400px) {
-      .nav-brand svg { height: 22px; }
-      .nav-cta { font-size: 0.8rem; padding: 0.45rem 0.8rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { transition: none !important; animation: none !important; }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV -->
-  <nav>
+  <!-- NAV. Written out on every page; tools/lib/page-audit.mjs chromeDrift()
+       fails the build if the copies stop matching. -->
+  <nav aria-label="Main">
     <a href="/" class="nav-brand" aria-label="SchoolStack home">
-      <img src="assets/logos/schoolstack-logo.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
+      <img src="/assets/logos/schoolstack-logo.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
     </a>
     <div class="nav-links">
       <a href="#tools">The tools</a>
       <a href="#platform">The platform</a>
+      <a href="/about">About Us</a>
       <a href="#design-partners">Design partners</a>
       <a href="#faq">FAQ</a>
-      <a href="#apply-heading" class="nav-cta">Apply to join</a>
     </div>
+    <!-- Phones and narrow tablets. A <details> opens and closes with no
+         script at all; js/site.js only closes it after a link is chosen. -->
+    <details class="nav-menu">
+      <summary>Menu</summary>
+      <div class="nav-menu-panel">
+          <a href="#tools">The tools</a>
+          <a href="#platform">The platform</a>
+          <a href="/about">About Us</a>
+          <a href="#design-partners">Design partners</a>
+          <a href="#faq">FAQ</a>
+      </div>
+    </details>
   </nav>
 
   <main id="main">
@@ -1088,36 +167,91 @@
     </div>
     <h1>The back office small schools deserve.<br>Built with the people who run them.</h1>
     <p class="subtitle">
-      Small schools face the same operational demands as large ones, without the same staff or
-      systems. We're inviting a small group of school leaders to use SchoolStack early and help
-      shape the connected back-office platform launching in 2027.
+      Practical tools and human support for the business of running a small school. Understand
+      your finances, explore your community, and make your next decision with greater confidence.
     </p>
     <div class="hero-cta">
-      <a href="#apply-heading" class="btn-primary">
-        Apply to join the design cohort
+      <a href="#tools" class="btn-primary">
+        Explore the free tools
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#tools" class="btn-secondary">Explore today's tools</a>
+      <a href="#design-partners" class="btn-secondary">Become a design partner</a>
     </div>
     <p class="boilerplate">
-      Four tools are available now. SchoolStack is a program of <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a>, a 501(c)(3) nonprofit.
+      Space, Budget, and Access are available now. Our connected platform is in development for 2027.
+    </p>
+    <p class="boilerplate boilerplate-org">
+      SchoolStack is a program of <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a>, a 501(c)(3) nonprofit.
     </p>
   </section>
   </div>
 
+  <!-- THE TOOLS. Three are promoted: Space, Budget and Access. Lending Lab is
+       off the public site while it gets more work; its /go/ routes stay in
+       _redirects for links already shared (see tools/verify-render.mjs). -->
+  <section class="section" id="tools">
+    <div class="label">Free to use today</div>
+    <h2>Start with the question in front of you.</h2>
+    <p class="section-desc">
+      Each tool works on its own and is free to use today. Explore your community, understand your
+      numbers, or navigate school-choice funding.
+    </p>
+
+    <div class="stack-grid">
+
+      <article class="tool-card card-space">
+        <img class="tool-logo" src="/assets/logos/schoolstack-space-logo.svg" alt="SchoolStack Space" width="499" height="71">
+        <div class="tool-role">Community intelligence and facilities</div>
+        <p class="tool-body">Know your neighbors by name. Explore the people, schools, and organizations around you, identify potential community partners, and plan a space your school can sustain.</p>
+        <p class="tool-guardrail">Start with your community. Use what you learn to guide conversations, shared-space opportunities, and facility decisions.</p>
+        <p class="tool-note">Joins the SchoolStack platform</p>
+        <a class="tool-link" href="/go/space" target="_blank" rel="noopener noreferrer">
+          Explore Space
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </article>
+
+      <article class="tool-card card-budget">
+        <img class="tool-logo" src="/assets/logos/schoolstack-budget-logo.svg" alt="SchoolStack Budget" width="522" height="71">
+        <div class="tool-role">Financial planning</div>
+        <p class="tool-body">Understand how enrollment, staffing, facilities, and funding shape your school's financial future.</p>
+        <p class="tool-guardrail">Build a five-year financial model and see the decisions behind your numbers in plain language.</p>
+        <p class="tool-note">Joins the SchoolStack platform</p>
+        <a class="tool-link" href="/go/budget" target="_blank" rel="noopener noreferrer">
+          Build my budget
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </article>
+
+      <article class="tool-card card-access">
+        <img class="tool-logo" src="/assets/logos/schoolstack-access-logo.svg" alt="SchoolStack Access" width="511" height="71">
+        <div class="tool-role">Funding and policy guidance</div>
+        <p class="tool-body">Understand school-choice funding and what it means for your school and the families you serve.</p>
+        <p class="tool-guardrail">Explore sourced, dated guidance on state programs and the federal scholarship tax credit, including participation requirements and next steps. Guidance, not tax advice.</p>
+        <p class="tool-note">Stand-alone guide</p>
+        <a class="tool-link" href="/go/access" target="_blank" rel="noopener noreferrer">
+          Explore funding guidance
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
   <!-- DURABILITY SNAPSHOT. A founder surface, and deliberately not called a
-       budget: it is a one-year pressure test of facilities and staffing
-       against the tuition a school actually collects, and SchoolStack Budget
-       is where the five-year plan gets built. The values in the markup are
+       budget: it is a one-year illustration of facilities and staffing
+       against the tuition and funding a school enters, and SchoolStack Budget
+       is where the five-year plan gets built. It groups costs; it does not
+       classify them, so staffing is never described as outside program. The values in the markup are
        the defaults, so the section reads correctly before
        js/budget-calculator.js runs and nothing moves when it does. -->
   <section class="section" id="budget-calculator" aria-labelledby="calc-heading">
     <div class="label">Free durability snapshot</div>
-    <h2 id="calc-heading">How far does your tuition go?</h2>
+    <h2 id="calc-heading">How far do your tuition and funding go?</h2>
     <p class="calc-lead">Know your numbers before you make your next big decision.</p>
     <p class="section-desc">
-      Pressure-test your facilities and staffing against the tuition you expect to collect. It is
-      not a budget. It is a quick read on where you stand today.
+      Pressure-test your facilities and staffing against the tuition and funding you expect each
+      year. It is not a budget. It is a quick read on where you stand today.
     </p>
 
     <div class="calc" data-budget-calculator data-status="ok">
@@ -1138,15 +272,16 @@
           <p class="calc-error" id="calcStudentsError" data-calc="students-error" hidden></p>
         </div>
 
+        <p class="calc-assume" id="calcAssume">Illustrative starting allocations. Adjust these to reflect your school.</p>
+
         <div class="calc-slider calc-facilities">
           <div class="calc-slider-head">
             <label for="calcFacilities">All-in facilities</label>
             <output for="calcFacilities" data-out="facilities-pct">15%</output>
           </div>
-          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" style="--fill: 37.5%" aria-describedby="calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
+          <input id="calcFacilities" data-calc="facilities" type="range" min="0" max="40" step="1" value="15" style="--fill: 37.5%" aria-describedby="calcAssume calcFacilitiesHint" aria-valuetext="15 percent, $75,000 a year">
           <p class="calc-figures"><span data-out="facilities-annual">$75,000</span> a year &middot; <span data-out="facilities-monthly">$6,250</span> a month</p>
-          <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs. We suggest 15% as a ceiling.</p>
-          <p class="calc-flag" data-calc="facilities-flag">Above 15%, facilities start to crowd out program.</p>
+          <p class="calc-hint" id="calcFacilitiesHint">Rent, CAM, utilities, maintenance, insurance, and other occupancy costs.</p>
         </div>
 
         <div class="calc-slider calc-staffing">
@@ -1154,9 +289,9 @@
             <label for="calcStaffing">All-in staffing</label>
             <output for="calcStaffing" data-out="staffing-pct">60%</output>
           </div>
-          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" style="--fill: 66.67%" aria-describedby="calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
+          <input id="calcStaffing" data-calc="staffing" type="range" min="0" max="90" step="1" value="60" style="--fill: 66.67%" aria-describedby="calcAssume calcStaffingHint" aria-valuetext="60 percent, $300,000 a year">
           <p class="calc-figures"><span data-out="staffing-annual">$300,000</span> a year &middot; <span data-out="staffing-monthly">$25,000</span> a month</p>
-          <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs. Around 60% is a common starting point, and it moves with your model.</p>
+          <p class="calc-hint" id="calcStaffingHint">Salaries, benefits, employer payroll taxes, and other personnel costs.</p>
         </div>
 
         <button type="button" class="calc-reset" data-calc="reset">Reset to starting values</button>
@@ -1164,13 +299,13 @@
 
       <div class="calc-results">
         <div>
-          <p class="calc-k">Tuition you collect each year</p>
+          <p class="calc-k">Tuition and funding each year</p>
           <p class="calc-big" data-out="revenue">$500,000</p>
           <p class="calc-sub"><span data-out="revenue-formula">$10,000 &times; 50 students</span> &middot; <span data-out="revenue-monthly">$41,667</span> a month</p>
         </div>
 
         <div>
-          <div class="calc-bar" data-calc="bar" role="img" aria-label="Facilities 15%, staffing 60%, left for program 25%.">
+          <div class="calc-bar" data-calc="bar" role="img" aria-label="Facilities 15%, staffing 60%, remaining for other expenses and reserves 25%.">
             <span class="seg seg-facilities"></span><span class="seg seg-staffing"></span><span class="seg seg-remaining"></span><span class="seg seg-deficit"></span><span class="calc-mark"></span>
           </div>
         </div>
@@ -1178,42 +313,32 @@
         <ul class="calc-legend">
           <li><span class="sw sw-facilities" aria-hidden="true"></span><span>Facilities</span><span class="pct" data-out="facilities-pct">15%</span><span class="amt" data-out="facilities-annual">$75,000</span></li>
           <li><span class="sw sw-staffing" aria-hidden="true"></span><span>Staffing</span><span class="pct" data-out="staffing-pct">60%</span><span class="amt" data-out="staffing-annual">$300,000</span></li>
-          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Program and everything else</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$125,000</span></li>
-          <li class="is-deficit" data-calc="deficit-legend" hidden><span class="sw sw-deficit" aria-hidden="true"></span><span>Over collected tuition</span><span class="pct" data-out="deficit-pct">0%</span><span class="amt" data-out="deficit-annual">$0</span></li>
+          <li data-calc="remaining-legend"><span class="sw sw-remaining" aria-hidden="true"></span><span>Other expenses and reserves</span><span class="pct" data-out="remaining-pct">25%</span><span class="amt" data-out="remaining-annual">$125,000</span></li>
+          <li class="is-deficit" data-calc="deficit-legend" hidden><span class="sw sw-deficit" aria-hidden="true"></span><span>Over the tuition and funding entered</span><span class="pct" data-out="deficit-pct">0%</span><span class="amt" data-out="deficit-annual">$0</span></li>
         </ul>
 
         <div class="calc-remaining">
-          <p class="calc-k">Available for program</p>
+          <p class="calc-k">Remaining for other expenses and reserves</p>
           <p class="calc-remaining-figure"><span data-out="remaining-annual">$125,000</span> <small>a year</small></p>
-          <p><span data-out="remaining-pct">25%</span> of collected tuition &middot; <span data-out="remaining-monthly">$10,417</span> a month</p>
-          <p>This has to cover:</p>
-          <ul class="calc-covers">
-            <li>Instructional materials</li>
-            <li>Technology</li>
-            <li>Administrative expenses</li>
-            <li>Marketing and recruitment</li>
-            <li>Professional services</li>
-            <li>Other insurance not included above</li>
-            <li>Operating reserves</li>
-            <li>All other expenses</li>
-          </ul>
-          <p class="calc-caveat"><strong>This is not profit or available cash.</strong> It is what is left for program and everything listed above.</p>
+          <p><span data-out="remaining-pct">25%</span> of tuition and funding &middot; <span data-out="remaining-monthly">$10,417</span> a month</p>
+          <p class="calc-caveat"><strong>This is not profit or available cash.</strong></p>
+          <p>This amount still needs to cover instructional materials, technology, administration, recruitment, professional services, other operating expenses, and reserves.</p>
         </div>
 
         <div class="calc-guide" aria-hidden="true">
-          <p data-when="ok">This mix leaves room for program today. Leases step up, salaries rise and enrollment moves, so check it again each year.</p>
-          <p data-when="tight">What is left for program may be tight. Make sure it covers your program, other expenses and reserves.</p>
-          <p data-when="over">Your facilities and staffing allocations exceed the tuition you expect to collect, before accounting for program and other operating expenses.</p>
+          <p data-when="ok">Your remaining funds must cover other operating expenses and reserves. Review those costs before deciding whether this mix works for your school.</p>
+          <p data-when="tight">What remains may be tight. Make sure it covers your other operating expenses and reserves.</p>
+          <p data-when="over">Your facilities and staffing allocations exceed the annual tuition and funding entered, before other operating expenses.</p>
         </div>
         <p class="sr-only" data-calc="alert" role="status" aria-live="polite"></p>
       </div>
     </div>
 
     <p class="platform-note calc-note">
-      A one-year snapshot for planning only. Actual needs vary by school model, location, staffing,
-      enrollment, and funding sources, and a mix that works today can change as leases, salaries and
-      enrollment do. It assumes you collect the tuition entered and leaves out other revenue such as
-      grants and fundraising. Estimates are not loan eligibility.
+      A one-year illustration for planning only. It assumes you collect the full amount entered and
+      leaves out any revenue you have not entered, such as grants or fundraising. It does not
+      establish financial health, cash availability, runway, or loan eligibility. Actual needs vary
+      by school model, location, staffing, and enrollment.
     </p>
 
     <div class="calc-cta">
@@ -1226,88 +351,31 @@
     </div>
   </section>
 
-  <!-- THE TOOLS -->
-  <section class="section" id="tools">
-    <div class="label">Open now</div>
-    <h2>Built to meet the moment</h2>
+  <!-- THE PLATFORM. Planned, not live. QuickBooks Online stays the accounting
+       system of record (Plus is the working assumption; Advanced is NOT
+       required). Gusto is a planned integration: SchoolStack does not run
+       payroll. Do not claim either integration is live, or that everything
+       ships at once. -->
+  <section class="section section-narrow" id="platform">
+    <div class="label">In development for 2027</div>
+    <h2>One connected back office, built for small schools.</h2>
     <p class="section-desc">
-      Small-school leaders need answers they can act on, not another report. Each SchoolStack tool
-      turns school-founder experience and lender insight into a clear next step. Every tool is free
-      to use today and works on its own, so start with the question in front of you.
+      We're developing a connected platform that brings financial planning, visibility, and the
+      work around running a school into one place, alongside QuickBooks Online and a planned Gusto
+      integration.
     </p>
-
-    <div class="stack-grid">
-
-      <article class="tool-card card-space">
-        <img class="tool-logo" src="assets/logos/schoolstack-space-logo.svg" alt="SchoolStack Space" width="499" height="71">
-        <div class="tool-role">Facilities and community</div>
-        <p class="tool-body">Estimate demand in your community, then size and cost a facility your enrollment can support.</p>
-        <p class="tool-guardrail">It shows its math, so the decision stays yours to make.</p>
-        <p class="tool-note">Joins the SchoolStack platform</p>
-        <a class="tool-link" href="/go/space" target="_blank" rel="noopener noreferrer">
-          Open Space
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </article>
-
-      <article class="tool-card card-budget">
-        <img class="tool-logo" src="assets/logos/schoolstack-budget-logo.svg" alt="SchoolStack Budget" width="522" height="71">
-        <div class="tool-role">Financial modeling</div>
-        <p class="tool-body">Build a five-year model your lender can read, and see your school's financial health in plain language.</p>
-        <p class="tool-guardrail">See how enrollment, staffing, facilities, and debt shape cash flow and long-term sustainability.</p>
-        <p class="tool-note">Joins the SchoolStack platform</p>
-        <a class="tool-link" href="/go/budget" target="_blank" rel="noopener noreferrer">
-          Open Budget
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </article>
-
-      <article class="tool-card card-access">
-        <img class="tool-logo" src="assets/logos/schoolstack-access-logo.svg" alt="SchoolStack Access" width="511" height="71">
-        <div class="tool-role">Funding and policy</div>
-        <p class="tool-body">State-by-state guidance on school-choice funding and the Federal Scholarship Tax Credit.</p>
-        <p class="tool-guardrail">See what families can use in your state, when programs begin, and what schools need to participate. Sourced and dated. Guidance, not tax advice.</p>
-        <p class="tool-note">Stand-alone guide</p>
-        <a class="tool-link" href="/go/access" target="_blank" rel="noopener noreferrer">
-          Open Access
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </article>
-
-      <article class="tool-card card-lending">
-        <img class="tool-logo" src="assets/logos/schoolstack-lendinglab-logo.svg" alt="SchoolStack Lending Lab" width="631" height="71">
-        <div class="tool-role">Financing</div>
-        <p class="tool-body">Explore working-capital financing for eligible small independent schools, beginning with a short fit check and followed by human underwriting from a lender who understands school finances.</p>
-        <p class="tool-guardrail">See if you may be a fit in a few minutes. If you move forward, real people review your school, your plans, and your numbers.</p>
-        <p class="tool-note">Joins the SchoolStack platform</p>
-        <a class="tool-link" href="/go/screener" target="_blank" rel="noopener noreferrer">
-          Check your fit
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- THE PLATFORM -->
-  <section class="section section-narrow" id="platform" style="padding-top: 0;">
-    <div class="label">Arriving 2027</div>
-    <h2>One back office, built for small schools</h2>
     <p class="section-desc">
-      SchoolStack will bring budgeting, financial visibility, compliance, recruitment, enrollment,
-      and payroll management into one place, working alongside QuickBooks Online Advanced as the
-      accounting system of record. Your books stay where your accountant expects them. The work
-      around them stops living in spreadsheets.
+      QuickBooks Online remains your accounting system of record. The planned Gusto integration
+      will connect payroll information with SchoolStack.
     </p>
     <ul class="platform-areas">
-      <li>Budgeting</li>
-      <li>Financial visibility</li>
-      <li>Compliance</li>
-      <li>Recruitment</li>
-      <li>Enrollment</li>
-      <li>Payroll management</li>
+      <li>Budgeting and financial visibility</li>
+      <li>Recruitment and enrollment workflows</li>
+      <li>Compliance support</li>
+      <li>QuickBooks Online integration</li>
+      <li>Gusto integration</li>
     </ul>
-    <p class="platform-note">QuickBooks Online Advanced requires a separate paid subscription.</p>
+    <p class="platform-note">All planned. Integrations are not live yet, and capabilities may arrive in stages.</p>
   </section>
 
   <!-- DESIGN PARTNER COHORT -->
@@ -1322,6 +390,10 @@
         work, tell us what saves time, and be candid about what gets in the way.
       </p>
       <p>No product or finance expertise is required. We need people who know what it takes to run a school.</p>
+      <p class="cohort-scope">
+        Space, Budget, and Access are free for anyone to use today, no application needed. The
+        cohort is for helping shape the connected platform, which is in development for 2027.
+      </p>
 
       <div class="exchange">
         <div class="exchange-card">
@@ -1471,45 +543,27 @@
           <h3 id="successHeading" tabindex="-1">Thanks for applying.</h3>
           <p>
             We'll review your information and contact selected schools about next steps. In the
-            meantime, explore the four tools available today:
+            meantime, explore the three tools available today:
             <a href="/go/space" target="_blank" rel="noopener noreferrer">Space</a>,
-            <a href="/go/budget" target="_blank" rel="noopener noreferrer">Budget</a>,
-            <a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a>, and
-            <a href="/go/screener" target="_blank" rel="noopener noreferrer">Lending Lab</a>.
+            <a href="/go/budget" target="_blank" rel="noopener noreferrer">Budget</a>, and
+            <a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a>.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- WHY -->
-  <section class="section section-narrow">
-    <div class="label">Why we build</div>
-    <h2>Built by a founder, for founders</h2>
-    <figure class="founder-quote">
-      <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
-      <blockquote>
-        <p class="quote-lead">I've been there.</p>
-        <p>
-          I started out in a middle school classroom, and everything I know about the business
-          side I learned the hard way. I've watched a lot of good school leaders learn it the same
-          way. None of it is intuitive.
-        </p>
-        <p>
-          I've also raised more than $100 million in philanthropy and public grants, so I know
-          what funders and lenders want to see. We built SchoolStack so you don't have to guess.
-        </p>
-      </blockquote>
-      <figcaption>
-        <strong>Allison Serafin</strong>
-        <span>Founder, SchoolStack.</span>
-      </figcaption>
-    </figure>
-    <p class="section-desc" style="margin-bottom: 0;">
-      Last summer we met over 100 school founders who had quit careers and signed personal
-      guarantees to open schools. Most could not see where their financial health was headed.
-      Accounting tells you the past. We wanted founders to see what is coming.
+  <!-- FOUNDER INTRO. Brief by design: full biographies and values live on
+       /about. -->
+  <section class="section section-narrow founder-intro" aria-labelledby="founder-heading">
+    <div class="label">The people behind SchoolStack</div>
+    <h2 id="founder-heading">Built with an understanding of what schools carry.</h2>
+    <p class="section-desc">
+      SchoolStack founder Allison Serafin brings more than 20 years of experience in teaching,
+      education policy, philanthropy, and school development. Together with Daniel Crook and the
+      School Harbor team, she is building tools shaped by the people who run small schools.
     </p>
+    <p class="founder-link"><a href="/about">Meet the people behind SchoolStack</a></p>
   </section>
 
   <!-- PARTNERS -->
@@ -1540,14 +594,6 @@
       infrastructure small schools depend on.
       <a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Learn more</a>
     </p>
-    <div class="team-row">
-      <div class="team-item"><strong>Allison Serafin</strong><span>Founder</span></div>
-      <div class="team-item"><strong>Daniel Crook</strong><span>Chief Technology Officer</span></div>
-      <div class="team-item">
-        <strong><a href="https://www.schoolharbor.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">School Harbor</a></strong>
-        <span>Technology partner</span>
-      </div>
-    </div>
   </section>
 
   <!-- FAQ -->
@@ -1558,50 +604,49 @@
       <div class="faq-item">
         <h3>What can I use today?</h3>
         <p>
-          All four tools:
-          <a href="/go/space" target="_blank" rel="noopener noreferrer">Space</a> for facilities and community,
-          <a href="/go/budget" target="_blank" rel="noopener noreferrer">Budget</a> for five-year financial planning,
-          <a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a> for funding and policy guidance, and
-          <a href="/go/screener" target="_blank" rel="noopener noreferrer">Lending Lab</a> for financing. Each works on its own.
+          Three tools:
+          <a href="/go/space" target="_blank" rel="noopener noreferrer">Space</a> for community intelligence and facilities,
+          <a href="/go/budget" target="_blank" rel="noopener noreferrer">Budget</a> for five-year financial planning, and
+          <a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a> for funding and policy guidance. Each works on its own and is free to use today.
         </p>
       </div>
       <div class="faq-item">
         <h3>What does it cost?</h3>
-        <p>The four tools available today cost nothing to use. Pricing for the 2027 SchoolStack platform has not been finalized. QuickBooks Online Advanced is a separate paid subscription.</p>
+        <p>Space, Budget, and Access cost nothing to use today. Pricing for the 2027 SchoolStack platform has not been finalized.</p>
       </div>
       <div class="faq-item">
         <h3>What happens in 2027?</h3>
-        <p>Space, Budget, and Lending Lab will connect with the SchoolStack platform. Access will remain a stand-alone guide. We will explain any account or data changes before launch.</p>
+        <p>Our connected platform is in development for 2027. Space and Budget will connect with it, and Access will remain a stand-alone guide. We will explain any account or data changes before launch.</p>
       </div>
       <div class="faq-item">
-        <h3>What does checking my Lending Lab fit tell me?</h3>
-        <p>It provides an initial indication of whether the school may fit the program and what may need to be strengthened. It is not loan approval. Human underwriting and a credit decision come later.</p>
+        <h3>Does SchoolStack replace QuickBooks or Gusto?</h3>
+        <p>No. QuickBooks Online remains your accounting system of record, and SchoolStack does not process payroll. A QuickBooks Online integration and a Gusto integration are planned for the connected platform. Neither is live yet, and you will not need QuickBooks Online Advanced.</p>
       </div>
     </div>
   </section>
 
   </main>
 
-  <!-- FOOTER -->
+  <!-- FOOTER. Shared with every page; see the NAV note. -->
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
-          <img src="assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
+          <img src="/assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
           <p>The back office small schools run on. Built by a founder, for founders.</p>
         </div>
         <div class="footer-col">
-          <h3>The tools</h3>
+          <h2>The tools</h2>
           <ul>
             <li><a href="/go/space" target="_blank" rel="noopener noreferrer">Space</a></li>
             <li><a href="/go/budget" target="_blank" rel="noopener noreferrer">Budget</a></li>
             <li><a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a></li>
-            <li><a href="/go/lending-lab" target="_blank" rel="noopener noreferrer">Lending Lab</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3>About</h3>
+          <h2>About</h2>
           <ul>
+            <li><a href="/about">About Us</a></li>
             <li><a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a></li>
             <li><a href="#platform">The platform</a></li>
             <li><a href="#design-partners">Design partners</a></li>
@@ -1626,6 +671,7 @@
        the same arithmetic the page does. Outside /assets/, so it is not under
        the year-long immutable cache and needs no hash in its name. -->
   <script src="/js/budget-calculator.js" defer></script>
+  <script src="/js/site.js" defer></script>
   <script>
 document.addEventListener('DOMContentLoaded', function() {
   var form = document.getElementById('signupForm');

@@ -21,10 +21,6 @@ Given('{int}% for facilities and {int}% for staffing', function (facilitiesPct, 
   this.calcInput = { ...this.calcInput, facilitiesPct, staffingPct };
 });
 
-Then('facilities are flagged as above the ceiling', function () {
-  assert.equal(result(this).facilitiesAboveCeiling, true);
-});
-
 Then('annual revenue is {word}', function (want) {
   assert.equal(calc.formatUSD(result(this).revenue.annual), want);
 });
