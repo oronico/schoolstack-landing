@@ -14,7 +14,7 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const calc = require('../../js/budget-calculator.js');
-const { breakEven, breakEvenSentence, parseExpenses, parsePerStudent, formatUSD, BE_DEFAULTS, BE_LIMITS } = calc;
+const { breakEven, breakEvenSentence, breakEvenFormula, parseExpenses, parsePerStudent, formatUSD, BE_DEFAULTS, BE_LIMITS } = calc;
 
 test('defaults: $600,000 at $10,000 a student is exactly 60 students', () => {
   const r = breakEven(BE_DEFAULTS);
@@ -51,6 +51,20 @@ test('a case where float division lands a hair off a whole number', () => {
   assert.equal(r.exact, true);
 });
 
+test('the working never reads as a different answer than the count', () => {
+  // Bugbot, PR #32: $600,000.25 needs 61 students, but whole-dollar rounding
+  // printed "$600,000 ÷ $10,000", which reads as exactly 60.
+  const r = breakEven({ expenses: 600000.25, perStudent: 10000 });
+  assert.equal(r.students, 61);
+  assert.equal(breakEvenFormula(r), '$600,000.25 ÷ $10,000 per student, rounded up');
+  assert.equal(breakEvenSentence(r), 'At 61 students you collect $610,000, $9,999.75 above what a year costs.');
+  // Cents on the per-student side are shown too, and whole figures stay whole.
+  const c = breakEven({ expenses: 1000000, perStudent: 12345.67 });
+  assert.equal(breakEvenFormula(c), '$1,000,000 ÷ $12,345.67 per student, rounded up');
+  assert.equal(breakEvenSentence(c), 'At 82 students you collect $1,012,344.94, $12,344.94 above what a year costs.');
+  assert.equal(breakEvenFormula(breakEven(BE_DEFAULTS)), '$600,000 ÷ $10,000 per student');
+});
+
 /* Adversarial rows: zero, tiny and huge for each money input. */
 
 test('zero expenses need zero students', () => {
@@ -62,7 +76,8 @@ test('zero expenses need zero students', () => {
 test('a tiny expense still needs one whole student', () => {
   const r = breakEven({ expenses: 0.01, perStudent: 10000 });
   assert.equal(r.students, 1);
-  assert.equal(breakEvenSentence(r), 'At 1 student you collect $10,000, $10,000 above what a year costs.');
+  // A cent of expenses leaves a cushion of $9,999.99, shown to the cent.
+  assert.equal(breakEvenSentence(r), 'At 1 student you collect $10,000, $9,999.99 above what a year costs.');
 });
 
 test('the largest accepted figures stay exact', () => {

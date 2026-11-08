@@ -231,6 +231,16 @@
     return (r < 0 ? '−' : '') + usd.format(Math.abs(r));
   }
 
+  // Whole dollars when the figure is whole, cents when it is not. The
+  // break-even working and sentence use this: rounding $600,000.25 to
+  // "$600,000" made "$600,000 ÷ $10,000" read as exactly 60 beside an
+  // answer of 61, which is right, and looked wrong.
+  function formatUSDExact(n) {
+    var cents = Math.round(n * 100);
+    if (cents % 100 === 0) return formatUSD(cents / 100);
+    return (cents < 0 ? '−' : '') + '$' + usdCents.format(Math.abs(cents) / 100);
+  }
+
   // For the tuition box after the visitor leaves it: keeps cents only if typed.
   function formatTuitionField(n) {
     return n % 1 === 0 ? plain.format(n) : usdCents.format(n);
@@ -373,8 +383,14 @@
      data-out names starting "be-", so it never collides with the snapshot. */
   function breakEvenSentence(r) {
     var who = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
-    if (r.exact) return 'At ' + who + ' you collect ' + formatUSD(r.collected) + ', exactly what a year costs.';
-    return 'At ' + who + ' you collect ' + formatUSD(r.collected) + ', ' + formatUSD(r.cushion) + ' above what a year costs.';
+    if (r.exact) return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', exactly what a year costs.';
+    return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', ' + formatUSDExact(r.cushion) + ' above what a year costs.';
+  }
+
+  // "$600,000 ÷ $10,000 per student", plus ", rounded up" on a remainder.
+  function breakEvenFormula(r) {
+    return formatUSDExact(r.expenses) + ' ÷ ' + formatUSDExact(r.perStudent) + ' per student'
+      + (r.exact ? '' : ', rounded up');
   }
 
   function mountBreakEven(el) {
@@ -421,8 +437,7 @@
       var r = breakEven(last);
       var result = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
       setText('be-result', result);
-      setText('be-formula', formatUSD(r.expenses) + ' ÷ ' + formatUSD(r.perStudent) + ' per student'
-        + (r.exact ? '' : ', rounded up'));
+      setText('be-formula', breakEvenFormula(r));
       setText('be-sentence', breakEvenSentence(r));
 
       var announce = result + ' to break even.';
@@ -466,6 +481,8 @@
     calculate: calculate,
     barSegments: barSegments,
     formatUSD: formatUSD,
+    formatUSDExact: formatUSDExact,
+    breakEvenFormula: breakEvenFormula,
     formatPct: formatPct,
     formatTuitionField: formatTuitionField,
     mount: mount,
