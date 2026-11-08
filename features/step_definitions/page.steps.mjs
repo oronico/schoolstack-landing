@@ -27,7 +27,7 @@ Then('no link opens a new tab without rel="noopener"', function () {
 });
 
 Then('every declared font family has a matching @font-face', function () {
-  const wanted = declaredFontFamilies(ctx.html);
+  const wanted = declaredFontFamilies(ctx.siteCss);
   const served = servedFontFamilies(ctx.css);
   assert.ok(Object.keys(wanted).length, 'the page declares no font families at all');
   for (const [role, family] of Object.entries(wanted)) {

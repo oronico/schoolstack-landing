@@ -93,12 +93,23 @@ test('the tight warning starts below 15% remaining, not at it', () => {
 });
 
 /* ---------------------------------------------------------------------------
-   The 15% facilities ceiling
+   No benchmarks. The starting allocations are illustrations to adjust, so the
+   result carries no verdict about any one percentage, and no message reads a
+   remainder as proof of financial health.
    --------------------------------------------------------------------------- */
 
-test('facilities above 15% are flagged against the suggested ceiling', () => {
-  assert.equal(run({ facilitiesPct: 15 }).facilitiesAboveCeiling, false);
-  assert.equal(run({ facilitiesPct: 16 }).facilitiesAboveCeiling, true);
+test('no percentage is judged against a ceiling or benchmark', () => {
+  const r = run({ facilitiesPct: 30 });
+  assert.equal('facilitiesAboveCeiling' in r, false);
+  // Facilities at 30% with 40% staffing leaves 30%: nothing to flag.
+  assert.equal(run({ facilitiesPct: 30, staffingPct: 40 }).status, 'ok');
+});
+
+test('the messages describe the inputs and never call a mix healthy', () => {
+  assert.match(MESSAGES.over, /tuition and funding entered/);
+  for (const m of Object.values(MESSAGES)) {
+    assert.ok(!/healthy|sustainab|program\b/i.test(m), `"${m}"`);
+  }
 });
 
 /* ---------------------------------------------------------------------------

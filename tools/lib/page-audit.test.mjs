@@ -11,10 +11,12 @@ import { join } from 'node:path';
 import { ROOT } from './harness.mjs';
 import {
   anchorTargets, elementIds, danglingAnchors,
-  unsafeBlankLinks, declaredFontFamilies, servedFontFamilies,
+  unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
+const about = () => readFileSync(join(ROOT, 'about.html'), 'utf8');
+const css = () => readFileSync(join(ROOT, 'css/site.css'), 'utf8');
 
 test('anchorTargets collects every in-page target with its lines', () => {
   const out = anchorTargets('<a href="#faq">a</a>\n<a href="#faq">b</a>\n<a href="#top">c</a>');
@@ -71,6 +73,28 @@ test('index.html has no dangling anchors', () => {
   assert.deepEqual(danglingAnchors(page()), []);
 });
 
+test('"/#id" links from another page must land on an id the home page has', () => {
+  const home = '<section id="faq"></section>';
+  assert.deepEqual(danglingAnchors('<a href="/#faq">FAQ</a>', home), []);
+  assert.deepEqual(danglingAnchors('<a href="/#nope">x</a>', home), [{ target: '/#nope', lines: [1] }]);
+});
+
+test('about.html has no dangling anchors, its own or into the home page', () => {
+  assert.deepEqual(danglingAnchors(about(), page()), []);
+});
+
+test('chromeDrift ignores the intended differences and catches the rest', () => {
+  const home = '<nav><a href="#faq">FAQ</a><a href="/about">About Us</a></nav><footer>f</footer>';
+  const other = '<nav><a href="/#faq">FAQ</a><a href="/about" aria-current="page">About Us</a></nav><footer>f</footer>';
+  assert.deepEqual(chromeDrift(home, other), []);
+  const drifted = other.replace('FAQ</a>', 'Questions</a>');
+  assert.equal(chromeDrift(home, drifted).length, 1);
+});
+
+test('the home page and the About page share one nav and one footer', () => {
+  assert.deepEqual(chromeDrift(page(), about()), []);
+});
+
 test('index.html opens no new tab without rel=noopener', () => {
   assert.deepEqual(unsafeBlankLinks(page()), []);
 });
@@ -78,7 +102,7 @@ test('index.html opens no new tab without rel=noopener', () => {
 test('every family the page asks for is a family fonts.css serves', () => {
   // The drift this guards: the files still load, so nothing 4xxs, and the whole
   // site paints in Trebuchet MS with every other check green.
-  const wanted = declaredFontFamilies(page());
+  const wanted = declaredFontFamilies(css());
   const served = servedFontFamilies(readFileSync(join(ROOT, 'fonts/fonts.css'), 'utf8'));
   assert.deepEqual(Object.keys(wanted).sort(), ['body', 'display']);
   for (const family of Object.values(wanted)) assert.ok(served.has(family), family);

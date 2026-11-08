@@ -136,37 +136,38 @@ const AUDIT = `(async () => {
   });
 })()`;
 
+for (const path of ['/', '/about'])
 for (const width of VIEWPORTS) {
   await browser.send('Emulation.setDeviceMetricsOverride',
     { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
-  const navError = await browser.navigate(site.base + '/');
-  if (navError) { fail(`${width}px  navigation failed: ${navError}`); continue; }
+  const navError = await browser.navigate(site.base + path);
+  if (navError) { fail(`${path} ${width}px  navigation failed: ${navError}`); continue; }
   await sleep(2000);
 
   const r = await browser.evaluate(AUDIT, { awaitPromise: true });
-  console.log(`${String(width).padStart(4)}px  contrast: ${r.checked} elements checked, `
+  console.log(`${path.padEnd(7)}${String(width).padStart(4)}px  contrast: ${r.checked} elements checked, `
     + `${r.unchecked} not computable, ${r.low.length} below target  |  `
     + `main: ${r.mains}  skip link: ${r.skip ? 'yes' : 'no'}  lang: ${r.lang || 'MISSING'}`);
 
   for (const l of r.low) {
-    fail(`${width}px  contrast ${l.ratio}:1 (needs ${l.need}:1) - ${l.color} on ${l.on} - "${l.text}"`);
+    fail(`${path} ${width}px  contrast ${l.ratio}:1 (needs ${l.need}:1) - ${l.color} on ${l.on} - "${l.text}"`);
   }
-  if (r.mains !== 1) fail(`${width}px  ${r.mains} <main> landmarks, expected exactly 1`);
-  if (!r.lang) fail(`${width}px  <html> has no lang attribute`);
+  if (r.mains !== 1) fail(`${path} ${width}px  ${r.mains} <main> landmarks, expected exactly 1`);
+  if (!r.lang) fail(`${path} ${width}px  <html> has no lang attribute`);
 
   if (!r.skip) {
-    fail(`${width}px  the first thing a keyboard reaches is "${r.firstFocusable}", not a skip link - `
+    fail(`${path} ${width}px  the first thing a keyboard reaches is "${r.firstFocusable}", not a skip link - `
       + 'every visit starts by tabbing through the whole nav');
   } else {
-    if (!r.skip.targetExists) fail(`${width}px  the skip link points at an id that does not exist`);
-    if (!r.skip.visibleOnFocus) fail(`${width}px  the skip link stays invisible when focused, so nobody knows it is there`);
+    if (!r.skip.targetExists) fail(`${path} ${width}px  the skip link points at an id that does not exist`);
+    if (!r.skip.visibleOnFocus) fail(`${path} ${width}px  the skip link stays invisible when focused, so nobody knows it is there`);
   }
 
-  for (const t of r.positiveTabindex) fail(`${width}px  "${t}" has a positive tabindex, which reorders the whole page`);
-  for (const s of r.imgsNoAlt) fail(`${width}px  ${s} has no alt attribute`);
-  for (const n of r.missingAutocomplete) fail(`${width}px  ${n} has no autocomplete, so the browser cannot fill it`);
-  for (const u of r.unnamed) fail(`${width}px  the ${u} field has no label a screen reader can read`);
-  for (const c of r.namelessControls) fail(`${width}px  the "${c}" control has no accessible name`);
+  for (const t of r.positiveTabindex) fail(`${path} ${width}px  "${t}" has a positive tabindex, which reorders the whole page`);
+  for (const s of r.imgsNoAlt) fail(`${path} ${width}px  ${s} has no alt attribute`);
+  for (const n of r.missingAutocomplete) fail(`${path} ${width}px  ${n} has no autocomplete, so the browser cannot fill it`);
+  for (const u of r.unnamed) fail(`${path} ${width}px  the ${u} field has no label a screen reader can read`);
+  for (const c of r.namelessControls) fail(`${path} ${width}px  the "${c}" control has no accessible name`);
 }
 
 await browser.close();

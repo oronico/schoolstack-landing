@@ -64,7 +64,8 @@ const READ = `JSON.stringify((() => {
     deficitShown: !el.querySelector('[data-calc="deficit-legend"]').hidden,
     remainingRowShown: !el.querySelector('[data-calc="remaining-legend"]').hidden,
     tuition: el.querySelector('[data-calc="tuition"]').value,
-    facilitiesFlag: el.querySelector('[data-calc="facilities-flag"]').hasAttribute('data-on'),
+    barLabel: el.querySelector('[data-calc="bar"]').getAttribute('aria-label'),
+    remainingLegendText: el.querySelector('[data-calc="remaining-legend"]').textContent.replace(/\\s+/g, ' ').trim(),
     students: el.querySelector('[data-calc="students"]').value,
     facilities: el.querySelector('[data-calc="facilities"]').value,
     staffing: el.querySelector('[data-calc="staffing"]').value,
@@ -119,8 +120,10 @@ for (const width of [1440, 820, 390]) {
   check(r.revenue === '$500,000', at(`default tuition collected reads ${r.revenue}, expected $500,000`));
   check(r.facAnnual === '$75,000' && r.facMonthly === '$6,250', at(`default facilities read ${r.facAnnual} / ${r.facMonthly}`));
   check(r.staffAnnual === '$300,000' && r.staffMonthly === '$25,000', at(`default staffing read ${r.staffAnnual} / ${r.staffMonthly}`));
-  check(r.remPct === '25%' && r.remAnnual === '$125,000', at(`default program reads ${r.remPct} / ${r.remAnnual}`));
-  check(!r.facilitiesFlag, at('the facilities ceiling flag is on at 15%'));
+  check(r.remPct === '25%' && r.remAnnual === '$125,000', at(`default remainder reads ${r.remPct} / ${r.remAnnual}`));
+  // The chart, its legend and its accessible description use one wording.
+  check(/other expenses and reserves/i.test(r.remainingLegendText), at(`legend reads "${r.remainingLegendText}"`));
+  check(/remaining for other expenses and reserves 25%/.test(r.barLabel), at(`bar is described as "${r.barLabel}"`));
   check(r.status === 'ok' && r.alert === '', at(`default state is ${r.status} with alert "${r.alert}"`));
   check(r.cta === '/go/budget', at(`the calculator CTA points at ${r.cta}, expected /go/budget`));
   checkBar(r, at('defaults'));
@@ -155,7 +158,6 @@ for (const width of [1440, 820, 390]) {
   await key('facilities', 'ArrowRight', 3);
   r = await read();
   check(r.facilities === '18' && r.facPct === '18%', at(`three ArrowRights left facilities at ${r.facilities} (${r.facPct})`));
-  check(r.facilitiesFlag, at('facilities at 18% did not show the 15% ceiling flag'));
   check(r.focused === 'facilities', at(`focus moved off the facilities slider to ${r.focused}`));
   await key('facilities', 'ArrowLeft');
   r = await read();
@@ -177,7 +179,8 @@ for (const width of [1440, 820, 390]) {
   check(r.remAnnual.startsWith('−$'), at(`the deficit amount reads ${r.remAnnual}, expected a negative dollar figure`));
   check(r.deficitShown, at('the over-revenue legend row stayed hidden'));
   check(!r.remainingRowShown, at('the legend lists the shortfall twice: "Everything else" is still shown past 100%'));
-  check(/exceed the tuition you expect to collect/.test(r.alert), at(`over state announces "${r.alert}"`));
+  check(/exceed the annual tuition and funding entered/.test(r.alert), at(`over state announces "${r.alert}"`));
+  check(/over the tuition and funding entered by 30%/.test(r.barLabel), at(`over state bar is described as "${r.barLabel}"`));
   checkBar(r, at('130% allocated'));
 
   /* 5. Bad input is named on the field and does not blank the figures. */
@@ -209,7 +212,7 @@ for (const width of [1440, 820, 390]) {
     at(`after Reset: ${r.revenue}, ${r.status}, errors "${r.tuitionError}" "${r.studentsError}"`));
   check(r.remainingRowShown && !r.deficitShown, at('after Reset the legend still shows the over-revenue row'));
 
-  console.log(`${String(width).padStart(4)}px  mounted, tap targets, typed, keyed, ceiling flag, over 100%, bad input, largest figures, reset`);
+  console.log(`${String(width).padStart(4)}px  mounted, tap targets, labels, typed, keyed, over 100%, bad input, largest figures, reset`);
 }
 
 await browser.close();

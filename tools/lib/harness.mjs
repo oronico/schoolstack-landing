@@ -37,7 +37,10 @@ export const TYPES = {
 export async function serveSite({ headersFor = () => ({}) } = {}) {
   const server = createServer((req, res) => {
     const path = decodeURIComponent(req.url.split('?')[0]);
-    const file = join(ROOT, path === '/' ? 'index.html' : path);
+    let file = join(ROOT, path === '/' ? 'index.html' : path);
+    // Netlify serves about.html at /about, and so does this. Without it the
+    // About page would 404 here while working in production.
+    if (!extname(file) && !existsSync(file) && existsSync(file + '.html')) file += '.html';
     const headers = { ...headersFor(path) };
     // A path that escapes ROOT is refused rather than served.
     if (!file.startsWith(ROOT) || !existsSync(file)) {
