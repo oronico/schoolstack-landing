@@ -334,11 +334,60 @@
       </div>
     </div>
 
+
     <p class="platform-note calc-note">
       A one-year illustration for planning only. It assumes you collect the full amount entered and
       leaves out any revenue you have not entered, such as grants or fundraising. It does not
       establish financial health, cash availability, runway, or loan eligibility. Actual needs vary
       by school model, location, staffing, and enrollment.
+    </p>
+
+    <div class="calc-be-wrap">
+      <h3 id="beHeading">How many students do you need to break even?</h3>
+      <p class="section-desc">
+        Enter what a year of running your school costs and what each student brings in. The answer is
+        your enrollment driver: the number the rest of your budget leans on.
+      </p>
+
+      <div class="calc calc-be" data-break-even-calculator role="group" aria-labelledby="beHeading">
+        <div class="calc-inputs">
+          <div class="calc-field">
+            <label for="beExpenses">Total yearly expenses, including debt service</label>
+            <div class="calc-money">
+              <span aria-hidden="true">$</span>
+              <input id="beExpenses" data-be="expenses" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="600,000" aria-describedby="beExpensesHint beExpensesError">
+            </div>
+            <p class="calc-hint" id="beExpensesHint">Payroll, rent, operating costs and a year of loan payments. Leave out one-time purchases like a build-out.</p>
+            <p class="calc-error" id="beExpensesError" data-be="expenses-error" hidden></p>
+          </div>
+
+          <div class="calc-field">
+            <label for="bePerStudent">Tuition or per-pupil funding collected per student</label>
+            <div class="calc-money">
+              <span aria-hidden="true">$</span>
+              <input id="bePerStudent" data-be="per-student" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="10,000" aria-describedby="bePerStudentHint bePerStudentError">
+            </div>
+            <p class="calc-hint" id="bePerStudentHint">What you expect to collect for each student in a year, after any discounts or free seats.</p>
+            <p class="calc-error" id="bePerStudentError" data-be="per-student-error" hidden></p>
+          </div>
+        </div>
+
+        <div class="calc-results">
+          <div>
+            <p class="calc-k">Students to enroll to break even</p>
+            <p class="calc-big" data-out="be-result">60 students</p>
+            <p class="calc-sub" data-out="be-formula">$600,000 &divide; $10,000 per student</p>
+          </div>
+          <p class="calc-be-sentence" data-out="be-sentence">At 60 students you collect $600,000, exactly what a year costs.</p>
+          <p class="calc-hint">Every student past this number adds to your cushion. Enrollment below it means a gap to close with fundraising, grants or lower costs.</p>
+          <p class="sr-only" data-be="alert" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="platform-note calc-note">
+      Estimates are for planning only and are not loan eligibility. The break-even count assumes every
+      enrolled student pays the amount entered and leaves out grants and fundraising.
     </p>
 
     <div class="calc-cta">

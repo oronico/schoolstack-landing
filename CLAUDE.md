@@ -189,7 +189,14 @@ Why each exists:
   the chart, past 100%, reset, tap targets. It is called a snapshot, not a
   budget, on purpose: Budget is where the five-year plan is built, and the
   CTA under it says so. Wording changes must not move a number: compare
-  `calculate()` against `main` over a grid of inputs before merging.
+  `calculate()` against `main` over a grid of inputs before merging. The
+  same file carries the **break-even card** beside it (owner request,
+  November 2026): total yearly expenses including debt service, divided by
+  tuition or per-pupil funding per student, rounded UP to a whole student.
+  One-time purchases stay out, the same basis SchoolStack Budget uses for
+  break-even. Its arithmetic is unit tested in
+  `tools/lib/break-even.test.mjs`, stated in `features/break-even.feature`,
+  and driven in the browser by the same verify-calculator run.
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local
   development nor the diff will tell you it blocked your own stylesheet.
 - **build-images** — the OG card once shipped in DejaVu Sans because the
