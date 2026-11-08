@@ -48,6 +48,8 @@ const PAGES = {
     minTextChars: 3000,
     ids: ['people', 'values', 'contact', 'allison-name', 'daniel-name'],
   },
+  '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: [] },  // logo, footer logo
+  '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: [] },
 };
 
 /* Lending Lab is not promoted on schoolstack.ai for now. Its two /go/ rules

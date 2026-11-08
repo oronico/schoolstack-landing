@@ -22,6 +22,8 @@ https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
 /go/lending-lab    https://www.lendinglab.org            302
 /go/screener       https://www.lendinglab.org/screener   302
 
-# Clean URL for the About page. Netlify already serves about.html at /about;
-# this states it rather than relying on the default.
+# Clean URLs for the other pages. Netlify already serves about.html at
+# /about (and so on); these state it rather than relying on the default.
 /about             /about.html                           200
+/privacy           /privacy.html                         200
+/terms             /terms.html                           200

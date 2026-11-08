@@ -124,3 +124,39 @@ export function servedFontFamilies(css) {
   for (const m of css.matchAll(/font-family:\s*'([^']+)'/g)) out.add(m[1]);
   return out;
 }
+
+/**
+ * The privacy policy makes promises the code has to keep. These read both
+ * sides so a check can hold them together.
+ *
+ * formFields: every named input the design partner application submits,
+ * minus Netlify's own plumbing (form-name) and the spam trap (bot-field).
+ * listedFields: every data-field the privacy page lists.
+ */
+export function formFields(html) {
+  const form = (html.match(/<form\b[^>]*id="signupForm"[\s\S]*?<\/form>/) || [''])[0];
+  const out = new Set();
+  for (const m of form.matchAll(/<(?:input|select|textarea)\b[^>]*\sname="([^"]+)"/g)) {
+    if (m[1] !== 'form-name' && m[1] !== 'bot-field') out.add(m[1]);
+  }
+  return out;
+}
+
+export function listedFields(html) {
+  return new Set([...html.matchAll(/data-field="([^"]+)"/g)].map((m) => m[1]));
+}
+
+/** Where the privacy page and the form disagree, in both directions. */
+export function privacyFieldDrift(indexHtml, privacyHtml) {
+  const sent = formFields(indexHtml);
+  const listed = listedFields(privacyHtml);
+  return {
+    unlisted: [...sent].filter((f) => !listed.has(f)),
+    stale: [...listed].filter((f) => !sent.has(f)),
+  };
+}
+
+/** Code that would set or read a cookie, which the privacy page says never happens. */
+export function cookieUse(text) {
+  return /document\.cookie|set-cookie/i.test(text);
+}

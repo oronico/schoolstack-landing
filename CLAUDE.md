@@ -1,7 +1,8 @@
 # CLAUDE.md — agent contract for schoolstack-landing
 
-This repo is the marketing site at **https://schoolstack.ai**. It is two
-static pages, `index.html` and `about.html` (served at `/about`), sharing one
+This repo is the marketing site at **https://schoolstack.ai**. It is four
+static pages, `index.html`, `about.html`, `privacy.html` and `terms.html`
+(served at `/about`, `/privacy`, `/terms`), sharing one
 stylesheet (`css/site.css`), one small script (`js/site.js`) and the assets,
 published by Netlify straight from the repo root. There is no build step: what
 is committed is what ships.
@@ -290,3 +291,9 @@ measures and no others.
   incubator), not a separate legal or tax-exempt entity, so never put a
   501(c)(3) badge next to the SchoolStack name alone. School Harbor is the
   technology development partner; Daniel leads development through it.
+- **The privacy policy is a list of facts about the code.** No cookies, no
+  outside scripts, the calculator sends nothing, and the application fields
+  are listed one by one (`data-field`). `verify-content` fails if the form
+  gains a field the policy does not list, or if any page or script starts
+  using cookies. Change the site and `privacy.html` together, and have both
+  legal pages reviewed by counsel before material changes ship.
