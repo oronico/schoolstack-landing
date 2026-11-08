@@ -28,11 +28,14 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse } from './lib/page-audit.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
-const aboutHtml = read('about.html');
+// Every page other than the home page. Each shares its nav and footer and
+// meets the same link, anchor and voice rules.
+const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html'];
+const others = OTHER_PAGES.map((f) => ({ f, html: read(f) }));
 const siteCss = read('css/site.css');
 
 const failures = [];
@@ -154,7 +157,7 @@ if (ogImage) {
 const referenced = new Set();
 const note = (p) => { if (p && !/^(https?:|mailto:|data:|#)/.test(p)) referenced.add(p.split('?')[0].replace(/^\//, '')); };
 
-for (const m of (html + aboutHtml).matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
+for (const m of [html, ...others.map((o) => o.html)].join('\n').matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
 // Absolute metadata URLs on our own domain are still our files.
 for (const m of html.matchAll(/content="https:\/\/schoolstack\.ai\/([^"]+\.(?:png|svg|webp|ico))"/g)) note(m[1]);
 for (const i of manifest.icons) note(i.src);
@@ -199,10 +202,12 @@ console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), ${ratchet}`);
 for (const f of voice.faults) fail(f);
 // The About page meets the same rules. Its "deserves" count is its own, so a
 // first instance there fails here rather than hiding under the home page's.
-const aboutVoice = voiceFaults(aboutHtml);
-console.log(`Voice on about.html: ${aboutVoice.faults.length || 'no'} fault(s), "deserves" on ${aboutVoice.debt.length} line(s)`);
-for (const f of aboutVoice.faults) fail(`about.html: ${f}`);
-if (aboutVoice.debt.length) fail(`about.html carries "deserves" on line(s) ${aboutVoice.debt.map((d) => d.line).join(', ')} - CLAUDE.md retires it`);
+for (const o of others) {
+  const v = voiceFaults(o.html);
+  console.log(`Voice on ${o.f}: ${v.faults.length || 'no'} fault(s), "deserves" on ${v.debt.length} line(s)`);
+  for (const f of v.faults) fail(`${o.f}: ${f}`);
+  if (v.debt.length) fail(`${o.f} carries "deserves" on line(s) ${v.debt.map((d) => d.line).join(', ')} - CLAUDE.md retires it`);
+}
 
 /* Printed on every run, passing or failing. A ratchet nobody reads is a
    ratchet that never turns. */
@@ -218,17 +223,27 @@ if (voice.debt.length) {
    --------------------------------------------------------------------------- */
 const dangling = [
   ...danglingAnchors(html),
-  ...danglingAnchors(aboutHtml, html).map((d) => ({ ...d, target: d.target + ' (about.html)' })),
+  ...others.flatMap((o) => danglingAnchors(o.html, html).map((d) => ({ ...d, target: `${d.target} (${o.f})` }))),
 ];
-const unsafe = [...unsafeBlankLinks(html), ...unsafeBlankLinks(aboutHtml)];
+const unsafe = [...unsafeBlankLinks(html), ...others.flatMap((o) => unsafeBlankLinks(o.html))];
 const wanted = declaredFontFamilies(siteCss);
-const drift = chromeDrift(html, aboutHtml);
+const drift = others.flatMap((o) => chromeDrift(html, o.html).map((d) => `${d} (index.html vs ${o.f})`));
 const served = servedFontFamilies(read('fonts/fonts.css'));
 
 console.log(`Anchors: ${dangling.length || 'none'} dangling  |  target=_blank without noopener: ${unsafe.length || 'none'}`);
 console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.css serves ${[...served].join(' + ')}`);
 
-console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on index.html and about.html`);
+console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on index.html and ${OTHER_PAGES.join(', ')}`);
+
+/* The privacy policy's promises, held to the code. A new application field
+   has to be listed there, and the site must not start using cookies. */
+const fields = privacyFieldDrift(html, read('privacy.html'));
+const cookieFiles = ['index.html', ...OTHER_PAGES, 'js/site.js', 'js/budget-calculator.js', '_headers']
+  .filter((f) => cookieUse(read(f)));
+console.log(`Privacy policy: form fields ${fields.unlisted.length || fields.stale.length ? 'DRIFTED' : 'match'}, cookies ${cookieFiles.length ? 'IN USE' : 'none'}`);
+for (const f of fields.unlisted) fail(`the application collects "${f}" but privacy.html does not list it - add it to the "What we collect" list`);
+for (const f of fields.stale) fail(`privacy.html lists "${f}" but the application no longer collects it`);
+for (const f of cookieFiles) fail(`${f} sets or reads a cookie, but privacy.html promises the site sets none`);
 for (const d of drift) fail(`the ${d} - the nav and footer are written out on each page and must match`);
 for (const d of dangling) {
   fail(`href="#${d.target}" on line(s) ${d.lines.join(', ')} points at an id that does not exist - the link scrolls nowhere`);

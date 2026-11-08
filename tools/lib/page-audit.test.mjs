@@ -12,6 +12,7 @@ import { ROOT } from './harness.mjs';
 import {
   anchorTargets, elementIds, danglingAnchors,
   unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
+  formFields, privacyFieldDrift, cookieUse,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -93,6 +94,34 @@ test('chromeDrift ignores the intended differences and catches the rest', () => 
 
 test('the home page and the About page share one nav and one footer', () => {
   assert.deepEqual(chromeDrift(page(), about()), []);
+});
+
+test('formFields reads the application, minus Netlify plumbing and the spam trap', () => {
+  const html = '<form id="signupForm"><input type="hidden" name="form-name"><input name="bot-field">'
+    + '<input name="email"><select name="schoolState"></select><textarea name="headache"></textarea></form>';
+  assert.deepEqual([...formFields(html)].sort(), ['email', 'headache', 'schoolState']);
+});
+
+test('privacyFieldDrift catches a new form field the policy does not list, and a stale one', () => {
+  const form = '<form id="signupForm"><input name="email"><input name="phone"></form>';
+  const policy = '<li data-field="email"></li><li data-field="fax"></li>';
+  assert.deepEqual(privacyFieldDrift(form, policy), { unlisted: ['phone'], stale: ['fax'] });
+});
+
+test('the privacy policy lists exactly what the application collects', () => {
+  const drift = privacyFieldDrift(page(), readFileSync(join(ROOT, 'privacy.html'), 'utf8'));
+  assert.deepEqual(drift, { unlisted: [], stale: [] });
+});
+
+test('cookieUse spots code that would break the no-cookies promise', () => {
+  assert.equal(cookieUse('document.cookie = "a=1"'), true);
+  assert.equal(cookieUse('var cookieJar = 1;'), false);
+});
+
+test('every page shares the home page nav and footer', () => {
+  for (const p of ['about.html', 'privacy.html', 'terms.html']) {
+    assert.deepEqual(chromeDrift(page(), readFileSync(join(ROOT, p), 'utf8')), [], p);
+  }
 });
 
 test('index.html opens no new tab without rel=noopener', () => {

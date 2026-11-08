@@ -1021,6 +1021,20 @@ footer {
 .about-contact { text-align: center; }
 .about-contact .section-desc { margin-bottom: 1.5rem; }
 
+/* LEGAL PAGES (privacy.html, terms.html): a reading measure, headings on
+   the left, since these are read top to bottom rather than scanned. */
+.legal-hero h1 { margin-bottom: 0.4rem; }
+.legal-hero .legal-updated { font-size: 0.9rem; font-weight: 700; color: var(--muted); margin-bottom: 1rem; }
+.legal-hero p:last-child { font-size: 1.05rem; color: var(--ink); max-width: 60ch; margin: 0 auto; }
+.section.legal h2 { text-align: left; font-size: 1.35rem; margin: 2.1rem 0 0.6rem; }
+.section.legal h2:first-child { margin-top: 0; }
+.legal h3 { font-size: 1.05rem; margin: 1.3rem 0 0.4rem; }
+.legal p, .legal li { font-size: 1rem; color: var(--ink); }
+.legal p + p { margin-top: 0.7rem; }
+.legal ul { margin: 0.5rem 0 0.5rem 1.25rem; display: grid; gap: 0.35rem; }
+.legal a { color: var(--space-dark); font-weight: 700; }
+.form-help a { color: var(--on-navy-sky); font-weight: 700; }
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .nav-links { display: none; }

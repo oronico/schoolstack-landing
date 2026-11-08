@@ -3,6 +3,21 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-08: QuickBooks rollout in the FAQ
+- The FAQ, platform note and terms now say the QuickBooks Online
+  integration starts rolling out with design partner schools in November
+  2026 (cash-basis schools first), with Gusto still planned.
+- New FAQ: "Which QuickBooks Online plan do I need?" Advanced is not
+  required; nonprofits should review it for Form 990 categorization.
+
+## 2026-11-08: Privacy policy and terms of use
+- Added `/privacy` and `/terms`, linked from the footer on every page and
+  from the design partner application. Drafted from what the site actually
+  does; for legal review before merge.
+- `verify-content` now holds the privacy policy to the code: every
+  application field must be listed, and no page or script may use cookies.
+  Both pages join the shared nav and footer, render and accessibility checks.
+
 ## 2026-11-08: Three tools, the planned platform, and an About page
 
 ### Added
