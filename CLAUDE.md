@@ -187,7 +187,7 @@ Why each exists:
   attributes passed happily. This one compares each image's *rendered* aspect
   ratio to its natural one, and cross-checks every `/go/` link against
   `_redirects` so a typo cannot become a dead CTA on a live page. It renders
-  every page, fails if retired words ("Lending Lab", "check your fit")
+  `/` and `/about`, fails if retired words ("Lending Lab", "four tools")
   reach a reader, and fails if a nav link lands its heading under the fixed
   nav.
 - **verify-calculator** — the durability snapshot's math lives in
@@ -286,14 +286,14 @@ measures and no others.
 
 ## 7. Product facts copy must not contradict (November 2026)
 
-- **Four tools are promoted: Space, Budget, Access and Enrollment Path.**
-  The first three are separate sites reached through `/go/`; Enrollment
-  Path lives here at `/enrollment/` and its card links there directly, in
-  the same tab. **Never call Enrollment Path free** (owner, November 2026):
-  the tools section reads "Available today", not "Free to use today". Lending
-  Lab is not promoted on schoolstack.ai while it gets more work: no card,
-  nav, footer, FAQ, metadata or share-card mention. Do not touch the Lending
-  Lab app.
+- **Three tools are promoted: Space, Budget, Access.** Lending Lab is not
+  promoted on schoolstack.ai while it gets more work: no card, nav, footer,
+  FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
+- **Enrollment Path is not a fourth product** (owner, November 2026). It is
+  a self-audit of a school's recruitment and enrollment, reached from the
+  main nav and phone menu, not a tool card, and not counted in "three
+  tools". Never call it free. Its logo file
+  (`assets/logos/schoolstack-enrollment-logo.svg`) is kept for later use.
 - **QuickBooks Online is the accounting system of record.** Never present
   Advanced as required. The owner's guidance for nonprofits: review Advanced
   for the categorization Form 990 preparation needs. The FAQ says so.

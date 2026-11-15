@@ -284,8 +284,7 @@ section[id], [id].section { scroll-margin-top: 4.5rem; }
 .btn-secondary:hover { border-color: var(--muted); transform: translateY(-1px); }
 
 /* THE STACK: 2 x 2 on desktop, one column once a card would be cramped */
-/* Four tools: two by two on wide screens, one column below 900px. */
-.stack-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.35rem; }
+.stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.35rem; }
 .tool-card {
   background: linear-gradient(180deg, var(--c-tint) 0%, rgba(255,255,255,0) 58%), var(--panel);
   border: 1px solid var(--hairline);
@@ -362,7 +361,6 @@ section[id], [id].section { scroll-margin-top: 4.5rem; }
 
 .card-space   { --c-light: var(--space-light);   --c-mid: var(--space-mid);   --c-dark: var(--space-dark);   --c-accent: var(--space-dark);   --c-tint: rgba(125,211,252,0.30); }
 .card-budget  { --c-light: var(--budget-light);  --c-mid: var(--budget-mid);  --c-dark: var(--budget-dark);  --c-accent: var(--budget-dark);  --c-tint: rgba(134,239,172,0.34); }
-.card-enrollment { --c-light: #5EEAD4; --c-mid: #14B8A6; --c-dark: #0D9488; --c-accent: #0F766E; --c-tint: rgba(94,234,212,0.28); }
 .card-access  { --c-light: var(--access-light);  --c-mid: var(--access-mid);  --c-dark: var(--access-dark);  --c-accent: var(--access-dark);  --c-tint: rgba(196,181,253,0.32); }
 
 /* DURABILITY SNAPSHOT. Behaviour lives in js/budget-calculator.js; this is

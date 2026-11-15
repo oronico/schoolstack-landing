@@ -60,11 +60,10 @@ const PAGES = {
    still a CTA that fell off. */
 const UNLINKED_ON_PURPOSE = new Set(['/go/lending-lab', '/go/screener']);
 
-/* Words that must not reach a reader while Lending Lab is off the site.
-   Checked against rendered text, which is what a visitor sees, so a comment
-   in the source does not trip it. ("Four tools" was on this list while the
-   fourth was Lending Lab; with Enrollment Path it is true again.) */
-const RETIRED = [/lending lab/i, /check your fit/i];
+/* Words that must not reach a reader while Lending Lab is off the site, and
+   the tool count it took with it. Checked against rendered text, which is
+   what a visitor sees, so a comment in the source does not trip it. */
+const RETIRED = [/lending lab/i, /\bfour tools\b/i, /\ball four\b/i, /check your fit/i];
 
 const site = await serveSite();
 const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });

@@ -3,24 +3,17 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
-## 2026-11-15: Enrollment Path card on the home page
-Added Enrollment Path at /enrollment and a card on the home page.
-- A teal Enrollment Path card after Space, Budget and Access ("Start your
-  audit", same tab). The grid is two by two on wide screens.
-- Four tools everywhere the site counts them: hero, tools section, design
-  partner note, application confirmation, FAQ and its structured data,
-  footer, metadata and the share card. "Free" is off the tools copy: the
-  section reads "Available today" and the hero button "Explore the tools".
-- `/enrollment` redirects to `/enrollment/`, so both addresses open the
-  tool.
-- `assets/logos/schoolstack-enrollment-logo.svg`: the Enrollment Path logo,
-  built like Space, Budget and Access (Quicksand Bold at 44px, outlined,
-  same spacing; a rebuilt Space logo matches the shipped one to 0.4% of
-  pixels, all edge anti-aliasing). Teal ramp #5EEAD4, #14B8A6, #0D9488,
-  name in #0F766E.
-- Files: `assets/logos/schoolstack-enrollment-logo.svg`, `index.html`, `about.html`, `privacy.html`, `terms.html`,
-  `css/site.css`, `_redirects`, `og-image.png`, `tools/og-image.html`,
-  `tools/verify-render.mjs`, `CLAUDE.md`, `CHANGELOG.md`.
+## 2026-11-15: Enrollment Path in the menu
+Added Enrollment Path at /enrollment, reached from the main menu.
+- Enrollment Path is a recruitment and enrollment self-audit, not a fourth
+  product, so it has no tool card and the site still counts three tools.
+  It sits last in the desktop nav and the phone menu on every page.
+- `/enrollment` redirects to `/enrollment/`, so both addresses open it.
+- `assets/logos/schoolstack-enrollment-logo.svg` is added for later use,
+  built like the Space, Budget and Access logos in teal.
+- Files: `index.html`, `about.html`, `privacy.html`, `terms.html`,
+  `_redirects`, `assets/logos/schoolstack-enrollment-logo.svg`,
+  `CLAUDE.md`, `CHANGELOG.md`.
 
 ## 2026-11-15: Enrollment Path at /enrollment/
 - Added the owner's Enrollment Path tool as a stand-alone page: a
