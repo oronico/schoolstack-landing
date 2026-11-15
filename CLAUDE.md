@@ -13,6 +13,14 @@ the copies differ in anything but the intended two ways (`#faq` on the home
 page is `/#faq` elsewhere; each page marks its own nav item `aria-current`).
 Change both, or the check stops you.
 
+**Tool pages** are the exception. `enrollment/index.html` (served at
+`/enrollment/`) is Enrollment Path, a stand-alone tool with its own masthead,
+like Space and Budget. It does not share the nav and footer, but it meets
+every other rule: self-hosted brand faces through `--font-display` and
+`--font-body`, no outside origins, `/go/` routes for tool links, the
+planning-only disclaimer, and the content, render and accessibility checks
+(`TOOL_PAGES` in `verify-content`).
+
 Read this before changing anything. Every rule below exists because it was
 broken once and cost a round trip.
 
@@ -302,6 +310,11 @@ measures and no others.
   incubator), not a separate legal or tax-exempt entity, so never put a
   501(c)(3) badge next to the SchoolStack name alone. School Harbor is the
   technology development partner; Daniel leads development through it.
+- **Enrollment Path saves answers in the visitor's browser** (localStorage)
+  and sends nothing. Its share-your-numbers block posts to an Airtable form
+  and is off (`SHARE_ENABLED=false`). Turning it on needs the owner's
+  approval (section 5: no third-party form handler without it) and a
+  matching change to `privacy.html` and the tool's footer line.
 - **The privacy policy is a list of facts about the code.** No cookies, no
   outside scripts, the calculator sends nothing, and the application fields
   are listed one by one (`data-field`). `verify-content` fails if the form

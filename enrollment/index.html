@@ -6,16 +6,22 @@
 <title>Enrollment Path | SchoolStack</title>
 <meta name="description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
 <link rel="canonical" href="https://schoolstack.ai/enrollment/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 26'%3E%3Crect width='17' height='6' rx='3' fill='%2338BDF8'/%3E%3Crect y='10' width='23' height='6' rx='3' fill='%2334D399'/%3E%3Crect y='20' width='30' height='6' rx='3' fill='%23FBBF24'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SchoolStack">
 <meta property="og:title" content="Enrollment Path | SchoolStack">
 <meta property="og:description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
 <meta property="og:url" content="https://schoolstack.ai/enrollment/">
-<meta name="twitter:card" content="summary">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Quicksand:wght@600;700&display=swap">
+<meta property="og:image" content="https://schoolstack.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- The brand faces, self-hosted like the rest of the site: the CSP forbids
+     every outside origin, so a Google Fonts link would be blocked and the
+     page would paint in a fallback. -->
+<link rel="preload" href="/fonts/quicksand-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0}
@@ -28,22 +34,33 @@ img{max-width:100%}
   --mast:#1E293B; --mast-fg:#FAF9F7;
   --yes:#328555; --part:#D97706; --no:#B42318;
   --st-aw:#D97706; --st-co:#0D9488; --st-ap:#3A6AA6; --st-yi:#328555; --st-re:#1E293B;
+  /* The same hues, darkened where they color small text (stage and force
+     labels), so 11px type clears 4.5:1 on white. Bars and borders keep the
+     brighter values above. */
+  --st-aw-t:#B45309; --st-co-t:#0F766E; --st-ap-t:#3A6AA6; --st-yi-t:#2F7D50; --st-re-t:#1E293B; --no-t:#B42318;
   --focus:#3A6AA6;
-  --f-display:"Quicksand", "Nunito", system-ui, sans-serif;
-  --f-body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mark:"Montserrat", "Arial Black", system-ui, sans-serif;
+  /* Quicksand and Nunito are the SchoolStack brand faces (CLAUDE.md section 1).
+     --font-display and --font-body carry the same names as the home page so
+     the site's font checks read this page the same way. */
+  --font-display:'Quicksand', 'Trebuchet MS', sans-serif;
+  --font-body:'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-display:var(--font-display);
+  --f-body:var(--font-body);
+  --f-mark:var(--font-display);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
   --mast:#0B1220; --mast-fg:#FAF9F7;
   --yes:#4FA872; --part:#F0A030; --no:#F0705F;
   --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
+  --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
   color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
   --mast:#0B1220; --mast-fg:#FAF9F7;
   --yes:#4FA872; --part:#F0A030; --no:#F0705F;
   --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
+  --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
   color-scheme:dark }
 
 *{box-sizing:border-box}
@@ -61,8 +78,10 @@ button,input,select{font:inherit;color:inherit}
 .mast{background:var(--mast);color:var(--mast-fg)}
 .mast .wrap{padding-block:22px 34px;display:grid;gap:22px}
 .logo{display:flex;align-items:center;gap:10px}
-.logo svg{width:30px;height:26px;flex:none}
-.logo b{font-family:var(--f-mark);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.logo{justify-self:start;text-decoration:none}
+.logo img{height:26px;width:auto;display:block}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:var(--cream);padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none}
+.skip-link:focus{left:0}
 .mast h1{font-size:clamp(34px,6vw,56px);font-weight:700;letter-spacing:-.01em}
 .mast .lede{max-width:62ch;font-size:17px;color:#D6DCE5}
 .path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:6px;padding:0;list-style:none}
@@ -152,7 +171,7 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .force-head .arrow{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--fc);color:#fff;font-family:var(--f-mark);font-weight:800;font-size:18px;flex:none}
 .force-head h3{font-size:19px}
 .force-head p{font-size:13px;color:var(--muted)}
-.force .side{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fc)}
+.force .side{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fct,var(--fc))}
 .opts{display:grid;gap:6px}
 .opt{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:7px 10px;border-radius:8px;border:1px solid transparent;cursor:pointer}
 .opt:hover{background:var(--surface-2)}
@@ -168,7 +187,7 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .phase h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
 .phase h3 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:600}
 .step{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--sc);border-radius:8px;padding:12px 14px;display:grid;gap:6px}
-.step .s-stage{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sc)}
+.step .s-stage{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sct,var(--sc))}
 .step .s-do{font-weight:600}
 .step .s-why{font-size:13px;color:var(--muted)}
 .step .s-status{font-size:12px;font-weight:600}
@@ -210,12 +229,12 @@ footer b{color:var(--fg)}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="mast">
   <div class="wrap">
-    <div class="logo" aria-label="SchoolStack">
-      <svg viewBox="0 0 30 26" aria-hidden="true"><rect x="0" y="0" width="17" height="6" rx="3" fill="#38BDF8"/><rect x="0" y="10" width="23" height="6" rx="3" fill="#34D399"/><rect x="0" y="20" width="30" height="6" rx="3" fill="#FBBF24"/></svg>
-      <b>SchoolStack</b>
-    </div>
+    <a class="logo" href="/" aria-label="SchoolStack home">
+      <img src="/assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
+    </a>
     <div style="display:grid;gap:12px">
       <span class="eyebrow" style="color:#AEB8C6">Recruitment and enrollment</span>
       <h1>Enrollment Path</h1>
@@ -231,7 +250,7 @@ footer b{color:var(--fg)}
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main">
   <div class="banner" id="exampleBanner">
     <span><b>You are looking at an example audit</b> for a made-up K to 8 school with 72 students. Start your own to clear the answers.</span>
     <button class="btn primary" id="startOwn" type="button">Start my audit</button>
@@ -300,7 +319,7 @@ footer b{color:var(--fg)}
     <div class="plan-top">
       <div class="panel">
         <h3>Seat math</h3>
-        <p class="note" style="margin:0 0 12px">Your budget driver is the enrollment you need to break even. Find it in <a href="https://budget.schoolstack.ai" target="_blank" rel="noopener">SchoolStack Budget</a>. Use your own conversion rates; the example numbers are placeholders.</p>
+        <p class="note" style="margin:0 0 12px">Your budget driver is the enrollment you need to break even. Find it in <a href="/go/budget" target="_blank" rel="noopener noreferrer">SchoolStack Budget</a>. Use your own conversion rates; the example numbers are placeholders.</p>
         <div class="seat">
           <div class="field"><label for="current">Students enrolled now</label><input id="current" type="number" min="0" max="5000" inputmode="numeric"></div>
           <div class="field"><label for="reRate">Expected re-enrollment %</label><input id="reRate" type="number" min="0" max="100" inputmode="numeric"></div>
@@ -326,7 +345,7 @@ footer b{color:var(--fg)}
         <div class="share" id="shareBlock">
           <h4>Help build small school benchmarks</h4>
           <p>Share your numbers with SchoolStack, with no name, email or school name attached. We publish only grouped results, so founders can see how schools like theirs convert inquiries, fill seats and keep families.</p>
-          <a class="btn primary" id="shareLink" href="#" target="_blank" rel="noopener">Share my numbers</a>
+          <a class="btn primary" id="shareLink" aria-disabled="true" target="_blank" rel="noopener noreferrer">Share my numbers</a>
           <p id="shareNote">Opens a short form with your answers filled in. You review them and add last year's actual numbers before you submit.</p>
         </div>
       </div>
@@ -343,7 +362,9 @@ footer b{color:var(--fg)}
 <footer>
   <div class="wrap">
     <p><b>About this tool.</b> Built by SchoolStack for small school founders. The forces in Step 3 draw on the four forces of progress in Bob Moesta's <i>Demand-Side Sales 101</i>.</p>
-    <p>Your answers stay in this browser. Nothing leaves it unless you choose to share your numbers.</p>
+    <p>Your answers are saved in this browser so you can pick up where you left off. They are not sent to SchoolStack. <b>Clear all answers</b> removes them.</p>
+    <p>Estimates are for planning only and are not loan eligibility.</p>
+    <p><a href="/">SchoolStack home</a> &middot; <a href="/about">About Us</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="mailto:allison@schoolstack.ai">allison@schoolstack.ai</a></p>
   </div>
 </footer>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -426,6 +447,9 @@ const NUMS=["current","reRate","driver","goal","rInq","rApp","rYield"];
 
 const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 // Turn on only after the Airtable form "Share your enrollment numbers with SchoolStack" is published.
+// Before turning it on: CLAUDE.md asks the owner to approve any third-party
+// form handler, privacy.html must say what is shared and where it goes, and
+// the footer line "They are not sent to SchoolStack" must change with it.
 const SHARE_ENABLED=false;
 const FORM_URL="https://airtable.com/appk92KPCWOm8X8B7/pagQxyBNwXId3KkCa/form";
 const EXAMPLE={example:true,name:"Example school",state:"",type:"tuition",offer:"7",grades:["K to 2","3 to 5","6 to 8"],
@@ -464,7 +488,7 @@ function renderAudit(){
   }).join("");
 }
 function renderForces(){
-  $("forces").innerHTML=FORCES.map(f=>`<div class="force" style="--fc:var(${f.c})"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
+  $("forces").innerHTML=FORCES.map(f=>`<div class="force" style="--fc:var(${f.c});--fct:var(${f.c}-t)"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
     <div class="opts">${f.opts.map(o=>{const on=S.forces.includes(o.id);return `<label class="opt ${on?"on":""}" for="fo-${o.id}"><input type="checkbox" id="fo-${o.id}" value="${o.id}" ${on?"checked":""}><span>${esc(o.t)}</span></label>`}).join("")}</div></div>`).join("");
 }
 function syncProfile(){
@@ -505,7 +529,7 @@ function renderPlan(){
     const steps=r.slice(k*3,k*3+3);
     return `<div class="phase"><h3>${ph[0]} <small>${ph[1]}</small></h3>`+(steps.length?steps.map(i=>{
       const st=stageOf(i.st),b=boost(i.id);
-      return `<div class="step" style="--sc:var(${st.color})"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
+      return `<div class="step" style="--sc:var(${st.color});--sct:var(${st.color}-t)"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
     }).join(""):`<p class="empty">${k===0?"Mark practices Partly or Not yet in the audit to build this list.":"Nothing more to add here."}</p>`)+`</div>`;
   }).join("");
   renderSeat();renderCal();$("planText").value=planText();

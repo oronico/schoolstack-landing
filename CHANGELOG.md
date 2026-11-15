@@ -3,6 +3,21 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-15: Enrollment Path at /enrollment/
+- Added the owner's Enrollment Path tool as a stand-alone page: a
+  five-stage enrollment audit, the forces that move families, a 90-day plan,
+  seat math and a recruitment calendar. Answers stay in the visitor's
+  browser.
+- Fitted to the site's rules: Quicksand and Nunito self-hosted in place of
+  Google Fonts (Inter, Montserrat), which the CSP would have blocked; the
+  real wordmark in the masthead; the Budget link through `/go/budget`; a
+  skip link; the planning-only disclaimer and links home, About, Privacy and
+  Terms in the footer; small stage labels darkened to pass contrast.
+- The share-your-numbers block stays off until its Airtable form is
+  approved and the privacy policy covers it.
+- `privacy.html` now says Enrollment Path saves answers in the browser.
+- Not yet linked from the home page or nav.
+
 ## 2026-11-08: QuickBooks rollout in the FAQ
 - The FAQ, platform note and terms now say the QuickBooks Online
   integration starts rolling out with design partner schools in November
