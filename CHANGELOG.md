@@ -3,6 +3,20 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-15: Enrollment Path card on the home page
+Added Enrollment Path at /enrollment and a card on the home page.
+- A teal Enrollment Path card after Space, Budget and Access ("Start your
+  audit", same tab). The grid is two by two on wide screens.
+- Four tools everywhere the site counts them: hero, tools section, design
+  partner note, application confirmation, FAQ and its structured data,
+  footer, metadata and the share card. "Free" is off the tools copy: the
+  section reads "Available today" and the hero button "Explore the tools".
+- `/enrollment` redirects to `/enrollment/`, so both addresses open the
+  tool.
+- Files: `index.html`, `about.html`, `privacy.html`, `terms.html`,
+  `css/site.css`, `_redirects`, `og-image.png`, `tools/og-image.html`,
+  `tools/verify-render.mjs`, `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-15: Enrollment Path at /enrollment/
 - Added the owner's Enrollment Path tool as a stand-alone page: a
   five-stage enrollment audit, the forces that move families, a 90-day plan,
