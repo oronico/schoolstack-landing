@@ -286,27 +286,6 @@ section[id], [id].section { scroll-margin-top: 4.5rem; }
 /* THE STACK: 2 x 2 on desktop, one column once a card would be cramped */
 /* Four tools: two by two on wide screens, one column below 900px. */
 .stack-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.35rem; }
-/* Enrollment Path has no logo file yet: its name in the same lockup, with
-   the stack mark in teal, sized to sit where the logo images sit. */
-.tool-wordmark {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 26px;
-  margin-bottom: 0.9rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--ink);
-}
-.tool-wordmark b { font-weight: 700; color: var(--c-accent); }
-/* The product mark: three stacked bars, left-aligned, growing, as in the
-   Space, Budget and Access logo files. */
-.tool-wordmark .mark { display: grid; gap: 2px; width: 22px; flex-shrink: 0; }
-.tool-wordmark .mark span { display: block; height: 5px; border-radius: 3px; }
-.tool-wordmark .mark span:nth-child(1) { width: 60%; background: var(--c-light); }
-.tool-wordmark .mark span:nth-child(2) { width: 80%; background: var(--c-mid); }
-.tool-wordmark .mark span:nth-child(3) { width: 100%; background: var(--c-dark); }
 .tool-card {
   background: linear-gradient(180deg, var(--c-tint) 0%, rgba(255,255,255,0) 58%), var(--panel);
   border: 1px solid var(--hairline);

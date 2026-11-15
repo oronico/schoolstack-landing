@@ -13,7 +13,12 @@ Added Enrollment Path at /enrollment and a card on the home page.
   section reads "Available today" and the hero button "Explore the tools".
 - `/enrollment` redirects to `/enrollment/`, so both addresses open the
   tool.
-- Files: `index.html`, `about.html`, `privacy.html`, `terms.html`,
+- `assets/logos/schoolstack-enrollment-logo.svg`: the Enrollment Path logo,
+  built like Space, Budget and Access (Quicksand Bold at 44px, outlined,
+  same spacing; a rebuilt Space logo matches the shipped one to 0.4% of
+  pixels, all edge anti-aliasing). Teal ramp #5EEAD4, #14B8A6, #0D9488,
+  name in #0F766E.
+- Files: `assets/logos/schoolstack-enrollment-logo.svg`, `index.html`, `about.html`, `privacy.html`, `terms.html`,
   `css/site.css`, `_redirects`, `og-image.png`, `tools/og-image.html`,
   `tools/verify-render.mjs`, `CLAUDE.md`, `CHANGELOG.md`.
 
