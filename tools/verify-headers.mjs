@@ -73,6 +73,10 @@ browser.on((m) => {
     case 'Log.entryAdded': {
       const e = m.params.entry;
       // CSP refusals surface here with source "security", not as page errors.
+      // Some Chromium builds no longer know interest-cohort (FLoC, withdrawn)
+      // and say so as an error, though the page is fine. The header stays for
+      // scanners that look for it. Only this exact message is let through.
+      if (/^Error with Permissions-Policy header: Unrecognized feature: 'interest-cohort'\.$/.test(e.text)) break;
       if (e.level === 'error' || e.source === 'security') {
         (/Content Security Policy|Refused to/i.test(e.text) ? violations : consoleErrors).push(e.text);
       }

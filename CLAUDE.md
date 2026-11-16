@@ -334,7 +334,7 @@ measures and no others.
 
 ## 8. UI state: one attribute per component
 
-Each piece of the site that changes as a visitor uses it keeps its state in
+Each piece of the home page that changes as a visitor uses it keeps its state in
 one place and names it on the page as an attribute. Read the attribute, not
 a mix of `disabled`, `hidden` and text, to know where a component is; tests
 and agents both do. When you add a state, add it to the table in the code
@@ -346,8 +346,6 @@ and to this list, and give the check that covers it a line.
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
 | Phone menu | `js/site.js` | `details.nav-menu[open]` | open, closed (the browser keeps it) | none yet |
-| Enrollment Path mode | `enrollment/index.html` | `body[data-mode]` | `example` (first visit), `own` | none yet |
-| Enrollment Path clear button | `enrollment/index.html` | `#resetAll[data-state]` | `idle` → `armed` (3 seconds) → `idle` | none yet |
 
 The application form shows exactly what `VIEW[state]` says. `ON[state]`
 lists the events each state answers (`SUBMIT`, `SUCCEED`, `FAIL`) and where
