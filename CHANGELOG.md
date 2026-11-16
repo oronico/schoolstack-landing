@@ -3,6 +3,26 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-16: One spacing scale, one type scale, five colours
+Rebuilt `css/site.css` (1,085 lines to 870) for the four site pages.
+- Fixes the five biggest hierarchy and density problems found in
+  screenshots at 1440 and 390px: headings that did not rank (h1 40.8px
+  over eight 36px h2s), 30 painted text sizes with 44% of characters under
+  15px, 67 colour values and 21 gradients that carried no meaning, a dense
+  calculator band, and a navy band of boxes inside boxes.
+- Now: 6 painted text sizes, none under 15px; 5 colour tokens; 9 spacing
+  steps; no gradients or drop shadows. The h1 is 44px over 29px band
+  headings. The FAQ and the cohort exchange are lists with rules, not
+  cards; the application fields are paper on ink; the eyebrows are
+  sentence case.
+- The partners and Building Hope bands step down a size: they support the
+  page rather than lead it.
+- Contrast is now computable on every element (no gradient behind text),
+  and passes at both widths on every page.
+- No copy, markup structure, behaviour or check changed. One inline
+  `margin-top` left the FAQ markup.
+- Files: `css/site.css`, `index.html`, `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-16: UI state named on the page
 Each home page component that changes as a visitor uses it now keeps its state in one
 place and names it as an attribute. CLAUDE.md section 8 lists them.

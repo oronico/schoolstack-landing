@@ -250,6 +250,31 @@ them hanging 256px short of the right edge while the heading above them sat on
 the container edge, and gave the page a ragged right margin. There are two
 measures and no others.
 
+### Three scales, and nothing off them (November 2026)
+
+`css/site.css` was rebuilt on three scales, defined once in `:root`. Every
+margin, padding, gap, font size and colour in it is one of these:
+
+- **Spacing:** `--sp-1` to `--sp-9`, on a 4px base (4, 8, 12, 16, 24, 32,
+  48, 72, 96px). Tailwind's pattern: one base, fixed multiples.
+- **Type:** `--step--1` to `--step-4`, six steps, each a `clamp()` from a
+  390px to a 1440px screen (Utopia's method). `--step--1` is held at 15px:
+  before the rebuild, 44% of the home page's characters were smaller. The
+  hero `<h1>` is the only `--step-4` text; band headings are `--step-3`.
+- **Colour:** five tokens, each with one job. `--ink` text and the dark
+  bands; `--paper` the page (the mark's own `#FAF9F7`) and text on ink;
+  `--muted` secondary text on paper only (2.9:1 on ink fails); `--accent`
+  the one primary action, and the "tight" status; `--alert` errors and
+  "over 100%". `--line` and `--line-on-ink` mix two tokens for hairlines
+  and are never painted behind text, because the contrast check cannot
+  read a mixed colour.
+
+No gradients and no drop shadows. The one exception is the slider track,
+whose filled part is a hard stop between two flat colours: WebKit has no
+other way to colour it. Each product's own colour lives in its logo
+artwork, so the tool cards carry none. Enrollment Path keeps its own
+styles: its five stage colours and answer colours carry meaning.
+
 ## 5. Netlify specifics
 
 - `_headers` carries the CSP and cache rules. It allows **no external origin** —
