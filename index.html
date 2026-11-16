@@ -749,26 +749,30 @@ document.addEventListener('DOMContentLoaded', function() {
   var label = btn.textContent;
 
   // The application is a state machine with four states. Each state fixes
-  // everything a visitor can see, and NEXT lists the only moves allowed, so
-  // no mix of half-updated flags can show (say) the error and the thank-you
-  // together. The current state is written to #signup as data-state, which
-  // is what tools/verify-form.mjs and the feature steps read.
+  // everything a visitor can see, so no mix of half-updated flags can show
+  // (say) the error and the thank-you together. ON lists, for each state,
+  // the events it answers and where each one leads, in the shape XState,
+  // Robot and javascript-state-machine all use. An event a state does not
+  // list is ignored, as in xstate/fsm. The current state is written to
+  // #signup as data-state, the convention Radix uses, and that is what
+  // tools/verify-form.mjs and the feature steps read.
   var VIEW = {
     idle:       { form: true,  busy: false, error: false, success: false },
     submitting: { form: true,  busy: true,  error: false, success: false },
     failed:     { form: true,  busy: false, error: true,  success: false },
     submitted:  { form: false, busy: false, error: false, success: true }
   };
-  var NEXT = {
-    idle: ['submitting'],
-    submitting: ['submitted', 'failed'],
-    failed: ['submitting'],
-    submitted: []
+  var ON = {
+    idle:       { SUBMIT: 'submitting' },
+    submitting: { SUCCEED: 'submitted', FAIL: 'failed' },
+    failed:     { SUBMIT: 'submitting' },
+    submitted:  {}
   };
   var state = 'idle';
 
-  function go(next) {
-    if (NEXT[state].indexOf(next) === -1) return false;
+  function send(event) {
+    var next = ON[state][event];
+    if (!next) return false;
     state = next;
     var v = VIEW[state];
     box.setAttribute('data-state', state);
@@ -796,9 +800,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    // Only idle and failed may move to submitting, so a second Enter keypress
+    // Only idle and failed answer SUBMIT, so a second Enter keypress
     // while the first request is out does nothing.
-    if (!go('submitting')) return;
+    if (!send('SUBMIT')) return;
 
     fetch('/', {
       method: 'POST',
@@ -807,7 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(function(res) {
       if (!res.ok) throw new Error('rejected');
-      go('submitted');
+      send('SUCCEED');
       var heading = document.getElementById('successHeading');
       if (heading) heading.focus();
     })
@@ -817,7 +821,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // person to email. The browser's own wording ("Failed to fetch") is
       // never shown.
       writeError();
-      go('failed');
+      send('FAIL');
     });
   });
 

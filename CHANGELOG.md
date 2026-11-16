@@ -10,7 +10,11 @@ place and names it as an attribute. CLAUDE.md section 8 lists them.
   `submitting`, `failed`, `submitted`) on `#signup[data-state]`, in place of
   a `pending` flag and three separate display toggles. The form carries
   `aria-busy` while a request is out. The wording, the focus move and all
-  four outcomes are unchanged.
+  four outcomes are unchanged. Moves are keyed by event (`SUBMIT`,
+  `SUCCEED`, `FAIL`), the shape XState, Robot and javascript-state-machine
+  use; no library is added.
+- New working agreement in CLAUDE.md section 6: search open-source projects
+  and compare their approaches before writing an unfamiliar feature.
 - `verify-form` and `features/signup.feature` now check the state after
   each outcome, and walk a new path: an error, a second try, then success.
 - Enrollment Path: the two-click "Clear all answers" button names its state
