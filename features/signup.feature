@@ -10,6 +10,9 @@ Feature: The design partner application form
   The error path is the one visitors meet on a bad day, and it is the least
   likely to have been opened in a browser.
 
+  The form has four states, named on #signup as data-state: idle,
+  submitting, failed and submitted. Only idle and failed may submit.
+
   Background:
     Given the page is loaded at 1440 pixels wide
 
@@ -28,12 +31,19 @@ Feature: The design partner application form
     And the request is a POST of urlencoded fields to "/"
     And the posted body carries form-name "early-access"
     And the form is replaced by the confirmation
+    And the form is in the "submitted" state
 
   Scenario: A server error keeps the visitor's details and lets them retry
     When a visitor submits the form and the server answers 500
     Then an error is shown
     And the visitor's answers are still in the form
     And the button is usable again with its original label
+    And the form is in the "failed" state
+
+  Scenario: A visitor who met an error can try again and get through
+    When a visitor submits the form and the server answers 500, then they try again
+    Then it passed through "failed -> submitted"
+    And the form is replaced by the confirmation
 
   Scenario: A dropped network points the visitor at a human
     When a visitor submits the form and the network drops
@@ -44,6 +54,7 @@ Feature: The design partner application form
     When a visitor submits the form and the request never settles
     Then the button is disabled
     And the button reads "Submitting..."
+    And the form is in the "submitting" state
 
   Scenario: An empty form never reaches the network
     The browser's own validation should stop it, so no request is made and the

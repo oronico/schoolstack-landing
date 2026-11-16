@@ -3,6 +3,27 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-16: UI state named on the page
+Each home page component that changes as a visitor uses it now keeps its state in one
+place and names it as an attribute. CLAUDE.md section 8 lists them.
+- The design partner application is a four-state machine (`idle`,
+  `submitting`, `failed`, `submitted`) on `#signup[data-state]`, in place of
+  a `pending` flag and three separate display toggles. The wording, the
+  focus move and all four outcomes are unchanged. Moves are keyed by event
+  (`SUBMIT`, `SUCCEED`, `FAIL`), the shape XState, Robot and
+  javascript-state-machine use; no library is added.
+- New working agreement in CLAUDE.md section 6: search open-source projects
+  and compare their approaches before writing an unfamiliar feature.
+- `verify-form` and `features/signup.feature` now check the state after
+  each outcome, and walk a new path: an error, a second try, then success.
+- `verify-headers` no longer fails local runs on Chromium builds that call
+  `interest-cohort` an unrecognized feature. Only that exact message is let
+  through; the header itself is unchanged.
+- Files: `index.html`, `css/site.css`, `tools/verify-headers.mjs`,
+  `tools/lib/form-scenario.mjs`, `tools/verify-form.mjs`,
+  `features/signup.feature`, `features/step_definitions/signup.steps.mjs`,
+  `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-15: Enrollment Path in the menu
 Added Enrollment Path at /enrollment, reached from the main menu.
 - Enrollment Path is a recruitment and enrollment self-audit, not a fourth

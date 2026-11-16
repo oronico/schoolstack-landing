@@ -283,6 +283,11 @@ measures and no others.
   table rows. If there is no real screenshot, ship no screenshot.
 - Social/profile URLs cannot be verified from the build sandbox. When adding
   one, say so and ask for a click-through check before merge.
+- Do not write an unfamiliar feature from scratch (owner, November 2026).
+  First search GitHub for open-source projects that solve it, compare two
+  or three of their approaches, and say in the PR which one you follow and
+  why. Cucumber is the only dependency (section 3), so most often you borrow
+  the pattern, not the package; adding a package needs the owner.
 
 ## 7. Product facts copy must not contradict (November 2026)
 
@@ -326,3 +331,38 @@ measures and no others.
   gains a field the policy does not list, or if any page or script starts
   using cookies. Change the site and `privacy.html` together, and have both
   legal pages reviewed by counsel before material changes ship.
+
+## 8. UI state: one attribute per component
+
+Each piece of the home page that changes as a visitor uses it keeps its state in
+one place and names it on the page as an attribute. Read the attribute, not
+a mix of `disabled`, `hidden` and text, to know where a component is; tests
+and agents both do. When you add a state, add it to the table in the code
+and to this list, and give the check that covers it a line.
+
+| Component | Where | Attribute | States | Checked by |
+| --- | --- | --- | --- | --- |
+| Design partner application | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
+| Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
+| Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
+| Phone menu | `js/site.js` | `details.nav-menu[open]` | open, closed (the browser keeps it) | none yet |
+
+The application form shows exactly what `VIEW[state]` says. `ON[state]`
+lists the events each state answers (`SUBMIT`, `SUCCEED`, `FAIL`) and where
+each leads; `send()` ignores any other, which is what stops a second Enter
+keypress while a request is out.
+
+The shape is borrowed, not invented (section 6). XState, Robot and
+javascript-state-machine all key moves by event name; xstate/fsm ignores an
+event the state does not list, where javascript-state-machine throws, and a
+form should not throw on a double keypress. Radix names state with one
+valued `data-state` attribute per concern and a bare attribute such as
+`data-disabled` for the rest, which is what `data-state`, `data-stale` and
+`data-ready` here follow. No library is loaded: a four-state form does not
+earn a dependency.
+
+The form, the error and the thank-you panel are shown and hidden with the
+`hidden` attribute, so without the stylesheet the page still shows the right
+one. The form does not carry `aria-busy`: MDN describes it for live regions,
+widgets and feeds, not forms, and it would tell a screen reader to hold back
+the button's "Submitting..." label, the one change a visitor should hear.
