@@ -8,11 +8,10 @@ Each home page component that changes as a visitor uses it now keeps its state i
 place and names it as an attribute. CLAUDE.md section 8 lists them.
 - The design partner application is a four-state machine (`idle`,
   `submitting`, `failed`, `submitted`) on `#signup[data-state]`, in place of
-  a `pending` flag and three separate display toggles. The form carries
-  `aria-busy` while a request is out. The wording, the focus move and all
-  four outcomes are unchanged. Moves are keyed by event (`SUBMIT`,
-  `SUCCEED`, `FAIL`), the shape XState, Robot and javascript-state-machine
-  use; no library is added.
+  a `pending` flag and three separate display toggles. The wording, the
+  focus move and all four outcomes are unchanged. Moves are keyed by event
+  (`SUBMIT`, `SUCCEED`, `FAIL`), the shape XState, Robot and
+  javascript-state-machine use; no library is added.
 - New working agreement in CLAUDE.md section 6: search open-source projects
   and compare their approaches before writing an unfamiliar feature.
 - `verify-form` and `features/signup.feature` now check the state after

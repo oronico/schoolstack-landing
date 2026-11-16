@@ -359,6 +359,10 @@ form should not throw on a double keypress. Radix names state with one
 valued `data-state` attribute per concern and a bare attribute such as
 `data-disabled` for the rest, which is what `data-state`, `data-stale` and
 `data-ready` here follow. No library is loaded: a four-state form does not
-earn a dependency. The form,
-the error and the thank-you panel are shown and hidden with the `hidden`
-attribute, so without the stylesheet the page still shows the right one.
+earn a dependency.
+
+The form, the error and the thank-you panel are shown and hidden with the
+`hidden` attribute, so without the stylesheet the page still shows the right
+one. The form does not carry `aria-busy`: MDN describes it for live regions,
+widgets and feeds, not forms, and it would tell a screen reader to hold back
+the button's "Submitting..." label, the one change a visitor should hear.

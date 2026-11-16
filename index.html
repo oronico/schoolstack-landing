@@ -777,7 +777,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var v = VIEW[state];
     box.setAttribute('data-state', state);
     form.hidden = !v.form;
-    form.setAttribute('aria-busy', String(v.busy));
     btn.disabled = v.busy;
     btn.textContent = v.busy ? 'Submitting...' : label;
     errorEl.hidden = !v.error;

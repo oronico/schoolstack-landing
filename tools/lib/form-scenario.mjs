@@ -96,7 +96,6 @@ export function scenario(mode, { fill = true } = {}) {
       errorShown: shown(errorEl),
       errorText: errorEl.textContent.trim(),
       state: document.getElementById('signup').getAttribute('data-state'),
-      busy: form.getAttribute('aria-busy'),
       states,
     });
   })()`;

@@ -197,7 +197,6 @@ if (inFlight) {
   check(inFlight.label !== inFlight.initialLabel, 'the button gives no sign that a submission is under way');
   check(!inFlight.successShown, 'the confirmation appeared before the server had answered');
   check(inFlight.state === 'submitting', `while in flight #signup reads data-state="${inFlight.state}", expected "submitting"`);
-  check(inFlight.busy === 'true', 'the form is not marked aria-busy while a submission is in flight');
 }
 
 /* --- a retry after an error -------------------------------------------------- */
