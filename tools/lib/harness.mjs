@@ -10,7 +10,7 @@
 
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, mkdtempSync, rmSync, statSync } from 'node:fs';
 import { join, extname, dirname, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -41,6 +41,8 @@ export async function serveSite({ headersFor = () => ({}) } = {}) {
     // Netlify serves about.html at /about, and so does this. Without it the
     // About page would 404 here while working in production.
     if (!extname(file) && !existsSync(file) && existsSync(file + '.html')) file += '.html';
+    // And a directory serves its index.html, as /enrollment/ does.
+    if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
     const headers = { ...headersFor(path) };
     // A path that escapes ROOT is refused rather than served.
     if (!file.startsWith(ROOT) || !existsSync(file)) {

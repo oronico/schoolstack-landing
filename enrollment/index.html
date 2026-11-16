@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Enrollment Path | SchoolStack</title>
+<meta name="description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
+<link rel="canonical" href="https://schoolstack.ai/enrollment/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SchoolStack">
+<meta property="og:title" content="Enrollment Path | SchoolStack">
+<meta property="og:description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
+<meta property="og:url" content="https://schoolstack.ai/enrollment/">
+<meta property="og:image" content="https://schoolstack.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- The brand faces, self-hosted like the rest of the site: the CSP forbids
+     every outside origin, so a Google Fonts link would be blocked and the
+     page would paint in a fallback. -->
+<link rel="preload" href="/fonts/quicksand-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* Layout: navy masthead with the five-stage path, then a two-column work area (audit left, sticky scorecard right) that stacks on phones; forces, plan, seat math and calendar run full width below. */
+:root{
+  --navy:#1E293B; --cream:#FAF9F7; --amber:#D97706; --teal:#0D9488; --blue:#3A6AA6; --green:#328555;
+  --bg:#FAF9F7; --surface:#FFFFFF; --surface-2:#F1EFEA; --fg:#1E293B; --muted:#56606F; --line:#DDD9D0;
+  --mast:#1E293B; --mast-fg:#FAF9F7;
+  --yes:#328555; --part:#D97706; --no:#B42318;
+  --st-aw:#D97706; --st-co:#0D9488; --st-ap:#3A6AA6; --st-yi:#328555; --st-re:#1E293B;
+  /* The same hues, darkened where they color small text (stage and force
+     labels), so 11px type clears 4.5:1 on white. Bars and borders keep the
+     brighter values above. */
+  --st-aw-t:#B45309; --st-co-t:#0F766E; --st-ap-t:#3A6AA6; --st-yi-t:#2F7D50; --st-re-t:#1E293B; --no-t:#B42318;
+  --focus:#3A6AA6;
+  /* Quicksand and Nunito are the SchoolStack brand faces (CLAUDE.md section 1).
+     --font-display and --font-body carry the same names as the home page so
+     the site's font checks read this page the same way. */
+  --font-display:'Quicksand', 'Trebuchet MS', sans-serif;
+  --font-body:'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-display:var(--font-display);
+  --f-body:var(--font-body);
+  --f-mark:var(--font-display);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
+  --mast:#0B1220; --mast-fg:#FAF9F7;
+  --yes:#4FA872; --part:#F0A030; --no:#F0705F;
+  --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
+  --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
+  --mast:#0B1220; --mast-fg:#FAF9F7;
+  --yes:#4FA872; --part:#F0A030; --no:#F0705F;
+  --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
+  --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+p{margin:0}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Masthead */
+.mast{background:var(--mast);color:var(--mast-fg)}
+.mast .wrap{padding-block:22px 34px;display:grid;gap:22px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo{justify-self:start;text-decoration:none}
+.logo img{height:26px;width:auto;display:block}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:var(--cream);padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none}
+.skip-link:focus{left:0}
+.mast h1{font-size:clamp(34px,6vw,56px);font-weight:700;letter-spacing:-.01em}
+.mast .lede{max-width:62ch;font-size:17px;color:#D6DCE5}
+.path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:6px;padding:0;list-style:none}
+.path li{border-top:3px solid var(--c);padding-top:10px;min-width:0}
+.path b{font-family:var(--f-mark);font-weight:800;font-size:17px;display:block}
+.path span{font-size:13px;color:#C7CED9;display:block;margin-top:4px}
+@media (max-width:820px){.path{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Example banner */
+.banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:24px}
+
+/* Buttons */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--fg)}
+.btn.primary{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+:root[data-theme="dark"] .btn.primary{background:var(--cream);color:var(--navy);border-color:var(--cream)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{background:var(--cream);color:var(--navy);border-color:var(--cream)}}
+
+/* Sections */
+section.block{padding-block:40px 8px}
+.sec-head{display:grid;gap:8px;margin-bottom:20px;max-width:70ch}
+.sec-head h2{font-size:clamp(24px,3.4vw,32px)}
+.sec-head p{color:var(--muted)}
+
+/* School profile */
+.profile{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.field{display:grid;gap:6px;min-width:0;align-content:start}
+.field label,.field .lbl{font-size:13px;font-weight:600}
+.field input[type=text],.field input[type=number],.field select{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:9px 10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.chip span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:500;background:var(--bg)}
+.chip input:checked+span{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+:root[data-theme="dark"] .chip input:checked+span{background:var(--cream);color:var(--navy);border-color:var(--cream)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip input:checked+span{background:var(--cream);color:var(--navy);border-color:var(--cream)}}
+.chip input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+.share{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:grid;gap:10px}
+.share h4{margin:0;font-family:var(--f-display);font-size:17px}
+.share p{font-size:13.5px;color:var(--muted)}
+a.btn{display:inline-block;text-decoration:none;justify-self:start}
+a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+
+/* Audit */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:980px){.work{grid-template-columns:1fr}}
+.stage{margin-bottom:28px}
+.stage-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--sc);padding-bottom:8px;margin-bottom:4px}
+.stage-head h3{font-size:22px}
+.stage-head .q{color:var(--muted);font-size:14px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.item .txt{min-width:0;display:grid;gap:6px}
+.item .practice{font-weight:600}
+.item .why{font-size:13.5px;color:var(--muted);padding-left:12px;border-left:2px solid var(--sc)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;align-self:start;justify-self:start;background:var(--surface)}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.seg span{display:block;padding:6px 11px;font-size:13px;font-weight:600;white-space:nowrap;border-left:1px solid var(--line)}
+.seg label:first-child span{border-left:0}
+.seg input:checked+span.y{background:var(--yes);color:#fff}
+.seg input:checked+span.p{background:var(--part);color:#1E293B}
+.seg input:checked+span.n{background:var(--no);color:#fff}
+.seg input:checked+span.x{background:var(--surface-2);color:var(--muted)}
+.seg input:focus-visible+span{outline:3px solid var(--focus);outline-offset:-3px}
+@media (max-width:560px){.item{grid-template-columns:1fr}}
+
+/* Scorecard */
+.score{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px}
+@media (max-width:980px){.score{position:static}}
+.overall{display:flex;align-items:flex-end;gap:12px}
+.overall .big{font-family:var(--f-mark);font-weight:800;font-size:52px;line-height:.9}
+.overall .of{color:var(--muted);font-size:13px}
+.meter{display:grid;gap:5px}
+.meter .row{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600}
+.bar{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sc);border-radius:5px;transition:width .3s}
+.answered{font-size:12.5px;color:var(--muted)}
+.topgaps{display:grid;gap:8px;margin:8px 0 0;padding:0;list-style:none}
+.topgaps li{font-size:13.5px;display:grid;grid-template-columns:10px 1fr;gap:8px;align-items:start}
+.topgaps li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--sc);margin-top:5px}
+
+/* Forces */
+.forces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.forces{grid-template-columns:1fr}}
+.force{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;min-width:0}
+.force-head{display:flex;gap:12px;align-items:center}
+.force-head .arrow{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--fc);color:#fff;font-family:var(--f-mark);font-weight:800;font-size:18px;flex:none}
+.force-head h3{font-size:19px}
+.force-head p{font-size:13px;color:var(--muted)}
+.force .side{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--fct,var(--fc))}
+.opts{display:grid;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:7px 10px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+.opt:hover{background:var(--surface-2)}
+.opt input{margin-top:3px;width:16px;height:16px;accent-color:var(--navy);flex:none}
+.opt.on{border-color:var(--line);background:var(--surface-2)}
+.forcemap{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;font-size:13px;color:var(--muted)}
+.forcemap b{color:var(--fg)}
+
+/* Plan */
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.phases{grid-template-columns:1fr}}
+.phase{display:grid;gap:12px;align-content:start;min-width:0}
+.phase h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px}
+.phase h3 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:600}
+.step{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--sc);border-radius:8px;padding:12px 14px;display:grid;gap:6px}
+.step .s-stage{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sct,var(--sc))}
+.step .s-do{font-weight:600}
+.step .s-why{font-size:13px;color:var(--muted)}
+.step .s-status{font-size:12px;font-weight:600}
+.empty{color:var(--muted);font-size:14px;padding:12px 0}
+.plan-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:28px}
+@media (max-width:820px){.plan-top{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.panel h3{font-size:19px;margin-bottom:6px}
+
+/* Seat math */
+.seat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.seat .full{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.result{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:16px}
+.result div{background:var(--surface-2);border-radius:8px;padding:10px 12px}
+.result b{font-family:var(--f-mark);font-weight:800;font-size:28px;display:block;line-height:1.1}
+.result span{font-size:12.5px;color:var(--muted)}
+.funnel{display:grid;gap:8px;margin-top:14px}
+.frow{display:grid;grid-template-columns:110px 1fr 46px;gap:10px;align-items:center;font-size:13.5px}
+.frow .bar{height:16px;border-radius:4px}
+.frow b{font-family:var(--f-mark);font-weight:800;text-align:right}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+
+/* Calendar */
+.cal-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.cal{display:grid;grid-template-columns:210px repeat(12,minmax(44px,1fr));gap:8px 0;min-width:770px;font-size:13px}
+.cal .mh{font-size:12px;font-weight:600;color:var(--muted);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.cal .ln{font-weight:600;padding-right:12px;align-self:center;font-size:13px;line-height:1.3}
+.cal .ln small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.cal .seg-b{height:26px;align-self:center;background:var(--sc)}
+.cal .seg-b.start{border-radius:13px 0 0 13px}.cal .seg-b.end{border-radius:0 13px 13px 0}.cal .seg-b.start.end{border-radius:13px}
+.cal .gap{height:26px;align-self:center;border-left:1px dashed var(--line)}
+
+footer{margin-top:48px;border-top:1px solid var(--line)}
+footer .wrap{padding-block:24px 40px;display:grid;gap:10px;font-size:13px;color:var(--muted)}
+footer b{color:var(--fg)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--navy);color:var(--cream);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px}
+.copybox{width:100%;min-height:160px;margin-top:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px;font-family:var(--f-body);font-size:13px;color:var(--fg)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="SchoolStack home">
+      <img src="/assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
+    </a>
+    <div style="display:grid;gap:12px">
+      <span class="eyebrow" style="color:#AEB8C6">Recruitment and enrollment</span>
+      <h1>Enrollment Path</h1>
+      <p class="lede">Score how your school gets found, chosen, joined and kept. Then turn the gaps into a 90-day plan and the seat math behind it.</p>
+    </div>
+    <ol class="path" aria-label="The five stages of enrollment">
+      <li style="--c:#F0A030"><b>Awareness</b><span>The right families know you exist</span></li>
+      <li style="--c:#2BB5A8"><b>Consideration</b><span>They see why you, and see their child here</span></li>
+      <li style="--c:#6E9BD6"><b>Application</b><span>They finish applying</span></li>
+      <li style="--c:#4FA872"><b>Yield</b><span>Accepted families show up on day one</span></li>
+      <li style="--c:#E6E1D6"><b>Retention</b><span>Families come back next year</span></li>
+    </ol>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div class="banner" id="exampleBanner">
+    <span><b>You are looking at an example audit</b> for a made-up K to 8 school with 72 students. Start your own to clear the answers.</span>
+    <button class="btn primary" id="startOwn" type="button">Start my audit</button>
+  </div>
+
+  <section class="block" aria-labelledby="h-school">
+    <div class="sec-head">
+      <span class="eyebrow">Step 1</span>
+      <h2 id="h-school">Your school</h2>
+      <p>These shape which practices you see, the calendar and the seat math.</p>
+    </div>
+    <div class="profile">
+      <div class="field"><label for="schoolName">School name</label><input id="schoolName" type="text" autocomplete="organization" placeholder="Your school"></div>
+      <div class="field"><label for="schoolState">State</label><select id="schoolState"></select></div>
+      <div class="field"><label for="schoolType">How families pay</label>
+        <select id="schoolType">
+          <option value="tuition">Tuition, ESA or scholarship</option>
+          <option value="charter">Public charter (no tuition)</option>
+        </select></div>
+      <div class="field"><label for="offerMonth">When offers go out</label>
+        <select id="offerMonth"></select></div>
+      <div class="field"><span class="lbl" id="gradesLbl">Grades you enroll</span>
+        <div class="chips" role="group" aria-labelledby="gradesLbl" id="grades"></div></div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-audit">
+    <div class="sec-head">
+      <span class="eyebrow">Step 2</span>
+      <h2 id="h-audit">Audit your enrollment path</h2>
+      <p>Mark each practice <b>Yes</b>, <b>Partly</b> or <b>Not yet</b>. Use <b>N/A</b> when it doesn't fit your school; it drops out of your score.</p>
+    </div>
+    <div class="work">
+      <div id="audit"></div>
+      <aside class="score" aria-labelledby="h-score">
+        <div>
+          <span class="eyebrow" id="h-score">Scorecard</span>
+          <div class="overall"><span class="big num" id="overall">0</span><span class="of">out of 100<br><span id="answered" class="answered"></span></span></div>
+        </div>
+        <div id="meters" style="display:grid;gap:12px"></div>
+        <div>
+          <span class="eyebrow">Biggest gaps right now</span>
+          <ul class="topgaps" id="topgaps"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-forces">
+    <div class="sec-head">
+      <span class="eyebrow">Step 3</span>
+      <h2 id="h-forces">What moves your families</h2>
+      <p>A family switches schools when the push away from their current school and the pull toward yours outweigh their worries about the switch and the comfort of staying put. Mark what you hear from families. Your plan moves the practices that answer those forces up the list.</p>
+    </div>
+    <div class="forces" id="forces"></div>
+  </section>
+
+  <section class="block" aria-labelledby="h-plan">
+    <div class="sec-head">
+      <span class="eyebrow">Step 4</span>
+      <h2 id="h-plan"><span id="planName">Your</span> 90-day enrollment plan</h2>
+      <p>Gaps are ranked by their effect on enrollment and by the forces you marked. <b>Not yet</b> ranks above <b>Partly</b>.</p>
+    </div>
+    <div class="phases" id="phases"></div>
+
+    <div class="plan-top">
+      <div class="panel">
+        <h3>Seat math</h3>
+        <p class="note" style="margin:0 0 12px">Your budget driver is the enrollment you need to break even. Find it in <a href="/go/budget" target="_blank" rel="noopener noreferrer">SchoolStack Budget</a>. Use your own conversion rates; the example numbers are placeholders.</p>
+        <div class="seat">
+          <div class="field"><label for="current">Students enrolled now</label><input id="current" type="number" min="0" max="5000" inputmode="numeric"></div>
+          <div class="field"><label for="reRate">Expected re-enrollment %</label><input id="reRate" type="number" min="0" max="100" inputmode="numeric"></div>
+          <div class="field"><label for="driver">Budget driver (break-even students)</label><input id="driver" type="number" min="1" max="5000" inputmode="numeric"></div>
+          <div class="field"><label for="goal">Enrollment goal</label><input id="goal" type="number" min="1" max="5000" inputmode="numeric"></div>
+          <span class="full">Your conversion rates</span>
+          <div class="field"><label for="rInq">Inquiry to application %</label><input id="rInq" type="number" min="1" max="100" inputmode="numeric"></div>
+          <div class="field"><label for="rApp">Application to offer %</label><input id="rApp" type="number" min="1" max="100" inputmode="numeric"></div>
+          <div class="field"><label for="rYield">Offer to enrolled % (yield)</label><input id="rYield" type="number" min="1" max="100" inputmode="numeric"></div>
+        </div>
+        <div class="result" id="result"></div>
+        <div class="funnel" id="funnel"></div>
+        <p class="note" id="leverNote"></p>
+      </div>
+      <div class="panel">
+        <h3>Take it with you</h3>
+        <p class="note" style="margin:0">Copy the plan as plain text for a doc, your team or a board update.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn primary" id="copyPlan" type="button">Copy plan</button>
+          <button class="btn" id="resetAll" type="button">Clear all answers</button>
+        </div>
+        <textarea class="copybox" id="planText" readonly aria-label="Plan as plain text"></textarea>
+        <div class="share" id="shareBlock">
+          <h4>Help build small school benchmarks</h4>
+          <p>Share your numbers with SchoolStack, with no name, email or school name attached. We publish only grouped results, so founders can see how schools like theirs convert inquiries, fill seats and keep families.</p>
+          <a class="btn primary" id="shareLink" aria-disabled="true" target="_blank" rel="noopener noreferrer">Share my numbers</a>
+          <p id="shareNote">Opens a short form with your answers filled in. You review them and add last year's actual numbers before you submit.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:36px">
+      <h2 style="font-size:24px">Recruitment year</h2>
+      <p>Some families plan a switch for months. Others decide in weeks after a move or a hard year. Run both, and protect the families you already have.</p>
+    </div>
+    <div class="cal-wrap"><div class="cal" id="cal"></div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>About this tool.</b> Built by SchoolStack for small school founders. The forces in Step 3 draw on the four forces of progress in Bob Moesta's <i>Demand-Side Sales 101</i>.</p>
+    <p>Your answers are saved in this browser so you can pick up where you left off. They are not sent to SchoolStack. <b>Clear all answers</b> removes them.</p>
+    <p>Estimates are for planning only and are not loan eligibility.</p>
+    <p><a href="/">SchoolStack home</a> &middot; <a href="/about">About Us</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="mailto:allison@schoolstack.ai">allison@schoolstack.ai</a></p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+const STAGES=[
+ {id:"aw",name:"Awareness",q:"Do the right families know you exist?",color:"--st-aw"},
+ {id:"co",name:"Consideration",q:"Do they see why your school, and see their child here?",color:"--st-co"},
+ {id:"ap",name:"Application",q:"Do they finish applying?",color:"--st-ap"},
+ {id:"yi",name:"Yield",q:"Do accepted families show up on day one?",color:"--st-yi"},
+ {id:"re",name:"Retention",q:"Do your families come back next year?",color:"--st-re"}
+];
+// w = weight 1 to 3 (effect on enrollment). only: "tuition" limits to tuition schools. grades: shown only for those grades.
+const ITEMS=[
+ {id:"a1",st:"aw",w:3,s:"Referral tools for current families",p:"Current families have an easy way to refer others: a link to share, a person to call and a few facts to pass on.",why:"Families trust another parent more than any ad. A happy family will send others if you make it easy and tell them what to say.",act:"Give every current family a referral card: a short link, the name of the person to call and three facts about the school. Ask for referrals at pickup and in your next newsletter."},
+ {id:"a2",st:"aw",w:2,s:"Track referrals on the inquiry form",p:"Our inquiry form asks how the family heard about us, and we count referrals as their own line.",why:"If you don't count referrals, you can't tell whether your parent ambassadors are working.",act:"Add two questions to your inquiry form: “How did you hear about us?” and “Do you know a family enrolled here?” Report referral inquiries each month."},
+ {id:"a3",st:"aw",w:2,s:"Partners outside your circle",p:"At least two community partners outside our current families send families our way: pastors, youth leagues, counselors, tutors, therapists or pediatricians.",why:"Word of mouth stops at the edge of your current families. Trusted local voices reach the families your parents don't know.",act:"List five trusted people in your area who see families outside your circle. Meet two of them this month and leave them something to hand out."},
+ {id:"a4",st:"aw",w:2,s:"Own your online listings",p:"A named person keeps our Google, review site and local parent group listings current.",why:"Families form a first view online before they ever call. A wrong address or an unanswered review costs you calls you never see.",act:"Name one owner for online listings. Claim each one, fix wrong facts, answer reviews and set a monthly reminder to check them."},
+ {id:"a5",st:"aw",w:1,s:"Run a secret shopper test",p:"In the last six months, someone searched for our school as a new family would and fixed what they found.",why:"You can't see your school the way a stranger does unless you look on purpose.",act:"Search for your school, call the main line and fill out the inquiry form as a parent would. Write down every snag and fix the top three."},
+ {id:"a6",st:"aw",w:2,s:"Reach families at moments of change",p:"We reach out when families face a change: a move, a school closing, new housing nearby or a hard year.",why:"Families who are content rarely look. Families facing a change are ready to hear about a new option.",act:"Pick one change to target this season (a closing school, new housing, a nearby employer hiring) and plan one outreach touch for those families."},
+ {id:"a7",st:"aw",w:1,s:"Use your host site and faith partners",p:"Our host church or partner congregation helps spread the word: bulletin notes, announcements, a table after services.",why:"Many small schools meet in churches. The congregation already knows the building and trusts the people in it.",act:"Ask your host or partner congregation for one announcement and one bulletin note this month, and staff a table after a service."},
+ {id:"c1",st:"co",w:3,s:"Name your academic specifics",p:"Our website and materials name our model, show how we measure progress, describe support for different learners and list what students do beyond the core.",why:"Every school says it has strong academics. Families act on what they can check.",act:"Rewrite your academics page around four specifics: your model by name, how you track progress, support for students who need more, and enrichment."},
+ {id:"c2",st:"co",w:3,s:"Show safety and belonging",p:"Our materials show what it is like to be a student here: safety, how we handle conflict and bullying, and how each child is known.",why:"Parents want to know their child will be safe and known, not only taught. For many families this decides it.",act:"Write a short, plain statement on school climate (safety, conflict, how each child is known) and use it on your home page and at every tour."},
+ {id:"c3",st:"co",w:3,s:"Show you are a real school",p:"A visitor can tell right away this is a serious school: an experienced educator leading it, a safe building that meets code, written policies and proof students are learning.",why:"Schools in churches, storefronts and homes get asked if they are a real school. Answer before a family has to ask.",act:"Build a one-page “Who we are” sheet: the leader's education background, your building's safety status, key policies and how you show learning. Hand it out at every tour."},
+ {id:"c4",st:"co",w:3,s:"Stay open to families all year",p:"Any month of the year, a family can reach a person, find current facts and start an application.",why:"Many families decide in weeks after a move or a hard year. The school they can reach first makes their short list.",act:"Keep the application open year-round, put a phone number that gets answered on every page and check that dates, costs and open grades on your site are current."},
+ {id:"c5",st:"co",w:2,s:"Reply to inquiries within a day",p:"We answer new inquiries within one business day, including in summer.",why:"A slow reply reads as a school too busy for my child. Families who decide fast go with whoever answers.",act:"Set a one-business-day reply rule. Assign summer coverage by name and test it with a form submission in June."},
+ {id:"c6",st:"co",w:2,s:"Ask what started the search",p:"We ask what started each family's search and fit our message to it.",why:"A family leaving a bad situation needs to hear why it will be different here. A family comparing options needs to hear why you.",act:"Add “What started your search?” to the inquiry form (unhappy at current school, looking for a better fit, change in family life) and write a reply for each."},
+ {id:"c7",st:"co",w:3,only:"tuition",s:"Make cost and aid plain",p:"Families can see full cost, what ESA, voucher, tax credit scholarship or school aid covers, and the steps and deadlines, before they apply.",why:"Cost and paperwork worry families new to private school most. A family that can't see the math stops at the inquiry.",act:"Publish a one-page cost sheet: tuition, fees, the aid you accept, what a typical family pays after aid and the steps and deadlines to use it."},
+ {id:"p1",st:"ap",w:2,grades:["PreK","K to 2"],s:"A path for PreK and K families",p:"Families new to school (PreK and K) have their own info session, plain language and a current parent of a young child to talk to.",why:"First-time school families visit more schools, know less about the process and worry more about choosing wrong.",act:"Hold one info session only for PreK and K families and match each interested family with a current parent of a young child within a week."},
+ {id:"p2",st:"ap",w:2,grades:["6 to 8","9 to 12"],s:"Reach families before a transition",p:"Our calendar reaches families a year before a natural move, such as 5th to 6th or 8th to 9th grade.",why:"Families start rethinking school the year before a transition. Reach them before they decide, not after.",act:"Add families of 4th and 7th graders to this year's calendar with light touches: a community event, a postcard or a short ad. Ask for nothing yet."},
+ {id:"p3",st:"ap",w:3,s:"Pre-enrollment visits",p:"Applicants can sit in a class, shadow for a day or meet students and teachers before they enroll.",why:"A child who has met a teacher can picture going there. So can the parent.",act:"Offer a set visit: one class to sit in, one teacher to meet and one student to talk to. Put the sign-up link in your application confirmation."},
+ {id:"p4",st:"ap",w:3,s:"A commute and care sheet",p:"Families get a commute and care sheet at inquiry and again at acceptance: routes, carpools, drive times and before and after care.",why:"Families say yes to a school, then can't make the daily drive or schedule work. Often the problem is picturing it, not distance.",act:"Make a one-page commute and care sheet: transit or bus options, a carpool sign-up, drive times from three nearby neighborhoods and care hours. Send it with every offer."},
+ {id:"p5",st:"ap",w:2,grades:["6 to 8","9 to 12"],s:"Talk to students, not only parents",p:"For middle and high school applicants, we speak to the student directly, not only the parent.",why:"By middle school the student often has the final say. A message aimed only at parents misses the person deciding.",act:"Write one message from 7th grade up that speaks to the student, and invite each student applicant to talk with a current student."},
+ {id:"p6",st:"ap",w:2,s:"A short application",p:"Our application takes under 20 minutes on a phone and asks only what we need to decide.",why:"Every extra page is a place to stall. Families apply in spare minutes, often on a phone.",act:"Fill out your own application on a phone and time it. Cut every question you don't need until after enrollment."},
+ {id:"y1",st:"yi",w:3,s:"Next-day welcome call",p:"Every accepted family hears from a named staff member by the next school day.",why:"The weeks between offer and first day are when families back out. Silence reads as “they don't need us.”",act:"Start a welcome call for every offer. Use a short script: congratulations, what happens next, the commute sheet, and when they can visit."},
+ {id:"y2",st:"yi",w:2,s:"One owner for accepted families",p:"One person owns each accepted family until the first day of school, and it is part of their job.",why:"When everyone owns follow-up, no one does. Families need one name to call.",act:"Name one owner for accepted families and write it into their role. They track each family from offer to first day."},
+ {id:"y3",st:"yi",w:2,s:"Track yield and reasons for no",p:"We track how many offers turn into enrolled students and record why each family said no.",why:"You can't fix what you don't count. Reasons for no show which losses were in your control.",act:"Add a yield column to your tracker and ask every family that declines one question: “What made you choose another option?”"},
+ {id:"y4",st:"yi",w:2,s:"One story across every touch",p:"A family hears the same story from our website, inquiry email, tour and acceptance letter.",why:"Mixed messages raise stress, and stressed families default to what they know.",act:"Lay your website, inquiry email, tour talking points and acceptance letter side by side. Fix every place where facts, dates or tone don't match."},
+ {id:"y5",st:"yi",w:2,s:"Student ambassadors",p:"Current students reach out to accepted students before the enrollment deadline.",why:"A child who is excited to come is the strongest yield tool you have, and a reluctant one can undo a parent's yes.",act:"Start a student ambassador group. Each accepted student hears from a current student before the deadline."},
+ {id:"y6",st:"yi",w:1,s:"Personal follow-up after acceptance",p:"Our messages after acceptance refer to what this family cared about, not a form letter.",why:"A note that remembers their question tells a family they were heard.",act:"Keep notes on what each family asked at tours and inquiry. Use them in one personal follow-up, and connect them with a current parent."},
+ {id:"y7",st:"yi",w:2,only:"tuition",s:"Walk families through contract and aid",p:"We explain the enrollment contract, deposit and aid award steps in a conversation, not only by email.",why:"Contracts and aid forms are where accepted families stall, and they rarely call to say so.",act:"Book a 15-minute call with each accepted family to walk through the contract, deposit and aid steps. Track who has finished each one."},
+ {id:"r1",st:"re",w:3,s:"Re-enroll early",p:"We ask current families to re-enroll by a set date each winter, before other schools make offers.",why:"A returning student is the cheapest seat you will fill. Every family that leaves has to be replaced by new recruiting.",act:"Set a re-enrollment date in January or February, before other schools' offers. Send the form with a personal note from the leader."},
+ {id:"r2",st:"re",w:3,s:"Talk with families who might leave",p:"We know which families are unsure about next year and talk with each of them before re-enrollment opens.",why:"Families rarely leave without signs: missed payments, a struggling child, fewer pickups. An early talk can fix what a form can't.",act:"Go through your roster with teachers and mark any family that might not return. The leader calls each one before re-enrollment opens."},
+ {id:"r3",st:"re",w:2,s:"Survey families and close the loop",p:"We survey families once a year and tell them what we changed because of it.",why:"Families stay where they feel heard. Showing what changed matters more than asking.",act:"Send a five-question family survey this term, then share three things you will change because of it."},
+ {id:"r4",st:"re",w:2,s:"Re-engage last cycle's families",p:"We keep a list of every family that applied, was accepted or left, and contact them at the start of each cycle.",why:"These families already know you. Many chose something else over timing or logistics, not over your school.",act:"Pull every family that applied, was accepted or left in the last two years. Send each a personal note at the start of the cycle with what is new."},
+ {id:"r5",st:"re",w:1,s:"Ask why families leave",p:"When a family leaves, we ask why and write it down.",why:"Exit reasons show patterns you can fix before they cost you more families.",act:"Make a short exit conversation standard for every departing family and review the reasons each spring."}
+];
+const FORCES=[
+ {id:"push",name:"Push",side:"Toward a change",sub:"What drives families away from their current school",c:"--st-aw",sym:"→",opts:[
+   {id:"pu1",t:"Unhappy with their current school",items:["c6","p2"]},
+   {id:"pu2",t:"Child struggling or needing more support",items:["c1","a3"]},
+   {id:"pu3",t:"Safety or bullying concerns",items:["c2"]},
+   {id:"pu4",t:"A move, a new job or a family change",items:["a6","c4","c5"]},
+   {id:"pu5",t:"Their school is closing or changing",items:["a6","c4"]}]},
+ {id:"pull",name:"Pull",side:"Toward a change",sub:"What draws families to your school",c:"--st-co",sym:"→",opts:[
+   {id:"pl1",t:"Small classes and a child known by name",items:["c2","p3"]},
+   {id:"pl2",t:"Faith and shared values",items:["a7","c2"]},
+   {id:"pl3",t:"Your model or approach",items:["c1"]},
+   {id:"pl4",t:"Schedule or flexibility",items:["p4"]},
+   {id:"pl5",t:"ESA or scholarship makes it affordable",items:["c7","y7"]}]},
+ {id:"anx",name:"Anxiety",side:"Against a change",sub:"What worries families about switching",c:"--no",sym:"←",opts:[
+   {id:"an1",t:"Cost and paperwork",items:["c7","y7","y1"]},
+   {id:"an2",t:"Will my child fit in",items:["c2","p3","y5"]},
+   {id:"an3",t:"Is this a real school",items:["c3","c1"]},
+   {id:"an4",t:"Getting there every day",items:["p4"]},
+   {id:"an5",t:"The process is confusing",items:["y2","y4","p6"]}]},
+ {id:"hab",name:"Habit",side:"Against a change",sub:"What keeps families where they are",c:"--st-ap",sym:"←",opts:[
+   {id:"hb1",t:"Siblings or friends at their current school",items:["a1","y6"]},
+   {id:"hb2",t:"Their current school costs nothing and is close",items:["p4","c7"]},
+   {id:"hb3",t:"They know the routine",items:["y1","p3"]},
+   {id:"hb4",t:"They don't know what else is out there",items:["a3","a4"]}]}
+];
+const GRADES=["PreK","K to 2","3 to 5","6 to 8","9 to 12"];
+const MONTHS=["Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"];
+const MONTHS_LONG=["August","September","October","November","December","January","February","March","April","May","June","July"];
+const VAL={yes:2,partly:1,no:0};
+const KEY="ss-enrollment-path-v2";
+const NUMS=["current","reRate","driver","goal","rInq","rApp","rYield"];
+
+const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+// Turn on only after the Airtable form "Share your enrollment numbers with SchoolStack" is published.
+// Before turning it on: CLAUDE.md asks the owner to approve any third-party
+// form handler, privacy.html must say what is shared and where it goes, and
+// the footer line "They are not sent to SchoolStack" must change with it.
+const SHARE_ENABLED=false;
+const FORM_URL="https://airtable.com/appk92KPCWOm8X8B7/pagQxyBNwXId3KkCa/form";
+const EXAMPLE={example:true,name:"Example school",state:"",type:"tuition",offer:"7",grades:["K to 2","3 to 5","6 to 8"],
+ ans:{a1:"partly",a2:"no",a3:"no",a4:"partly",a5:"no",a6:"no",a7:"yes",c1:"yes",c2:"partly",c3:"partly",c4:"no",c5:"partly",c6:"no",c7:"no",p1:"partly",p2:"no",p3:"yes",p4:"no",p5:"no",p6:"partly",y1:"no",y2:"partly",y3:"no",y4:"partly",y5:"no",y6:"partly",y7:"no",r1:"partly",r2:"no",r3:"no",r4:"no",r5:"no"},
+ forces:["pu2","pl1","pl5","an1","an3","hb2"],current:72,reRate:85,driver:80,goal:96,rInq:50,rApp:80,rYield:65};
+const BLANK=()=>({example:false,name:"",state:"",type:"tuition",offer:"7",grades:[],ans:{},forces:[],current:"",reRate:"",driver:"",goal:"",rInq:"",rApp:"",rYield:""});
+
+let S;
+try{const raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):null;}catch(e){S=null}
+if(!S||typeof S!=="object"||!S.ans) S=JSON.parse(JSON.stringify(EXAMPLE));
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stageOf=id=>STAGES.find(s=>s.id===id);
+const shown=i=>(!i.only||S.type===i.only)&&(!i.grades||!(S.grades||[]).length||i.grades.some(g=>S.grades.includes(g)));
+const visible=()=>ITEMS.filter(shown);
+const scored=()=>visible().filter(i=>S.ans[i.id]!=="na");
+
+/* Static UI */
+$("schoolState").innerHTML='<option value="">Choose</option>'+STATES.map(s=>`<option value="${s}">${s}</option>`).join("");
+const om=$("offerMonth");
+om.innerHTML='<option value="rolling">Rolling, all year</option>'+MONTHS_LONG.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+$("grades").innerHTML=GRADES.map((g,i)=>`<label class="chip"><input type="checkbox" id="g${i}" value="${g}"><span>${g}</span></label>`).join("");
+
+function renderAudit(){
+  $("audit").innerHTML=STAGES.map(st=>{
+    const items=visible().filter(i=>i.st===st.id);
+    return `<div class="stage" style="--sc:var(${st.color})"><div class="stage-head"><h3>${st.name}</h3><span class="q">${st.q}</span></div>`+
+    items.map(it=>{
+      const a=S.ans[it.id];
+      const opts=[["yes","Yes","y"],["partly","Partly","p"],["no","Not yet","n"],["na","N/A","x"]];
+      return `<div class="item"><div class="txt"><p class="practice" id="pr-${it.id}">${esc(it.p)}</p><p class="why">${esc(it.why)}</p></div>
+      <div class="seg" role="radiogroup" aria-labelledby="pr-${it.id}">${opts.map(o=>`<label><input type="radio" name="q-${it.id}" id="q-${it.id}-${o[0]}" value="${o[0]}" ${a===o[0]?"checked":""}><span class="${o[2]}">${o[1]}</span></label>`).join("")}</div></div>`;
+    }).join("")+`</div>`;
+  }).join("");
+}
+function renderForces(){
+  $("forces").innerHTML=FORCES.map(f=>`<div class="force" style="--fc:var(${f.c});--fct:var(${f.c}-t)"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
+    <div class="opts">${f.opts.map(o=>{const on=S.forces.includes(o.id);return `<label class="opt ${on?"on":""}" for="fo-${o.id}"><input type="checkbox" id="fo-${o.id}" value="${o.id}" ${on?"checked":""}><span>${esc(o.t)}</span></label>`}).join("")}</div></div>`).join("");
+}
+function syncProfile(){
+  $("schoolName").value=S.name||"";
+  $("schoolState").value=S.state||"";
+  $("schoolType").value=S.type||"tuition";
+  om.value=String(S.offer??"7");
+  GRADES.forEach((g,i)=>{$("g"+i).checked=(S.grades||[]).includes(g)});
+  NUMS.forEach(k=>$(k).value=S[k]??"");
+  $("exampleBanner").hidden=!S.example;
+}
+
+/* Scoring */
+function boost(id){let b=0;FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id)&&o.items.includes(id))b++}));return b}
+function ranked(){
+  return scored().filter(i=>S.ans[i.id]==="no"||S.ans[i.id]==="partly").map(i=>{
+    const gap=S.ans[i.id]==="no"?2:1;
+    return {...i,gap,score:gap*(i.w+boost(i.id))+(gap===2?0.5:0)};
+  }).sort((a,b)=>b.score-a.score||b.w-a.w);
+}
+function pct(list){if(!list.length)return 0;return Math.round(list.reduce((t,i)=>t+(VAL[S.ans[i.id]]||0),0)/(list.length*2)*100)}
+function renderScore(){
+  const sc=scored();
+  const done=visible().filter(i=>S.ans[i.id]).length;
+  $("overall").textContent=pct(sc);
+  $("answered").textContent=`${done} of ${visible().length} answered`;
+  $("meters").innerHTML=STAGES.map(st=>{const v=pct(sc.filter(i=>i.st===st.id));return `<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">${v}</span></div><div class="bar" role="img" aria-label="${st.name} ${v} out of 100"><i style="width:${v}%"></i></div></div>`}).join("");
+  const top=ranked().slice(0,3);
+  $("topgaps").innerHTML=top.length?top.map(i=>`<li style="--sc:var(${stageOf(i.st).color})"><span>${esc(i.s)}</span></li>`).join(""):`<li style="--sc:var(--line)"><span>No gaps marked yet.</span></li>`;
+}
+
+/* Plan */
+function renderPlan(){
+  $("planName").textContent=S.name?S.name+"'s":"Your";
+  const r=ranked().slice(0,9);
+  const phases=[["Days 1 to 30","Start now"],["Days 31 to 60","Build"],["Days 61 to 90","Lock in"]];
+  $("phases").innerHTML=phases.map((ph,k)=>{
+    const steps=r.slice(k*3,k*3+3);
+    return `<div class="phase"><h3>${ph[0]} <small>${ph[1]}</small></h3>`+(steps.length?steps.map(i=>{
+      const st=stageOf(i.st),b=boost(i.id);
+      return `<div class="step" style="--sc:var(${st.color});--sct:var(${st.color}-t)"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
+    }).join(""):`<p class="empty">${k===0?"Mark practices Partly or Not yet in the audit to build this list.":"Nothing more to add here."}</p>`)+`</div>`;
+  }).join("");
+  renderSeat();renderCal();$("planText").value=planText();
+}
+function n(v,d){const x=parseFloat(v);return isFinite(x)&&x>=0?x:d}
+function seatMath(){
+  const cur=n(S.current,0),re=Math.min(n(S.reRate,85),100)/100,drv=n(S.driver,0),goal=n(S.goal,0);
+  const ri=Math.max(n(S.rInq,50),1)/100,ra=Math.max(n(S.rApp,80),1)/100,ry=Math.max(n(S.rYield,65),1)/100;
+  const back=Math.round(cur*re);
+  const target=goal||drv;
+  const fill=t=>Math.max(0,Math.ceil(t-back));
+  const funnel=(seats,yy,rr)=>{const offers=Math.ceil(seats/(yy??ry)),apps=Math.ceil(offers/ra),inq=Math.ceil(apps/ri);return {seats,offers,apps,inq}};
+  return {cur,re,drv,goal,back,target,fill,funnel,ri,ra,ry};
+}
+function renderSeat(){
+  const m=seatMath();
+  if(!m.target){$("result").innerHTML="";$("funnel").innerHTML=`<p class="note">Enter your budget driver or an enrollment goal to see how many families you need.</p>`;$("leverNote").textContent="";return}
+  const newDrv=m.drv?m.fill(m.drv):null,newGoal=m.goal?m.fill(m.goal):null;
+  $("result").innerHTML=`<div><b class="num">${m.back}</b><span>students likely to return</span></div>`+
+    (newDrv!==null?`<div><b class="num">${newDrv}</b><span>new students to reach your budget driver (${m.drv})</span></div>`:"")+
+    (newGoal!==null?`<div><b class="num">${newGoal}</b><span>new students to reach your goal (${m.goal})</span></div>`:"");
+  const seats=m.fill(m.target);
+  const f=m.funnel(seats);
+  const max=Math.max(f.inq,1);
+  const row=(lbl,v,c)=>`<div class="frow"><span>${lbl}</span><div class="bar"><i style="width:${v/max*100}%;background:var(${c})"></i></div><b class="num">${v}</b></div>`;
+  $("funnel").innerHTML=`<p class="note" style="margin:6px 0 2px">To enroll ${seats} new students for your ${m.goal?"goal":"budget driver"}, you need about:</p>`+row("Inquiries",f.inq,"--st-aw")+row("Applications",f.apps,"--st-co")+row("Offers",f.offers,"--st-ap")+row("New students",seats,"--st-yi");
+  const notes=[];
+  if(m.cur&&m.re<0.96){const back2=Math.round(m.cur*Math.min(m.re+0.05,1)),seats2=Math.max(0,Math.ceil(m.target-back2)),f2=m.funnel(seats2);notes.push(`Raise re-enrollment by 5 points and you need ${f.inq-f2.inq} fewer inquiries.`)}
+  if(m.ry<0.9){const f3=m.funnel(seats,Math.min(m.ry+0.1,0.99));notes.push(`Raise yield by 10 points and you need ${f.inq-f3.inq} fewer.`)}
+  $("leverNote").textContent=notes.join(" ");
+}
+function span(a,b){const s=new Set();for(let i=a;i<=b;i++)s.add(i);return s}
+function lanes(){
+  const roll=S.offer==="rolling",o=roll?null:parseInt(S.offer,10),g=S.grades||[];
+  const L=[];
+  L.push({n:"Always open",s:"A phone that gets answered, live application, current site",c:"--muted",m:span(0,11),faint:true});
+  L.push({n:"Re-engage past families",s:"Applied, accepted or left",c:"--st-re",m:span(0,1)});
+  L.push({n:"Fall campaign",s:"Tours, open houses, referrals",c:"--st-aw",m:roll?span(1,6):span(1,Math.max(1,o-1))});
+  L.push({n:"Re-enrollment",s:"At-risk talks, then forms by a set date",c:"--st-re",m:span(3,6)});
+  if(S.type==="tuition") L.push({n:"Cost and aid help",s:"Check your state's ESA and scholarship dates",c:"--st-co",m:roll?span(2,10):span(2,Math.min(11,Math.max(2,o+1)))});
+  if(!g.length||g.includes("6 to 8")||g.includes("9 to 12")) L.push({n:"Families before a transition",s:"Light touches a year early",c:"--st-co",m:span(2,6)});
+  if(!g.length||g.includes("PreK")||g.includes("K to 2")) L.push({n:"PreK and K families",s:"Their own session and parent match",c:"--st-co",m:span(3,7)});
+  L.push({n:"Offers and yield",s:"Welcome call, visits, commute sheet",c:"--st-yi",m:roll?span(0,11):span(o,11)});
+  L.push({n:"Summer: fast replies",s:"Families who decide in weeks",c:"--st-ap",m:span(9,11).add(0)});
+  return L;
+}
+function renderCal(){
+  let h=`<div></div>`+MONTHS.map(m=>`<div class="mh">${m}</div>`).join("");
+  lanes().forEach(l=>{
+    h+=`<div class="ln">${esc(l.n)}<small>${esc(l.s)}</small></div>`;
+    for(let i=0;i<12;i++){
+      if(l.m.has(i)){const st=!l.m.has(i-1),en=!l.m.has(i+1);h+=`<div class="seg-b ${st?"start":""} ${en?"end":""}" style="--sc:var(${l.c});${l.faint?"opacity:.35":""}" title="${esc(l.n)}: ${MONTHS_LONG[i]}"></div>`}
+      else h+=`<div class="gap"></div>`;
+    }
+  });
+  $("cal").innerHTML=h;
+}
+function planText(){
+  const r=ranked().slice(0,9),sc=scored(),L=[];
+  L.push(`${S.name||"Our school"}: 90-day enrollment plan`);
+  L.push(`Audit score: ${pct(sc)} out of 100 (`+STAGES.map(s=>`${s.name} ${pct(sc.filter(i=>i.st===s.id))}`).join(", ")+")");
+  const fs=[];FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id))fs.push(`${f.name}: ${o.t}`)}));
+  if(fs.length)L.push("What moves our families: "+fs.join("; "));
+  L.push("");
+  ["Days 1 to 30","Days 31 to 60","Days 61 to 90"].forEach((ph,k)=>{
+    const steps=r.slice(k*3,k*3+3);if(!steps.length)return;
+    L.push(ph.toUpperCase());
+    steps.forEach(i=>{L.push(`- [${stageOf(i.st).name}] ${i.act}`);L.push(`  Why: ${i.why}`)});
+    L.push("");
+  });
+  const m=seatMath();
+  if(m.target){const seats=m.fill(m.target),f=m.funnel(seats);
+    L.push(`SEAT MATH: about ${m.back} students return. To reach ${m.goal?"our goal of "+m.goal:"our budget driver of "+m.drv}, we need ${seats} new students: about ${f.offers} offers, ${f.apps} applications and ${f.inq} inquiries.`);
+    if(m.goal&&m.drv)L.push(`Budget driver: ${m.drv} students (${m.fill(m.drv)} new).`);}
+  L.push("");L.push("Built with SchoolStack Enrollment Path.");
+  return L.join("\n");
+}
+function renderShare(){
+  $("shareBlock").hidden=!SHARE_ENABLED; if(!SHARE_ENABLED) return;
+  const a=$("shareLink"),note=$("shareNote");
+  if(S.example){a.setAttribute("aria-disabled","true");a.removeAttribute("href");note.textContent="Start your own audit to share your numbers. Example answers are never sent.";return}
+  const sc=scored(),p=[];
+  const add=(k,v)=>{if(v!==undefined&&v!==null&&String(v).trim()!=="")p.push("prefill_"+encodeURIComponent(k)+"="+encodeURIComponent(v))};
+  add("State",S.state);
+  add("How families pay",S.type==="tuition"?"Tuition, ESA or scholarship":"Public charter");
+  if((S.grades||[]).length)add("Grades enrolled",S.grades.join(","));
+  add("Offers go out",S.offer==="rolling"?"Rolling":MONTHS_LONG[parseInt(S.offer,10)]);
+  [["Students enrolled now","current"],["Expected re-enrollment %","reRate"],["Budget driver","driver"],["Enrollment goal","goal"],["Inquiry to application %","rInq"],["Application to offer %","rApp"],["Offer to enrolled %","rYield"]].forEach(([k,f])=>{const v=parseFloat(S[f]);if(isFinite(v))add(k,Math.round(v))});
+  if(visible().filter(i=>S.ans[i.id]).length>=visible().length*0.8){
+    add("Audit score",pct(sc));
+    STAGES.forEach(s=>add(s.name+" score",pct(sc.filter(i=>i.st===s.id))));
+    add("Biggest gaps",ranked().slice(0,3).map(i=>i.s).join("; "));
+  }
+  const fs=[];FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id))fs.push(`${f.name}: ${o.t}`)}));
+  add("Forces marked",fs.join("; "));
+  a.removeAttribute("aria-disabled");
+  a.href=FORM_URL+(p.length?"?"+p.join("&"):"");
+  note.textContent="Opens a short form with your answers filled in. You review them and add last year's actual numbers before you submit. Your school name is not included.";
+}
+function renderAll(){renderScore();renderPlan();renderShare()}
+
+/* Events */
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.name&&t.name.startsWith("q-")){S.ans[t.name.slice(2)]=t.value}
+  else if(t.id&&t.id.startsWith("fo-")){const id=t.value;S.forces=t.checked?[...new Set([...S.forces,id])]:S.forces.filter(x=>x!==id);t.closest(".opt").classList.toggle("on",t.checked)}
+  else if(t.id&&/^g\d$/.test(t.id)){S.grades=GRADES.filter((g,i)=>$("g"+i).checked);renderAudit()}
+  else if(t.id==="schoolType"){S.type=t.value;renderAudit()}
+  else if(t.id==="offerMonth"){S.offer=t.value}
+  else if(t.id==="schoolState"){S.state=t.value}
+  else return;
+  save();renderAll();
+});
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="schoolName"){S.name=t.value.slice(0,80)}
+  else if(NUMS.includes(t.id)){S[t.id]=t.value}
+  else return;
+  save();renderAll();
+});
+function toast(msg){const el=$("toast");el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
+function resetBlank(){S=BLANK();save();syncProfile();renderAudit();renderForces();renderAll()}
+$("startOwn").addEventListener("click",()=>{resetBlank();toast("Example cleared. Your audit starts here.");$("schoolName").focus()});
+let armed=false;
+$("resetAll").addEventListener("click",e=>{
+  if(!armed){armed=true;e.target.textContent="Click again to clear";setTimeout(()=>{armed=false;e.target.textContent="Clear all answers"},3000);return}
+  armed=false;e.target.textContent="Clear all answers";resetBlank();toast("Answers cleared");
+});
+$("copyPlan").addEventListener("click",()=>{
+  const txt=planText(),box=$("planText");box.value=txt;
+  const fallback=()=>{box.focus();box.select();toast("Plan selected. Press Ctrl+C or Cmd+C to copy.")};
+  try{navigator.clipboard.writeText(txt).then(()=>toast("Plan copied"),fallback)}catch(err){fallback()}
+});
+
+syncProfile();renderAudit();renderForces();renderAll();
+})();
+</script>
+</body>
+</html>

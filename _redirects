@@ -27,3 +27,7 @@ https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
 /about             /about.html                           200
 /privacy           /privacy.html                         200
 /terms             /terms.html                           200
+
+# Enrollment Path lives at /enrollment/ (enrollment/index.html). Send the
+# no-slash address to it too, so both open the tool and share one URL.
+/enrollment        /enrollment/                          301

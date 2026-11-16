@@ -36,6 +36,11 @@ const html = read('index.html');
 // meets the same link, anchor and voice rules.
 const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html'];
 const others = OTHER_PAGES.map((f) => ({ f, html: read(f) }));
+// Stand-alone tool pages: their own masthead rather than the shared nav and
+// footer (like Space and Budget), but the same link, anchor and voice rules.
+const TOOL_PAGES = ['enrollment/index.html'];
+const tools = TOOL_PAGES.map((f) => ({ f, html: read(f) }));
+const allPages = [...others, ...tools];
 const siteCss = read('css/site.css');
 
 const failures = [];
@@ -157,7 +162,7 @@ if (ogImage) {
 const referenced = new Set();
 const note = (p) => { if (p && !/^(https?:|mailto:|data:|#)/.test(p)) referenced.add(p.split('?')[0].replace(/^\//, '')); };
 
-for (const m of [html, ...others.map((o) => o.html)].join('\n').matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
+for (const m of [html, ...allPages.map((o) => o.html)].join('\n').matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
 // Absolute metadata URLs on our own domain are still our files.
 for (const m of html.matchAll(/content="https:\/\/schoolstack\.ai\/([^"]+\.(?:png|svg|webp|ico))"/g)) note(m[1]);
 for (const i of manifest.icons) note(i.src);
@@ -202,7 +207,7 @@ console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), ${ratchet}`);
 for (const f of voice.faults) fail(f);
 // The About page meets the same rules. Its "deserves" count is its own, so a
 // first instance there fails here rather than hiding under the home page's.
-for (const o of others) {
+for (const o of allPages) {
   const v = voiceFaults(o.html);
   console.log(`Voice on ${o.f}: ${v.faults.length || 'no'} fault(s), "deserves" on ${v.debt.length} line(s)`);
   for (const f of v.faults) fail(`${o.f}: ${f}`);
@@ -223,9 +228,9 @@ if (voice.debt.length) {
    --------------------------------------------------------------------------- */
 const dangling = [
   ...danglingAnchors(html),
-  ...others.flatMap((o) => danglingAnchors(o.html, html).map((d) => ({ ...d, target: `${d.target} (${o.f})` }))),
+  ...allPages.flatMap((o) => danglingAnchors(o.html, html).map((d) => ({ ...d, target: `${d.target} (${o.f})` }))),
 ];
-const unsafe = [...unsafeBlankLinks(html), ...others.flatMap((o) => unsafeBlankLinks(o.html))];
+const unsafe = [...unsafeBlankLinks(html), ...allPages.flatMap((o) => unsafeBlankLinks(o.html))];
 const wanted = declaredFontFamilies(siteCss);
 const drift = others.flatMap((o) => chromeDrift(html, o.html).map((d) => `${d} (index.html vs ${o.f})`));
 const served = servedFontFamilies(read('fonts/fonts.css'));
@@ -238,7 +243,7 @@ console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on
 /* The privacy policy's promises, held to the code. A new application field
    has to be listed there, and the site must not start using cookies. */
 const fields = privacyFieldDrift(html, read('privacy.html'));
-const cookieFiles = ['index.html', ...OTHER_PAGES, 'js/site.js', 'js/budget-calculator.js', '_headers']
+const cookieFiles = ['index.html', ...OTHER_PAGES, ...TOOL_PAGES, 'js/site.js', 'js/budget-calculator.js', '_headers']
   .filter((f) => cookieUse(read(f)));
 console.log(`Privacy policy: form fields ${fields.unlisted.length || fields.stale.length ? 'DRIFTED' : 'match'}, cookies ${cookieFiles.length ? 'IN USE' : 'none'}`);
 for (const f of fields.unlisted) fail(`the application collects "${f}" but privacy.html does not list it - add it to the "What we collect" list`);

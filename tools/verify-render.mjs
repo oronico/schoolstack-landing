@@ -50,6 +50,8 @@ const PAGES = {
   },
   '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: [] },  // logo, footer logo
   '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: [] },
+  // A stand-alone tool page with its own masthead: wordmark only.
+  '/enrollment/': { minImages: 1, h1: 1, minTextChars: 4000, ids: ['main', 'audit', 'forces', 'phases', 'cal'] },
 };
 
 /* Lending Lab is not promoted on schoolstack.ai for now. Its two /go/ rules
@@ -167,7 +169,7 @@ for (const width of VIEWPORTS) {
       const hidden = [];
       const targets = [...new Set([...document.querySelectorAll('nav a[href*="#"], footer a[href*="#"], .hero a[href^="#"]')]
         .map((a) => a.getAttribute('href').split('#')[1]))];
-      for (const id of targets) {
+      for (const id of nav ? targets : []) {
         const el = document.getElementById(id);
         if (!el) continue;
         el.scrollIntoView({ block: 'start', behavior: 'instant' });
