@@ -3,6 +3,25 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-16: UI state named on the page
+Each component that changes as a visitor uses it now keeps its state in one
+place and names it as an attribute. CLAUDE.md section 8 lists them.
+- The design partner application is a four-state machine (`idle`,
+  `submitting`, `failed`, `submitted`) on `#signup[data-state]`, in place of
+  a `pending` flag and three separate display toggles. The form carries
+  `aria-busy` while a request is out. The wording, the focus move and all
+  four outcomes are unchanged.
+- `verify-form` and `features/signup.feature` now check the state after
+  each outcome, and walk a new path: an error, a second try, then success.
+- Enrollment Path: the two-click "Clear all answers" button names its state
+  (`idle`, `armed`), and fixes a bug where a timer left from an earlier
+  click disarmed the button a second after it was armed again. The page
+  names its mode (`example` or `own`) on `<body>`.
+- Files: `index.html`, `css/site.css`, `enrollment/index.html`,
+  `tools/lib/form-scenario.mjs`, `tools/verify-form.mjs`,
+  `features/signup.feature`, `features/step_definitions/signup.steps.mjs`,
+  `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-15: Enrollment Path in the menu
 Added Enrollment Path at /enrollment, reached from the main menu.
 - Enrollment Path is a recruitment and enrollment self-audit, not a fourth

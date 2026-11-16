@@ -140,6 +140,7 @@ if (ok) {
   }
   check(!ok.formShown, 'the form is still on screen after a successful submit');
   check(ok.successShown, 'the confirmation panel never appeared after a successful submit');
+  check(ok.state === 'submitted', `after a successful submit #signup reads data-state="${ok.state}", expected "submitted"`);
 }
 
 /* --- the server says no ----------------------------------------------------- */
@@ -152,6 +153,7 @@ if (bad) {
     `a rejected submit showed the browser's own words: "${bad.errorText}"`);
   check(!bad.successShown, 'a rejected submit showed the confirmation panel anyway');
   check(bad.formShown, 'a rejected submit hid the form, leaving nothing to retry with');
+  check(bad.state === 'failed', `after a server error #signup reads data-state="${bad.state}", expected "failed"`);
   // "Your answers are still here" is a promise the error copy makes.
   for (const [name, value] of Object.entries(ANSWERS)) {
     check(bad.values[name] === value, `after a server error ${name} reads "${bad.values[name]}", expected the typed "${value}"`);
@@ -182,6 +184,7 @@ if (dropped) {
     `a dropped connection showed "${dropped.errorText}", which does not offer ${SUPPORT_EMAIL} as a way through`);
   check(!dropped.successShown, 'a failed request showed the confirmation panel anyway');
   check(!dropped.disabled, 'the submit button stayed disabled after a failed request');
+  check(dropped.state === 'failed', `after a dropped request #signup reads data-state="${dropped.state}", expected "failed"`);
   check(dropped.label === dropped.initialLabel,
     `after a failed request the button reads "${dropped.label}", expected "${dropped.initialLabel}"`);
 }
@@ -193,6 +196,21 @@ if (inFlight) {
   check(inFlight.disabled, 'the submit button stays clickable while a submission is in flight - double submits');
   check(inFlight.label !== inFlight.initialLabel, 'the button gives no sign that a submission is under way');
   check(!inFlight.successShown, 'the confirmation appeared before the server had answered');
+  check(inFlight.state === 'submitting', `while in flight #signup reads data-state="${inFlight.state}", expected "submitting"`);
+  check(inFlight.busy === 'true', 'the form is not marked aria-busy while a submission is in flight');
+}
+
+/* --- a retry after an error -------------------------------------------------- */
+// The failed state exists so the visitor can try again. This walks the one
+// path back out of it: a 500, a second click, then success.
+const retry = await run('retry');
+if (retry) {
+  console.log(`Retry: ${retry.calls.length} request(s), states ${retry.states.join(' -> ')}`);
+  check(retry.calls.length === 2, `a retry sent ${retry.calls.length} requests, expected 2`);
+  check(retry.states.join(',') === 'failed,submitted',
+    `a retry went through ${retry.states.join(' -> ')}, expected failed -> submitted`);
+  check(!retry.formShown && retry.successShown && !retry.errorShown,
+    'after a successful retry the page still shows the form or the error');
 }
 
 /* --- nothing filled in ------------------------------------------------------ */
@@ -202,6 +220,7 @@ if (empty) {
   check(empty.calls.length === 0,
     'an empty form was submitted anyway - required validation is not stopping it');
   check(!empty.successShown, 'an empty form produced a confirmation');
+  check(empty.state === 'idle', `an empty form moved #signup to data-state="${empty.state}", expected "idle"`);
 }
 
 await browser.close();

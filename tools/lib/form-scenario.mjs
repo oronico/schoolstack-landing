@@ -37,6 +37,7 @@ export const MODES = {
   'server-error': 'the server answers 500',
   'network-error': 'the network drops',
   'in-flight': 'the request never settles',
+  retry: 'the server answers 500, then they try again',
 };
 
 /**
@@ -63,6 +64,7 @@ export function scenario(mode, { fill = true } = {}) {
       });
       if ('${mode}' === 'ok') return Promise.resolve({ ok: true, status: 200 });
       if ('${mode}' === 'server-error') return Promise.resolve({ ok: false, status: 500 });
+      if ('${mode}' === 'retry') return Promise.resolve(calls.length === 1 ? { ok: false, status: 500 } : { ok: true, status: 200 });
       if ('${mode}' === 'network-error') return Promise.reject(new TypeError('Failed to fetch'));
       return new Promise(() => {});          // in flight, never settles
     };
@@ -70,6 +72,12 @@ export function scenario(mode, { fill = true } = {}) {
     ${fill ? FILL : ''}
     btn.click();
     await new Promise((r) => setTimeout(r, 150));
+    const states = [document.getElementById('signup').getAttribute('data-state')];
+    if ('${mode}' === 'retry') {
+      btn.click();
+      await new Promise((r) => setTimeout(r, 150));
+      states.push(document.getElementById('signup').getAttribute('data-state'));
+    }
 
     const shown = (el) => getComputedStyle(el).display !== 'none';
     const values = {};
@@ -87,6 +95,9 @@ export function scenario(mode, { fill = true } = {}) {
       successShown: shown(successEl),
       errorShown: shown(errorEl),
       errorText: errorEl.textContent.trim(),
+      state: document.getElementById('signup').getAttribute('data-state'),
+      busy: form.getAttribute('aria-busy'),
+      states,
     });
   })()`;
 }

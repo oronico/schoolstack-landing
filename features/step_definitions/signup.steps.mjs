@@ -13,6 +13,7 @@ const MODE_FOR = {
   'the server answers 500': 'server-error',
   'the network drops': 'network-error',
   'the request never settles': 'in-flight',
+  'the server answers 500, then they try again': 'retry',
 };
 
 /* Each scenario submits once, so the page is reloaded first: a form already
@@ -67,6 +68,15 @@ Then('the {string} field is required', async function (name) {
 });
 
 /* --- what the page did ----------------------------------------------------- */
+
+// #signup carries the form's state (idle, submitting, failed, submitted).
+Then('the form is in the {string} state', function (state) {
+  assert.equal(this.result.state, state);
+});
+
+Then('it passed through {string}', function (path) {
+  assert.equal(this.result.states.join(' -> '), path);
+});
 
 Then('exactly one request is sent', function () {
   assert.equal(this.result.calls.length, 1);

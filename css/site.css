@@ -857,7 +857,6 @@ textarea:focus-visible,
   border: 1px solid var(--budget-mid);
   border-radius: var(--r-md);
   padding: 1.5rem;
-  display: none;
 }
 .form-success h3 { color: #fff; margin-bottom: 0.5rem; }
 .form-success p { color: var(--on-navy-text); font-size: 0.94rem; }
@@ -869,8 +868,10 @@ textarea:focus-visible,
   padding: 0.7rem 1rem;
   color: #fff;
   font-size: 0.9rem;
-  display: none;
 }
+/* The form handler shows and hides these three with the hidden attribute.
+   .signup-form sets display: grid, which would otherwise beat it. */
+.signup-form[hidden], .form-success[hidden], .form-error[hidden] { display: none; }
 .form-error a { color: #fff; font-weight: 700; }
 
 /* FAQ */

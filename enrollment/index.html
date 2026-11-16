@@ -339,7 +339,7 @@ footer b{color:var(--fg)}
         <p class="note" style="margin:0">Copy the plan as plain text for a doc, your team or a board update.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
           <button class="btn primary" id="copyPlan" type="button">Copy plan</button>
-          <button class="btn" id="resetAll" type="button">Clear all answers</button>
+          <button class="btn" id="resetAll" type="button" data-state="idle">Clear all answers</button>
         </div>
         <textarea class="copybox" id="planText" readonly aria-label="Plan as plain text"></textarea>
         <div class="share" id="shareBlock">
@@ -498,6 +498,9 @@ function syncProfile(){
   om.value=String(S.offer??"7");
   GRADES.forEach((g,i)=>{$("g"+i).checked=(S.grades||[]).includes(g)});
   NUMS.forEach(k=>$(k).value=S[k]??"");
+  // The page is in one of two modes: the worked example a first visit
+  // opens on, or the visitor's own audit. Named on <body> as data-mode.
+  document.body.dataset.mode=S.example?"example":"own";
   $("exampleBanner").hidden=!S.example;
 }
 
@@ -653,10 +656,19 @@ document.addEventListener("input",e=>{
 function toast(msg){const el=$("toast");el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
 function resetBlank(){S=BLANK();save();syncProfile();renderAudit();renderForces();renderAll()}
 $("startOwn").addEventListener("click",()=>{resetBlank();toast("Example cleared. Your audit starts here.");$("schoolName").focus()});
-let armed=false;
-$("resetAll").addEventListener("click",e=>{
-  if(!armed){armed=true;e.target.textContent="Click again to clear";setTimeout(()=>{armed=false;e.target.textContent="Clear all answers"},3000);return}
-  armed=false;e.target.textContent="Clear all answers";resetBlank();toast("Answers cleared");
+/* Clear all answers takes two clicks, so the button has two states, named
+   on it as data-state: idle, and armed for 3 seconds after the first click.
+   Every move goes through setReset, which also cancels the old timer, so a
+   timer left from an earlier click cannot disarm a later one. */
+const resetBtn=$("resetAll"),RESET_LABEL={idle:"Clear all answers",armed:"Click again to clear"};
+let resetState="idle",resetTimer=0;
+function setReset(st){
+  resetState=st;resetBtn.dataset.state=st;resetBtn.textContent=RESET_LABEL[st];
+  clearTimeout(resetTimer);if(st==="armed")resetTimer=setTimeout(()=>setReset("idle"),3000);
+}
+resetBtn.addEventListener("click",()=>{
+  if(resetState==="idle"){setReset("armed");return}
+  setReset("idle");resetBlank();toast("Answers cleared");
 });
 $("copyPlan").addEventListener("click",()=>{
   const txt=planText(),box=$("planText");box.value=txt;

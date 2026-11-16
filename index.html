@@ -485,7 +485,7 @@
       <h3 id="apply-heading" tabindex="-1">Your application</h3>
       <!-- id="signup" is the anchor the page carried until September 2026, kept
            so links already shared to /#signup still land on the form. -->
-      <div id="signup">
+      <div id="signup" data-state="idle">
         <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-labelledby="apply-heading">
           <input type="hidden" name="form-name" value="early-access">
           <!-- Spam trap. Hidden from every visitor and from assistive tech; a
@@ -596,10 +596,10 @@
 
           <button type="submit" class="form-submit" id="submitBtn" aria-describedby="applyHelp">Apply to join the design cohort</button>
           <p class="form-help" id="applyHelp">Short application. We'll follow up with selected schools about next steps. Our <a href="/privacy">privacy policy</a> explains how we use your details.</p>
-          <div class="form-error" id="formError" role="alert"></div>
+          <div class="form-error" id="formError" role="alert" hidden></div>
         </form>
 
-        <div class="form-success" id="formSuccess" role="status">
+        <div class="form-success" id="formSuccess" role="status" hidden>
           <h3 id="successHeading" tabindex="-1">Thanks for applying.</h3>
           <p>
             We'll review your information and contact selected schools about next steps. In the
@@ -740,15 +740,48 @@
 document.addEventListener('DOMContentLoaded', function() {
   var form = document.getElementById('signupForm');
   if (!form) return;
+  var box = document.getElementById('signup');
   var btn = document.getElementById('submitBtn');
   var errorEl = document.getElementById('formError');
   var successEl = document.getElementById('formSuccess');
   // Restored from the markup, not a literal, so relabelling the button in
   // HTML cannot leave the error path putting the old label back.
   var label = btn.textContent;
-  var pending = false;
 
-  function showError() {
+  // The application is a state machine with four states. Each state fixes
+  // everything a visitor can see, and NEXT lists the only moves allowed, so
+  // no mix of half-updated flags can show (say) the error and the thank-you
+  // together. The current state is written to #signup as data-state, which
+  // is what tools/verify-form.mjs and the feature steps read.
+  var VIEW = {
+    idle:       { form: true,  busy: false, error: false, success: false },
+    submitting: { form: true,  busy: true,  error: false, success: false },
+    failed:     { form: true,  busy: false, error: true,  success: false },
+    submitted:  { form: false, busy: false, error: false, success: true }
+  };
+  var NEXT = {
+    idle: ['submitting'],
+    submitting: ['submitted', 'failed'],
+    failed: ['submitting'],
+    submitted: []
+  };
+  var state = 'idle';
+
+  function go(next) {
+    if (NEXT[state].indexOf(next) === -1) return false;
+    state = next;
+    var v = VIEW[state];
+    box.setAttribute('data-state', state);
+    form.hidden = !v.form;
+    form.setAttribute('aria-busy', String(v.busy));
+    btn.disabled = v.busy;
+    btn.textContent = v.busy ? 'Submitting...' : label;
+    errorEl.hidden = !v.error;
+    successEl.hidden = !v.success;
+    return true;
+  }
+
+  function writeError() {
     // Built with DOM calls rather than innerHTML: the wording is ours, but the
     // habit keeps the handler safe if a server message is ever shown here.
     errorEl.textContent = '';
@@ -759,18 +792,13 @@ document.addEventListener('DOMContentLoaded', function() {
     link.textContent = 'allison@schoolstack.ai';
     errorEl.appendChild(link);
     errorEl.appendChild(document.createTextNode('.'));
-    errorEl.style.display = 'block';
   }
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    // The disabled button already blocks a second click; this blocks a second
-    // Enter keypress in a field while the first request is still out.
-    if (pending) return;
-    pending = true;
-    btn.disabled = true;
-    btn.textContent = 'Submitting...';
-    errorEl.style.display = 'none';
+    // Only idle and failed may move to submitting, so a second Enter keypress
+    // while the first request is out does nothing.
+    if (!go('submitting')) return;
 
     fetch('/', {
       method: 'POST',
@@ -779,8 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(function(res) {
       if (!res.ok) throw new Error('rejected');
-      form.style.display = 'none';
-      successEl.style.display = 'block';
+      go('submitted');
       var heading = document.getElementById('successHeading');
       if (heading) heading.focus();
     })
@@ -789,12 +816,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // the device, reads the same: the answers are kept, and there is a
       // person to email. The browser's own wording ("Failed to fetch") is
       // never shown.
-      showError();
-      btn.disabled = false;
-      btn.textContent = label;
-    })
-    .then(function() { pending = false; });
+      writeError();
+      go('failed');
+    });
   });
+
+  box.setAttribute('data-state', state);
 });
 </script>
 
