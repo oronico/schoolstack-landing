@@ -283,6 +283,11 @@ measures and no others.
   table rows. If there is no real screenshot, ship no screenshot.
 - Social/profile URLs cannot be verified from the build sandbox. When adding
   one, say so and ask for a click-through check before merge.
+- Do not write an unfamiliar feature from scratch (owner, November 2026).
+  First search GitHub for open-source projects that solve it, compare two
+  or three of their approaches, and say in the PR which one you follow and
+  why. Cucumber is the only dependency (section 3), so most often you borrow
+  the pattern, not the package; adding a package needs the owner.
 
 ## 7. Product facts copy must not contradict (November 2026)
 
