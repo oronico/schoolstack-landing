@@ -104,7 +104,7 @@ if (ld) {
 
   if (check(faqNode, 'the JSON-LD declares no FAQPage')
       && check(faqSection, 'index.html has no #faq section to compare the FAQPage against')) {
-    const visible = [...faqSection[0].matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)]
+    const visible = [...faqSection[0].matchAll(/<h3>([\s\S]*?)<\/h3>\s*(?:<\/summary>\s*)?<p>([\s\S]*?)<\/p>/g)]
       .map((m) => ({ q: strip(m[1]), a: strip(m[2]) }));
     const marked = faqNode.mainEntity.map((e) => ({ q: strip(e.name), a: strip(e.acceptedAnswer.text) }));
 
