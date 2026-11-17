@@ -321,8 +321,10 @@ styles: its five stage colours and answer colours carry meaning.
   FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
 - **Enrollment Path is not a fourth product** (owner, November 2026). It is
   a self-audit of a school's recruitment and enrollment, reached from the
-  main nav and phone menu, not a tool card, and not counted in "three
-  tools". Never call it free. Its logo file
+  main nav, the phone menu, the footer's About column, its own home page
+  band after the calculator (with a real screenshot of the example audit's
+  scorecard), and a link under the break-even result. It is not a tool
+  card and not counted in "three tools". Never call it free. Its logo file
   (`assets/logos/schoolstack-enrollment-logo.svg`) is kept for later use.
 - **QuickBooks Online is the accounting system of record.** Never present
   Advanced as required. The owner's guidance for nonprofits: review Advanced
