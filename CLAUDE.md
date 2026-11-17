@@ -269,6 +269,11 @@ margin, padding, gap, font size and colour in it is one of these:
   and are never painted behind text, because the contrast check cannot
   read a mixed colour.
 
+The home page alternates its ground to break up the scroll: paper, then
+the ink Enrollment Path band after the calculator, paper, the ink
+application band, paper, the ink footer. Ink is the only other ground the
+five tokens allow.
+
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
 other way to colour it. Each product's own colour lives in its logo
@@ -321,8 +326,10 @@ styles: its five stage colours and answer colours carry meaning.
   FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
 - **Enrollment Path is not a fourth product** (owner, November 2026). It is
   a self-audit of a school's recruitment and enrollment, reached from the
-  main nav and phone menu, not a tool card, and not counted in "three
-  tools". Never call it free. Its logo file
+  main nav, the phone menu, the footer's About column, its own ink band on
+  the home page after the calculator (with a real screenshot of the example
+  audit's scorecard), and a link under the break-even result. It is not a tool
+  card and not counted in "three tools". Never call it free. Its logo file
   (`assets/logos/schoolstack-enrollment-logo.svg`) is kept for later use.
 - **QuickBooks Online is the accounting system of record.** Never present
   Advanced as required. The owner's guidance for nonprofits: review Advanced

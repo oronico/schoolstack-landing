@@ -3,6 +3,33 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-17: Enrollment Path, easier to find
+Enrollment Path was reachable only from the nav (last of six items) and,
+on phones, from behind the menu.
+- A home page band after the calculator: "Fill the seats your budget
+  counts on", a short description, a button to start the audit, and a
+  real screenshot of the tool's scorecard for its built-in example school
+  (`images/enrollment-scorecard.webp`). It sits apart from the three tool
+  cards, so the site still counts three tools, and it never says free.
+- Under the break-even result: "Know the number. Now plan how you'll
+  enroll them", linking to the audit. The break-even answer and the
+  tool's seat math start from the same number.
+- The footer's About column links it on every page.
+- The band is ink, full-bleed, so the page no longer runs 4.6 desktop
+  screens of paper before its first change of ground. Its button is the
+  outline style: the calculator's "Build my five-year budget" stays the one
+  yellow button in view.
+- The FAQ answers fold under their questions (native `<details>`, no
+  script). The FAQ check in `verify-content` now allows a `</summary>`
+  between question and answer, and still compares every word.
+- The partners band and the Building Hope band are one band: "A program of
+  Building Hope Impact Fund", then the incubator and the two funders side
+  by side, each under a small label. One full-size heading fewer.
+- The home page is 652px shorter at 1440 and 806px shorter at 390.
+- Files: `index.html`, `about.html`, `privacy.html`, `terms.html`,
+  `css/site.css`, `images/enrollment-scorecard.webp`,
+  `tools/verify-content.mjs`, `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-16: One spacing scale, one type scale, five colours
 Rebuilt `css/site.css` (1,085 lines to 870) for the four site pages.
 - Fixes the five biggest hierarchy and density problems found in

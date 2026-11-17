@@ -125,6 +125,7 @@ summary:focus-visible,
   outline-offset: 3px;
 }
 .signup a:focus-visible,
+.enroll-band a:focus-visible,
 .signup h3:focus-visible,
 .signup button:focus-visible,
 footer a:focus-visible,
@@ -562,6 +563,35 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 .calc-cta p { color: var(--muted); max-width: 56ch; margin: 0 auto var(--sp-5); }
 .calc-cta .btn-primary { justify-content: center; }
 
+/* ENROLLMENT PATH BAND: text left, the real scorecard right. Left-aligned,
+   unlike the centred band headers, because it pairs text with a picture. */
+.calc-be-next { font-size: var(--step--1); font-weight: 700; border-top: 1px solid var(--line); padding-top: var(--sp-4); }
+/* A 44px tap target, which verify-calculator holds every control in the
+   card to; inline-flex keeps it in the sentence. */
+.calc-be-next a { color: var(--ink); display: inline-flex; align-items: center; min-height: 44px; }
+.enroll-band {
+  /* Ink, full-bleed: it breaks the long paper run between the hero and the
+     application band. Contents sit on the page's content edges, the same
+     max() the nav uses. */
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: var(--sp-8);
+  padding-inline: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: var(--sp-8);
+  align-items: center;
+}
+.enroll-band .label { color: var(--accent); }
+.enroll-band h2 { color: var(--paper); font-size: var(--step-3); margin-bottom: var(--sp-3); }
+.enroll-text p { max-width: 52ch; margin-bottom: var(--sp-3); }
+.enroll-text .enroll-note { font-size: var(--step--1); font-weight: 700; margin-bottom: var(--sp-5); }
+.enroll-band .btn-secondary { background: var(--ink); color: var(--paper); border-color: var(--paper); }
+.enroll-band .btn-secondary:hover { background: var(--paper); color: var(--ink); }
+.enroll-shot { margin: 0; }
+.enroll-shot img { display: block; width: 100%; height: auto; border-radius: var(--r-md); }
+.enroll-shot figcaption { font-size: var(--step--1); margin-top: var(--sp-2); text-align: center; }
+
 /* THE PLATFORM: the areas named in the paragraph above, as a list. */
 .platform-areas {
   list-style: none;
@@ -713,9 +743,24 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 
 /* FAQ: a list with rules between, not a stack of cards. */
 .faq-grid { display: grid; margin-top: var(--sp-5); border-top: 1px solid var(--line); }
-.faq-item { padding: var(--sp-5) 0; border-bottom: 1px solid var(--line); }
-.faq-item h3 { font-size: var(--step-1); margin-bottom: var(--sp-2); }
-.faq-item p { font-size: var(--step-0); color: var(--muted); }
+.faq-item { border-bottom: 1px solid var(--line); }
+/* Each answer folds under its question: a native <details>, so it opens by
+   keyboard and with no script, and find-in-page still reaches the text. */
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 48px;
+  padding: var(--sp-4) 0;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; font-size: var(--step-2); font-weight: 700; line-height: 1; flex-shrink: 0; }
+.faq-item[open] summary::after { content: '\2212'; }
+.faq-item h3 { font-size: var(--step-1); }
+.faq-item p { font-size: var(--step-0); color: var(--muted); padding-bottom: var(--sp-5); }
 .faq-item a { color: var(--ink); font-weight: 700; }
 
 /* FOUNDER INTRO: brief, with the full story on /about */
@@ -729,10 +774,11 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 .backing h2 { font-size: var(--step-2); }
 .backing p { color: var(--muted); font-size: var(--step-0); max-width: 60ch; margin: 0 auto var(--sp-5); }
 .backing p a { color: var(--ink); font-weight: 700; }
-.backing > p:last-child { margin-bottom: 0; }
-.bhif-mark { display: inline-block; margin-bottom: var(--sp-4); }
-.bhif-mark img { height: 96px; width: auto; display: block; }
-.partner-row { display: flex; justify-content: center; align-items: flex-start; gap: var(--sp-8); flex-wrap: wrap; margin-top: var(--sp-6); }
+/* The incubator and the funders, side by side, each under a small label. */
+.backers { display: flex; justify-content: center; align-items: flex-start; gap: var(--sp-8); flex-wrap: wrap; margin-top: var(--sp-6); }
+.backer-group { display: flex; flex-direction: column; align-items: center; }
+.backing .backer-label { font-size: var(--step--1); font-weight: 700; margin: 0 0 var(--sp-4); }
+.partner-row { display: flex; justify-content: center; align-items: flex-start; gap: var(--sp-7); flex-wrap: wrap; }
 .partner { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); text-decoration: none; max-width: 240px; }
 .partner-mark { height: 76px; display: flex; align-items: center; justify-content: center; }
 .partner-mark img { object-fit: contain; }
@@ -851,10 +897,12 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .section { padding: var(--sp-7) var(--gutter); }
   .signup { padding: var(--sp-7) var(--gutter); }
   .platform-areas { grid-template-columns: 1fr; }
+  .enroll-band { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: var(--sp-7); }
+  .enroll-shot { max-width: 280px; margin-inline: auto; }
   .exchange { grid-template-columns: 1fr; gap: var(--sp-5); }
   .form-row { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; gap: var(--sp-5); }
-  .partner-row { gap: var(--sp-6); }
+  .partner-row, .backers { gap: var(--sp-6); }
   .incubator { grid-template-columns: 1fr; gap: var(--sp-4); }
   .incubator img { width: 88px; }
   .values { grid-template-columns: 1fr; }
