@@ -28,7 +28,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS } from './lib/page-audit.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -242,12 +242,16 @@ console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on
 
 /* The privacy policy's promises, held to the code. A new application field
    has to be listed there, and the site must not start using cookies. */
-const fields = privacyFieldDrift(html, read('privacy.html'));
+const privacyHtml = read('privacy.html');
+const formDrift = FORMS.map((f) => ({ ...f, ...privacyFieldDrift(html, privacyHtml, f) }));
+const fields = { unlisted: formDrift.flatMap((f) => f.unlisted), stale: formDrift.flatMap((f) => f.stale) };
 const cookieFiles = ['index.html', ...OTHER_PAGES, ...TOOL_PAGES, 'js/site.js', 'js/budget-calculator.js', '_headers']
   .filter((f) => cookieUse(read(f)));
 console.log(`Privacy policy: form fields ${fields.unlisted.length || fields.stale.length ? 'DRIFTED' : 'match'}, cookies ${cookieFiles.length ? 'IN USE' : 'none'}`);
-for (const f of fields.unlisted) fail(`the application collects "${f}" but privacy.html does not list it - add it to the "What we collect" list`);
-for (const f of fields.stale) fail(`privacy.html lists "${f}" but the application no longer collects it`);
+for (const f of formDrift) {
+  for (const x of f.unlisted) fail(`${f.label} collects "${x}" but privacy.html does not list it - add it to its data-form="${f.name}" list`);
+  for (const x of f.stale) fail(`privacy.html lists "${x}" for ${f.label}, which no longer collects it`);
+}
 for (const f of cookieFiles) fail(`${f} sets or reads a cookie, but privacy.html promises the site sets none`);
 for (const d of drift) fail(`the ${d} - the nav and footer are written out on each page and must match`);
 for (const d of dangling) {

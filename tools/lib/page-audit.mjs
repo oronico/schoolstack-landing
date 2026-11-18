@@ -129,12 +129,21 @@ export function servedFontFamilies(css) {
  * The privacy policy makes promises the code has to keep. These read both
  * sides so a check can hold them together.
  *
- * formFields: every named input the design partner application submits,
- * minus Netlify's own plumbing (form-name) and the spam trap (bot-field).
- * listedFields: every data-field the privacy page lists.
+ * formFields: every named input a form submits (the design partner
+ * application unless another form id is given), minus Netlify's own plumbing
+ * (form-name) and the spam trap (bot-field).
+ * listedFields: every data-field the privacy page lists, or only those in the
+ * list marked data-form="<name>" when a form name is given.
  */
-export function formFields(html) {
-  const form = (html.match(/<form\b[^>]*id="signupForm"[\s\S]*?<\/form>/) || [''])[0];
+
+/** The site's Netlify forms, each listed field by field in privacy.html. */
+export const FORMS = [
+  { id: 'signupForm', name: 'early-access', label: 'the design partner application' },
+  { id: 'newsletterForm', name: 'mailing-list', label: 'the mailing list sign-up' },
+];
+
+export function formFields(html, id = 'signupForm') {
+  const form = (html.match(new RegExp(`<form\\b[^>]*id="${id}"[\\s\\S]*?<\\/form>`)) || [''])[0];
   const out = new Set();
   for (const m of form.matchAll(/<(?:input|select|textarea)\b[^>]*\sname="([^"]+)"/g)) {
     if (m[1] !== 'form-name' && m[1] !== 'bot-field') out.add(m[1]);
@@ -142,14 +151,17 @@ export function formFields(html) {
   return out;
 }
 
-export function listedFields(html) {
-  return new Set([...html.matchAll(/data-field="([^"]+)"/g)].map((m) => m[1]));
+export function listedFields(html, formName = null) {
+  const scope = formName
+    ? (html.match(new RegExp(`<ul\\b[^>]*data-form="${formName}"[\\s\\S]*?<\\/ul>`)) || [''])[0]
+    : html;
+  return new Set([...scope.matchAll(/data-field="([^"]+)"/g)].map((m) => m[1]));
 }
 
-/** Where the privacy page and the form disagree, in both directions. */
-export function privacyFieldDrift(indexHtml, privacyHtml) {
-  const sent = formFields(indexHtml);
-  const listed = listedFields(privacyHtml);
+/** Where the privacy page and one form disagree, in both directions. */
+export function privacyFieldDrift(indexHtml, privacyHtml, { id = 'signupForm', name = null } = {}) {
+  const sent = formFields(indexHtml, id);
+  const listed = listedFields(privacyHtml, name);
   return {
     unlisted: [...sent].filter((f) => !listed.has(f)),
     stale: [...listed].filter((f) => !sent.has(f)),

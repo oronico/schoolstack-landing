@@ -3,6 +3,29 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-18: A SchoolStack mailing list
+- A sign-up in the footer of every page, headed "Stay ready.": one email
+  field and a "Join the list" button. It is a second Netlify form,
+  `mailing-list`, so the design partner application and its notifications
+  are untouched. Netlify collects the addresses; the emails themselves go
+  out from whatever tool the owner picks, by export.
+- It follows the application's state machine: `idle`, `submitting`,
+  `failed`, `submitted` on `#newsletter[data-state]`, driven by
+  `js/site.js` so it works on every page.
+- `privacy.html` has a "When you join the mailing list" section listing the
+  one field, and says how long an address is kept.
+- The privacy field check now holds each form to its own list
+  (`data-form`), so a field listed for one form cannot cover another.
+- `verify-form` checks the sign-up on `/` and `/about`: the Netlify
+  contract, success, server error, dropped network, in flight, retry and an
+  empty submit. Breaking its retry path, or removing its privacy line, fails
+  the checks.
+- Files: `index.html`, `about.html`, `privacy.html`, `terms.html`,
+  `js/site.js`, `css/site.css`, `tools/lib/page-audit.mjs`,
+  `tools/lib/page-audit.test.mjs`, `tools/lib/form-scenario.mjs`,
+  `tools/verify-content.mjs`, `tools/verify-form.mjs`, `CLAUDE.md`,
+  `CHANGELOG.md`.
+
 ## 2026-11-17: Enrollment Path, easier to find
 Enrollment Path was reachable only from the nav (last of six items) and,
 on phones, from behind the menu.

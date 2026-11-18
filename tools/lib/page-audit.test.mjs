@@ -12,7 +12,7 @@ import { ROOT } from './harness.mjs';
 import {
   anchorTargets, elementIds, danglingAnchors,
   unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
-  formFields, privacyFieldDrift, cookieUse,
+  formFields, privacyFieldDrift, cookieUse, FORMS,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -108,9 +108,17 @@ test('privacyFieldDrift catches a new form field the policy does not list, and a
   assert.deepEqual(privacyFieldDrift(form, policy), { unlisted: ['phone'], stale: ['fax'] });
 });
 
-test('the privacy policy lists exactly what the application collects', () => {
-  const drift = privacyFieldDrift(page(), readFileSync(join(ROOT, 'privacy.html'), 'utf8'));
-  assert.deepEqual(drift, { unlisted: [], stale: [] });
+test('the privacy policy lists exactly what each form collects, form by form', () => {
+  const policy = readFileSync(join(ROOT, 'privacy.html'), 'utf8');
+  for (const f of FORMS) {
+    assert.deepEqual(privacyFieldDrift(page(), policy, f), { unlisted: [], stale: [] }, f.label);
+  }
+});
+
+test('a field listed under one form does not cover another form', () => {
+  const html = '<form id="a"><input name="email"></form><form id="b"><input name="phone"></form>';
+  const policy = '<ul data-form="one"><li data-field="email"></li><li data-field="phone"></li></ul><ul data-form="two"></ul>';
+  assert.deepEqual(privacyFieldDrift(html, policy, { id: 'b', name: 'two' }), { unlisted: ['phone'], stale: [] });
 });
 
 test('cookieUse spots code that would break the no-cookies promise', () => {
