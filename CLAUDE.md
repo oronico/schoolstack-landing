@@ -206,6 +206,21 @@ Why each exists:
   break-even. Its arithmetic is unit tested in
   `tools/lib/break-even.test.mjs`, stated in `features/break-even.feature`,
   and driven in the browser by the same verify-calculator run.
+- **the focus ring** — `verify-a11y` presses Tab through every page at both
+  widths and fails any stop whose focus ring is missing or under 3:1 against
+  what it is drawn over (`tools/lib/focus-audit.mjs`). It only measured text
+  until November 2026, when the consent checkbox's ring turned out to be ink
+  on the ink band and Enrollment Path's masthead ring 2.64:1. A control that
+  hides itself and rings the label beside it is judged by that label's ring,
+  and an inset ring by the fill it sits on: Codex found the first version
+  passing Enrollment Path's answer buttons, whose rings were 1.2:1 on red.
+  It runs in the light theme only. It cannot reach a state that needs a
+  submit, so the thank-you panel was checked by hand.
+- **working lines** — `tools/lib/working-lines.test.mjs` reads back every
+  sum the calculators print ("$10,000.50 × 50 students", "$600,000 ÷ $10,000
+  per student") and fails if it does not reproduce the printed answer. The
+  same mistake shipped twice: the math in cents, the working line rounded to
+  the dollar (#32, then #31).
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local
   development nor the diff will tell you it blocked your own stylesheet.
 - **build-images** — the OG card once shipped in DejaVu Sans because the
@@ -325,6 +340,23 @@ styles: its five stage colours and answer colours carry meaning.
   or three of their approaches, and say in the PR which one you follow and
   why. Cucumber is the only dependency (section 3), so most often you borrow
   the pattern, not the package; adding a package needs the owner.
+- Build only what was asked (owner, November 2026). Anything extra goes in
+  the PR description as a proposal, not in the code, and do not design for
+  rare or future cases nobody asked about. Agents broke this three times in
+  three months: copy nobody asked for (taken out in #23), `aria-busy` on the
+  application form and state attributes on Enrollment Path (both taken
+  back out in November).
+- **Two review bots read every PR: Codex and Cursor Bugbot. A PR is not
+  ready until both have reviewed its latest commit and each finding is fixed
+  or answered on its thread.** They skip drafts and start when a PR is
+  marked ready; Bugbot takes about 10 minutes and comments only when it finds
+  something. Between 4 and 17 November 2026 every PR was merged within
+  seconds of being marked ready, so five Bugbot findings landed after the
+  merge and nobody read them; three were live bugs (#31, #35, #39). So:
+  when you open a draft, post one comment, `@codex review`, so Codex reviews
+  the draft. When the owner marks a PR ready, keep watching it until Bugbot
+  has had its 10 minutes, and report what both bots found, or that they
+  found nothing, before the owner merges.
 
 ## 7. Product facts copy must not contradict (November 2026)
 
