@@ -32,6 +32,7 @@ async function tabWalk() {
     await key('keyDown'); await key('keyUp');
     const p = await browser.evaluate(FOCUS_PROBE);
     if (!p) break;
+    if (p.skip) continue;
     const id = p.tag + ':' + p.label;
     if (id === firstLabel) break;
     if (firstLabel === null) firstLabel = id;

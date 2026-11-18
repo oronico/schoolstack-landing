@@ -18,8 +18,11 @@
  * drawn over the element's own background, not its parent's.
  * Focus inside a <video>'s own controls (play, menu) is the browser's: it
  * draws those rings in a shadow root the page can neither style nor read, so
- * that stop is skipped. The video itself, focused before its controls, is
- * still measured. Chromium's control rings were checked by screenshot.
+ * that stop is skipped: the probe answers { skip: true } and the walk goes
+ * on to the next stop. null still means focus has left the page, which ends
+ * the walk; Codex caught the first version using null here, which ended it
+ * at the video and left the forms below unchecked (#43). The video itself,
+ * focused before its controls, is still measured. Chromium's control rings were checked by screenshot.
  * WCAG 2.2 asks 3:1 for a focus indicator (1.4.11, 2.4.13).
  */
 
@@ -29,7 +32,7 @@ export const MIN_RING_WIDTH = 2;
 export const FOCUS_PROBE = `(() => {
   const el = document.activeElement;
   if (!el || el === document.body || el === document.documentElement) return JSON.stringify(null);
-  if (el.matches('video[controls], audio[controls]') && !el.matches(':focus-visible')) return JSON.stringify(null);
+  if (el.matches('video[controls], audio[controls]') && !el.matches(':focus-visible')) return JSON.stringify({ skip: true });
   const rgb = (s) => (s.match(/[\\d.]+/g) || []).map(Number);
   const lum = ([r, g, b]) => {
     const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
@@ -69,7 +72,7 @@ export const FOCUS_PROBE = `(() => {
 
 /** Why a probed ring fails, or null when a keyboard user can see it. */
 export function ringProblem(p) {
-  if (!p || !p.shown) return null;
+  if (!p || p.skip || !p.shown) return null;
   if (p.style === 'none' || p.width < MIN_RING_WIDTH) return `no visible focus ring (outline ${p.style} ${p.width}px)`;
   if (p.ratio < MIN_RING_RATIO) return `focus ring ${p.ratio}:1 (needs ${MIN_RING_RATIO}:1) - ${p.color} on ${p.on}`;
   return null;
