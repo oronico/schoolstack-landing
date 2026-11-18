@@ -17,12 +17,38 @@
  */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
+import { FOCUS_PROBE, ringProblem } from './lib/focus-audit.mjs';
+
+/* Walk the page with real Tab presses, as a keyboard user does, and probe
+   each stop's focus ring. Stops when focus comes back round or leaves the
+   page; the cap is a backstop, not the expected end. */
+async function tabWalk() {
+  await browser.evaluate('(document.activeElement && document.activeElement.blur(), scrollTo(0, 0), 0)');
+  const key = (type) => browser.send('Input.dispatchKeyEvent',
+    { type, key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9 });
+  const stops = [];
+  let firstLabel = null;
+  for (let i = 0; i < 150; i++) {
+    await key('keyDown'); await key('keyUp');
+    const p = await browser.evaluate(FOCUS_PROBE);
+    if (!p) break;
+    const id = p.tag + ':' + p.label;
+    if (id === firstLabel) break;
+    if (firstLabel === null) firstLabel = id;
+    stops.push(p);
+  }
+  return stops;
+}
 
 const VIEWPORTS = [1440, 390];
 
 const site = await serveSite();
 const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
 await browser.send('Page.enable');
+// Keep the page focused as a visitor's tab is. Without this, the synthetic
+// Tab presses below leave headless Chrome treating the page as unfocused,
+// and a scripted focus() on the next page no longer shows the skip link.
+await browser.send('Emulation.setFocusEmulationEnabled', { enabled: true });
 
 const failures = [];
 const fail = (m) => failures.push(m);
@@ -168,6 +194,11 @@ for (const width of VIEWPORTS) {
   for (const n of r.missingAutocomplete) fail(`${path} ${width}px  ${n} has no autocomplete, so the browser cannot fill it`);
   for (const u of r.unnamed) fail(`${path} ${width}px  the ${u} field has no label a screen reader can read`);
   for (const c of r.namelessControls) fail(`${path} ${width}px  the "${c}" control has no accessible name`);
+
+  const stops = await tabWalk();
+  const blind = stops.map((p) => [p, ringProblem(p)]).filter(([, why]) => why);
+  console.log(`${' '.repeat(13)}focus: ${stops.length} Tab stops, ${blind.length} without a visible ring`);
+  for (const [p, why] of blind) fail(`${path} ${width}px  "${p.label}" (${p.tag}): ${why}`);
 }
 
 await browser.close();

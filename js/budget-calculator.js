@@ -303,9 +303,9 @@
         facilitiesPct: parts.facilities.value, staffingPct: parts.staffing.value,
       });
 
-      setText('revenue', formatUSD(r.revenue.annual));
+      setText('revenue', formatUSDExact(r.revenue.annual));
       setText('revenue-monthly', formatUSD(r.revenue.monthly));
-      setText('revenue-formula', formatUSD(r.tuition) + ' \u00d7 ' + plain.format(r.students) + (r.students === 1 ? ' student' : ' students'));
+      setText('revenue-formula', revenueFormula(r));
 
       ['facilities', 'staffing', 'remaining'].forEach(function (k) {
         setText(k + '-pct', formatPct(r[k].pct));
@@ -388,6 +388,13 @@
   }
 
   // "$600,000 ÷ $10,000 per student", plus ", rounded up" on a remainder.
+  // The snapshot's working line. Exact to the cent, like the total above it,
+  // so the printed sum always multiplies out to the printed answer.
+  function revenueFormula(r) {
+    return formatUSDExact(r.tuition) + ' \u00d7 ' + plain.format(r.students)
+      + (r.students === 1 ? ' student' : ' students');
+  }
+
   function breakEvenFormula(r) {
     return formatUSDExact(r.expenses) + ' ÷ ' + formatUSDExact(r.perStudent) + ' per student'
       + (r.exact ? '' : ', rounded up');
@@ -483,6 +490,7 @@
     formatUSD: formatUSD,
     formatUSDExact: formatUSDExact,
     breakEvenFormula: breakEvenFormula,
+    revenueFormula: revenueFormula,
     formatPct: formatPct,
     formatTuitionField: formatTuitionField,
     mount: mount,

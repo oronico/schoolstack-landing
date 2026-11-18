@@ -128,9 +128,15 @@ summary:focus-visible,
 .enroll-band a:focus-visible,
 .signup h3:focus-visible,
 .signup button:focus-visible,
-footer a:focus-visible,
-.consent-item:focus-within {
+.signup input:focus-visible,
+footer a:focus-visible {
   outline-color: var(--accent);
+}
+/* The thank-you panel is paper inside the ink band, so its ring goes back
+   to ink: accent on paper is 1.6:1. */
+.signup .form-success a:focus-visible,
+.signup .form-success h3:focus-visible {
+  outline-color: var(--ink);
 }
 
 /* NAV */
