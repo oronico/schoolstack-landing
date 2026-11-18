@@ -3,6 +3,20 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-18: Film first, an early list, and who pays for the tools
+- The platform band, film on top, now sits directly under the hero, with
+  the early list right after it. The tools and the snapshot follow.
+- The design partner application is an early list again: first name, work
+  email, school, state, and an optional accounting question (the beta
+  starts with QuickBooks Online schools). Joining is the request for beta
+  news and product updates, so the separate email checkbox is gone. The
+  Netlify form keeps its name, `early-access`.
+- The hero, nav, footer, share-card text, privacy policy and terms now say
+  early list and closed beta, not applications.
+- The tools band says the tools are complimentary, funded by philanthropy
+  so more schools can flourish, and thanks Stand Together Trust and the
+  Beth and Ravenel Curry Foundation.
+
 ## 2026-11-18: The platform film
 - The owner's 82-second film of SchoolStack now plays in the platform band.
   It starts only when pressed, so its voiceover is heard, and downloads

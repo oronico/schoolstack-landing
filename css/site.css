@@ -616,6 +616,9 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
   font-size: var(--step--1);
 }
 .platform-note { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-5); }
+/* The complimentary tools, and who pays for them (owner, November 2026). */
+.tools-gift { max-width: var(--measure); margin: 0 auto var(--sp-7); padding: var(--sp-4) var(--sp-5); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; font-size: var(--step-0); color: var(--muted); }
+.tools-gift strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); margin-bottom: var(--sp-2); }
 /* The platform film: plays only when asked, so its voiceover is heard. */
 .platform-film { margin: var(--sp-6) 0; }
 .platform-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--ink); border-radius: var(--r-md); }
@@ -639,32 +642,10 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 }
 /* What a partner gets, what we ask: two columns with a rule between, not
    two more boxes inside the band. */
-.exchange {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-6);
-  margin: var(--sp-6) auto 0;
-  text-align: left;
-}
-.exchange-card h3 { color: var(--paper); font-size: var(--step-1); margin-bottom: var(--sp-3); }
-.exchange-card ul { list-style: none; display: grid; gap: var(--sp-2); }
-.exchange-card li { display: flex; gap: var(--sp-3); align-items: baseline; color: var(--paper); font-size: var(--step-0); }
-.exchange-card li::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--accent);
-  transform: translateY(-2px);
-}
-
 .signup-form-wrap {
   max-width: 560px;
-  margin: var(--sp-8) auto 0;
-  padding-top: var(--sp-7);
-  border-top: 1px solid var(--line-on-ink);
+  margin: var(--sp-6) auto 0;
 }
-.signup-form-wrap .label { color: var(--accent); text-align: center; }
 .signup-form-wrap h3 { color: var(--paper); text-align: center; font-size: var(--step-2); margin-bottom: var(--sp-5); }
 /* Fixed nav: a hash link to the form heading would land it under the bar
    without these. The legacy #signup anchor sits one element lower. */
@@ -950,7 +931,6 @@ footer input:focus-visible, footer button:focus-visible, footer [tabindex]:focus
   .platform-areas { grid-template-columns: 1fr; }
   .enroll-band { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: var(--sp-7); }
   .enroll-shot { max-width: 280px; margin-inline: auto; }
-  .exchange { grid-template-columns: 1fr; gap: var(--sp-5); }
   .form-row { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; gap: var(--sp-5); }
   .partner-row, .backers { gap: var(--sp-6); }

@@ -168,7 +168,7 @@ node tools/verify-render.mjs    # layout: stretched images, heading order, overf
 node tools/verify-headers.mjs   # the CSP does not block the page it protects
 node tools/verify-calculator.mjs # the durability snapshot, driven by keyboard and typing
 node tools/verify-a11y.mjs      # contrast, landmarks, skip link, labels, on both pages
-node tools/verify-form.mjs      # the design partner application, all four submit outcomes
+node tools/verify-form.mjs      # the early list form, all four submit outcomes
 node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts loaded
 npx cucumber-js                 # the same checks, read as specifications
 ```
@@ -290,10 +290,11 @@ margin, padding, gap, font size and colour in it is one of these:
   and are never painted behind text, because the contrast check cannot
   read a mixed colour.
 
-The home page alternates its ground to break up the scroll: paper, then
-the ink Enrollment Path band after the calculator, paper, the ink
-application band, paper, the ink footer. Ink is the only other ground the
-five tokens allow.
+The home page alternates its ground to break up the scroll (order set by
+the owner, November 2026): the paper hero and platform film, the ink early
+list band, the paper tools and calculator, the ink Enrollment Path band,
+paper again, the ink footer. Ink is the only other ground the five tokens
+allow, and two ink bands never touch.
 
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
@@ -318,8 +319,9 @@ styles: its five stage colours and answer colours carry meaning.
 - `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
   rule states it). The local harness does the same.
 - `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
-- The lead form is Netlify Forms (`name="early-access"`). It is the design
-  partner application: the name predates the cohort and stays, because a
+- The lead form is Netlify Forms (`name="early-access"`). It is the early
+  list for beta places and product updates (owner, November 2026: it was the
+  design partner application from September to November). The name stays, because a
   rename creates a second form in the dashboard and orphans the first one's
   notifications. Netlify reads the field list off the deployed HTML, so a new
   `<input name>` becomes a stored column on the next deploy with no other
@@ -327,8 +329,8 @@ styles: its five stage colours and answer colours carry meaning.
   talking to the owner: the list is a company asset and it stays first-party.
 - The **mailing list** is a second Netlify form, `name="mailing-list"`, in the
   footer of every page (owner, November 2026), headed with the sign-off line
-  "Stay ready.". One field: email. It is kept apart from the application, so
-  the application's dashboard and notifications are untouched. Netlify only
+  "Stay ready.". One field: email. It is kept apart from the early list, so
+  that form's dashboard and notifications are untouched. Netlify only
   collects the addresses; whatever tool sends the emails gets them by export
   from the dashboard, and `privacy.html` must name that tool before it holds
   the list.
@@ -386,7 +388,11 @@ styles: its five stage colours and answer colours carry meaning.
   November 2026). It opens more widely in 2027. The platform band carries
   the owner's film of that beta (click to play, captions on by default, no
   autoplay), with the line "Shown: SchoolStack in closed beta with our design
-  partners." Keep that line wherever the film appears.
+  partners." Keep that line wherever the film appears. The film sits
+  directly under the hero, and the early list band follows it.
+- **The tools are complimentary, funded by philanthropy, so more schools
+  can flourish** (owner, November 2026). The tools band says so and thanks
+  Stand Together Trust and the Beth and Ravenel Curry Foundation.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
   Gusto actions nobody has confirmed, or promise every platform capability
@@ -426,13 +432,13 @@ and to this list, and give the check that covers it a line.
 
 | Component | Where | Attribute | States | Checked by |
 | --- | --- | --- | --- | --- |
-| Design partner application | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
+| Early list form | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
-| Mailing list sign-up (footer, every page) | `js/site.js` | `#newsletter[data-state]` | the same four states and events as the application | `verify-form`, on `/` and `/about` |
+| Mailing list sign-up (footer, every page) | `js/site.js` | `#newsletter[data-state]` | the same four states and events as the early list | `verify-form`, on `/` and `/about` |
 | Phone menu | `js/site.js` | `details.nav-menu[open]` | open, closed (the browser keeps it) | none yet |
 
-The application form shows exactly what `VIEW[state]` says. `ON[state]`
+The early list form shows exactly what `VIEW[state]` says. `ON[state]`
 lists the events each state answers (`SUBMIT`, `SUCCEED`, `FAIL`) and where
 each leads; `send()` ignores any other, which is what stops a second Enter
 keypress while a request is out.

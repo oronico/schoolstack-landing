@@ -58,7 +58,7 @@ Then('it declares a honeypot field', async function () {
 Then('the {string} field is not required', async function (name) {
   const required = await ctx.browser.evaluate(
     `JSON.stringify(!!document.querySelector('#signupForm [name=${JSON.stringify(name)}][required]'))`);
-  assert.equal(required, false, `${name} is required; it must stay optional and separate from the application`);
+  assert.equal(required, false, `${name} is required; it must stay optional`);
 });
 
 Then('the {string} field is required', async function (name) {
