@@ -3,6 +3,35 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-18: What the agents kept getting wrong
+An audit of the last 60 days found Cursor Bugbot findings landing minutes
+after each merge, unread. This fixes the three that were live bugs, adds
+the checks that would have caught them, and writes the lessons into
+CLAUDE.md.
+- **Calculator cents (#31):** the snapshot printed "$10,001 × 50 students"
+  for $10,000.50 a student. Its working line and total are now exact to the
+  cent, as the break-even card's have been since #32.
+- **Enrollment Path's hidden rates (#35):** a blank re-enrollment or
+  conversion rate was silently replaced by the example's (85, 50, 80, 65
+  percent). Now a figure that needs a rate waits for it, and the page says
+  which rate to enter. The example audit and fully filled audits give the
+  same numbers as before.
+- **Invisible focus (#39):** the consent checkbox's ring was ink on the ink
+  band; the thank-you panel's was accent on paper at 1.6:1. The new focus
+  check also found Enrollment Path's masthead ring at 2.64:1. All three now
+  clear 3:1.
+- **New checks:** `verify-a11y` tabs through every page and fails an
+  invisible focus ring; `working-lines.test.mjs` fails a printed sum that
+  does not add up. Each was shown to fail on the old code.
+- **CLAUDE.md:** build only what was asked, and a PR is not ready until
+  Codex and Bugbot have reviewed its latest commit.
+- Not reproduced, so not changed: Bugbot's tablet overflow on #40 (no
+  sideways scroll at 640 to 800px) and its FAQ-headings finding (Chromium
+  still exposes them as headings; Safari with VoiceOver is untested).
+- Files: `js/budget-calculator.js`, `enrollment/index.html`,
+  `css/site.css`, `tools/verify-a11y.mjs`, `tools/lib/focus-audit.mjs`,
+  `tools/lib/working-lines.test.mjs`, `CLAUDE.md`, `CHANGELOG.md`.
+
 ## 2026-11-18: A SchoolStack mailing list
 - A sign-up in the footer of every page, headed "Stay ready.": one email
   field and a "Join the list" button. It is a second Netlify form,
