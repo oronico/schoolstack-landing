@@ -152,6 +152,12 @@ than the preference. It still catches a second instance nobody meant to add.
 | Surface | Reads |
 | --- | --- |
 | `<h1>` | The back office small schools deserve. Built with the people who run them. |
+| Platform film, spoken and in its captions (`assets/video/*.vtt`) | This is the back office small schools deserve. |
+
+The film's line is the owner's own narration, and captions must match what
+is said, so the captions file carries it. The ratchet reads the pages, not
+the captions, so it does not count this line; keep the narration's words out
+of page text unless the owner settles the word.
 
 ## 3. Checks — run these, they have each caught a real bug
 
@@ -376,6 +382,11 @@ styles: its five stage colours and answer colours carry meaning.
 - **The QBO integration rolls out with the design partner pilot** from
   November 2026, cash-basis schools first; an accrual cohort follows. It
   opens more widely with the platform in 2027.
+- **Design partners use the platform now, in a closed beta** (owner,
+  November 2026). It opens more widely in 2027. The platform band carries
+  the owner's film of that beta (click to play, captions on by default, no
+  autoplay), with the line "Shown: SchoolStack in closed beta with our design
+  partners." Keep that line wherever the film appears.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
   Gusto actions nobody has confirmed, or promise every platform capability

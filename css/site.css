@@ -120,6 +120,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
+video:focus-visible,
 [tabindex]:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 3px;
@@ -615,6 +616,10 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
   font-size: var(--step--1);
 }
 .platform-note { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-5); }
+/* The platform film: plays only when asked, so its voiceover is heard. */
+.platform-film { margin: var(--sp-6) 0; }
+.platform-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--ink); border-radius: var(--r-md); }
+.platform-film figcaption { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); text-align: center; }
 
 /* DESIGN PARTNER COHORT + APPLICATION: the one ink band in the page body.
    Flat ink, paper text, accent for the two things to notice: the status

@@ -26,6 +26,7 @@ export const TYPES = {
   '.woff2': 'font/woff2', '.woff': 'font/woff',
   '.webmanifest': 'application/manifest+json', '.xml': 'application/xml', '.txt': 'text/plain',
   '.json': 'application/json',
+  '.mp4': 'video/mp4', '.vtt': 'text/vtt',
 };
 
 /**

@@ -16,6 +16,10 @@
  * then a span), so a hidden control is measured by that sibling's ring, as
  * Codex pointed out on #42. An inset ring (negative outline-offset) is
  * drawn over the element's own background, not its parent's.
+ * Focus inside a <video>'s own controls (play, menu) is the browser's: it
+ * draws those rings in a shadow root the page can neither style nor read, so
+ * that stop is skipped. The video itself, focused before its controls, is
+ * still measured. Chromium's control rings were checked by screenshot.
  * WCAG 2.2 asks 3:1 for a focus indicator (1.4.11, 2.4.13).
  */
 
@@ -25,6 +29,7 @@ export const MIN_RING_WIDTH = 2;
 export const FOCUS_PROBE = `(() => {
   const el = document.activeElement;
   if (!el || el === document.body || el === document.documentElement) return JSON.stringify(null);
+  if (el.matches('video[controls], audio[controls]') && !el.matches(':focus-visible')) return JSON.stringify(null);
   const rgb = (s) => (s.match(/[\\d.]+/g) || []).map(Number);
   const lum = ([r, g, b]) => {
     const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
