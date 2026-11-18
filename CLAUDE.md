@@ -210,8 +210,12 @@ Why each exists:
   widths and fails any stop whose focus ring is missing or under 3:1 against
   what it is drawn over (`tools/lib/focus-audit.mjs`). It only measured text
   until November 2026, when the consent checkbox's ring turned out to be ink
-  on the ink band and Enrollment Path's masthead ring 2.64:1. It cannot reach
-  a state that needs a submit, so the thank-you panel was checked by hand.
+  on the ink band and Enrollment Path's masthead ring 2.64:1. A control that
+  hides itself and rings the label beside it is judged by that label's ring,
+  and an inset ring by the fill it sits on: Codex found the first version
+  passing Enrollment Path's answer buttons, whose rings were 1.2:1 on red.
+  It runs in the light theme only. It cannot reach a state that needs a
+  submit, so the thank-you panel was checked by hand.
 - **working lines** — `tools/lib/working-lines.test.mjs` reads back every
   sum the calculators print ("$10,000.50 × 50 students", "$600,000 ÷ $10,000
   per student") and fails if it does not reproduce the printed answer. The

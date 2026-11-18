@@ -9,8 +9,13 @@
  * left tabbing through the nav "moving an invisible cursor".
  *
  * FOCUS_PROBE runs in the page after a real Tab keypress, so :focus-visible
- * applies exactly as it does for a visitor. It reports the focused element's
- * outline and the contrast of that outline against what it is drawn over.
+ * applies exactly as it does for a visitor. It reports the ring a visitor
+ * sees and the contrast of that ring against what it is drawn over. A
+ * control can hide itself and draw its ring on the label beside it
+ * (Enrollment Path's answer buttons and grade chips: an opacity:0 input,
+ * then a span), so a hidden control is measured by that sibling's ring, as
+ * Codex pointed out on #42. An inset ring (negative outline-offset) is
+ * drawn over the element's own background, not its parent's.
  * WCAG 2.2 asks 3:1 for a focus indicator (1.4.11, 2.4.13).
  */
 
@@ -25,22 +30,28 @@ export const FOCUS_PROBE = `(() => {
     const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
     return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
   };
-  // The ring is drawn outside the element (outline-offset), over whatever
-  // its parents paint, so the backdrop search starts one level up.
+  // Hidden control: the ring a visitor sees is on the next element.
+  const own = getComputedStyle(el);
+  const er = el.getBoundingClientRect();
+  const hidden = parseFloat(own.opacity) === 0 || er.width * er.height < 4;
+  const target = hidden && el.nextElementSibling ? el.nextElementSibling : el;
+  // An outside ring sits over whatever the parents paint; an inset ring sits
+  // over the element's own background.
+  const inset = parseFloat(getComputedStyle(target).outlineOffset) < 0;
   const backdrop = () => {
-    for (let n = el.parentElement; n; n = n.parentElement) {
+    for (let n = inset ? target : target.parentElement; n; n = n.parentElement) {
       const c = rgb(getComputedStyle(n).backgroundColor);
       if (c.length >= 3 && (c[3] === undefined || c[3] > 0.95)) return c.slice(0, 3);
     }
     return [255, 255, 255];
   };
-  const cs = getComputedStyle(el);
+  const cs = getComputedStyle(target);
   const ring = rgb(cs.outlineColor).slice(0, 3);
   const back = backdrop();
   const [a, b] = [lum(ring), lum(back)].sort((x, y) => y - x);
-  const r = el.getBoundingClientRect();
+  const r = target.getBoundingClientRect();
   return JSON.stringify({
-    label: (el.getAttribute('aria-label') || el.id || el.name || (el.textContent || '').trim() || el.tagName).slice(0, 45),
+    label: (el.getAttribute('aria-label') || el.id || el.name || (target.textContent || '').trim() || el.tagName).slice(0, 45),
     tag: el.tagName.toLowerCase(),
     style: cs.outlineStyle,
     width: parseFloat(cs.outlineWidth) || 0,

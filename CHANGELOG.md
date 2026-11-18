@@ -20,6 +20,12 @@ CLAUDE.md.
   band; the thank-you panel's was accent on paper at 1.6:1. The new focus
   check also found Enrollment Path's masthead ring at 2.64:1. All three now
   clear 3:1.
+- **Enrollment Path's answer buttons:** Codex showed the first focus check
+  measured the hidden radio, not the ring drawn on its label. Measured
+  properly, a focused "Not yet" ring was 1.19:1 on red and "Partly" 1.74:1
+  on amber. A checked answer's ring now takes the answer's text colour,
+  4.5:1 or better on every fill. In the dark theme the green and red
+  answers' white text was itself 2.9:1; it is now dark text, 5:1.
 - **New checks:** `verify-a11y` tabs through every page and fails an
   invisible focus ring; `working-lines.test.mjs` fails a printed sum that
   does not add up. Each was shown to fail on the old code.
