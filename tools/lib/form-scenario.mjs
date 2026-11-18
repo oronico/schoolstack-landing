@@ -31,6 +31,19 @@ export const ANSWERS = {
   headache: 'Knowing in January whether we make payroll in March.',
 };
 
+/** What the mailing list sign-up fills in: one address. */
+export const MAILING_EMAIL = 'grace@example.org';
+
+/** Which form a scenario drives, by the ids the page gives its parts. */
+export const APPLICATION = {
+  form: 'signupForm', button: 'submitBtn', error: 'formError', success: 'formSuccess',
+  box: 'signup', fill: FILL,
+};
+export const MAILING_LIST = {
+  form: 'newsletterForm', button: 'newsletterBtn', error: 'newsletterError', success: 'newsletterSuccess',
+  box: 'newsletter', fill: `form.querySelector('#newsletterEmail').value = '${MAILING_EMAIL}';`,
+};
+
 /** The four outcomes a visitor can meet, named as the page experiences them. */
 export const MODES = {
   ok: 'the submission succeeds',
@@ -41,16 +54,18 @@ export const MODES = {
 };
 
 /**
- * An expression that submits the form under `mode` and reports what the page
+ * An expression that submits a form under `mode` and reports what the page
  * did. Pass fill:false to submit an empty form, which the browser should
- * refuse outright.
+ * refuse outright, and target: MAILING_LIST to drive the footer sign-up
+ * instead of the design partner application.
  */
-export function scenario(mode, { fill = true } = {}) {
+export function scenario(mode, { fill = true, target = APPLICATION } = {}) {
+  const t = target;
   return `(async () => {
-    const form = document.getElementById('signupForm');
-    const btn = document.getElementById('submitBtn');
-    const errorEl = document.getElementById('formError');
-    const successEl = document.getElementById('formSuccess');
+    const form = document.getElementById('${t.form}');
+    const btn = document.getElementById('${t.button}');
+    const errorEl = document.getElementById('${t.error}');
+    const successEl = document.getElementById('${t.success}');
     const initialLabel = btn.textContent;
     const calls = [];
 
@@ -69,14 +84,14 @@ export function scenario(mode, { fill = true } = {}) {
       return new Promise(() => {});          // in flight, never settles
     };
 
-    ${fill ? FILL : ''}
+    ${fill ? t.fill : ''}
     btn.click();
     await new Promise((r) => setTimeout(r, 150));
-    const states = [document.getElementById('signup').getAttribute('data-state')];
+    const states = [document.getElementById('${t.box}').getAttribute('data-state')];
     if ('${mode}' === 'retry') {
       btn.click();
       await new Promise((r) => setTimeout(r, 150));
-      states.push(document.getElementById('signup').getAttribute('data-state'));
+      states.push(document.getElementById('${t.box}').getAttribute('data-state'));
     }
 
     const shown = (el) => getComputedStyle(el).display !== 'none';
@@ -95,7 +110,7 @@ export function scenario(mode, { fill = true } = {}) {
       successShown: shown(successEl),
       errorShown: shown(errorEl),
       errorText: errorEl.textContent.trim(),
-      state: document.getElementById('signup').getAttribute('data-state'),
+      state: document.getElementById('${t.box}').getAttribute('data-state'),
       states,
     });
   })()`;

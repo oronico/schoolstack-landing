@@ -304,6 +304,13 @@ styles: its five stage colours and answer colours carry meaning.
   `<input name>` becomes a stored column on the next deploy with no other
   change. Submissions live in the Netlify dashboard. **Do not add a third-party form handler** without
   talking to the owner: the list is a company asset and it stays first-party.
+- The **mailing list** is a second Netlify form, `name="mailing-list"`, in the
+  footer of every page (owner, November 2026), headed with the sign-off line
+  "Stay ready.". One field: email. It is kept apart from the application, so
+  the application's dashboard and notifications are untouched. Netlify only
+  collects the addresses; whatever tool sends the emails gets them by export
+  from the dashboard, and `privacy.html` must name that tool before it holds
+  the list.
 
 ## 6. Working agreements
 
@@ -358,10 +365,12 @@ styles: its five stage colours and answer colours carry meaning.
   approval (section 5: no third-party form handler without it) and a
   matching change to `privacy.html` and the tool's footer line.
 - **The privacy policy is a list of facts about the code.** No cookies, no
-  outside scripts, the calculator sends nothing, and the application fields
-  are listed one by one (`data-field`). `verify-content` fails if the form
-  gains a field the policy does not list, or if any page or script starts
-  using cookies. Change the site and `privacy.html` together, and have both
+  outside scripts, the calculator sends nothing, and each form's fields are
+  listed one by one (`data-field`), under a list marked with that form's
+  Netlify name (`data-form="early-access"`, `data-form="mailing-list"`).
+  `verify-content` fails if either form gains a field its list does not
+  name, or if any page or script starts using cookies. `FORMS` in
+  `tools/lib/page-audit.mjs` is the list of forms it checks. Change the site and `privacy.html` together, and have both
   legal pages reviewed by counsel before material changes ship.
 
 ## 8. UI state: one attribute per component
@@ -377,6 +386,7 @@ and to this list, and give the check that covers it a line.
 | Design partner application | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
+| Mailing list sign-up (footer, every page) | `js/site.js` | `#newsletter[data-state]` | the same four states and events as the application | `verify-form`, on `/` and `/about` |
 | Phone menu | `js/site.js` | `details.nav-menu[open]` | open, closed (the browser keeps it) | none yet |
 
 The application form shows exactly what `VIEW[state]` says. `ON[state]`
