@@ -121,6 +121,12 @@ export const ENTITLEMENT_WORDS = /\bdeserve[sd]?\b/gi;
    generated copy". A hyphen or a full stop does the job. */
 export const EM_DASH = /—/g;
 
+/* "Closed beta", or "beta" on its own, reads as a door shut to the visitor.
+   The owner asked twice (November 2026) for it to go; "early access" is the
+   word, and design partner schools use the platform today. Checked on every
+   page, share text included, since the head is not stripped. */
+export const BETA = /\bbeta\b/gi;
+
 /* A count of schools we do not have is the fastest way to lose a founder who
    knows the sector. CLAUDE.md: "no fake user counts".
  *
@@ -170,6 +176,10 @@ export function voiceFaults(html) {
 
   for (const hit of locate(copy, EM_DASH)) {
     faults.push(`line ${hit.line} carries an em dash - CLAUDE.md forbids them in copy`);
+  }
+
+  for (const hit of locate(copy, BETA)) {
+    faults.push(`line ${hit.line} says "${hit.match}" - CLAUDE.md: say "early access", never "beta" or "closed beta"`);
   }
 
   for (const hit of locate(copy, USER_COUNT)) {

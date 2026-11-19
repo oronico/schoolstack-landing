@@ -328,7 +328,7 @@ styles: its five stage colours and answer colours carry meaning.
   rule states it). The local harness does the same.
 - `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
-  list for beta places and product updates (owner, November 2026: it was the
+  list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a
   rename creates a second form in the dashboard and orphans the first one's
   notifications. Netlify reads the field list off the deployed HTML, so a new
@@ -396,7 +396,8 @@ styles: its five stage colours and answer colours carry meaning.
 - **Design partner schools use the platform today, and it opens to more
   schools in 2027** (owner, November 2026). Say it that way. Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
-  "early access" is the word. The platform band carries the owner's film
+  "early access" is the word. `verify-content` fails on the word (`BETA` in
+  `tools/lib/copy-rules.mjs`), share text included. The platform band carries the owner's film
   (click to play, captions on by default, no autoplay), with the line
   "Shown: SchoolStack today, built with our design partner schools." Keep
   that line wherever the film appears. The film follows the free tools, and

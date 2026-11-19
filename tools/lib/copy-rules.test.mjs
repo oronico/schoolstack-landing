@@ -22,6 +22,15 @@ const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
    stripNonCopy
    --------------------------------------------------------------------------- */
 
+test('beta, closed or not, is a voice fault on the page and in share text', () => {
+  const page = (body) => `<html><head><meta name="description" content="${body.meta}"></head><body><p>${body.p}</p>`
+    + '<p>Estimates are for planning only and are not loan eligibility.</p></body></html>';
+  assert.ok(voiceFaults(page({ meta: 'x', p: 'In closed beta with design partners' })).faults.some((f) => /beta/.test(f)));
+  assert.ok(voiceFaults(page({ meta: 'Now in Beta.', p: 'x' })).faults.some((f) => /beta/i.test(f)));
+  assert.ok(!voiceFaults(page({ meta: 'x', p: 'Early access list now open' })).faults.some((f) => /beta/i.test(f)));
+  assert.ok(!voiceFaults(page({ meta: 'x', p: '<!-- not "closed beta" in a comment -->' })).faults.some((f) => /beta/i.test(f)));
+});
+
 test('stripNonCopy removes comments, scripts and styles', () => {
   const out = stripNonCopy('<p>keep</p><!-- drop --><style>.a{}</style><script>var x</script>');
   assert.ok(out.includes('keep'));
