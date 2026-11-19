@@ -387,6 +387,18 @@ styles: its five stage colours and answer colours carry meaning.
   audit's scorecard), and a link under the break-even result. It is not a tool
   card and not counted in "three tools". Never call it free. Its logo file
   (`assets/logos/schoolstack-enrollment-logo.svg`) is kept for later use.
+- **Who it is for: schools of 20 to 250 students** (owner, November 2026).
+  The hero, the early list and the FAQ say so. Space, Budget and Access stay
+  open to any school, so the range never reads as a door shut.
+- **The goal of the page is early access to the full product.** "Get early
+  access" is the primary button in the hero and on the form; the free tools
+  are the secondary action. The platform band names the jobs founders hire
+  SchoolStack for, in the words they used in design partner calls and
+  demos (payroll, who owes tuition, filling seats, the board). Add a job
+  only if the product does it today.
+- **Schools on another accounting platform** can move to QuickBooks Online
+  with SchoolStack's accounting partner; they email allison@schoolstack.ai.
+  Do not name the partner on the site until the owner says so.
 - **QuickBooks Online is the accounting system of record.** Never present
   Advanced as required. The owner's guidance for nonprofits: review Advanced
   for the categorization Form 990 preparation needs. The FAQ says so.
