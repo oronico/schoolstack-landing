@@ -8,6 +8,10 @@ prepared for review; Netlify deploys on merge to `main`.
   Budget, and Access are complimentary for every school, funded by
   philanthropy so more schools can flourish." On its own, "Complimentary
   for every school" read as if the platform were free too.
+- The Budget and Access cards now ask the question each tool answers, under
+  the heading "Start with the question in front of you.": "How do I build a
+  five-year financial model?" and "What is the education freedom tax
+  credit?"
 
 ## 2026-11-19: Free tools first, and no "closed beta"
 - The three free tools now sit directly under the hero. The first tool card
