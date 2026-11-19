@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-19: Say which tools are complimentary
+- The philanthropy line under the tool cards now names them: "Space,
+  Budget, and Access are complimentary for every school, funded by
+  philanthropy so more schools can flourish." On its own, "Complimentary
+  for every school" read as if the platform were free too.
+
 ## 2026-11-19: Free tools first, and no "closed beta"
 - The three free tools now sit directly under the hero. The first tool card
   was 3.6 screens down on a laptop and 4.3 on a phone; it is now on the
