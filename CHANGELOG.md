@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-19: One sign-up
+- The site now has one sign-up, the early list. The footer's "Stay ready."
+  block keeps its heading and links to the early list instead of carrying
+  its own form.
+- The `mailing-list` form, its script in `js/site.js`, its checks and its
+  privacy-policy section are gone. Addresses it already collected stay in
+  the Netlify dashboard, and the privacy policy still covers them.
+
 ## 2026-11-18: Film first, an early list, and who pays for the tools
 - The platform band, film on top, now sits directly under the hero, with
   the early list right after it. The tools and the snapshot follow.

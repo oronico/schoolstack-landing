@@ -28,17 +28,10 @@ export const ANSWERS = {
   accountingPlatform: 'QuickBooks Online',
 };
 
-/** What the mailing list sign-up fills in: one address. */
-export const MAILING_EMAIL = 'grace@example.org';
-
 /** Which form a scenario drives, by the ids the page gives its parts. */
 export const APPLICATION = {
   form: 'signupForm', button: 'submitBtn', error: 'formError', success: 'formSuccess',
   box: 'signup', fill: FILL,
-};
-export const MAILING_LIST = {
-  form: 'newsletterForm', button: 'newsletterBtn', error: 'newsletterError', success: 'newsletterSuccess',
-  box: 'newsletter', fill: `form.querySelector('#newsletterEmail').value = '${MAILING_EMAIL}';`,
 };
 
 /** The four outcomes a visitor can meet, named as the page experiences them. */
@@ -53,8 +46,7 @@ export const MODES = {
 /**
  * An expression that submits a form under `mode` and reports what the page
  * did. Pass fill:false to submit an empty form, which the browser should
- * refuse outright, and target: MAILING_LIST to drive the footer sign-up
- * instead of the early list form.
+ * refuse outright.
  */
 export function scenario(mode, { fill = true, target = APPLICATION } = {}) {
   const t = target;

@@ -139,7 +139,6 @@ export function servedFontFamilies(css) {
 /** The site's Netlify forms, each listed field by field in privacy.html. */
 export const FORMS = [
   { id: 'signupForm', name: 'early-access', label: 'the early list form' },
-  { id: 'newsletterForm', name: 'mailing-list', label: 'the mailing list sign-up' },
 ];
 
 export function formFields(html, id = 'signupForm') {
