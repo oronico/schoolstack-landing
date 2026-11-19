@@ -129,6 +129,13 @@ Practically: the landing hero, the tools grid and the signup form are founder
 surfaces. The partner and funder sections are not - do not reuse founder lines
 there, and do not water down the founder lines to make them serve both.
 
+**Less copy** (owner, November 2026: "So MUCH copy, all over the site").
+Say a thing once. A tool card is a logo, one line and a link; a band is a
+label, a heading and what it shows, not a paragraph that repeats them. In
+that pass the home page went from 1,364 words to about 1,100 and the tool
+cards from 185 words to 72. Before adding a sentence, check whether the
+heading, a button or another band already says it.
+
 Other standing rules: no fake user counts, no em dashes in generated copy, and
 `Estimates are for planning only and are not loan eligibility` stays wherever
 numbers appear.
