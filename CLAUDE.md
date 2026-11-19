@@ -291,9 +291,10 @@ margin, padding, gap, font size and colour in it is one of these:
   read a mixed colour.
 
 The home page alternates its ground to break up the scroll (order set by
-the owner, November 2026): the paper hero and platform film, the ink early
-list band, the paper tools and calculator, the ink Enrollment Path band,
-paper again, the ink footer. Ink is the only other ground the five tokens
+the owner, November 2026): the paper hero, free tools and platform film,
+the ink early list band, the paper calculator, the ink Enrollment Path
+band, paper again, the ink footer. The free tools sit directly under the
+hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
 
 No gradients and no drop shadows. The one exception is the slider track,
@@ -385,12 +386,14 @@ styles: its five stage colours and answer colours carry meaning.
 - **The QBO integration rolls out with the design partner pilot** from
   November 2026, cash-basis schools first; an accrual cohort follows. It
   opens more widely with the platform in 2027.
-- **Design partners use the platform now, in a closed beta** (owner,
-  November 2026). It opens more widely in 2027. The platform band carries
-  the owner's film of that beta (click to play, captions on by default, no
-  autoplay), with the line "Shown: SchoolStack in closed beta with our design
-  partners." Keep that line wherever the film appears. The film sits
-  directly under the hero, and the early list band follows it.
+- **Design partner schools use the platform today, and it opens to more
+  schools in 2027** (owner, November 2026). Say it that way. Do not write
+  "closed beta" or "beta" on the site: the owner found it unwelcoming, and
+  "early access" is the word. The platform band carries the owner's film
+  (click to play, captions on by default, no autoplay), with the line
+  "Shown: SchoolStack today, built with our design partner schools." Keep
+  that line wherever the film appears. The film follows the free tools, and
+  the early list band follows the film.
 - **The tools are complimentary, funded by philanthropy, so more schools
   can flourish** (owner, November 2026). The tools band says so and thanks
   Stand Together Trust and the Beth and Ravenel Curry Foundation.

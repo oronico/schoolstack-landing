@@ -3,6 +3,17 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-19: Free tools first, and no "closed beta"
+- The three free tools now sit directly under the hero. The first tool card
+  was 3.6 screens down on a laptop and 4.3 on a phone; it is now on the
+  first screen of a laptop and 1.2 screens down on a phone. The
+  philanthropy line moves under the cards, and the film and the early list
+  follow.
+- "Closed beta" is gone from the site. The page now says design partner
+  schools use SchoolStack today and it opens to more schools in 2027, and
+  "early access" replaces "beta" in the hero, the form, the footer, the
+  share-card text, the privacy policy and the terms.
+
 ## 2026-11-19: One sign-up
 - The site now has one sign-up, the early list. The footer's "Stay ready."
   block keeps its heading and links to the early list instead of carrying
