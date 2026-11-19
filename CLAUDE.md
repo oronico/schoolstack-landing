@@ -403,8 +403,9 @@ styles: its five stage colours and answer colours carry meaning.
   Advanced as required. The owner's guidance for nonprofits: review Advanced
   for the categorization Form 990 preparation needs. The FAQ says so.
 - **The QBO integration rolls out with the design partner pilot** from
-  November 2026, cash-basis schools first; an accrual cohort follows. It
-  opens more widely with the platform in 2027.
+  November 2026 and opens more widely with the platform in 2027. Cash-basis
+  schools go first and an accrual cohort follows, but **cash versus accrual
+  is internal** (owner, November 2026): never put it on the site.
 - **Design partner schools use the platform today, and it opens to more
   schools in 2027** (owner, November 2026). Say it that way. Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
