@@ -129,8 +129,8 @@ export function servedFontFamilies(css) {
  * The privacy policy makes promises the code has to keep. These read both
  * sides so a check can hold them together.
  *
- * formFields: every named input a form submits (the design partner
- * application unless another form id is given), minus Netlify's own plumbing
+ * formFields: every named input a form submits (the early list form unless
+ * another form id is given), minus Netlify's own plumbing
  * (form-name) and the spam trap (bot-field).
  * listedFields: every data-field the privacy page lists, or only those in the
  * list marked data-form="<name>" when a form name is given.
@@ -138,7 +138,7 @@ export function servedFontFamilies(css) {
 
 /** The site's Netlify forms, each listed field by field in privacy.html. */
 export const FORMS = [
-  { id: 'signupForm', name: 'early-access', label: 'the design partner application' },
+  { id: 'signupForm', name: 'early-access', label: 'the early list form' },
   { id: 'newsletterForm', name: 'mailing-list', label: 'the mailing list sign-up' },
 ];
 

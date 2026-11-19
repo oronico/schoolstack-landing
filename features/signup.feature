@@ -1,11 +1,11 @@
-Feature: The design partner application form
+Feature: The early list form
 
   The form is the only behaviour on the site and the only thing the page is
   ultimately for. Every way it breaks, it breaks quietly:
 
   Netlify pairs a submission to a form by the hidden form-name field. If that
   stops matching the form's name, Netlify answers 200, the visitor reads
-  "Thanks for applying", and the application is discarded. Nothing goes red.
+  "You're on the list", and the sign-up is discarded. Nothing goes red.
 
   The error path is the one visitors meet on a bad day, and it is the least
   likely to have been opened in a browser.
@@ -21,8 +21,10 @@ Feature: The design partner application form
     And it posts with a hidden form-name of "early-access"
     And it declares a honeypot field
 
-  Scenario: The marketing consent is a separate, optional ask
-    Then the "emailConsent" field is not required
+  Scenario: Only the accounting question is optional
+    The beta starts with schools on QuickBooks Online, so the question helps,
+    but nobody should be kept off the list for skipping it.
+    Then the "accountingPlatform" field is not required
     And the "schoolName" field is required
 
   Scenario: A good submission reaches Netlify and thanks the visitor

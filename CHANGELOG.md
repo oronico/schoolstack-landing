@@ -3,6 +3,35 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-18: Film first, an early list, and who pays for the tools
+- The platform band, film on top, now sits directly under the hero, with
+  the early list right after it. The tools and the snapshot follow.
+- The design partner application is an early list again: first name, work
+  email, school, state, and an optional accounting question (the beta
+  starts with QuickBooks Online schools). Joining is the request for beta
+  news and product updates, so the separate email checkbox is gone. The
+  Netlify form keeps its name, `early-access`.
+- The hero, nav, footer, share-card text, privacy policy and terms now say
+  early list and closed beta, not applications.
+- The tools band says the tools are complimentary, funded by philanthropy
+  so more schools can flourish, and thanks Stand Together Trust and the
+  Beth and Ravenel Curry Foundation.
+
+## 2026-11-18: The platform film
+- The owner's 82-second film of SchoolStack now plays in the platform band.
+  It starts only when pressed, so its voiceover is heard, and downloads
+  nothing but its 2 KB captions until then. The video is a 3.8 MB, 720p cut
+  of the 4K original; the poster is a frame from it.
+- Captions are on by default and match the narration word for word,
+  including the closing "deserve" line, which repeats the hero.
+- A line under the film says it shows the closed beta with design partners,
+  opening more widely in 2027. The platform note no longer calls the rest
+  "planned".
+- The focus check now skips focus inside the browser's own player buttons,
+  which the page cannot style or read; the video itself is still checked.
+- Files: `index.html`, `css/site.css`, `assets/video/`,
+  `tools/lib/focus-audit.mjs`, `tools/lib/harness.mjs`, `CLAUDE.md`.
+
 ## 2026-11-18: What the agents kept getting wrong
 An audit of the last 60 days found Cursor Bugbot findings landing minutes
 after each merge, unread. This fixes the three that were live bugs, adds

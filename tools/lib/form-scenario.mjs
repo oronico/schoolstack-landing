@@ -17,8 +17,6 @@ export const FILL = `
   form.querySelector('#schoolName').value = 'Lovelace Microschool';
   form.querySelector('#schoolState').value = 'Ohio';
   form.querySelector('#accountingPlatform').value = 'QuickBooks Online';
-  form.querySelector('#headache').value = 'Knowing in January whether we make payroll in March.';
-  form.querySelector('[name="emailConsent"]').checked = true;
 `;
 
 /** The answers FILL typed, read back off the form after a submit attempt. */
@@ -28,7 +26,6 @@ export const ANSWERS = {
   schoolName: 'Lovelace Microschool',
   schoolState: 'Ohio',
   accountingPlatform: 'QuickBooks Online',
-  headache: 'Knowing in January whether we make payroll in March.',
 };
 
 /** What the mailing list sign-up fills in: one address. */
@@ -57,7 +54,7 @@ export const MODES = {
  * An expression that submits a form under `mode` and reports what the page
  * did. Pass fill:false to submit an empty form, which the browser should
  * refuse outright, and target: MAILING_LIST to drive the footer sign-up
- * instead of the design partner application.
+ * instead of the early list form.
  */
 export function scenario(mode, { fill = true, target = APPLICATION } = {}) {
   const t = target;

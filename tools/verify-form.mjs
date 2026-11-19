@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Drives the design partner application form in headless Chromium:
+ * Drives the early list form in headless Chromium:
  *
  *   node tools/verify-form.mjs
  *
@@ -9,7 +9,7 @@
  *
  *  - Netlify pairs a submission to a form by the hidden `form-name` field. If
  *    it stops matching the form's `name`, Netlify answers 200, the visitor
- *    reads "Thanks for applying", and the application is discarded. Nothing
+ *    reads "You're on the list", and the sign-up is discarded. Nothing
  *    anywhere goes red.
  *  - The submit handler restores the button label after an error. If that
  *    label drifts from the markup, every visitor who hits a submission error
@@ -76,7 +76,7 @@ if (await load()) {
       // hiding style can sit anywhere above the field.
       potHidden: pot ? (pot.offsetParent === null && pot.getBoundingClientRect().height === 0) : false,
       required: [...form.querySelectorAll('[required]')].map((el) => el.name),
-      consentRequired: !!form.querySelector('[name="emailConsent"][required]'),
+      platformRequired: !!form.querySelector('[name="accountingPlatform"][required]'),
       potAriaHidden: pot ? !!pot.closest('[aria-hidden="true"]') : false,
       unlabelled: labelled,
       action: form.getAttribute('action'),
@@ -99,10 +99,10 @@ if (await load()) {
   check(f.potName ? f.potAriaHidden : true, `the ${f.potName} honeypot is not aria-hidden, so a screen reader announces it as a real field`);
   // The application proper. The marketing consent is deliberately NOT here: it
   // is a separate ask and must never gate the submit.
-  for (const name of ['firstName', 'email', 'schoolName', 'schoolState', 'accountingPlatform', 'headache']) {
+  for (const name of ['firstName', 'email', 'schoolName', 'schoolState']) {
     check(f.required.includes(name), `required fields are ${JSON.stringify(f.required)}, expected ${name} among them`);
   }
-  check(!f.consentRequired, 'the marketing consent checkbox is required - it must stay optional and separate from the application');
+  check(!f.platformRequired, 'the accounting platform question is required - it must stay optional, so nobody is kept off the early list for skipping it');
   for (const el of f.unlabelled) fail(`the ${el} field has no <label for>`);
 }
 
@@ -136,7 +136,6 @@ if (ok) {
     for (const [name, value] of Object.entries(ANSWERS)) {
       check(body.get(name) === value, `the posted body carries ${name}="${body.get(name)}", expected "${value}" - the answer was typed and not sent`);
     }
-    check(body.get('emailConsent') === 'Yes', 'the posted body lost the email consent');
   }
   check(!ok.formShown, 'the form is still on screen after a successful submit');
   check(ok.successShown, 'the confirmation panel never appeared after a successful submit');
