@@ -129,6 +129,13 @@ Practically: the landing hero, the tools grid and the signup form are founder
 surfaces. The partner and funder sections are not - do not reuse founder lines
 there, and do not water down the founder lines to make them serve both.
 
+**Less copy** (owner, November 2026: "So MUCH copy, all over the site").
+Say a thing once. A tool card is a logo, one line and a link; a band is a
+label, a heading and what it shows, not a paragraph that repeats them. In
+that pass the home page went from 1,364 words to about 1,100 and the tool
+cards from 185 words to 72. Before adding a sentence, check whether the
+heading, a button or another band already says it.
+
 Other standing rules: no fake user counts, no em dashes in generated copy, and
 `Estimates are for planning only and are not loan eligibility` stays wherever
 numbers appear.
@@ -291,9 +298,10 @@ margin, padding, gap, font size and colour in it is one of these:
   read a mixed colour.
 
 The home page alternates its ground to break up the scroll (order set by
-the owner, November 2026): the paper hero and platform film, the ink early
-list band, the paper tools and calculator, the ink Enrollment Path band,
-paper again, the ink footer. Ink is the only other ground the five tokens
+the owner, November 2026): the paper hero, free tools and platform film,
+the ink early list band, the paper calculator, the ink Enrollment Path
+band, paper again, the ink footer. The free tools sit directly under the
+hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
 
 No gradients and no drop shadows. The one exception is the slider track,
@@ -320,7 +328,7 @@ styles: its five stage colours and answer colours carry meaning.
   rule states it). The local harness does the same.
 - `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
-  list for beta places and product updates (owner, November 2026: it was the
+  list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a
   rename creates a second form in the dashboard and orphans the first one's
   notifications. Netlify reads the field list off the deployed HTML, so a new
@@ -385,12 +393,15 @@ styles: its five stage colours and answer colours carry meaning.
 - **The QBO integration rolls out with the design partner pilot** from
   November 2026, cash-basis schools first; an accrual cohort follows. It
   opens more widely with the platform in 2027.
-- **Design partners use the platform now, in a closed beta** (owner,
-  November 2026). It opens more widely in 2027. The platform band carries
-  the owner's film of that beta (click to play, captions on by default, no
-  autoplay), with the line "Shown: SchoolStack in closed beta with our design
-  partners." Keep that line wherever the film appears. The film sits
-  directly under the hero, and the early list band follows it.
+- **Design partner schools use the platform today, and it opens to more
+  schools in 2027** (owner, November 2026). Say it that way. Do not write
+  "closed beta" or "beta" on the site: the owner found it unwelcoming, and
+  "early access" is the word. `verify-content` fails on the word (`BETA` in
+  `tools/lib/copy-rules.mjs`), share text included. The platform band carries the owner's film
+  (click to play, captions on by default, no autoplay), with the line
+  "Shown: SchoolStack today, built with our design partner schools." Keep
+  that line wherever the film appears. The film follows the free tools, and
+  the early list band follows the film.
 - **The tools are complimentary, funded by philanthropy, so more schools
   can flourish** (owner, November 2026). The tools band says so and thanks
   Stand Together Trust and the Beth and Ravenel Curry Foundation.

@@ -271,8 +271,9 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 
 /* THE TOOLS: three neutral cards. Each product's own colour lives in its
    logo artwork, so the cards themselves need none. */
-.stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); }
+.stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); margin-top: var(--sp-6); }
 .tool-card {
+  position: relative;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -282,17 +283,8 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
   transition: border-color 0.2s;
 }
 .tool-card:hover { border-color: var(--ink); }
-.tool-logo { height: 26px; width: auto; display: block; align-self: flex-start; margin-bottom: var(--sp-4); }
-.tool-role { font-size: var(--step--1); font-weight: 700; color: var(--muted); margin-bottom: var(--sp-2); }
-.tool-body { font-size: var(--step-0); margin-bottom: var(--sp-4); }
-.tool-guardrail {
-  font-size: var(--step--1);
-  color: var(--muted);
-  border-left: 2px solid var(--line);
-  padding-left: var(--sp-3);
-  margin-bottom: var(--sp-4);
-}
-.tool-note { font-size: var(--step--1); font-weight: 700; color: var(--muted); margin-bottom: var(--sp-4); }
+.tool-logo { height: 32px; width: auto; display: block; align-self: flex-start; margin-bottom: var(--sp-4); }
+.tool-body { font-family: var(--font-display); font-weight: 700; font-size: var(--step-1); color: var(--ink); margin-bottom: var(--sp-5); }
 .tool-link {
   margin-top: auto;
   align-self: flex-start;
@@ -305,8 +297,10 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
   color: var(--ink);
   text-underline-offset: 4px;
 }
+/* The whole card is the link's target; the focus ring stays on the link. */
+.tool-link::after { content: ''; position: absolute; inset: 0; border-radius: var(--r-md); }
 .tool-link svg { transition: transform 0.2s; }
-.tool-link:hover svg { transform: translateX(3px); }
+.tool-link:hover svg, .tool-card:hover .tool-link svg { transform: translateX(3px); }
 
 /* DURABILITY SNAPSHOT. Behaviour lives in js/budget-calculator.js; this is
    layout only. Bar: facilities ink, staffing muted, what remains accent,
@@ -617,7 +611,7 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 }
 .platform-note { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-5); }
 /* The complimentary tools, and who pays for them (owner, November 2026). */
-.tools-gift { max-width: var(--measure); margin: 0 auto var(--sp-7); padding: var(--sp-4) var(--sp-5); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; font-size: var(--step-0); color: var(--muted); }
+.tools-gift { max-width: var(--measure); margin: var(--sp-7) auto 0; padding: var(--sp-4) var(--sp-5); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; font-size: var(--step-0); color: var(--muted); }
 .tools-gift strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); margin-bottom: var(--sp-2); }
 /* The platform film: plays only when asked, so its voiceover is heard. */
 .platform-film { margin: var(--sp-6) 0; }
@@ -632,14 +626,6 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
 .cohort-status { font-size: var(--step--1); font-weight: 800; color: var(--accent); margin-bottom: var(--sp-2); }
 .cohort-hero h2 { color: var(--paper); font-size: var(--step-3); margin-bottom: var(--sp-4); }
 .cohort-hero > p { color: var(--paper); font-size: var(--step-0); max-width: 56ch; margin: 0 auto var(--sp-4); }
-.cohort-hero > p.cohort-scope {
-  font-size: var(--step--1);
-  border-top: 1px solid var(--line-on-ink);
-  border-bottom: 1px solid var(--line-on-ink);
-  padding: var(--sp-4) 0;
-  margin-top: var(--sp-5);
-  max-width: 62ch;
-}
 /* What a partner gets, what we ask: two columns with a rule between, not
    two more boxes inside the band. */
 .signup-form-wrap {
