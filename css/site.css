@@ -791,45 +791,23 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 .footer-bottom a { color: var(--accent); text-decoration: none; font-weight: 700; }
 .footer-legal { font-size: var(--step--1); margin-top: var(--sp-3); }
 
-/* MAILING LIST, in the footer of every page. Paper field and accent button on
-   ink, like the application. */
+/* STAY READY, in the footer of every page: a link to the early list, the
+   site's one sign-up (owner, November 2026). */
 .newsletter { margin-top: var(--sp-6); }
 .newsletter-heading { color: var(--paper); font-size: var(--step-1); margin-bottom: var(--sp-1); }
 .footer-brand .newsletter-blurb { margin-bottom: var(--sp-4); }
-.newsletter-form label { display: block; font-size: var(--step--1); font-weight: 700; margin-bottom: var(--sp-1); }
-.newsletter-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.newsletter-row input {
-  flex: 1 1 12rem;
-  min-width: 0;
-  min-height: 48px;
-  padding: var(--sp-3) var(--sp-4);
-  border: 1px solid var(--paper);
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  color: var(--ink);
-  font: var(--step-0) var(--font-body);
-}
-.newsletter-row input::placeholder { color: var(--muted); }
-.newsletter-row button {
-  flex: 0 0 auto;
+.newsletter-link {
+  display: inline-flex;
+  align-items: center;
   min-height: 48px;
   padding: var(--sp-3) var(--sp-5);
-  border: none;
   border-radius: var(--r-sm);
   background: var(--accent);
   color: var(--ink);
   font: 800 var(--step-0) var(--font-body);
-  cursor: pointer;
+  text-decoration: none;
 }
-.newsletter-row button:hover { background: var(--paper); }
-.newsletter-row button:disabled { background: var(--paper); color: var(--muted); cursor: not-allowed; }
-.newsletter-error { margin-top: var(--sp-2); background: var(--alert); color: var(--paper); padding: var(--sp-2) var(--sp-3); border-radius: var(--r-sm); font-size: var(--step--1); }
-.newsletter-error a { color: var(--paper); font-weight: 700; }
-.newsletter-success { font-weight: 700; }
-footer input:focus-visible, footer button:focus-visible, footer [tabindex]:focus-visible { outline-color: var(--accent); }
-/* Shown and hidden with the hidden attribute; the form's flex rows would
-   otherwise beat it. */
-.newsletter-form[hidden], .newsletter-error[hidden], .newsletter-success[hidden] { display: none; }
+.newsletter-link:hover { background: var(--paper); }
 
 /* ABOUT PAGE. Text-led on purpose: no approved headshots exist. */
 .about-lead p { font-size: var(--step-1); color: var(--muted); max-width: 60ch; margin: 0 auto var(--sp-4); }

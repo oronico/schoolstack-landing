@@ -25,7 +25,7 @@
  */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
-import { scenario, ANSWERS, MAILING_LIST, MAILING_EMAIL } from './lib/form-scenario.mjs';
+import { scenario, ANSWERS } from './lib/form-scenario.mjs';
 
 // Asserted in the error path below, so it is named once rather than inline.
 const SUPPORT_EMAIL = 'allison@schoolstack.ai';
@@ -219,67 +219,6 @@ if (empty) {
     'an empty form was submitted anyway - required validation is not stopping it');
   check(!empty.successShown, 'an empty form produced a confirmation');
   check(empty.state === 'idle', `an empty form moved #signup to data-state="${empty.state}", expected "idle"`);
-}
-
-/* ---------------------------------------------------------------------------
-   3. The mailing list sign-up in the footer.
-
-   A second Netlify form, on every page. Checked on the home page and on
-   /about, since js/site.js drives it and each page loads that script itself.
-   --------------------------------------------------------------------------- */
-for (const path of ['/', '/about']) {
-  if (!(await load(path, 'newsletterForm'))) continue;
-  const where = `mailing list on ${path}`;
-  const contract = await browser.evaluate(`JSON.stringify((() => {
-    const form = document.getElementById('newsletterForm');
-    if (!form) return null;
-    const pot = form.querySelector('[name="bot-field"]');
-    return {
-      name: form.getAttribute('name'),
-      netlify: form.hasAttribute('data-netlify'),
-      formName: (form.querySelector('input[name="form-name"]') || {}).value,
-      honeypot: form.getAttribute('netlify-honeypot'),
-      potHidden: !!pot && pot.offsetParent === null,
-      labelled: !!form.querySelector('label[for="newsletterEmail"]'),
-      required: [...form.querySelectorAll('[required]')].map((el) => el.name),
-    };
-  })())`);
-  if (!check(contract, `${where}: #newsletterForm is missing`)) continue;
-  check(contract.name === 'mailing-list' && contract.formName === 'mailing-list' && contract.netlify,
-    `${where}: the form is not a Netlify form named "mailing-list" with a matching form-name`);
-  check(contract.honeypot === 'bot-field' && contract.potHidden, `${where}: the honeypot is missing or visible`);
-  check(contract.labelled, `${where}: the email field has no <label for>`);
-  check(JSON.stringify(contract.required) === '["email"]', `${where}: required fields are ${JSON.stringify(contract.required)}, expected only email`);
-
-  const runList = async (mode, opts = {}) => (await load(path, 'newsletterForm'))
-    ? browser.evaluate(scenario(mode, { ...opts, target: MAILING_LIST }), { awaitPromise: true })
-    : null;
-
-  const good = await runList('ok');
-  if (good) {
-    const body = new URLSearchParams(good.calls[0] ? good.calls[0].body : '');
-    console.log(`${where}: ${good.calls.length} request(s), state ${good.state}`);
-    check(good.calls.length === 1 && good.calls[0].method === 'POST'
-      && new URL(good.calls[0].url, 'http://x').pathname === '/', `${where}: a valid sign-up did not POST once to /`);
-    check(body.get('form-name') === 'mailing-list' && body.get('email') === MAILING_EMAIL,
-      `${where}: the posted body is missing form-name=mailing-list or the address`);
-    check(good.state === 'submitted' && good.successShown && !good.formShown,
-      `${where}: after success the state is "${good.state}" and the thank-you is ${good.successShown ? 'shown' : 'missing'}`);
-  }
-  for (const mode of ['server-error', 'network-error']) {
-    const bad = await runList(mode);
-    if (!bad) continue;
-    check(bad.state === 'failed' && bad.errorShown && bad.formShown && !bad.disabled,
-      `${where}, ${mode}: expected the failed state with the error shown and the button usable`);
-    check(bad.errorText.includes(SUPPORT_EMAIL), `${where}, ${mode}: the error does not name ${SUPPORT_EMAIL}`);
-    check(bad.values.email === MAILING_EMAIL, `${where}, ${mode}: the typed address was lost`);
-  }
-  const busy = await runList('in-flight');
-  if (busy) check(busy.state === 'submitting' && busy.disabled, `${where}: a sign-up in flight left the button live`);
-  const retried = await runList('retry');
-  if (retried) check(retried.states.join(',') === 'failed,submitted', `${where}: a retry went ${retried.states.join(' -> ')}`);
-  const blank = await runList('ok', { fill: false });
-  if (blank) check(blank.calls.length === 0 && blank.state === 'idle', `${where}: an empty sign-up was sent`);
 }
 
 await browser.close();

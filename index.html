@@ -712,23 +712,12 @@
         <div class="footer-brand">
           <img src="/assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
           <p>The back office small schools run on. Built by a founder, for founders.</p>
-          <!-- The mailing list: a second Netlify form, kept apart from the
-               early list form. Its state lives on #newsletter as
-               data-state (CLAUDE.md section 8); js/site.js drives it. -->
-          <div class="newsletter" id="newsletter" data-state="idle">
-            <h2 class="newsletter-heading" id="newsletterHeading">Stay ready.</h2>
-            <p class="newsletter-blurb" id="newsletterHelp">News, tool updates and event invitations from SchoolStack. Unsubscribe any time. We never sell your details.</p>
-            <form class="newsletter-form" id="newsletterForm" name="mailing-list" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-labelledby="newsletterHeading">
-              <input type="hidden" name="form-name" value="mailing-list">
-              <p class="hp" aria-hidden="true"><label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-              <label for="newsletterEmail">Email address</label>
-              <div class="newsletter-row">
-                <input type="email" id="newsletterEmail" name="email" required autocomplete="email" placeholder="you@yourschool.org" aria-describedby="newsletterHelp">
-                <button type="submit" id="newsletterBtn">Join the list</button>
-              </div>
-              <div class="newsletter-error" id="newsletterError" role="alert" hidden></div>
-            </form>
-            <p class="newsletter-success" id="newsletterSuccess" role="status" tabindex="-1" hidden>You're on the list. Thank you.</p>
+          <!-- One sign-up (owner, November 2026): the early list. This block
+               links to it; there is no second form. -->
+          <div class="newsletter">
+            <h2 class="newsletter-heading">Stay ready.</h2>
+            <p class="newsletter-blurb">Beta news and product updates from SchoolStack. Unsubscribe any time.</p>
+            <a class="newsletter-link" href="#design-partners">Join the early list</a>
           </div>
         </div>
         <div class="footer-col">
