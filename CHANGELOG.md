@@ -3,6 +3,32 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-19: A refresh aimed at early access
+Grounded in what founders said in design partner calls and demos.
+- The hero says who SchoolStack is for, schools of 20 to 250 students,
+  and makes "Get early access" the main button. "Explore the free tools"
+  is second. A line says it works with QuickBooks Online.
+- The platform band trades its five feature labels for the four jobs
+  founders named: making payroll, who owes tuition, filling seats, what to
+  show the board. A box under them says SchoolStack is built on QuickBooks
+  Online, and that schools on another platform can move with our
+  accounting partner by emailing Allison.
+- The early list is now "Get early access", names the 20 to 250 range, and
+  points schools on other platforms to Allison. The footer link and the
+  form button say "Get early access" too.
+- Two new FAQ answers: which schools SchoolStack is for, and what happens
+  for schools on another accounting platform.
+
+## 2026-11-19: Say which tools are complimentary
+- The philanthropy line under the tool cards now names them: "Space,
+  Budget, and Access are complimentary for every school, funded by
+  philanthropy so more schools can flourish." On its own, "Complimentary
+  for every school" read as if the platform were free too.
+- The Budget and Access cards now ask the question each tool answers, under
+  the heading "Start with the question in front of you.": "How do I build a
+  five-year financial model?" and "What is the education freedom tax
+  credit?"
+
 ## 2026-11-19: Free tools first, and no "closed beta"
 - The three free tools now sit directly under the hero. The first tool card
   was 3.6 screens down on a laptop and 4.3 on a phone; it is now on the
