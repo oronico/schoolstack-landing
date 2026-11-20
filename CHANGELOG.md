@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-20: New Space, Budget and Access logos
+- The tool cards carry the new product lockups: the SchoolStack wordmark
+  in navy, the product name under it in the product colour. Space and
+  Budget are the files from their own repos. Access had no SVG yet, so its
+  name was outlined from the kit's Montserrat ExtraBold the same way; the
+  same steps rebuild the other two pixel for pixel.
+- The logos show at 48px tall (213px wide), above the kit's 200px minimum.
+
 ## 2026-11-19: A refresh aimed at early access
 Grounded in what founders said in design partner calls and demos.
 - The hero says who SchoolStack is for, schools of 20 to 250 students,
