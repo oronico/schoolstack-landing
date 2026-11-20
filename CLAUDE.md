@@ -58,6 +58,14 @@ says otherwise. `_headers` caches `/assets/*` for a year as immutable, so a
 changed logo takes a new hash in its name. A same-name swap leaves returning
 visitors on the old file.
 
+**The product logos are the kit's lockups** (November 2026): the wordmark in
+navy, the product name under it in the product's dark shade, bars in its
+three shades (`products` in Space's `shared/design-tokens.json`). Space and
+Budget come from their repos. Access had no SVG, so "Access" was outlined
+from the kit's Montserrat ExtraBold at 100 units, ink top-left at (400, 197),
+with kerning: the method that rebuilds Space and Budget pixel for pixel. If
+Access's repo gains its own file, use that instead.
+
 ## 2. Voice: asset-based, never deficit-framed
 
 The reader is a capable founder running a real business. Write to their
