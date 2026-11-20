@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-20: Remove the old tool logos; check images at larger text
+- The six logo files the tool cards used before #49 (Space, Budget and
+  Access, each with a white copy) are gone. Nothing on the site or in
+  the three product apps linked to them.
+- The render check now also looks at every image with the text at 150%,
+  the size that squashed the tool logos after #49.
+
 ## 2026-11-20: Keep the tool logos in shape at larger text sizes
 - With the browser's text size set larger, the new tool logos squashed:
   their height grew with the text but their width hit the card's edge

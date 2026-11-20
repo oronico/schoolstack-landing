@@ -207,7 +207,10 @@ Why each exists:
   to 768px tall and squashed it. A source-level check that only looked for the
   attributes passed happily. This one compares each image's *rendered* aspect
   ratio to its natural one, and cross-checks every `/go/` link against
-  `_redirects` so a typo cannot become a dead CTA on a live page. It renders
+  `_redirects` so a typo cannot become a dead CTA on a live page. It checks
+  image shapes again with the page's text at 150%, as a visitor who raises
+  the browser's font size sees it: the tool logos squashed there after #49
+  while the normal-size pass stayed green. It renders
   `/` and `/about`, fails if retired words ("Lending Lab", "four tools")
   reach a reader, and fails if a nav link lands its heading under the fixed
   nav.
