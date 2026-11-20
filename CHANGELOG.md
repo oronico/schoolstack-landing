@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-20: Keep the tool logos in shape at larger text sizes
+- With the browser's text size set larger, the new tool logos squashed:
+  their height grew with the text but their width hit the card's edge
+  (at 150% they lost up to 44% of their width). They now shrink to fit,
+  keeping their shape. Found by Bugbot on #49.
+
 ## 2026-11-20: New Space, Budget and Access logos
 - The tool cards carry the new product lockups: the SchoolStack wordmark
   in navy, the product name under it in the product colour. Space and

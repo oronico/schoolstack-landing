@@ -283,7 +283,9 @@ section[id], [id].section { scroll-margin-top: var(--sp-8); }
   transition: border-color 0.2s;
 }
 .tool-card:hover { border-color: var(--ink); }
-.tool-logo { height: var(--sp-7); width: auto; display: block; align-self: flex-start; margin-bottom: var(--sp-4); }
+/* max-height, not height: with both sides auto the browser keeps the
+   lockup's shape when max-width:100% narrows it under large text. */
+.tool-logo { max-height: var(--sp-7); width: auto; display: block; align-self: flex-start; margin-bottom: var(--sp-4); }
 .tool-body { font-family: var(--font-display); font-weight: 700; font-size: var(--step-1); color: var(--ink); margin-bottom: var(--sp-5); }
 .tool-link {
   margin-top: auto;
