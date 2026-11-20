@@ -5,7 +5,7 @@
  *
  *   node tools/verify-render.mjs
  *
- *  1. No image is stretched. Compares each image's RENDERED aspect ratio to its
+ *  1. No image is stretched, at normal text size and at 150%. Compares each image's RENDERED aspect ratio to its
  *     natural one. This exists because adding width/height attributes to stop
  *     layout shift, without the matching `height: auto`, silently welded the
  *     dashboard preview to 768px tall and squashed it - and a source-level
@@ -26,6 +26,34 @@ import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 
 const VIEWPORTS = [1440, 820, 390];
 const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
+
+/* Lists every image whose rendered shape differs from its natural one.
+   A string, because it runs inside the page; both passes below use it. */
+const STRETCHED_JS = `() => {
+  const out = [];
+  for (const img of document.images) {
+    const r = img.getBoundingClientRect();
+    if (!r.width || !r.height || !img.naturalWidth || !img.naturalHeight) continue;
+    const rendered = r.width / r.height;
+    const natural = img.naturalWidth / img.naturalHeight;
+    if (Math.abs(rendered - natural) / natural > ${TOLERANCE}) {
+      out.push({
+        src: (img.getAttribute('src') || '').split('/').pop(),
+        rendered: Math.round(r.width) + 'x' + Math.round(r.height),
+        renderedRatio: +rendered.toFixed(3),
+        natural: img.naturalWidth + 'x' + img.naturalHeight,
+        naturalRatio: +natural.toFixed(3),
+      });
+    }
+  }
+  return out;
+}`;
+
+/* Larger text, as a visitor gets by raising the browser's default font
+   size. A height in rem grows with it while max-width stops the width at
+   the container, so an image can squash only here: the tool logos did on
+   #49, at 150%, and the pass at normal size was green. */
+const LARGE_TEXT = '150%';
 
 /* The floor: what has to be on the page before a green run means anything.
    Deliberately floors and landmarks rather than exact counts, so ordinary copy
@@ -89,22 +117,7 @@ for (const width of VIEWPORTS) {
       await new Promise(r => setTimeout(r, 1200));
       await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
 
-      const stretched = [];
-      for (const img of document.images) {
-        const r = img.getBoundingClientRect();
-        if (!r.width || !r.height || !img.naturalWidth || !img.naturalHeight) continue;
-        const rendered = r.width / r.height;
-        const natural = img.naturalWidth / img.naturalHeight;
-        if (Math.abs(rendered - natural) / natural > ${TOLERANCE}) {
-          stretched.push({
-            src: (img.getAttribute('src') || '').split('/').pop(),
-            rendered: Math.round(r.width) + 'x' + Math.round(r.height),
-            renderedRatio: +rendered.toFixed(3),
-            natural: img.naturalWidth + 'x' + img.naturalHeight,
-            naturalRatio: +natural.toFixed(3),
-          });
-        }
-      }
+      const stretched = (${STRETCHED_JS})();
 
       const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')];
       const skips = [];
@@ -249,6 +262,28 @@ for (const width of VIEWPORTS) {
   }
 }
 
+for (const path of Object.keys(PAGES))
+for (const width of VIEWPORTS) {
+  await browser.send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
+  const navError = await browser.navigate(site.base + path);
+  if (navError) {
+    failures.push(`${path} ${width}px  text ${LARGE_TEXT}: navigation failed: ${navError}`);
+    continue;
+  }
+  await sleep(1000);
+  const stretched = await browser.evaluate(`(async () => {
+      document.documentElement.style.fontSize = '${LARGE_TEXT}';
+      document.querySelectorAll('img[loading="lazy"]').forEach(i => i.loading = 'eager');
+      await new Promise(r => setTimeout(r, 800));
+      await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+      return JSON.stringify((${STRETCHED_JS})());
+    })()`, { awaitPromise: true });
+  console.log(`${path.padEnd(7)}${String(width).padStart(4)}px  text ${LARGE_TEXT}  stretched: ${stretched.length || 'none'}`);
+  for (const st of stretched) {
+    failures.push(`${path} ${width}px  text ${LARGE_TEXT}: ${st.src} rendered ${st.rendered} (ratio ${st.renderedRatio}) but is naturally ${st.natural} (ratio ${st.naturalRatio})`);
+  }
+}
+
 await browser.close();
 site.close();
 
@@ -258,6 +293,10 @@ if (failures.length) {
   if (failures.some((f) => f.includes('naturally'))) {
     console.log('\nA stretched image usually means its CSS sets one dimension while the\n'
       + 'width/height attributes set the other. Add `height: auto`.');
+  }
+  if (failures.some((f) => f.includes('text ' + LARGE_TEXT + ':'))) {
+    console.log('\nAn image that squashes only at larger text has a height that grows with\n'
+      + 'the text while its width is capped. Use max-height in place of height.');
   }
   if (failures.some((f) => f.includes('dead call to action'))) {
     console.log('\nAdd the missing path to _redirects, or point the link somewhere real.');
