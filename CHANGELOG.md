@@ -3,6 +3,18 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Path saves to a file and opens one
+Owner request after the same walk-through.
+- "Save to a file" writes the audit to a small JSON file on the visitor's
+  device. "Open a saved file" reads one back, on this device or another.
+  Nothing is sent: the browser writes and reads the file itself.
+- A file that is not a saved audit is refused and the answers on screen
+  stay as they were.
+- Answers from the browser's storage and from a file now pass through one
+  reader, which keeps only what the tool knows.
+- `privacy.html` is unchanged and still true. Whether it should name the
+  file is for the owner and counsel.
+
 ## 2026-11-21: Enrollment Path works out conversion rates from counts
 Owner request after the same walk-through.
 - Under "Your conversion rates", a school can open "Work them out from
