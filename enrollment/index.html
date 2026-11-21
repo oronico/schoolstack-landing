@@ -32,7 +32,7 @@ img{max-width:100%}
   --navy:#1E293B; --cream:#FAF9F7; --amber:#D97706; --teal:#0D9488; --blue:#3A6AA6; --green:#328555;
   --bg:#FAF9F7; --surface:#FFFFFF; --surface-2:#F1EFEA; --fg:#1E293B; --muted:#56606F; --line:#DDD9D0;
   --mast:#1E293B; --mast-fg:#FAF9F7;
-  --yes:#328555; --part:#D97706; --no:#B42318;
+  --yes:#328555; --part:#D97706; --part-text:#B45309; --no:#B42318;
   --st-aw:#D97706; --st-co:#0D9488; --st-ap:#3A6AA6; --st-yi:#328555; --st-re:#1E293B;
   /* The same hues, darkened where they color small text (stage and force
      labels), so 11px type clears 4.5:1 on white. Bars and borders keep the
@@ -51,14 +51,14 @@ img{max-width:100%}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
   --mast:#0B1220; --mast-fg:#FAF9F7;
-  --yes:#4FA872; --part:#F0A030; --no:#F0705F;
+  --yes:#4FA872; --part:#F0A030; --part-text:#F0A030; --no:#F0705F;
   --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
   --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
   color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#111827; --surface:#1E293B; --surface-2:#273347; --fg:#FAF9F7; --muted:#B4BCC8; --line:#364256;
   --mast:#0B1220; --mast-fg:#FAF9F7;
-  --yes:#4FA872; --part:#F0A030; --no:#F0705F;
+  --yes:#4FA872; --part:#F0A030; --part-text:#F0A030; --no:#F0705F;
   --st-aw:#F0A030; --st-co:#2BB5A8; --st-ap:#6E9BD6; --st-yi:#4FA872; --st-re:#E6E1D6; --focus:#6E9BD6;
   --st-aw-t:#F0A030; --st-co-t:#2BB5A8; --st-ap-t:#6E9BD6; --st-yi-t:#4FA872; --st-re-t:#E6E1D6; --no-t:#F0705F;
   color-scheme:dark }
@@ -200,6 +200,8 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .step .s-why{font-size:13px;color:var(--muted)}
 .step .s-status{font-size:12px;font-weight:600}
 .empty{color:var(--muted);font-size:14px;padding:12px 0}
+.phase.also{grid-column:1/-1}
+.rest{margin:0;padding-left:18px;font-size:14px;columns:2 280px;column-gap:32px}.rest li{padding:3px 0;break-inside:avoid}
 .plan-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:28px}
 @media (max-width:820px){.plan-top{grid-template-columns:1fr}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
@@ -279,7 +281,7 @@ footer b{color:var(--fg)}
     <div class="sec-head">
       <span class="eyebrow">Step 1</span>
       <h2 id="h-school">Your school</h2>
-      <p>These shape which practices you see, the calendar and the seat math.</p>
+      <p>These shape which practices you see and the calendar.</p>
     </div>
     <div class="profile">
       <div class="field"><label for="schoolName">School name</label><input id="schoolName" type="text" autocomplete="organization" placeholder="Your school"></div>
@@ -467,6 +469,8 @@ const MONTHS_LONG=["August","September","October","November","December","January
 const VAL={yes:2,partly:1,no:0};
 const KEY="ss-enrollment-path-v2";
 const NUMS=["current","reRate","driver","goal","rInq","rApp","rYield"];
+// The lowest percentage each rate field takes; the highest is 100.
+const RATES={reRate:0,rInq:1,rApp:1,rYield:1};
 
 const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 // Turn on only after the Airtable form "Share your enrollment numbers with SchoolStack" is published.
@@ -495,6 +499,10 @@ const stageOf=id=>STAGES.find(s=>s.id===id);
 const shown=i=>(!i.only||S.type===i.only)&&(!i.grades||!(S.grades||[]).length||i.grades.some(g=>S.grades.includes(g)));
 const visible=()=>ITEMS.filter(shown);
 const scored=()=>visible().filter(i=>S.ans[i.id]!=="na");
+// A force option is offered only while at least one practice it points to is
+// on screen: a charter school has no cost sheet to move up the plan.
+const optShown=o=>o.items.some(id=>{const it=ITEMS.find(i=>i.id===id);return it&&shown(it)});
+const marked=()=>{const m=[];FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id)&&optShown(o))m.push({f,o})}));return m};
 
 /* Static UI */
 $("schoolState").innerHTML='<option value="">Choose</option>'+STATES.map(s=>`<option value="${s}">${s}</option>`).join("");
@@ -516,7 +524,7 @@ function renderAudit(){
 }
 function renderForces(){
   $("forces").innerHTML=FORCES.map(f=>`<div class="force" style="--fc:var(${f.c});--fct:var(${f.c}-t)"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
-    <div class="opts">${f.opts.map(o=>{const on=S.forces.includes(o.id);return `<label class="opt ${on?"on":""}" for="fo-${o.id}"><input type="checkbox" id="fo-${o.id}" value="${o.id}" ${on?"checked":""}><span>${esc(o.t)}</span></label>`}).join("")}</div></div>`).join("");
+    <div class="opts">${f.opts.filter(optShown).map(o=>{const on=S.forces.includes(o.id);return `<label class="opt ${on?"on":""}" for="fo-${o.id}"><input type="checkbox" id="fo-${o.id}" value="${o.id}" ${on?"checked":""}><span>${esc(o.t)}</span></label>`}).join("")}</div></div>`).join("");
 }
 function syncProfile(){
   $("schoolName").value=S.name||"";
@@ -529,12 +537,22 @@ function syncProfile(){
 }
 
 /* Scoring */
-function boost(id){let b=0;FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id)&&o.items.includes(id))b++}));return b}
+function boost(id){return marked().filter(x=>x.o.items.includes(id)).length}
 function ranked(){
   return scored().filter(i=>S.ans[i.id]==="no"||S.ans[i.id]==="partly").map(i=>{
     const gap=S.ans[i.id]==="no"?2:1;
     return {...i,gap,score:gap*(i.w+boost(i.id))+(gap===2?0.5:0)};
   }).sort((a,b)=>b.score-a.score||b.w-a.w);
+}
+// The plan holds nine steps. Each force the school marked brings in the
+// first open practice on its list, the one that answers it most directly;
+// the other places go by rank.
+const PLAN_SIZE=9;
+function planned(){
+  const r=ranked(),pick=new Set();
+  marked().forEach(x=>{const id=x.o.items.find(id=>r.some(i=>i.id===id));if(id&&pick.size<PLAN_SIZE)pick.add(id)});
+  r.forEach(i=>{if(pick.size<PLAN_SIZE)pick.add(i.id)});
+  return {plan:r.filter(i=>pick.has(i.id)),rest:r.filter(i=>!pick.has(i.id))};
 }
 function pct(list){if(!list.length)return 0;return Math.round(list.reduce((t,i)=>t+(VAL[S.ans[i.id]]||0),0)/(list.length*2)*100)}
 function renderScore(){
@@ -550,15 +568,15 @@ function renderScore(){
 /* Plan */
 function renderPlan(){
   $("planName").textContent=S.name?S.name+"'s":"Your";
-  const r=ranked().slice(0,9);
+  const {plan:r,rest}=planned();
   const phases=[["Days 1 to 30","Start now"],["Days 31 to 60","Build"],["Days 61 to 90","Lock in"]];
   $("phases").innerHTML=phases.map((ph,k)=>{
     const steps=r.slice(k*3,k*3+3);
     return `<div class="phase"><h3>${ph[0]} <small>${ph[1]}</small></h3>`+(steps.length?steps.map(i=>{
       const st=stageOf(i.st),b=boost(i.id);
-      return `<div class="step" style="--sc:var(${st.color});--sct:var(${st.color}-t)"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
+      return `<div class="step" style="--sc:var(${st.color});--sct:var(${st.color}-t)"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part-text"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
     }).join(""):`<p class="empty">${k===0?"Mark practices Partly or Not yet in the audit to build this list.":"Nothing more to add here."}</p>`)+`</div>`;
-  }).join("");
+  }).join("")+(rest.length?`<div class="phase also"><h3>Also open <small>After day 90</small></h3><ul class="rest">${rest.map(i=>`<li>${stageOf(i.st).name}: ${esc(i.s)}</li>`).join("")}</ul></div>`:"");
   renderSeat();renderCal();$("planText").value=planText();
 }
 function n(v,d){const x=parseFloat(v);return isFinite(x)&&x>=0?x:d}
@@ -603,7 +621,7 @@ function lanes(){
   L.push({n:"Re-engage past families",s:"Applied, accepted or left",c:"--st-re",m:span(0,1)});
   L.push({n:"Fall campaign",s:"Tours, open houses, referrals",c:"--st-aw",m:roll?span(1,6):span(1,Math.max(1,o-1))});
   L.push({n:"Re-enrollment",s:"At-risk talks, then forms by a set date",c:"--st-re",m:span(3,6)});
-  if(S.type==="tuition") L.push({n:"Cost and aid help",s:"Check your state's ESA and scholarship dates",c:"--st-co",m:roll?span(2,10):span(2,Math.min(11,Math.max(2,o+1)))});
+  if(S.type==="tuition") L.push({n:"Cost and aid help",s:S.state?`Check ${S.state}'s ESA and scholarship dates`:"Check your state's ESA and scholarship dates",c:"--st-co",m:roll?span(2,10):span(2,Math.min(11,Math.max(2,o+1)))});
   if(!g.length||g.includes("6-8")||g.includes("9-12")) L.push({n:"Families before a transition",s:"Light touches a year early",c:"--st-co",m:span(2,6)});
   if(!g.length||g.includes("prek")||g.includes("k-2")) L.push({n:"PreK and K families",s:"Their own session and parent match",c:"--st-co",m:span(3,7)});
   L.push({n:"Offers and yield",s:"Welcome call, visits, commute sheet",c:"--st-yi",m:roll?span(0,11):span(o,11)});
@@ -622,10 +640,10 @@ function renderCal(){
   $("cal").innerHTML=h;
 }
 function planText(){
-  const r=ranked().slice(0,9),sc=scored(),L=[];
-  L.push(`${S.name||"Our school"}: 90-day enrollment plan`);
+  const {plan:r,rest}=planned(),sc=scored(),L=[];
+  L.push(`${S.name||"Our school"}${S.state?" ("+S.state+")":""}: 90-day enrollment plan`);
   L.push(`Audit score: ${pct(sc)} out of 100 (`+STAGES.map(s=>`${s.name} ${pct(sc.filter(i=>i.st===s.id))}`).join(", ")+")");
-  const fs=[];FORCES.forEach(f=>f.opts.forEach(o=>{if(S.forces.includes(o.id))fs.push(`${f.name}: ${o.t}`)}));
+  const fs=marked().map(x=>`${x.f.name}: ${x.o.t}`);
   if(fs.length)L.push("What moves our families: "+fs.join("; "));
   L.push("");
   ["Days 1 to 30","Days 31 to 60","Days 61 to 90"].forEach((ph,k)=>{
@@ -634,6 +652,7 @@ function planText(){
     steps.forEach(i=>{L.push(`- [${stageOf(i.st).name}] ${i.act}`);L.push(`  Why: ${i.why}`)});
     L.push("");
   });
+  if(rest.length){L.push("ALSO OPEN");rest.forEach(i=>L.push(`- [${stageOf(i.st).name}] ${i.s}`));L.push("")}
   const m=seatMath();
   if(m.target&&m.re!==null){const seats=m.fill(m.target),to=m.goal?"our goal of "+m.goal:"our budget driver of "+m.drv;
     if(m.funnelReady){const f=m.funnel(seats);L.push(`SEAT MATH: about ${m.back} students return. To reach ${to}, we need ${seats} new students: about ${f.offers} offers, ${f.apps} applications and ${f.inq} inquiries.`)}
@@ -671,10 +690,11 @@ document.addEventListener("change",e=>{
   const t=e.target;
   if(t.name&&t.name.startsWith("q-")){S.ans[t.name.slice(2)]=t.value}
   else if(t.id&&t.id.startsWith("fo-")){const id=t.value;S.forces=t.checked?[...new Set([...S.forces,id])]:S.forces.filter(x=>x!==id);t.closest(".opt").classList.toggle("on",t.checked)}
-  else if(t.id&&t.id.startsWith("grade-")){S.grades=GRADES.filter(g=>$("grade-"+g.id).checked).map(g=>g.id);renderAudit()}
-  else if(t.id==="schoolType"){S.type=t.value;renderAudit()}
+  else if(t.id&&t.id.startsWith("grade-")){S.grades=GRADES.filter(g=>$("grade-"+g.id).checked).map(g=>g.id);renderAudit();renderForces()}
+  else if(t.id==="schoolType"){S.type=t.value;renderAudit();renderForces()}
   else if(t.id==="offerMonth"){S.offer=t.value}
   else if(t.id==="schoolState"){S.state=t.value}
+  else if(RATES[t.id]!==undefined){const x=parseFloat(t.value);if(!isFinite(x))return;const v=Math.min(Math.max(x,RATES[t.id]),100);if(v===x)return;t.value=v;S[t.id]=String(v)}
   else return;
   save();renderAll();
 });
