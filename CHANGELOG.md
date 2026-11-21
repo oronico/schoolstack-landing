@@ -3,6 +3,30 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Audit's math moves into its own file, with tests
+Owner request: guardrails.
+- Scoring, the 90-day plan, the seat math, rates from counts and saved
+  files move from the page's script into `js/enrollment-audit.js`. The
+  page loads it, and so do 21 new unit tests in
+  `tools/lib/enrollment-audit.test.mjs`, each sum worked by hand first.
+- One test opens a saved file written out by hand on 21 November, so a
+  later change cannot lock visitors out of the audits they saved.
+- Nothing a visitor sees changes: the page was loaded with six saved
+  states before and after the move, and the plan, scores, seat math,
+  calendar and saved answers matched in every one.
+
+## 2026-11-21: Enrollment Path is now Enrollment Audit; Space asks a question
+Owner request.
+- Enrollment Path is renamed Enrollment Audit everywhere a reader sees it:
+  the nav and footer on every page, the home page band and its picture's
+  description, the privacy policy, and the tool's own title, heading and
+  copied plan. A saved file is now named `enrollment-audit-...json`.
+- The browser storage key and the saved-file tag keep the old name, so
+  audits saved before the rename still open.
+- The Space card now asks a question, like Budget and Access, to match the
+  heading "Start with the question in front of you.": "Who are the
+  families near me, and what space fits my school?"
+
 ## 2026-11-21: Enrollment Path saves to a file and opens one
 Owner request after the same walk-through.
 - "Save to a file" writes the audit to a small JSON file on the visitor's

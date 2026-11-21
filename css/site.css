@@ -1,5 +1,5 @@
 /* SchoolStack.ai: one stylesheet for the four site pages (index, about,
-   privacy, terms). Enrollment Path (/enrollment/) carries its own styles.
+   privacy, terms). Enrollment Audit (/enrollment/) carries its own styles.
 
    Rebuilt in November 2026 on three scales and nothing else:
      - 9 spacing steps on a 4px base (Tailwind's pattern),
@@ -581,7 +581,7 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .calc-cta p { color: var(--muted); max-width: 56ch; margin: 0 auto var(--sp-5); }
 .calc-cta .btn-primary { justify-content: center; }
 
-/* ENROLLMENT PATH BAND: text left, the real scorecard right. Left-aligned,
+/* ENROLLMENT AUDIT BAND: text left, the real scorecard right. Left-aligned,
    unlike the centred band headers, because it pairs text with a picture. */
 .calc-be-next { font-size: var(--step--1); font-weight: 700; border-top: 1px solid var(--line); padding-top: var(--sp-4); }
 /* A 44px tap target, which verify-calculator holds every control in the

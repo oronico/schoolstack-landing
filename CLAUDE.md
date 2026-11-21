@@ -14,7 +14,7 @@ page is `/#faq` elsewhere; each page marks its own nav item `aria-current`).
 Change both, or the check stops you.
 
 **Tool pages** are the exception. `enrollment/index.html` (served at
-`/enrollment/`) is Enrollment Path, a stand-alone tool with its own masthead,
+`/enrollment/`) is Enrollment Audit, a stand-alone tool with its own masthead,
 like Space and Budget. It does not share the nav and footer, but it meets
 every other rule: self-hosted brand faces through `--font-display` and
 `--font-body`, no outside origins, `/go/` routes for tool links, the
@@ -59,7 +59,7 @@ changed logo takes a new hash in its name. A same-name swap leaves returning
 visitors on the old file.
 
 The horizontal logo shows at one size, `--logo-h` (32px tall, 203px wide),
-in the nav, the footer and Enrollment Path's masthead: the design kit's
+in the nav, the footer and Enrollment Audit's masthead: the design kit's
 minimum is 200px wide. Only the nav may narrow it, on screens under 360px,
 where it and the menu button do not both fit.
 
@@ -239,12 +239,21 @@ Why each exists:
   widths and fails any stop whose focus ring is missing or under 3:1 against
   what it is drawn over (`tools/lib/focus-audit.mjs`). It only measured text
   until November 2026, when the consent checkbox's ring turned out to be ink
-  on the ink band and Enrollment Path's masthead ring 2.64:1. A control that
+  on the ink band and Enrollment Audit's masthead ring 2.64:1. A control that
   hides itself and rings the label beside it is judged by that label's ring,
   and an inset ring by the fill it sits on: Codex found the first version
-  passing Enrollment Path's answer buttons, whose rings were 1.2:1 on red.
+  passing Enrollment Audit's answer buttons, whose rings were 1.2:1 on red.
   It runs in the light theme only. It cannot reach a state that needs a
   submit, so the thank-you panel was checked by hand.
+- **Enrollment Audit's math** lives in `js/enrollment-audit.js`, loaded by
+  the page and by `tools/lib/enrollment-audit.test.mjs`, the same pattern
+  as the calculator. Before it moved there (November 2026) six PRs in two
+  days changed its scoring and seat math with nothing to test them, and
+  review caught two bugs a unit test would have (`d24464c`, `9922c4e`). The
+  page's own script only draws and saves. A change to scoring, the plan,
+  the seat math or saved files goes in that file with a test beside it.
+  One test opens a saved file written out by hand; never edit it to make
+  a change pass, because visitors keep those files.
 - **working lines** — `tools/lib/working-lines.test.mjs` reads back every
   sum the calculators print ("$10,000.50 × 50 students", "$600,000 ÷ $10,000
   per student") and fails if it does not reproduce the printed answer. The
@@ -317,7 +326,7 @@ margin, padding, gap, font size and colour in it is one of these:
 
 The home page alternates its ground to break up the scroll (order set by
 the owner, November 2026): the paper hero, free tools and platform film,
-the ink early list band, the paper calculator, the ink Enrollment Path
+the ink early list band, the paper calculator, the ink Enrollment Audit
 band, paper again, the ink footer. The free tools sit directly under the
 hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
@@ -325,7 +334,7 @@ allow, and two ink bands never touch.
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
 other way to colour it. Each product's own colour lives in its logo
-artwork, so the tool cards carry none. Enrollment Path keeps its own
+artwork, so the tool cards carry none. Enrollment Audit keeps its own
 styles: its five stage colours and answer colours carry meaning.
 
 ## 5. Netlify specifics
@@ -379,7 +388,7 @@ styles: its five stage colours and answer colours carry meaning.
   the PR description as a proposal, not in the code, and do not design for
   rare or future cases nobody asked about. Agents broke this three times in
   three months: copy nobody asked for (taken out in #23), `aria-busy` on the
-  application form and state attributes on Enrollment Path (both taken
+  application form and state attributes on Enrollment Audit (both taken
   back out in November).
 - **Two review bots read every PR: Codex and Cursor Bugbot. A PR is not
   ready until both have reviewed its latest commit and each finding is fixed
@@ -398,7 +407,12 @@ styles: its five stage colours and answer colours carry meaning.
 - **Three tools are promoted: Space, Budget, Access.** Lending Lab is not
   promoted on schoolstack.ai while it gets more work: no card, nav, footer,
   FAQ, metadata or share-card mention. Do not touch the Lending Lab app.
-- **Enrollment Path is not a fourth product** (owner, November 2026). It is
+- **Enrollment Audit was called Enrollment Path until 21 November 2026**
+  (owner). The page, the nav and the footers use the new name. The
+  browser storage key (`ss-enrollment-path-v2`) and the saved-file tag
+  (`schoolstack-enrollment-path`) keep the old one, so audits saved before
+  the rename still open; do not change them (section 9).
+- **Enrollment Audit is not a fourth product** (owner, November 2026). It is
   a self-audit of a school's recruitment and enrollment, reached from the
   main nav, the phone menu, the footer's About column, its own ink band on
   the home page after the calculator (with a real screenshot of the example
@@ -474,7 +488,7 @@ styles: its five stage colours and answer colours carry meaning.
   - The footer is copied into each page by hand, so
     `tools/lib/brand-credit.test.mjs` checks every page carries the credit
     and the copyright line, and that no old phrase comes back.
-- **Enrollment Path saves answers in the visitor's browser** (localStorage)
+- **Enrollment Audit saves answers in the visitor's browser** (localStorage)
   and sends nothing. Its share-your-numbers block posts to an Airtable form
   and is off (`SHARE_ENABLED=false`). Turning it on needs the owner's
   approval (section 5: no third-party form handler without it) and a
@@ -537,7 +551,7 @@ name, and never its position or its wording. Each rule below is checked.
   question carries the same one as `@id`. `verify-content` pairs the two by
   id, so reordering questions is safe and a real difference names the
   question. `/#faq-cost` opens that answer (`js/site.js`).
-- **Enrollment Path stores grades by id** (`prek`, `k-2`, `3-5`, `6-8`,
+- **Enrollment Audit stores grades by id** (`prek`, `k-2`, `3-5`, `6-8`,
   `9-12`), never by label, so a label can be reworded without losing a
   visitor's saved choice or hiding the practices filtered on it. Saves from
   before the change are read through `OLD_GRADE_LABELS`, frozen at the
