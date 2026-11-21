@@ -245,6 +245,15 @@ Why each exists:
   passing Enrollment Audit's answer buttons, whose rings were 1.2:1 on red.
   It runs in the light theme only. It cannot reach a state that needs a
   submit, so the thank-you panel was checked by hand.
+- **Enrollment Audit's math** lives in `js/enrollment-audit.js`, loaded by
+  the page and by `tools/lib/enrollment-audit.test.mjs`, the same pattern
+  as the calculator. Before it moved there (November 2026) six PRs in two
+  days changed its scoring and seat math with nothing to test them, and
+  review caught two bugs a unit test would have (`d24464c`, `9922c4e`). The
+  page's own script only draws and saves. A change to scoring, the plan,
+  the seat math or saved files goes in that file with a test beside it.
+  One test opens a saved file written out by hand; never edit it to make
+  a change pass, because visitors keep those files.
 - **working lines** — `tools/lib/working-lines.test.mjs` reads back every
   sum the calculators print ("$10,000.50 × 50 students", "$600,000 ÷ $10,000
   per student") and fails if it does not reproduce the printed answer. The

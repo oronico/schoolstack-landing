@@ -3,6 +3,18 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Audit's math moves into its own file, with tests
+Owner request: guardrails.
+- Scoring, the 90-day plan, the seat math, rates from counts and saved
+  files move from the page's script into `js/enrollment-audit.js`. The
+  page loads it, and so do 21 new unit tests in
+  `tools/lib/enrollment-audit.test.mjs`, each sum worked by hand first.
+- One test opens a saved file written out by hand on 21 November, so a
+  later change cannot lock visitors out of the audits they saved.
+- Nothing a visitor sees changes: the page was loaded with six saved
+  states before and after the move, and the plan, scores, seat math,
+  calendar and saved answers matched in every one.
+
 ## 2026-11-21: Enrollment Path is now Enrollment Audit; Space asks a question
 Owner request.
 - Enrollment Path is renamed Enrollment Audit everywhere a reader sees it:
