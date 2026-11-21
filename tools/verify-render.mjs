@@ -23,6 +23,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
+import { RETIRED_ANCHORS } from './lib/page-audit.mjs';
 
 const VIEWPORTS = [1440, 820, 390];
 const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
@@ -198,10 +199,20 @@ for (const width of VIEWPORTS) {
         const navBottom = nav.getBoundingClientRect().bottom;
         if (top < navBottom) hidden.push(id + ' (' + Math.round(top) + 'px, nav ends ' + Math.round(navBottom) + 'px)');
       }
+      // An empty marker that keeps a retired id alive must land exactly where
+      // the id that replaced it does, so an old link sees the same view.
+      const replaces = ${JSON.stringify(RETIRED_ANCHORS)};
+      const landAt = (el) => { el.scrollIntoView({ block: 'start', behavior: 'instant' }); return Math.round(window.scrollY); };
+      const aliasDrift = [...document.querySelectorAll('.anchor-alias[id]')].flatMap((a) => {
+        const to = document.getElementById(replaces[a.id] || '');
+        if (!to) return [a.id + ' replaces nothing in RETIRED_ANCHORS'];
+        const [from, want] = [landAt(a), landAt(to)];
+        return Math.abs(from - want) > 1 ? [a.id + ' lands at ' + from + 'px, #' + to.id + ' at ' + want + 'px'] : [];
+      });
       window.scrollTo(0, 0);
 
       return JSON.stringify({
-        stretched, skips, goLinks, deadAnchors, fontsApplied, retired, hidden,
+        stretched, skips, goLinks, deadAnchors, fontsApplied, retired, hidden, aliasDrift,
         title: document.title.trim(),
         h1: document.querySelectorAll('h1').length,
         textChars: (document.body.innerText || '').trim().length,
@@ -241,6 +252,7 @@ for (const width of VIEWPORTS) {
   for (const id of r.missingIds) failures.push(`${path} ${width}px  #${id} is missing from the page`);
   for (const w of r.retired) failures.push(`${path} ${width}px  the page shows "${w}" - Lending Lab is off the public site and three tools are promoted`);
   for (const h of r.hidden) failures.push(`${path} ${width}px  a link to #${h} lands its heading under the fixed nav`);
+  for (const d of r.aliasDrift) failures.push(`${path} ${width}px  retired anchor #${d}; put the marker where its replacement starts`);
   for (const a of r.deadAnchors) failures.push(`${path} ${width}px  "${a}" links to "#", which goes nowhere`);
   for (const s of r.stretched) {
     failures.push(`${path} ${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
