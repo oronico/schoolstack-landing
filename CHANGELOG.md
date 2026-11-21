@@ -3,6 +3,23 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Path plan fixes from a walk-through
+Owner approved after a full test audit on the live page.
+- Each force a school marks now brings its most direct open practice into
+  the 90-day plan. Before, "Is this a real school" could be marked and
+  "Show you are a real school" left out.
+- Open practices past the plan's nine steps are listed under "Also open",
+  on the page and in the copied plan. Before, they were dropped.
+- A force is offered only while a practice it points to is on screen. A
+  public charter no longer sees "ESA or scholarship makes it affordable".
+- The chosen state names itself in the cost and aid calendar lane and the
+  copied plan's title. The intro no longer says the profile shapes the seat
+  math, which it never did.
+- A rate typed outside its range is set to the nearest value the seat math
+  uses (1 to 100; re-enrollment 0 to 100), so the field shows what is
+  counted.
+- The "Partly" status line was 3.19:1 on white. It is now 5:1.
+
 ## 2026-11-21: The SchoolStack suite's ownership and credit words
 schoolstack.ai now says who owns SchoolStack and who founded it in the same
 words as Space and Access (docs/brand/suite-language.md in the SchoolStack
