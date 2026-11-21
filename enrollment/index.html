@@ -382,10 +382,13 @@ footer b{color:var(--fg)}
       </div>
       <div class="panel">
         <h3>Take it with you</h3>
-        <p class="note" style="margin:0">Copy the plan as plain text for a doc, your team or a board update.</p>
+        <p class="note" style="margin:0">Copy the plan as plain text for a doc, your team or a board update. Save your audit to a file to open it on another device or come back to it later.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
           <button class="btn primary" id="copyPlan" type="button">Copy plan</button>
+          <button class="btn" id="saveFile" type="button">Save to a file</button>
+          <button class="btn" id="openFile" type="button">Open a saved file</button>
           <button class="btn" id="resetAll" type="button">Clear all answers</button>
+          <input id="filePick" type="file" accept=".json,application/json" aria-label="Saved audit file" hidden>
         </div>
         <textarea class="copybox" id="planText" readonly aria-label="Plan as plain text"></textarea>
         <div class="share" id="shareBlock">
@@ -513,16 +516,34 @@ const EXAMPLE={example:true,name:"Example school",state:"",type:"tuition",offer:
  forces:["pu2","pl1","pl5","an1","an3","hb2"],current:72,reRate:85,driver:80,goal:96,rInq:50,rApp:80,rYield:65};
 const BLANK=()=>({example:false,name:"",state:"",type:"tuition",offer:"7",grades:[],ans:{},forces:[],current:"",reRate:"",driver:"",goal:"",rInq:"",rApp:"",rYield:""});
 
-let S;
-try{const raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):null;}catch(e){S=null}
-if(!S||typeof S!=="object"||!S.ans) S=JSON.parse(JSON.stringify(EXAMPLE));
 // Saves before November 2026 hold the labels as they read then. The map is
 // frozen at those words, so rewording a label later cannot drop a saved choice.
 const OLD_GRADE_LABELS={"PreK":"prek","K to 2":"k-2","3 to 5":"3-5","6 to 8":"6-8","9 to 12":"9-12"};
-S.grades=(Array.isArray(S.grades)?S.grades:[]).map(g=>OLD_GRADE_LABELS[g]||g).filter(id=>GRADES.some(x=>x.id===id));
-// A rate saved before the fields held their range is brought into it on
-// load, so the field shows the figure the seat math counts.
-Object.keys(RATES).forEach(k=>{const x=parseFloat(S[k]);if(isFinite(x)){const v=Math.min(Math.max(x,RATES[k]),100);if(v!==x)S[k]=String(v)}});
+const ANSWERS=["yes","partly","no","na"];
+// One reader for answers from the browser's storage and from a saved file.
+// It keeps only what the tool knows, in the shape it expects, and returns
+// null for anything that is not an audit.
+function clean(o){
+  if(!o||typeof o!=="object"||!o.ans||typeof o.ans!=="object")return null;
+  const c=BLANK(),str=(v,max)=>typeof v==="string"||typeof v==="number"?String(v).slice(0,max):"";
+  c.example=o.example===true;
+  c.name=str(o.name,80);
+  c.state=STATES.includes(o.state)?o.state:"";
+  c.type=o.type==="charter"?"charter":"tuition";
+  c.offer=o.offer==="rolling"||(/^\d+$/.test(String(o.offer))&&+o.offer<12)?String(o.offer):"7";
+  c.grades=(Array.isArray(o.grades)?o.grades:[]).map(g=>OLD_GRADE_LABELS[g]||g).filter(id=>GRADES.some(x=>x.id===id));
+  ITEMS.forEach(i=>{if(ANSWERS.includes(o.ans[i.id]))c.ans[i.id]=o.ans[i.id]});
+  const fo=[];FORCES.forEach(f=>f.opts.forEach(x=>fo.push(x.id)));
+  c.forces=(Array.isArray(o.forces)?o.forces:[]).filter(id=>fo.includes(id));
+  NUMS.concat(COUNTS).forEach(k=>{const x=parseFloat(o[k]);c[k]=isFinite(x)&&x>=0?String(x):""});
+  // A rate saved before the fields held their range is brought into it, so
+  // the field shows the figure the seat math counts.
+  Object.keys(RATES).forEach(k=>{const x=parseFloat(c[k]);if(isFinite(x))c[k]=String(Math.min(Math.max(x,RATES[k]),100))});
+  return c;
+}
+let S;
+try{const raw=localStorage.getItem(KEY); S=raw?clean(JSON.parse(raw)):null;}catch(e){S=null}
+if(!S) S=clean(EXAMPLE);
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const $=id=>document.getElementById(id);
@@ -768,6 +789,34 @@ $("copyPlan").addEventListener("click",()=>{
   const txt=planText(),box=$("planText");box.value=txt;
   const fallback=()=>{box.focus();box.select();toast("Plan selected. Press Ctrl+C or Cmd+C to copy.")};
   try{navigator.clipboard.writeText(txt).then(()=>toast("Plan copied"),fallback)}catch(err){fallback()}
+});
+
+// A saved audit is a small file on the visitor's own device. The tool
+// writes it and reads it back in the browser; nothing is sent anywhere.
+const FILE_TOOL="schoolstack-enrollment-path";
+$("saveFile").addEventListener("click",()=>{
+  const body=JSON.stringify({tool:FILE_TOOL,version:2,saved:new Date().toISOString(),audit:S},null,2);
+  const slug=(S.name||"audit").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"audit";
+  const a=document.createElement("a"),url=URL.createObjectURL(new Blob([body],{type:"application/json"}));
+  a.href=url;a.download=`enrollment-path-${slug}-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast("Audit saved to a file");
+});
+$("openFile").addEventListener("click",()=>$("filePick").click());
+$("filePick").addEventListener("change",e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  const bad=()=>toast("That file is not a saved audit. Your answers are unchanged.");
+  if(f.size>200000)return bad();
+  const r=new FileReader();
+  r.onerror=bad;
+  r.onload=()=>{
+    let next=null;
+    try{const o=JSON.parse(r.result);if(o&&o.tool===FILE_TOOL)next=clean(o.audit)}catch(err){}
+    if(!next)return bad();
+    next.example=false;S=next;save();syncProfile();renderAudit();renderForces();renderAll();
+    toast("Saved audit opened");
+  };
+  r.readAsText(f);
 });
 
 syncProfile();renderAudit();renderForces();renderAll();
