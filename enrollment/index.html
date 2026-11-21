@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Enrollment Path | SchoolStack</title>
+<title>Enrollment Audit | SchoolStack</title>
 <meta name="description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
 <link rel="canonical" href="https://schoolstack.ai/enrollment/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=bb61dd97">
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1f18d080">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SchoolStack">
-<meta property="og:title" content="Enrollment Path | SchoolStack">
+<meta property="og:title" content="Enrollment Audit | SchoolStack">
 <meta property="og:description" content="Score how your small school gets found, chosen, joined and kept. Leave with a 90-day enrollment plan and the seat math to reach your budget driver.">
 <meta property="og:url" content="https://schoolstack.ai/enrollment/">
 <meta property="og:image" content="https://schoolstack.ai/og-image.png?v=71a40584">
@@ -271,7 +271,7 @@ footer b{color:var(--fg)}
     </a>
     <div style="display:grid;gap:12px">
       <span class="eyebrow" style="color:#AEB8C6">Recruitment and enrollment</span>
-      <h1>Enrollment Path</h1>
+      <h1>Enrollment Audit</h1>
       <p class="lede">Score how your school gets found, chosen, joined and kept. Then turn the gaps into a 90-day plan and the seat math behind it.</p>
     </div>
     <ol class="path" aria-label="The five stages of enrollment">
@@ -719,7 +719,7 @@ function planText(){
     if(m.funnelReady){const f=m.funnel(seats);L.push(`SEAT MATH: about ${m.back} students return. To reach ${to}, we need ${seats} new students: about ${f.offers} offers, ${f.apps} applications and ${f.inq} inquiries.`)}
     else L.push(`SEAT MATH: about ${m.back} students return. To reach ${to}, we need ${seats} new students.`);
     if(m.goal&&m.drv)L.push(`Budget driver: ${m.drv} students (${m.fill(m.drv)} new).`);}
-  L.push("");L.push("Built with SchoolStack Enrollment Path.");
+  L.push("");L.push("Built with SchoolStack Enrollment Audit.");
   return L.join("\n");
 }
 function renderShare(){
@@ -798,7 +798,7 @@ $("saveFile").addEventListener("click",()=>{
   const body=JSON.stringify({tool:FILE_TOOL,version:2,saved:new Date().toISOString(),audit:S},null,2);
   const slug=(S.name||"audit").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"audit";
   const a=document.createElement("a"),url=URL.createObjectURL(new Blob([body],{type:"application/json"}));
-  a.href=url;a.download=`enrollment-path-${slug}-${new Date().toISOString().slice(0,10)}.json`;
+  a.href=url;a.download=`enrollment-audit-${slug}-${new Date().toISOString().slice(0,10)}.json`;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast("Audit saved to a file");
 });

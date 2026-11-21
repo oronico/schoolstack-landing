@@ -12,7 +12,7 @@
  * applies exactly as it does for a visitor. It reports the ring a visitor
  * sees and the contrast of that ring against what it is drawn over. A
  * control can hide itself and draw its ring on the label beside it
- * (Enrollment Path's answer buttons and grade chips: an opacity:0 input,
+ * (Enrollment Audit's answer buttons and grade chips: an opacity:0 input,
  * then a span), so a hidden control is measured by that sibling's ring, as
  * Codex pointed out on #42. An inset ring (negative outline-offset) is
  * drawn over the element's own background, not its parent's.
