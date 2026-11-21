@@ -3,6 +3,23 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: The SchoolStack suite's ownership and credit words
+schoolstack.ai now says who owns SchoolStack and who founded it in the same
+words as Space and Access (docs/brand/suite-language.md in the SchoolStack
+Space repo).
+- Every page footer carries the credit: "SchoolStack is a nonprofit venture
+  incubated by Building Hope Impact Fund. Founder & Product Developer:
+  Allison Serafin". The copyright line names Building Hope Impact Fund, not
+  "SchoolStack".
+- The home page line under the hero, the "Who is behind this" band and the
+  About page use counsel's sentence. Their headings read "Incubated by", not
+  "A program of" or "Incubated at".
+- "A program of Building Hope Impact Fund" stays in the Terms and Privacy
+  legal text, which counsel owns.
+- LICENSE: Building Hope Impact Fund owns the site; the founder credit
+  grants no rights. Same text as Space (owner approved).
+- `tools/lib/brand-credit.test.mjs` checks all of it.
+
 ## 2026-11-21: A link to a FAQ question shows the question
 - A link such as `/#faq-cost` scrolled the question under the fixed nav,
   so only its answer showed. It now stops 96px down, clear of the nav at
