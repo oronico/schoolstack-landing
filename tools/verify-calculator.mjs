@@ -48,9 +48,9 @@ const READ = `JSON.stringify((() => {
   const el = document.querySelector('[data-budget-calculator]');
   const out = (n) => el.querySelector('[data-out="' + n + '"]').textContent.trim();
   const bar = el.querySelector('[data-calc="bar"]').getBoundingClientRect();
-  const segs = [...el.querySelectorAll('.calc-bar .seg')].map((s) => {
+  const segs = [...el.querySelectorAll('[data-calc^="seg-"]')].map((s) => {
     const r = s.getBoundingClientRect();
-    return { cls: s.className, w: r.width, left: r.left - bar.left, right: r.right - bar.left };
+    return { cls: s.getAttribute('data-calc'), w: r.width, left: r.left - bar.left, right: r.right - bar.left };
   });
   const err = (n) => { const e = el.querySelector('[data-calc="' + n + '-error"]'); return e.hidden ? '' : e.textContent; };
   return {
@@ -72,7 +72,7 @@ const READ = `JSON.stringify((() => {
     tuitionInvalid: el.querySelector('[data-calc="tuition"]').getAttribute('aria-invalid'),
     tuitionError: err('tuition'), studentsError: err('students'),
     barWidth: bar.width, segs,
-    cta: (document.querySelector('#budget-calculator .calc-cta a') || {}).getAttribute?.('href') || null,
+    cta: (document.querySelector('#budget-calculator [data-calc="cta"]') || {}).getAttribute?.('href') || null,
     overflow: document.documentElement.scrollWidth > innerWidth + 1
       ? document.documentElement.scrollWidth + ' > ' + innerWidth : null,
     focused: document.activeElement && document.activeElement.getAttribute('data-calc'),
@@ -124,6 +124,9 @@ async function key(name, keyName, times = 1) {
 }
 
 function checkBar(r, where) {
+  // Four named segments, found by data-calc rather than their style class,
+  // so a check that finds none fails instead of passing an empty loop.
+  check(r.segs.length === 4, `${where}: found ${r.segs.length} bar segments by data-calc, expected 4`);
   for (const s of r.segs) {
     check(s.w >= 0, `${where}: ${s.cls} has width ${s.w}`);
     check(s.left >= -0.5 && s.right <= r.barWidth + 0.5,
