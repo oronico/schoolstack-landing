@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: A link to a FAQ question shows the question
+- A link such as `/#faq-cost` scrolled the question under the fixed nav,
+  so only its answer showed. It now stops 96px down, clear of the nav at
+  every width. Found by Bugbot on #57.
+- The layout check now tries every FAQ question as well as the nav and
+  footer links.
+
 ## 2026-11-21: One stable name for each thing
 Things a link, a check or a saved answer finds by name now have one
 name that does not change when the wording or the order does.

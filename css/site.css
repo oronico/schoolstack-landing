@@ -224,8 +224,11 @@ nav {
 .nav-menu-panel a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 
 /* Every in-page link target clears the fixed nav. An .anchor-alias is an
-   empty marker that keeps a retired id landing where its section starts. */
+   empty marker that keeps a retired id landing where its section starts.
+   A FAQ question has no padding above its heading, so it needs a margin
+   taller than the nav itself (57px, 69px on phones). */
 section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
+.faq-item[id] { scroll-margin-top: var(--sp-9); }
 .anchor-alias { display: block; }
 
 /* LAYOUT */
