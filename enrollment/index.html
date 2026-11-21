@@ -504,6 +504,9 @@ if(!S||typeof S!=="object"||!S.ans) S=JSON.parse(JSON.stringify(EXAMPLE));
 // frozen at those words, so rewording a label later cannot drop a saved choice.
 const OLD_GRADE_LABELS={"PreK":"prek","K to 2":"k-2","3 to 5":"3-5","6 to 8":"6-8","9 to 12":"9-12"};
 S.grades=(Array.isArray(S.grades)?S.grades:[]).map(g=>OLD_GRADE_LABELS[g]||g).filter(id=>GRADES.some(x=>x.id===id));
+// A rate saved before the fields held their range is brought into it on
+// load, so the field shows the figure the seat math counts.
+Object.keys(RATES).forEach(k=>{const x=parseFloat(S[k]);if(isFinite(x)){const v=Math.min(Math.max(x,RATES[k]),100);if(v!==x)S[k]=String(v)}});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const $=id=>document.getElementById(id);
