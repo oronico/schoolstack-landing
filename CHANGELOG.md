@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Path works out conversion rates from counts
+Owner request after the same walk-through.
+- Under "Your conversion rates", a school can open "Work them out from
+  last year's counts" and enter inquiries, applications, offers and new
+  students enrolled. Each rate fills in once its two counts are entered,
+  rounded to a whole percent and kept within 1 to 100. The rate fields stay
+  editable, and the counts save in the browser with the other answers.
+
 ## 2026-11-21: Enrollment Path holds the score and shows progress
 Owner request after the same walk-through.
 - The score and the five stage scores show once four in five practices are

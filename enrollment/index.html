@@ -220,6 +220,9 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 /* Seat math */
 .seat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .seat .full{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.counts{grid-column:1/-1;font-size:13.5px}
+.counts summary{cursor:pointer;font-weight:600;padding-block:6px;border-radius:4px}
+.counts .seat{margin-top:8px}
 .result{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:16px}
 .result div{background:var(--surface-2);border-radius:8px;padding:10px 12px}
 .result b{font-family:var(--f-mark);font-weight:800;font-size:28px;display:block;line-height:1.1}
@@ -360,6 +363,15 @@ footer b{color:var(--fg)}
           <div class="field"><label for="driver">Budget driver (break-even students)</label><input id="driver" type="number" min="1" max="5000" inputmode="numeric"></div>
           <div class="field"><label for="goal">Enrollment goal</label><input id="goal" type="number" min="1" max="5000" inputmode="numeric"></div>
           <span class="full">Your conversion rates</span>
+          <details class="counts">
+            <summary>Work them out from last year's counts</summary>
+            <div class="seat">
+              <div class="field"><label for="lInq">Inquiries</label><input id="lInq" type="number" min="0" max="50000" inputmode="numeric"></div>
+              <div class="field"><label for="lApp">Applications</label><input id="lApp" type="number" min="0" max="50000" inputmode="numeric"></div>
+              <div class="field"><label for="lOff">Offers</label><input id="lOff" type="number" min="0" max="50000" inputmode="numeric"></div>
+              <div class="field"><label for="lEnr">New students enrolled</label><input id="lEnr" type="number" min="0" max="50000" inputmode="numeric"></div>
+            </div>
+          </details>
           <div class="field"><label for="rInq">Inquiry to application %</label><input id="rInq" type="number" min="1" max="100" inputmode="numeric"></div>
           <div class="field"><label for="rApp">Application to offer %</label><input id="rApp" type="number" min="1" max="100" inputmode="numeric"></div>
           <div class="field"><label for="rYield">Offer to enrolled % (yield)</label><input id="rYield" type="number" min="1" max="100" inputmode="numeric"></div>
@@ -482,6 +494,10 @@ const MONTHS_LONG=["August","September","October","November","December","January
 const VAL={yes:2,partly:1,no:0};
 const KEY="ss-enrollment-path-v2";
 const NUMS=["current","reRate","driver","goal","rInq","rApp","rYield"];
+// Last year's counts. Each rate is the next count down the funnel over the
+// one above it, filled in once both are entered.
+const COUNTS=["lInq","lApp","lOff","lEnr"];
+const FROM_COUNTS=[["rInq","lApp","lInq"],["rApp","lOff","lApp"],["rYield","lEnr","lOff"]];
 // The lowest percentage each rate field takes; the highest is 100.
 const RATES={reRate:0,rInq:1,rApp:1,rYield:1};
 
@@ -549,6 +565,7 @@ function syncProfile(){
   om.value=String(S.offer??"7");
   GRADES.forEach(g=>{$("grade-"+g.id).checked=S.grades.includes(g.id)});
   NUMS.forEach(k=>$(k).value=S[k]??"");
+  COUNTS.forEach(k=>$(k).value=S[k]??"");
   $("exampleBanner").hidden=!S.example;
 }
 
@@ -725,6 +742,17 @@ document.addEventListener("input",e=>{
   const t=e.target;
   if(t.id==="schoolName"){S.name=t.value.slice(0,80)}
   else if(NUMS.includes(t.id)){S[t.id]=t.value}
+  else if(COUNTS.includes(t.id)){
+    S[t.id]=t.value;
+    // Only the rates this count is part of: a rate the visitor set by hand
+    // stays as they set it when an unrelated count changes.
+    FROM_COUNTS.filter(([,top,bottom])=>top===t.id||bottom===t.id).forEach(([rate,top,bottom])=>{
+      const a=parseFloat(S[top]),b=parseFloat(S[bottom]);
+      if(!isFinite(a)||!isFinite(b)||a<0||b<=0)return;
+      const v=Math.min(Math.max(Math.round(a/b*100),RATES[rate]),100);
+      S[rate]=String(v);$(rate).value=v;
+    });
+  }
   else return;
   save();renderAll();
 });
