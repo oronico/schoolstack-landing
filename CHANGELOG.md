@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: No more "applications" in what visitors read
+SchoolStack collects interest on an early list; it does not take
+applications (owner, November 2026).
+- The link-preview card said "Applications open" and "Apply to help build
+  the platform". It now says "Early access open" and "Join the early list
+  for the full platform in 2027."
+- The privacy policy's Security paragraph says "Early list sign-ups", not
+  "Applications".
+
 ## 2026-11-21: One brand navy
 - The site's text and dark bands now use #1E293B, the navy of the
   SchoolStack wordmark, the product logos, the design kit and all three
