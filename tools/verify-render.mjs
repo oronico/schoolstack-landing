@@ -178,13 +178,15 @@ for (const width of VIEWPORTS) {
       const retired = ${JSON.stringify(RETIRED.map((r) => r.source))}
         .filter((src) => new RegExp(src, 'i').test(bodyText));
 
-      // Every in-page destination in the nav and footer, scrolled to the way
-      // a click does it (scroll-margin respected): its first heading has to
-      // sit below the fixed nav, not under it.
+      // Every in-page destination in the nav and footer, and every FAQ
+      // question (each one is a shareable link, /#faq-cost), scrolled to the
+      // way a click does it (scroll-margin respected): its first heading has
+      // to sit below the fixed nav, not under it.
       const nav = document.querySelector('nav');
       const hidden = [];
       const targets = [...new Set([...document.querySelectorAll('nav a[href*="#"], footer a[href*="#"], .hero a[href^="#"]')]
-        .map((a) => a.getAttribute('href').split('#')[1]))];
+        .map((a) => a.getAttribute('href').split('#')[1])
+        .concat([...document.querySelectorAll('details.faq-item[id]')].map((d) => d.id)))];
       for (const id of nav ? targets : []) {
         const el = document.getElementById(id);
         if (!el) continue;
@@ -236,7 +238,7 @@ for (const width of VIEWPORTS) {
 
   for (const id of r.missingIds) failures.push(`${path} ${width}px  #${id} is missing from the page`);
   for (const w of r.retired) failures.push(`${path} ${width}px  the page shows "${w}" - Lending Lab is off the public site and three tools are promoted`);
-  for (const h of r.hidden) failures.push(`${path} ${width}px  the nav link to #${h} lands its heading under the fixed nav`);
+  for (const h of r.hidden) failures.push(`${path} ${width}px  a link to #${h} lands its heading under the fixed nav`);
   for (const a of r.deadAnchors) failures.push(`${path} ${width}px  "${a}" links to "#", which goes nowhere`);
   for (const s of r.stretched) {
     failures.push(`${path} ${width}px  ${s.src} rendered ${s.rendered} (ratio ${s.renderedRatio}) but is naturally ${s.natural} (ratio ${s.naturalRatio})`);
