@@ -171,3 +171,91 @@ export function privacyFieldDrift(indexHtml, privacyHtml, { id = 'signupForm', n
 export function cookieUse(text) {
   return /document\.cookie|set-cookie/i.test(text);
 }
+
+/* ---------------------------------------------------------------------------
+   Stable ids. Things the site links to, stores or checks are named by an id
+   that never changes with their wording or their place in a list.
+   ------------------------------------------------------------------------- */
+
+const stripTags = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+
+/**
+ * Pairs the visible FAQ with its JSON-LD by id, not by position, so a reorder
+ * is not a failure and a real difference is named by the question it is in.
+ * `sectionHtml` is the #faq section; `entities` is FAQPage.mainEntity.
+ * Returns the problems found, as sentences.
+ */
+export function faqDrift(sectionHtml, entities, origin = 'https://schoolstack.ai/') {
+  const problems = [];
+  const visible = new Map();
+  for (const m of sectionHtml.matchAll(/<details class="faq-item"([^>]*)>\s*<summary><h3>([\s\S]*?)<\/h3><\/summary>\s*<p>([\s\S]*?)<\/p>/g)) {
+    const id = (m[1].match(/\bid="([^"]+)"/) || [])[1];
+    const q = stripTags(m[2]);
+    if (!id) { problems.push(`the FAQ question "${q}" has no id`); continue; }
+    if (visible.has(id)) problems.push(`two FAQ questions share the id ${id}`);
+    visible.set(id, { q, a: stripTags(m[3]) });
+  }
+  const marked = new Map();
+  for (const e of entities) {
+    const at = e['@id'] || '';
+    const id = at.startsWith(origin + '#') ? at.slice(origin.length + 1) : '';
+    if (!id) { problems.push(`the JSON-LD question "${e.name}" has no @id of the form ${origin}#<id>`); continue; }
+    if (marked.has(id)) problems.push(`two JSON-LD questions share the @id #${id}`);
+    marked.set(id, { q: stripTags(e.name), a: stripTags(e.acceptedAnswer.text) });
+  }
+  for (const id of visible.keys()) if (!marked.has(id)) problems.push(`#${id} is on the page but not in the JSON-LD`);
+  for (const id of marked.keys()) if (!visible.has(id)) problems.push(`#${id} is in the JSON-LD but not on the page`);
+  for (const [id, v] of visible) {
+    const m = marked.get(id); if (!m) continue;
+    if (m.q !== v.q) problems.push(`#${id} question differs.\n      markup:  "${m.q}"\n      visible: "${v.q}"`);
+    if (m.a !== v.a) problems.push(`#${id} answer differs.\n      markup:  "${m.a}"\n      visible: "${v.a}"`);
+  }
+  return problems;
+}
+
+/**
+ * Ids that are retired: they still exist so links already shared keep
+ * working, but nothing on the site may link to them. The value names the id
+ * to link to instead.
+ */
+export const RETIRED_ANCHORS = { 'design-partners': 'early-access', apply: 'early-access', signup: 'early-access' };
+
+/** Links on a page to a retired id, as `{ id, use, line }`. */
+export function retiredAnchorLinks(html) {
+  const out = [];
+  for (const home of [false, true]) {
+    for (const [id, lines] of anchorTargets(html, { home })) {
+      if (id in RETIRED_ANCHORS) out.push({ id, use: RETIRED_ANCHORS[id], line: lines[0] });
+    }
+  }
+  return out;
+}
+
+/**
+ * Files in /assets are cached for a year as immutable, so each one's name
+ * must carry the first 8 hex digits of the sha256 of its own bytes. Takes
+ * the referenced paths and a reader; returns the problems found.
+ */
+export function assetHashDrift(paths, readBytes, sha256) {
+  const problems = [];
+  for (const path of new Set(paths)) {
+    const claimed = (path.match(/\.([0-9a-f]{8})\.[a-z0-9]+$/) || [])[1];
+    if (!claimed) { problems.push(`${path} is cached for a year but its name carries no content hash`); continue; }
+    const actual = sha256(readBytes(path)).slice(0, 8);
+    if (actual !== claimed) problems.push(`${path} is named ${claimed} but its content hashes to ${actual}: rename it to match`);
+  }
+  return problems;
+}
+
+/**
+ * Local file references written relative to the page ("images/x.png") instead
+ * of from the site root ("/images/x.png"). The same file then has two URLs,
+ * and markup moved to another page loads nothing. Returns `{ ref, line }`.
+ */
+export function relativeFileRefs(html) {
+  const out = [];
+  html.split('\n').forEach((line, i) => {
+    for (const m of line.matchAll(/\b(?:src|srcset|poster)="(?!\/|https?:|data:|#)([^"]+)"/g)) out.push({ ref: m[1], line: i + 1 });
+  });
+  return out;
+}

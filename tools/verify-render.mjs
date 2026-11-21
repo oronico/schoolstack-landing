@@ -67,7 +67,10 @@ const PAGES = {
     minTextChars: 4000,
     // Landmarks: the anchor targets the nav points at, plus the form the whole
     // page exists to feed.
-    ids: ['budget-calculator', 'tools', 'platform', 'design-partners', 'apply', 'faq', 'signupForm', 'submitBtn'],
+    ids: ['budget-calculator', 'tools', 'platform', 'early-access', 'faq', 'signupForm', 'submitBtn',
+      // Retired anchors for the early list. Links to them are already out in
+      // the world, so they must keep landing on the form.
+      'design-partners', 'apply', 'signup'],
   },
   // Loaded by its clean URL, as a visitor opening or refreshing it would.
   '/about': {

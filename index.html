@@ -9,12 +9,13 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#1E293B">
 
-  <!-- Icons. The ?v= query busts the long-lived favicon cache browsers keep;
-       bump it whenever tools/build-images.mjs changes the mark. -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=3">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+  <!-- Icons. The ?v= query busts the long-lived favicon cache browsers keep.
+       It is each file's content hash, which tools/build-images.mjs stamps on
+       every page; verify-content fails if one falls behind. Never type it. -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=bb61dd97">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=df3734c2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=e35e5f62">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1f18d080">
   <link rel="manifest" href="/site.webmanifest">
 
   <!-- Open Graph. The title here is shorter than the SEO <title> above: this is
@@ -26,7 +27,7 @@
   <meta property="og:url" content="https://schoolstack.ai/">
   <meta property="og:site_name" content="SchoolStack">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://schoolstack.ai/og-image.png">
+  <meta property="og:image" content="https://schoolstack.ai/og-image.png?v=71a40584">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -36,7 +37,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Back-office tools for small schools, built with the people who run them.">
   <meta name="twitter:description" content="SchoolStack is the back office for schools of 20 to 250 students, built on QuickBooks Online. Get early access, or use our free community, budgeting, and funding tools today.">
-  <meta name="twitter:image" content="https://schoolstack.ai/og-image.png">
+  <meta name="twitter:image" content="https://schoolstack.ai/og-image.png?v=71a40584">
   <meta name="twitter:image:alt" content="SchoolStack: the back office small schools run on. For schools of 20 to 250 students, built on QuickBooks Online. Three free tools open now.">
 
   <!-- Self-hosted rather than linked from fonts.googleapis.com: no third party
@@ -87,6 +88,7 @@
         "isPartOf": { "@id": "https://schoolstack.ai/#website" },
         "mainEntity": [
           {
+            "@id": "https://schoolstack.ai/#faq-use-today",
             "@type": "Question",
             "name": "What can I use today?",
             "acceptedAnswer": {
@@ -95,6 +97,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-which-schools",
             "@type": "Question",
             "name": "Which schools is SchoolStack for?",
             "acceptedAnswer": {
@@ -103,6 +106,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-other-accounting-platform",
             "@type": "Question",
             "name": "We use another accounting platform. Can we still join?",
             "acceptedAnswer": {
@@ -111,6 +115,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-cost",
             "@type": "Question",
             "name": "What does it cost?",
             "acceptedAnswer": {
@@ -119,6 +124,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-2027",
             "@type": "Question",
             "name": "What happens in 2027?",
             "acceptedAnswer": {
@@ -127,6 +133,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-quickbooks-gusto",
             "@type": "Question",
             "name": "Does SchoolStack replace QuickBooks or Gusto?",
             "acceptedAnswer": {
@@ -135,6 +142,7 @@
             }
           },
           {
+            "@id": "https://schoolstack.ai/#faq-quickbooks-plan",
             "@type": "Question",
             "name": "Which QuickBooks Online plan do I need?",
             "acceptedAnswer": {
@@ -163,7 +171,7 @@
       <a href="#tools">The tools</a>
       <a href="#platform">The platform</a>
       <a href="/about">About Us</a>
-      <a href="#design-partners">Early access</a>
+      <a href="#early-access">Early access</a>
       <a href="#faq">FAQ</a>
       <a href="/enrollment/">Enrollment Path</a>
     </div>
@@ -175,7 +183,7 @@
           <a href="#tools">The tools</a>
           <a href="#platform">The platform</a>
           <a href="/about">About Us</a>
-          <a href="#design-partners">Early access</a>
+          <a href="#early-access">Early access</a>
           <a href="#faq">FAQ</a>
           <a href="/enrollment/">Enrollment Path</a>
       </div>
@@ -196,7 +204,7 @@
       Practical tools and human support for schools of 20 to 250 students.
     </p>
     <div class="hero-cta">
-      <a href="#design-partners" class="btn-primary">
+      <a href="#early-access" class="btn-primary">
         Get early access
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -294,9 +302,13 @@
   <!-- THE EARLY LIST (owner, November 2026). An interest form for early
        access and product updates; it replaced the design partner
        application. The Netlify form keeps its name, early-access, so the
-       dashboard and notifications carry on. The section keeps the id
-       design-partners so links already shared still land here. -->
-  <section class="signup" id="design-partners">
+       dashboard and notifications carry on, and its id is that name too:
+       #early-access is the one id every link on the site uses. The older
+       ids still land here, because links to them are already out in the
+       world: #design-partners (the September 2026 application) on the
+       span below, #apply and #signup further down. Link to none of them. -->
+  <section class="signup" id="early-access">
+    <span class="anchor-alias" id="design-partners" aria-hidden="true"></span>
     <div class="cohort-hero">
       <span class="bars on-navy" aria-hidden="true"><span></span><span></span><span></span></span>
       <div class="cohort-status">Early access</div>
@@ -305,11 +317,11 @@
     </div>
 
     <div class="signup-form-wrap" id="apply">
-      <!-- The early list CTAs link here. tabindex="-1" makes the heading a focusable
-           fragment target, so the browser itself moves keyboard focus onto it
-           as it scrolls (the skip-link mechanism), and the next Tab lands on
-           the first field. Scripted focus cannot do this: the fragment
-           navigation runs after the click handler and would clear it. -->
+      <!-- tabindex="-1" makes the heading a focusable fragment target: a link
+           to #apply-heading moves keyboard focus onto it as it scrolls (the
+           skip-link mechanism), and the next Tab lands on the first field.
+           The site's own links go to #early-access, the band above, so the
+           reader sees what the list is before the fields. -->
       <h3 id="apply-heading" tabindex="-1">Your details</h3>
       <!-- id="signup" is the anchor the page carried until September 2026, kept
            so links already shared to /#signup still land on the form. -->
@@ -606,7 +618,7 @@
       </a>
     </div>
     <figure class="enroll-shot">
-      <img src="images/enrollment-scorecard.webp" width="640" height="954" loading="lazy"
+      <img src="/images/enrollment-scorecard.webp" width="640" height="954" loading="lazy"
            alt="The Enrollment Path scorecard for its example school: 27 out of 100, a score for each of five stages from awareness to retention, and the three biggest gaps.">
       <figcaption>The scorecard from the example audit</figcaption>
     </figure>
@@ -639,7 +651,7 @@
       <div class="backer-group">
         <p class="backer-label">Incubated by</p>
         <a class="partner" href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">
-          <span class="partner-mark"><img src="images/bhif-logo.webp" alt="Building Hope Impact Fund" width="400" height="400" style="max-height: 76px; width: auto; height: auto;" loading="lazy"></span>
+          <span class="partner-mark"><img src="/images/bhif-logo.webp" alt="Building Hope Impact Fund" width="400" height="400" style="max-height: 76px; width: auto; height: auto;" loading="lazy"></span>
           <span class="partner-name">Building Hope Impact Fund</span>
         </a>
       </div>
@@ -647,11 +659,11 @@
         <p class="backer-label">Backed by organizations that believe in education</p>
         <div class="partner-row">
           <a class="partner" href="https://standtogethertrust.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/stt-logo.png" alt="Stand Together Trust" width="813" height="500" style="max-height: 72px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
+        <span class="partner-mark"><img src="/images/stt-logo.png" alt="Stand Together Trust" width="813" height="500" style="max-height: 72px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
         <span class="partner-name">Stand Together Trust</span>
       </a>
           <a class="partner" href="https://www.brcurryfoundation.org" target="_blank" rel="noopener noreferrer">
-        <span class="partner-mark"><img src="images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" width="600" height="65" style="max-height: 46px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
+        <span class="partner-mark"><img src="/images/curry-logo.png" alt="The Beth and Ravenel Curry Foundation" width="600" height="65" style="max-height: 46px; max-width: 100%; width: auto; height: auto;" loading="lazy"></span>
         <span class="partner-name">The Beth and Ravenel Curry Foundation</span>
       </a>
         </div>
@@ -664,7 +676,7 @@
     <div class="label">FAQ</div>
     <h2>Common questions</h2>
     <div class="faq-grid">
-      <details class="faq-item">
+      <details class="faq-item" id="faq-use-today">
         <summary><h3>What can I use today?</h3></summary>
         <p>
           Three tools:
@@ -673,27 +685,27 @@
           <a href="/go/access" target="_blank" rel="noopener noreferrer">Access</a> for funding and policy guidance. Each works on its own and is free to use today.
         </p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-which-schools">
         <summary><h3>Which schools is SchoolStack for?</h3></summary>
         <p>SchoolStack is built for schools of 20 to 250 students. Space, Budget, and Access are open to any school.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-other-accounting-platform">
         <summary><h3>We use another accounting platform. Can we still join?</h3></summary>
         <p>Yes. SchoolStack runs on QuickBooks Online, and our accounting partner can move your books there. Email <a href="mailto:allison@schoolstack.ai?subject=Moving%20to%20QuickBooks%20Online">allison@schoolstack.ai</a> to start.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-cost">
         <summary><h3>What does it cost?</h3></summary>
         <p>Space, Budget, and Access cost nothing to use today. Pricing for the 2027 SchoolStack platform has not been finalized.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-2027">
         <summary><h3>What happens in 2027?</h3></summary>
         <p>Our connected platform is in development for 2027. Space and Budget will connect with it, and Access will remain a stand-alone guide. We will explain any account or data changes before launch.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-quickbooks-gusto">
         <summary><h3>Does SchoolStack replace QuickBooks or Gusto?</h3></summary>
         <p>No. QuickBooks Online remains your accounting system of record, and SchoolStack does not process payroll. Our QuickBooks Online integration starts rolling out with design partner schools in November 2026 and opens more widely as the platform does in 2027. A Gusto integration is planned.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" id="faq-quickbooks-plan">
         <summary><h3>Which QuickBooks Online plan do I need?</h3></summary>
         <p>SchoolStack does not require QuickBooks Online Advanced. If your school is a nonprofit, review whether Advanced fits your needs: its additional categorization options can help when you prepare your Form 990.</p>
       </details>
@@ -707,14 +719,14 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
-          <img src="/assets/logos/schoolstack-logo-white.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
+          <img src="/assets/logos/schoolstack-logo-white.6519c89c.svg" alt="SchoolStack" width="1296" height="204">
           <p>The back office small schools run on. Built by a founder, for founders.</p>
           <!-- One sign-up (owner, November 2026): the early list. This block
                links to it; there is no second form. -->
           <div class="newsletter">
             <h2 class="newsletter-heading">Stay ready.</h2>
             <p class="newsletter-blurb">Early access news and product updates from SchoolStack. Unsubscribe any time.</p>
-            <a class="newsletter-link" href="#design-partners">Get early access</a>
+            <a class="newsletter-link" href="#early-access">Get early access</a>
           </div>
         </div>
         <div class="footer-col">
@@ -731,7 +743,7 @@
             <li><a href="/about">About Us</a></li>
             <li><a href="https://www.buildinghopeimpactfund.org" target="_blank" rel="noopener noreferrer">Building Hope Impact Fund</a></li>
             <li><a href="#platform">The platform</a></li>
-            <li><a href="#design-partners">Early access</a></li>
+            <li><a href="#early-access">Early access</a></li>
             <li><a href="/enrollment/">Enrollment Path</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="mailto:allison@schoolstack.ai">Contact us</a></li>

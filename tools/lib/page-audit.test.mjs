@@ -13,6 +13,7 @@ import {
   anchorTargets, elementIds, danglingAnchors,
   unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
   formFields, privacyFieldDrift, cookieUse, FORMS,
+  faqDrift, retiredAnchorLinks, RETIRED_ANCHORS, assetHashDrift, relativeFileRefs,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -143,4 +144,64 @@ test('every family the page asks for is a family fonts.css serves', () => {
   const served = servedFontFamilies(readFileSync(join(ROOT, 'fonts/fonts.css'), 'utf8'));
   assert.deepEqual(Object.keys(wanted).sort(), ['body', 'display']);
   for (const family of Object.values(wanted)) assert.ok(served.has(family), family);
+});
+
+/* ---- Stable ids (November 2026) ---- */
+
+const faqItem = (id, q, a) => `<details class="faq-item"${id ? ` id="${id}"` : ''}>\n<summary><h3>${q}</h3></summary>\n<p>${a}</p></details>`;
+const entity = (id, q, a) => ({ '@id': id && `https://schoolstack.ai/#${id}`, name: q, acceptedAnswer: { text: a } });
+
+test('faqDrift pairs questions by id, so a reorder is not a failure', () => {
+  const html = faqItem('faq-a', 'A?', 'Yes.') + faqItem('faq-b', 'B?', 'No.');
+  assert.deepEqual(faqDrift(html, [entity('faq-b', 'B?', 'No.'), entity('faq-a', 'A?', 'Yes.')]), []);
+});
+
+test('faqDrift names the question whose answer differs', () => {
+  const out = faqDrift(faqItem('faq-a', 'A?', 'Yes.'), [entity('faq-a', 'A?', 'Maybe.')]);
+  assert.equal(out.length, 1);
+  assert.match(out[0], /#faq-a answer differs/);
+});
+
+test('faqDrift fails a question with no id, and one on only one side', () => {
+  assert.match(faqDrift(faqItem('', 'A?', 'Yes.'), [])[0], /has no id/);
+  assert.match(faqDrift(faqItem('faq-a', 'A?', 'Yes.'), [])[0], /#faq-a is on the page but not in the JSON-LD/);
+  assert.match(faqDrift('', [entity('faq-a', 'A?', 'Yes.')])[0], /#faq-a is in the JSON-LD but not on the page/);
+});
+
+test('faqDrift passes the live FAQ', () => {
+  const html = page();
+  const ld = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map((m) => JSON.parse(m[1])).flatMap((d) => d['@graph'] || [d]).find((d) => d['@type'] === 'FAQPage');
+  const section = html.match(/<section[^>]*id="faq"[\s\S]*?<\/section>/)[0];
+  assert.deepEqual(faqDrift(section, ld.mainEntity), []);
+});
+
+test('retiredAnchorLinks catches a link to a retired id, on the page and from another page', () => {
+  const out = retiredAnchorLinks('<a href="#apply">a</a>\n<a href="/#design-partners">b</a>');
+  assert.deepEqual(out.map((o) => o.id).sort(), ['apply', 'design-partners']);
+  assert.ok(out.every((o) => o.use === 'early-access'));
+});
+
+test('no page links a retired id, and each retired id still exists on the home page', () => {
+  for (const f of ['index.html', 'about.html', 'privacy.html', 'terms.html']) {
+    assert.deepEqual(retiredAnchorLinks(readFileSync(join(ROOT, f), 'utf8')), [], f);
+  }
+  const ids = elementIds(page());
+  for (const [id, use] of Object.entries(RETIRED_ANCHORS)) {
+    assert.ok(ids.has(id), `#${id} must stay, so links already shared keep working`);
+    assert.ok(ids.has(use), `#${use} must exist`);
+  }
+});
+
+test('assetHashDrift fails a missing or wrong hash and passes a right one', () => {
+  const bytes = { 'a.svg': 'x' };
+  const sha = (b) => (b === 'x' ? 'abcdef12' + '0'.repeat(56) : 'f'.repeat(64));
+  assert.deepEqual(assetHashDrift(['assets/a.abcdef12.svg'], () => 'x', sha), []);
+  assert.match(assetHashDrift(['assets/a.svg'], () => bytes['a.svg'], sha)[0], /carries no content hash/);
+  assert.match(assetHashDrift(['assets/a.12345678.svg'], () => 'x', sha)[0], /named 12345678 but its content hashes to abcdef12/);
+});
+
+test('relativeFileRefs catches a page-relative path and leaves root, remote and data paths alone', () => {
+  const out = relativeFileRefs('<img src="images/a.png">\n<img src="/images/b.png"><img src="https://x/c.png"><img src="data:x">');
+  assert.deepEqual(out, [{ ref: 'images/a.png', line: 1 }]);
 });
