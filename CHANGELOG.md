@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: One brand navy
+- The site's text and dark bands now use #1E293B, the navy of the
+  SchoolStack wordmark, the product logos, the design kit and all three
+  apps. The site was the only place using #141E33. The browser theme
+  colour, the web app manifest and the link-preview card follow.
+- Nothing else moved: with the old value forced back in, every page
+  matches the previous version pixel for pixel. Every text pair still
+  passes AA; the lowest involving navy is ink on amber, 8.8:1.
+
 ## 2026-11-21: Enrollment Path on phones: no zoom, bigger targets
 - On a touch screen, Enrollment Path's fields now use 16px text. Below
   that, iPhone Safari zoomed the page every time a field took focus, on

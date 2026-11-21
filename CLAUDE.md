@@ -301,8 +301,10 @@ margin, padding, gap, font size and colour in it is one of these:
   before the rebuild, 44% of the home page's characters were smaller. The
   hero `<h1>` is the only `--step-4` text; band headings are `--step-3`.
 - **Colour:** five tokens, each with one job. `--ink` text and the dark
-  bands; `--paper` the page (the mark's own `#FAF9F7`) and text on ink;
-  `--muted` secondary text on paper only (2.9:1 on ink fails); `--accent`
+  bands, `#1E293B`: the navy of the wordmark, the product logos, the
+  design kit and all three apps (owner, November 2026; it was `#141E33`,
+  which matched nothing else); `--paper` the page (the mark's own `#FAF9F7`) and text on ink;
+  `--muted` secondary text on paper only (2.6:1 on ink fails); `--accent`
   the one primary action, and the "tight" status; `--alert` errors and
   "over 100%". `--line` and `--line-on-ink` mix two tokens for hairlines
   and are never painted behind text, because the contrast check cannot
