@@ -496,3 +496,31 @@ The form, the error and the thank-you panel are shown and hidden with the
 one. The form does not carry `aria-busy`: MDN describes it for live regions,
 widgets and feeds, not forms, and it would tell a screen reader to hold back
 the button's "Submitting..." label, the one change a visitor should hear.
+
+## 9. One name for each thing (November 2026)
+
+Anything a link, a check, a save or a cache finds by name gets one stable
+name, and never its position or its wording. Each rule below is checked.
+
+- **The early list is `#early-access`**, the same as its Netlify form name.
+  `#design-partners`, `#apply` and `#signup` stay on the page so links
+  already shared still land, but nothing on the site may link to them
+  (`RETIRED_ANCHORS` in `tools/lib/page-audit.mjs`; `verify-content`
+  fails a link to one). Retire an id the same way: keep it, list it.
+- **Each FAQ item has an id** (`faq-cost`, `faq-2027`, ...), and its JSON-LD
+  question carries the same one as `@id`. `verify-content` pairs the two by
+  id, so reordering questions is safe and a real difference names the
+  question. `/#faq-cost` opens that answer (`js/site.js`).
+- **Enrollment Path stores grades by id** (`prek`, `k-2`, `3-5`, `6-8`,
+  `9-12`), never by label, so a label can be reworded without losing a
+  visitor's saved choice or hiding the practices filtered on it. Saves from
+  before the change are read through `OLD_GRADE_LABELS`, frozen at the
+  words they used; do not edit it when a label changes.
+- **A file in `/assets` is named for its content hash** (first 8 hex digits
+  of its sha256). `verify-content` fails a file with no hash or the wrong
+  one, so an edited logo must take a new name (section 1).
+- **The icons and the link-preview card keep fixed names**, so they carry
+  `?v=` with the same 8-digit content hash. `build-images` stamps it on every
+  page and the manifest (`tools/lib/asset-version.mjs`); never type one.
+- **Local files are written from the site root** (`/images/x.png`), so each
+  file has one URL. `verify-content` fails a page-relative `src`.

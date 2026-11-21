@@ -3,6 +3,24 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: One stable name for each thing
+Things a link, a check or a saved answer finds by name now have one
+name that does not change when the wording or the order does.
+- The early list band is `#early-access` everywhere, the same name as
+  its form. Every nav, footer and hero link used the retired name
+  `#design-partners`. The three old names still land on the band, so
+  links already shared keep working.
+- Each FAQ question has its own link (`/#faq-cost` opens the answer).
+  The check that the search-engine copy matches the visible FAQ now
+  pairs questions by that name, so reordering them no longer fails it.
+- Enrollment Path saves grades by id. Rewording a grade label used to
+  lose the saved choice and hide the practices meant for those grades.
+  Answers saved before this change read back unchanged.
+- The white logo's file name carried the colour logo's hash, so a later
+  edit could have been cached for a year under the wrong name. It now
+  has its own. Checks now fail a wrong hash, a stale `?v=` on the icons
+  and link-preview card, and an image path written relative to the page.
+
 ## 2026-11-21: No more "applications" in what visitors read
 SchoolStack collects interest on an early list; it does not take
 applications (owner, November 2026).
