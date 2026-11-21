@@ -58,6 +58,11 @@ says otherwise. `_headers` caches `/assets/*` for a year as immutable, so a
 changed logo takes a new hash in its name. A same-name swap leaves returning
 visitors on the old file.
 
+The horizontal logo shows at one size, `--logo-h` (32px tall, 203px wide),
+in the nav, the footer and Enrollment Path's masthead: the design kit's
+minimum is 200px wide. Only the nav may narrow it, on screens under 360px,
+where it and the menu button do not both fit.
+
 **The product logos are the kit's lockups** (November 2026): the wordmark in
 navy, the product name under it in the product's dark shade, bars in its
 three shades (`products` in Space's `shared/design-tokens.json`). Space and

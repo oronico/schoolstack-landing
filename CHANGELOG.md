@@ -25,6 +25,13 @@ name that does not change when the wording or the order does.
   funder images. Budget and Space serve their own copies of the two
   names they share.
 
+## 2026-11-21: One logo size
+- The SchoolStack logo shows 32px tall (203px wide) in the nav, the footer
+  and Enrollment Path's masthead. It was 27, 28 and 26px, all narrower
+  than the design kit's 200px minimum.
+- On phones under 360px wide the nav logo narrows, keeping its shape, so
+  the menu button still fits. The desktop nav bar is 5px taller.
+
 ## 2026-11-21: No more "applications" in what visitors read
 SchoolStack collects interest on an early list; it does not take
 applications (owner, November 2026).
