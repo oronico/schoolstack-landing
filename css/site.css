@@ -14,13 +14,15 @@
 
 :root {
   /* COLOUR: five tokens. What each one means is fixed:
-     ink    text, and the dark bands (application, footer)
+     ink    text, and the dark bands (early list, footer). #1E293B is the
+            navy of the wordmark, the product logos, the design kit and
+            all three apps (owner, November 2026; it was #141E33).
      paper  the page, and text on ink. #FAF9F7 is the mark's own ground.
-     muted  secondary text on paper only (2.9:1 on ink, so never there)
+     muted  secondary text on paper only (2.6:1 on ink, so never there)
      accent the one primary action per view, and status "tight". Ink text on
-            it is 10:1; as text it is used on ink only, where it is 10:1.
+            it is 8.8:1; as text it is used on ink only, where it is 8.8:1.
      alert  errors and "over 100%" */
-  --ink: #141E33;
+  --ink: #1E293B;
   --paper: #FAF9F7;
   --muted: #5B677A;
   --accent: #FBBF24;
