@@ -744,7 +744,9 @@ document.addEventListener("input",e=>{
   else if(NUMS.includes(t.id)){S[t.id]=t.value}
   else if(COUNTS.includes(t.id)){
     S[t.id]=t.value;
-    FROM_COUNTS.forEach(([rate,top,bottom])=>{
+    // Only the rates this count is part of: a rate the visitor set by hand
+    // stays as they set it when an unrelated count changes.
+    FROM_COUNTS.filter(([,top,bottom])=>top===t.id||bottom===t.id).forEach(([rate,top,bottom])=>{
       const a=parseFloat(S[top]),b=parseFloat(S[bottom]);
       if(!isFinite(a)||!isFinite(b)||a<0||b<=0)return;
       const v=Math.min(Math.max(Math.round(a/b*100),RATES[rate]),100);
