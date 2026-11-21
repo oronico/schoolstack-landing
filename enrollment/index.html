@@ -81,7 +81,8 @@ button,input,select{font:inherit;color:inherit}
 .mast .wrap{padding-block:22px 34px;display:grid;gap:22px}
 .logo{display:flex;align-items:center;gap:10px}
 .logo{justify-self:start;text-decoration:none}
-.logo img{height:26px;width:auto;display:block}
+/* 32px tall, 203px wide: the design kit's 200px minimum, and the size the site's nav uses. */
+.logo img{height:32px;width:auto;display:block}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:var(--cream);padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none}
 .skip-link:focus{left:0}
 .mast h1{font-size:clamp(34px,6vw,56px);font-weight:700;letter-spacing:-.01em}
