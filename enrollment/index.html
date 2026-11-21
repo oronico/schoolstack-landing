@@ -159,6 +159,16 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 /* Scorecard */
 .score{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px}
 @media (max-width:980px){.score{position:static}}
+/* Where the scorecard drops under the practices, a slim line of progress
+   stays in view while the visitor answers. */
+.audit-col{min-width:0}
+.prog{display:none}
+@media (max-width:980px){
+  html{scroll-padding-top:calc(env(safe-area-inset-top, 0px) + 56px)}
+  .prog{display:grid;grid-template-columns:1fr auto;gap:6px 12px;position:sticky;top:0;z-index:2;margin:0;padding:calc(env(safe-area-inset-top, 0px) + 10px) 0 10px;background:var(--bg);border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+  .prog-bar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+  .prog-bar i{display:block;height:100%;background:var(--fg)}
+}
 .overall{display:flex;align-items:flex-end;gap:12px}
 .overall .big{font-family:var(--f-mark);font-weight:800;font-size:52px;line-height:.9}
 .overall .of{color:var(--muted);font-size:13px}
@@ -305,7 +315,10 @@ footer b{color:var(--fg)}
       <p>Mark each practice <b>Yes</b>, <b>Partly</b> or <b>Not yet</b>. Use <b>N/A</b> when it doesn't fit your school; it drops out of your score.</p>
     </div>
     <div class="work">
-      <div id="audit"></div>
+      <div class="audit-col">
+        <p class="prog" id="prog"><span id="progCount"></span><span class="num" id="progScore"></span><span class="prog-bar" aria-hidden="true"><i id="progFill"></i></span></p>
+        <div id="audit"></div>
+      </div>
       <aside class="score" aria-labelledby="h-score">
         <div>
           <span class="eyebrow" id="h-score">Scorecard</span>
@@ -491,6 +504,9 @@ if(!S||typeof S!=="object"||!S.ans) S=JSON.parse(JSON.stringify(EXAMPLE));
 // frozen at those words, so rewording a label later cannot drop a saved choice.
 const OLD_GRADE_LABELS={"PreK":"prek","K to 2":"k-2","3 to 5":"3-5","6 to 8":"6-8","9 to 12":"9-12"};
 S.grades=(Array.isArray(S.grades)?S.grades:[]).map(g=>OLD_GRADE_LABELS[g]||g).filter(id=>GRADES.some(x=>x.id===id));
+// A rate saved before the fields held their range is brought into it on
+// load, so the field shows the figure the seat math counts.
+Object.keys(RATES).forEach(k=>{const x=parseFloat(S[k]);if(isFinite(x)){const v=Math.min(Math.max(x,RATES[k]),100);if(v!==x)S[k]=String(v)}});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const $=id=>document.getElementById(id);
@@ -555,12 +571,18 @@ function planned(){
   return {plan:r.filter(i=>pick.has(i.id)),rest:r.filter(i=>!pick.has(i.id))};
 }
 function pct(list){if(!list.length)return 0;return Math.round(list.reduce((t,i)=>t+(VAL[S.ans[i.id]]||0),0)/(list.length*2)*100)}
+// A practice not yet answered counts as zero, so a score read early looks
+// like a failing one. It shows once four in five practices are answered,
+// the same share the benchmark form asks for.
+function progress(){const all=visible().length,done=visible().filter(i=>S.ans[i.id]).length,need=Math.ceil(all*0.8);return {all,done,need,ready:all>0&&done>=need}}
 function renderScore(){
-  const sc=scored();
-  const done=visible().filter(i=>S.ans[i.id]).length;
-  $("overall").textContent=pct(sc);
-  $("answered").textContent=`${done} of ${visible().length} answered`;
-  $("meters").innerHTML=STAGES.map(st=>{const v=pct(sc.filter(i=>i.st===st.id));return `<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">${v}</span></div><div class="bar" role="img" aria-label="${st.name} ${v} out of 100"><i style="width:${v}%"></i></div></div>`}).join("");
+  const sc=scored(),pr=progress();
+  $("overall").textContent=pr.ready?pct(sc):"–";
+  $("answered").textContent=`${pr.done} of ${pr.all} answered`+(pr.ready?"":`. Your score shows at ${pr.need}.`);
+  $("progCount").textContent=`${pr.done} of ${pr.all} answered`;
+  $("progScore").textContent=pr.ready?`Score ${pct(sc)}`:"";
+  $("progFill").style.width=(pr.all?pr.done/pr.all*100:0)+"%";
+  $("meters").innerHTML=STAGES.map(st=>{const v=pct(sc.filter(i=>i.st===st.id));return pr.ready?`<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">${v}</span></div><div class="bar" role="img" aria-label="${st.name} ${v} out of 100"><i style="width:${v}%"></i></div></div>`:`<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">–</span></div><div class="bar" role="img" aria-label="${st.name} not scored yet"><i style="width:0%"></i></div></div>`}).join("");
   const top=ranked().slice(0,3);
   $("topgaps").innerHTML=top.length?top.map(i=>`<li style="--sc:var(${stageOf(i.st).color})"><span>${esc(i.s)}</span></li>`).join(""):`<li style="--sc:var(--line)"><span>No gaps marked yet.</span></li>`;
 }
@@ -642,7 +664,8 @@ function renderCal(){
 function planText(){
   const {plan:r,rest}=planned(),sc=scored(),L=[];
   L.push(`${S.name||"Our school"}${S.state?" ("+S.state+")":""}: 90-day enrollment plan`);
-  L.push(`Audit score: ${pct(sc)} out of 100 (`+STAGES.map(s=>`${s.name} ${pct(sc.filter(i=>i.st===s.id))}`).join(", ")+")");
+  const pr=progress();
+  L.push(pr.ready?`Audit score: ${pct(sc)} out of 100 (`+STAGES.map(s=>`${s.name} ${pct(sc.filter(i=>i.st===s.id))}`).join(", ")+")":`Audit in progress: ${pr.done} of ${pr.all} practices answered`);
   const fs=marked().map(x=>`${x.f.name}: ${x.o.t}`);
   if(fs.length)L.push("What moves our families: "+fs.join("; "));
   L.push("");

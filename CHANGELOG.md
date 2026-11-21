@@ -3,6 +3,18 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Path holds the score and shows progress
+Owner request after the same walk-through.
+- The score and the five stage scores show once four in five practices are
+  answered. Before, a new audit read "0 out of 100", and every unanswered
+  practice counted as zero until the last answer. The copied plan says
+  "Audit in progress" until then.
+- On screens where the scorecard sits under the practices (980px and
+  narrower), a line with "12 of 30 answered" stays at the top while the
+  visitor answers, and shows the score once it is ready.
+- A rate saved outside its range before #61 is brought into it when the
+  page loads. Found by Bugbot on #61.
+
 ## 2026-11-21: Enrollment Path plan fixes from a walk-through
 Owner approved after a full test audit on the live page.
 - Each force a school marks now brings its most direct open practice into
