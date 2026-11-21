@@ -449,10 +449,31 @@ styles: its five stage colours and answer colours carry meaning.
 - **Contact:** every Allison contact link is `allison@schoolstack.ai`.
   Daniel's is `daniel@schoolharbor.com`. LinkedIn and other profile URLs need
   a human click-through before merge (section 6).
-- **Who is who:** SchoolStack is a program of Building Hope Impact Fund (its
-  incubator), not a separate legal or tax-exempt entity, so never put a
-  501(c)(3) badge next to the SchoolStack name alone. School Harbor is the
-  technology development partner; Daniel leads development through it.
+- **Who is who:** SchoolStack is a nonprofit venture incubated by Building
+  Hope Impact Fund (counsel's words; see "Ownership and credit" below), not a
+  separate legal or tax-exempt entity, so never put a 501(c)(3) badge next to
+  the SchoolStack name alone. "A program of" stays only in the Terms and
+  Privacy legal text. School Harbor is the technology development partner;
+  Daniel leads development through it.
+- **Ownership and credit (SchoolStack suite).** Every SchoolStack app uses
+  the same ownership and credit words. The source is
+  docs/brand/suite-language.md in the SchoolStack Space repo.
+  - Credit, word for word, in every page footer: "SchoolStack
+    is a nonprofit venture incubated by Building Hope Impact Fund. Founder &
+    Product Developer: Allison Serafin" (the first sentence is counsel's
+    wording, 2026-10-28). Add nothing to it. Copy that names the owner opens
+    with the same first sentence.
+  - A heading or label over the Building Hope logo reads "Incubated by".
+  - Copyright: "© {year} Building Hope Impact Fund. All rights reserved."
+    Never name "SchoolStack" as the copyright holder.
+  - LICENSE: Building Hope Impact Fund owns the work and holds all rights;
+    "Allison Serafin is credited as Founder & Product Developer; the credit
+    grants her no license or other right in the repository."
+  - Never write "incubated at", "a product of", "built by Allison Serafin",
+    "designed and built by", or "Product design by".
+  - The footer is copied into each page by hand, so
+    `tools/lib/brand-credit.test.mjs` checks every page carries the credit
+    and the copyright line, and that no old phrase comes back.
 - **Enrollment Path saves answers in the visitor's browser** (localStorage)
   and sends nothing. Its share-your-numbers block posts to an Airtable form
   and is off (`SHARE_ENABLED=false`). Turning it on needs the owner's
