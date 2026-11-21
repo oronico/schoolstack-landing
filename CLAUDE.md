@@ -546,7 +546,10 @@ name, and never its position or its wording. Each rule below is checked.
   `#design-partners`, `#apply` and `#signup` stay on the page so links
   already shared still land, but nothing on the site may link to them
   (`RETIRED_ANCHORS` in `tools/lib/page-audit.mjs`; `verify-content`
-  fails a link to one). Retire an id the same way: keep it, list it.
+  fails a link to one). Retire an id the same way: keep it, list it. A
+  retired id with no element of its own goes on an empty `.anchor-alias`
+  placed just before the section it stood for; `verify-render` fails one
+  that lands more than 1px from the id that replaced it.
 - **Each FAQ item has an id** (`faq-cost`, `faq-2027`, ...), and its JSON-LD
   question carries the same one as `@id`. `verify-content` pairs the two by
   id, so reordering questions is safe and a real difference names the
@@ -559,8 +562,18 @@ name, and never its position or its wording. Each rule below is checked.
 - **A file in `/assets` is named for its content hash** (first 8 hex digits
   of its sha256). `verify-content` fails a file with no hash or the wrong
   one, so an edited logo must take a new name (section 1).
-- **The icons and the link-preview card keep fixed names**, so they carry
-  `?v=` with the same 8-digit content hash. `build-images` stamps it on every
-  page and the manifest (`tools/lib/asset-version.mjs`); never type one.
+- **The icons, the link-preview card and the images in `/images` keep
+  fixed names** (browsers, social sites and other sites ask for them by
+  name), so they carry `?v=` with the same 8-digit content hash. Run
+  `node tools/stamp-versions.mjs` after replacing one (`build-images` runs
+  it too; `tools/lib/asset-version.mjs`); never type one. `verify-content`
+  fails a stale version and an `/images` link with none.
 - **Local files are written from the site root** (`/images/x.png`), so each
   file has one URL. `verify-content` fails a page-relative `src`.
+- **Scripts and checks find a part by id or `data-calc`, never by its style
+  class**, so a class renamed for looks breaks nothing: the calculator's bar
+  segments and CTA (`data-calc`, checked by `verify-calculator`) and the
+  phone menu (`#nav-menu`, required on every page by `verify-render`).
+- **The sitemap carries no `<lastmod>`.** Sitemap tools take it from git at
+  build time; with no build step it is typed by hand, and it was 13 days
+  stale when removed. `verify-content` fails one.
