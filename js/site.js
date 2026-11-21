@@ -12,7 +12,7 @@
  */
 (function () {
   'use strict';
-  var menu = document.querySelector('details.nav-menu');
+  var menu = document.getElementById('nav-menu');
   if (!menu) return;
   var summary = menu.querySelector('summary');
 

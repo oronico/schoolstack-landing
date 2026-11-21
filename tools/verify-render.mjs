@@ -70,17 +70,19 @@ const PAGES = {
     ids: ['budget-calculator', 'tools', 'platform', 'early-access', 'faq', 'signupForm', 'submitBtn',
       // Retired anchors for the early list. Links to them are already out in
       // the world, so they must keep landing on the form.
-      'design-partners', 'apply', 'signup'],
+      'design-partners', 'apply', 'signup',
+      // js/site.js finds the phone menu by this id.
+      'nav-menu'],
   },
   // Loaded by its clean URL, as a visitor opening or refreshing it would.
   '/about': {
     minImages: 3,    // logo, BHIF, footer logo
     h1: 1,
     minTextChars: 3000,
-    ids: ['people', 'values', 'contact', 'allison-name', 'daniel-name'],
+    ids: ['people', 'values', 'contact', 'allison-name', 'daniel-name', 'nav-menu'],
   },
-  '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: [] },  // logo, footer logo
-  '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: [] },
+  '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: ['nav-menu'] },  // logo, footer logo
+  '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: ['nav-menu'] },
   // A stand-alone tool page with its own masthead: wordmark only.
   '/enrollment/': { minImages: 1, h1: 1, minTextChars: 4000, ids: ['main', 'audit', 'forces', 'phases', 'cal'] },
 };
