@@ -3,6 +3,17 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Five more stable names
+- A replaced image in `/images` (funder logos, the scorecard) now reaches
+  returning visitors at once. Each link carries its file's content hash,
+  as the icons already do; it used to stay cached for up to a week.
+- An old `#design-partners` link now lands exactly where `#early-access`
+  does. It used to scroll the band's top edge under the nav.
+- The sitemap no longer carries dates typed by hand. Every page changed
+  on 21 November while the sitemap still said 8 November.
+- The phone menu's script and the calculator check find their parts by
+  id or `data-calc`, so renaming a style class breaks nothing quietly.
+
 ## 2026-11-21: Enrollment Audit's math moves into its own file, with tests
 Owner request: guardrails.
 - Scoring, the 90-day plan, the seat math, rates from counts and saved
