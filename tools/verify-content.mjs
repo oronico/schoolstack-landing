@@ -125,6 +125,10 @@ const manifest = JSON.parse(read('site.webmanifest'));
 console.log(`Canonical: ${canonical}  og:url: ${ogUrl}  sitemap: ${sitemapLoc}`);
 check(canonical && ogUrl === canonical, `og:url is "${ogUrl}" but canonical is "${canonical}"`);
 check(canonical && sitemapLoc === canonical, `sitemap.xml lists "${sitemapLoc}" but canonical is "${canonical}"`);
+/* No build step can date a page from git, so a <lastmod> here is typed by
+   hand, and it went stale within days. Search engines use one only while it
+   stays accurate, so the sitemap carries none. */
+check(!/<lastmod>/.test(read('sitemap.xml')), 'sitemap.xml carries a <lastmod>: nothing keeps a hand-typed date true, so leave it out');
 check(themeMeta?.toLowerCase() === manifest.theme_color?.toLowerCase(),
   `<meta theme-color> is "${themeMeta}" but the manifest says "${manifest.theme_color}"`);
 
