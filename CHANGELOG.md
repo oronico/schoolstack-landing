@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-21: Enrollment Path on phones: no zoom, bigger targets
+- On a touch screen, Enrollment Path's fields now use 16px text. Below
+  that, iPhone Safari zoomed the page every time a field took focus, on
+  all 12 fields.
+- On a touch screen, every control is at least 44px tall, the size the
+  rest of the site holds: the 128 answer buttons and 5 grade chips (were
+  32px), the force options (38px) and the buttons (41px).
+- With a mouse, the page is unchanged, pixel for pixel.
+
 ## 2026-11-20: Remove the old tool logos; check images at larger text
 - The six logo files the tool cards used before #49 (Space, Budget and
   Access, each with a white copy) are gone. Nothing on the site or in

@@ -233,6 +233,17 @@ footer b{color:var(--fg)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--navy);color:var(--cream);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px}
 .copybox{width:100%;min-height:160px;margin-top:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px;font-family:var(--f-body);font-size:13px;color:var(--fg)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+/* Touch screens. Fields take 16px text: below that, iPhone Safari zooms the
+   page whenever one takes focus. Every control is at least 44px tall, the
+   size the rest of the site holds. A mouse keeps the denser layout. */
+@media (pointer: coarse){
+  .field input[type=text],.field input[type=number],.field select,.copybox{font-size:16px}
+  .field input[type=text],.field input[type=number],.field select{min-height:44px}
+  .btn{padding-block:10px}
+  .seg span{padding-block:12px}
+  .chip span{padding-block:11px}
+  .opt{padding-block:11px}
+}
 </style>
 </head>
 <body>
