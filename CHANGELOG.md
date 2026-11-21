@@ -20,6 +20,10 @@ name that does not change when the wording or the order does.
   edit could have been cached for a year under the wrong name. It now
   has its own. Checks now fail a wrong hash, a stale `?v=` on the icons
   and link-preview card, and an image path written relative to the page.
+- Eight files nothing linked to are gone (owner approved): the old white
+  logo, two old icon files, the two Lending Lab logos and three spare
+  funder images. Budget and Space serve their own copies of the two
+  names they share.
 
 ## 2026-11-21: No more "applications" in what visitors read
 SchoolStack collects interest on an early list; it does not take
