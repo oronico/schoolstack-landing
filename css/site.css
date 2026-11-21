@@ -223,8 +223,10 @@ nav {
 .nav-menu-panel a:last-child { border-bottom: none; }
 .nav-menu-panel a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 
-/* Every in-page link target clears the fixed nav. */
-section[id], [id].section { scroll-margin-top: var(--sp-8); }
+/* Every in-page link target clears the fixed nav. An .anchor-alias is an
+   empty marker that keeps a retired id landing where its section starts. */
+section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
+.anchor-alias { display: block; }
 
 /* LAYOUT */
 .section { padding: var(--sp-8) var(--gutter); max-width: var(--container); margin: 0 auto; }

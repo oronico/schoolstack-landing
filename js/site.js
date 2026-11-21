@@ -8,6 +8,7 @@
  *    to.
  *  - Escape closes the menu and puts focus back on its button.
  *  - Widening the window past the phone layout closes it too.
+ *  - A link to a FAQ question opens its answer (second block below).
  */
 (function () {
   'use strict';
@@ -29,4 +30,20 @@
     var close = function () { if (wide.matches) menu.open = false; };
     if (wide.addEventListener) wide.addEventListener('change', close);
   }
+})();
+
+/**
+ * A link to a FAQ question (/#faq-cost) opens its answer. Each question is a
+ * <details> with a stable id; browsers scroll to a closed <details> but leave
+ * it shut, so a shared link would land on a question with no answer showing.
+ */
+(function () {
+  'use strict';
+  function openTarget() {
+    var id = location.hash.slice(1);
+    var el = id && document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  }
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
 })();

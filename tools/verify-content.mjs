@@ -28,7 +28,9 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
+import { createHash } from 'node:crypto';
+import { PAGES as VERSIONED_PAGES, versionDrift } from './lib/asset-version.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -104,21 +106,12 @@ if (ld) {
 
   if (check(faqNode, 'the JSON-LD declares no FAQPage')
       && check(faqSection, 'index.html has no #faq section to compare the FAQPage against')) {
-    const visible = [...faqSection[0].matchAll(/<h3>([\s\S]*?)<\/h3>\s*(?:<\/summary>\s*)?<p>([\s\S]*?)<\/p>/g)]
-      .map((m) => ({ q: strip(m[1]), a: strip(m[2]) }));
-    const marked = faqNode.mainEntity.map((e) => ({ q: strip(e.name), a: strip(e.acceptedAnswer.text) }));
-
-    console.log(`FAQ: ${marked.length} in JSON-LD, ${visible.length} on the page`);
-    check(marked.length === visible.length,
-      `the JSON-LD lists ${marked.length} questions but the page shows ${visible.length}`);
-
-    // Google drops FAQ markup that does not match the visible copy, silently.
-    for (let i = 0; i < Math.min(marked.length, visible.length); i++) {
-      check(marked[i].q === visible[i].q,
-        `FAQ ${i + 1} question differs.\n      markup:  "${marked[i].q}"\n      visible: "${visible[i].q}"`);
-      check(marked[i].a === visible[i].a,
-        `FAQ ${i + 1} answer differs.\n      markup:  "${marked[i].a}"\n      visible: "${visible[i].a}"`);
-    }
+    // Paired by id, not by position: a reorder is not a failure, and a real
+    // difference is named by the question it is in. Google drops FAQ markup
+    // that does not match the visible copy, silently.
+    const problems = faqDrift(faqSection[0], faqNode.mainEntity);
+    console.log(`FAQ: ${faqNode.mainEntity.length} in JSON-LD, paired by id: ${problems.length ? problems.length + ' problem(s)' : 'all match'}`);
+    for (const p of problems) fail(`FAQ: ${p}`);
   }
 }
 
@@ -147,7 +140,7 @@ const ogImage = meta(/property="og:image" content="([^"]+)"/);
 const ogW = meta(/property="og:image:width" content="([^"]+)"/);
 const ogH = meta(/property="og:image:height" content="([^"]+)"/);
 if (ogImage) {
-  const path = ogImage.replace(/^https?:\/\/[^/]+\//, '');
+  const path = ogImage.replace(/^https?:\/\/[^/]+\//, '').replace(/[?#].*$/, '');
   if (check(existsSync(join(ROOT, path)), `og:image points at ${ogImage}, which is not in the repo`)) {
     const size = pngSize(path);
     console.log(`og:image: ${path} is ${size.w}x${size.h}, declared ${ogW}x${ogH}`);
@@ -236,6 +229,27 @@ const drift = others.flatMap((o) => chromeDrift(html, o.html).map((d) => `${d} (
 const served = servedFontFamilies(read('fonts/fonts.css'));
 
 console.log(`Anchors: ${dangling.length || 'none'} dangling  |  target=_blank without noopener: ${unsafe.length || 'none'}`);
+
+/* Retired ids stay on the page so links already shared keep working, but the
+   site itself links only to the current id (RETIRED_ANCHORS names it). */
+const retired = [{ f: 'index.html', html }, ...allPages].flatMap((o) => retiredAnchorLinks(o.html).map((r) => ({ ...r, f: o.f })));
+console.log(`Retired anchors linked: ${retired.length || 'none'}`);
+for (const r of retired) fail(`${r.f}:${r.line} links to #${r.id}, a retired id kept only for old links; link to #${r.use}`);
+
+/* /assets is cached for a year as immutable, so every file a page uses from
+   it carries its own content hash in its name (sha256, first 8 hex digits).
+   A same-name edit would leave returning visitors on the old bytes. */
+const assetRefs = [{ html }, ...allPages].flatMap((o) => [...o.html.matchAll(/(?:src|href|poster|content)="\/(assets\/[^"?#]+)"/g)].map((m) => m[1]));
+const assetProblems = assetHashDrift(assetRefs, (p) => readFileSync(join(ROOT, p)), (b) => createHash('sha256').update(b).digest('hex'));
+console.log(`Assets: ${new Set(assetRefs).size} referenced from /assets, ${assetProblems.length ? assetProblems.length + ' named wrongly' : 'each named by its own content hash'}`);
+for (const p of assetProblems) fail(p);
+/* The icons and the preview card keep fixed URLs, so their ?v= is each
+   file's content hash; tools/build-images.mjs stamps it. */
+const staleVersions = VERSIONED_PAGES.flatMap((f) => versionDrift(read(f), ROOT).map((d) => ({ ...d, f })));
+console.log(`Icon and card versions: ${staleVersions.length ? staleVersions.length + ' out of date' : 'each matches its file'}`);
+for (const d of staleVersions) fail(`${d.f}: ${d.file}?v=${d.has} should be ?v=${d.want}, its content hash; run node tools/build-images.mjs to stamp it`);
+const relative = [{ f: 'index.html', html }, ...allPages].flatMap((o) => relativeFileRefs(o.html).map((r) => ({ ...r, f: o.f })));
+for (const r of relative) fail(`${r.f}:${r.line} loads "${r.ref}" relative to the page; write it from the site root, "/${r.ref}", so the file has one URL`);
 console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.css serves ${[...served].join(' + ')}`);
 
 console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on index.html and ${OTHER_PAGES.join(', ')}`);

@@ -15,8 +15,9 @@
  * Run tools/fetch-fonts.mjs first if fonts/ is empty.
  */
 
+import { PAGES as VERSIONED_PAGES, stampVersions } from './lib/asset-version.mjs';
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -309,3 +310,14 @@ for (const name of built) {
   console.log(`  ${name.padEnd(24)} ${kb.padStart(8)} KB`);
 }
 console.log(`\n${built.length} assets written to ${ROOT}`);
+
+// Stamp each icon and the preview card's ?v= with its content hash, on every
+// page and the manifest, so a rebuilt image reaches returning visitors and
+// social sites without anyone remembering to bump a number.
+const stamped = [];
+for (const page of VERSIONED_PAGES) {
+  const before = readFileSync(join(ROOT, page), 'utf8');
+  const after = stampVersions(before, ROOT);
+  if (after !== before) { writeFileSync(join(ROOT, page), after); stamped.push(page); }
+}
+console.log(`Versions: ${stamped.length ? 'stamped in ' + stamped.join(', ') : 'every ?v= already matches its file'}`);
