@@ -30,7 +30,7 @@ import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
 import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
-import { PAGES as VERSIONED_PAGES, versionDrift } from './lib/asset-version.mjs';
+import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -243,11 +243,14 @@ const assetRefs = [{ html }, ...allPages].flatMap((o) => [...o.html.matchAll(/(?
 const assetProblems = assetHashDrift(assetRefs, (p) => readFileSync(join(ROOT, p)), (b) => createHash('sha256').update(b).digest('hex'));
 console.log(`Assets: ${new Set(assetRefs).size} referenced from /assets, ${assetProblems.length ? assetProblems.length + ' named wrongly' : 'each named by its own content hash'}`);
 for (const p of assetProblems) fail(p);
-/* The icons and the preview card keep fixed URLs, so their ?v= is each
-   file's content hash; tools/build-images.mjs stamps it. */
+/* The icons, the preview card and the images in /images keep fixed URLs,
+   so their ?v= is each file's content hash; tools/stamp-versions.mjs
+   stamps it. */
 const staleVersions = VERSIONED_PAGES.flatMap((f) => versionDrift(read(f), ROOT).map((d) => ({ ...d, f })));
-console.log(`Icon and card versions: ${staleVersions.length ? staleVersions.length + ' out of date' : 'each matches its file'}`);
-for (const d of staleVersions) fail(`${d.f}: ${d.file}?v=${d.has} should be ?v=${d.want}, its content hash; run node tools/build-images.mjs to stamp it`);
+const bareImages = VERSIONED_PAGES.flatMap((f) => unversionedImages(read(f)).map((r) => ({ ...r, f })));
+console.log(`Icon, card and image versions: ${staleVersions.length + bareImages.length ? (staleVersions.length + bareImages.length) + ' out of date or missing' : 'each matches its file'}`);
+for (const d of staleVersions) fail(`${d.f}: ${d.file}?v=${d.has} should be ?v=${d.want}, its content hash; run node tools/stamp-versions.mjs`);
+for (const r of bareImages) fail(`${r.f}:${r.line} loads ${r.ref} with no ?v=, so a replaced image stays cached for a week; add ?v= and run node tools/stamp-versions.mjs`);
 const relative = [{ f: 'index.html', html }, ...allPages].flatMap((o) => relativeFileRefs(o.html).map((r) => ({ ...r, f: o.f })));
 for (const r of relative) fail(`${r.f}:${r.line} loads "${r.ref}" relative to the page; write it from the site root, "/${r.ref}", so the file has one URL`);
 console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.css serves ${[...served].join(' + ')}`);
