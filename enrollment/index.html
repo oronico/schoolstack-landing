@@ -83,6 +83,8 @@ button,input,select{font:inherit;color:inherit}
 .logo{justify-self:start;text-decoration:none}
 /* 32px tall, 203px wide: the design kit's 200px minimum, and the size the site's nav uses. */
 .logo img{height:32px;width:auto;display:block}
+/* A 48px tap target around the 32px logo; the negative margin keeps the layout. */
+.logo{padding-block:8px;margin-block:-8px}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:var(--cream);padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none}
 .skip-link:focus{left:0}
 .mast h1{font-size:clamp(34px,6vw,56px);font-weight:700;letter-spacing:-.01em}
