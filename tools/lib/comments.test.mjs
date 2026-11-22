@@ -14,8 +14,8 @@ test('kindOf maps each file to the comment syntax it uses', () => {
   assert.equal(kindOf('sitemap.xml'), 'html');
   assert.equal(kindOf('_headers'), 'hash');
   assert.equal(kindOf('_redirects'), 'hash');
-  assert.equal(kindOf('.github/workflows/verify.yml'), 'config');
-  assert.equal(kindOf('netlify.toml'), 'config');
+  assert.equal(kindOf('.github/workflows/verify.yml'), 'yaml');
+  assert.equal(kindOf('netlify.toml'), 'toml');
   assert.equal(kindOf('features/signup.feature'), 'hash');
   assert.equal(kindOf('package.json'), null);
   assert.equal(kindOf('CLAUDE.md'), null);
@@ -56,6 +56,20 @@ test('a regex after a control-flow condition is not a comment', () => {
   assert.deepEqual(lines('const r = (a) / 2; // yes', 'js'), [1]);
 });
 
+test('a regex after a statement block, division after an object literal', () => {
+  assert.deepEqual(lines('if (ok) {} /[/*]/.test(value);', 'js'), []);
+  assert.deepEqual(lines('function a() {} /[/*]/.test(v);', 'js'), []);
+  assert.deepEqual(lines('const f = () => {}\n/[/*]/.test(v);', 'js'), []);
+  assert.deepEqual(lines('const r = {} / 2; // yes', 'js'), [1]);
+  assert.deepEqual(lines('const r = f({ a: 1 }.a / 2); // yes', 'js'), [1]);
+});
+
+test('postfix ++ and -- end a value, so a slash after them divides', () => {
+  assert.deepEqual(lines('let n = 4; const result = n++ / 2; // explanation', 'js'), [1]);
+  assert.deepEqual(lines('const r = n-- / 2; /* yes */', 'js'), [1]);
+  assert.deepEqual(lines('const r = x + ++n; /[/*]/.test(v);', 'js'), []);
+});
+
 test('a shebang is not a comment', () => {
   assert.deepEqual(lines('#!/usr/bin/env node\nrun();', 'js'), []);
 });
@@ -81,9 +95,22 @@ test('hash comments only where # opens the line', () => {
   assert.deepEqual(lines('# one\n/go/x https://y.org/#z 302\n  # two\n', 'hash'), [1, 3]);
 });
 
-test('YAML and TOML comments, trailing ones included', () => {
-  assert.deepEqual(texts('name: Verify # explanation\n# own line\n', 'config'), ['# explanation', '# own line']);
-  assert.deepEqual(lines('url: https://x.org/#frag\nrun: echo "a # b"\nk: \'c # d\'\nv: x#y\n', 'config'), []);
+test('YAML comments, trailing ones included', () => {
+  assert.deepEqual(texts('name: Verify # explanation\n# own line\n', 'yaml'), ['# explanation', '# own line']);
+  assert.deepEqual(lines('url: https://x.org/#frag\nk: "a # b"\nk: \'c # d\'\nv: x#y\n', 'yaml'), []);
+  assert.deepEqual(texts('run: echo "a # b"\n', 'yaml'), ['# b"'], 'an unquoted value ends at " #", as YAML reads it');
+  assert.deepEqual(texts("name: Don't panic # real\n", 'yaml'), ['# real']);
+});
+
+test('YAML strings and block scalars over several lines', () => {
+  assert.deepEqual(lines('description: |\n  # Heading\n  text\nname: x # yes\n', 'yaml'), [4]);
+  assert.deepEqual(lines('k: "one\n  # two"\nj: 1 # yes\n', 'yaml'), [3]);
+  assert.deepEqual(lines('- run: | # yes\n    echo "a # b"\n    # yes, a shell comment\n    ls\n', 'yaml'), [1, 3]);
+});
+
+test('TOML comments, but not inside strings of one line or several', () => {
+  assert.deepEqual(texts('[build]\n  publish = "." # yes\n', 'toml'), ['# yes']);
+  assert.deepEqual(lines('message = """\n# Heading\n"""\nraw = \'\'\'\n# also text\n\'\'\'\nurl = "https://x/#y"\n', 'toml'), []);
 });
 
 test('the ratchet fails a rise and asks for the baseline to drop on a fall', () => {

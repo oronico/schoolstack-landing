@@ -9,7 +9,8 @@ const KIND = [
   [/\.(m?js)$/, 'js'],
   [/\.css$/, 'css'],
   [/\.(html|xml)$/, 'html'],
-  [/(\.ya?ml|\.toml)$/, 'config'],
+  [/\.ya?ml$/, 'yaml'],
+  [/\.toml$/, 'toml'],
   [/(\.feature|\.txt|^_headers|^_redirects|\.gitignore)$/, 'hash'],
 ];
 
@@ -29,6 +30,10 @@ const CONTROL_WORDS = new Set(['if', 'while', 'for', 'with']);
 
 const REGEX_AFTER_WORD = new Set(['return', 'typeof', 'case', 'in', 'of', 'delete', 'void', 'throw', 'new', 'else', 'do', 'yield', 'await', 'instanceof']);
 
+const BLOCK_AFTER_WORD = new Set(['else', 'do', 'try', 'finally']);
+
+const OPERATOR = /^[=(,:?[!&|+\-*%<>~^]$/;
+
 function jsRanges(src, from = 0, to = src.length) {
   const out = [];
   let i = from;
@@ -36,6 +41,12 @@ function jsRanges(src, from = 0, to = src.length) {
   const braces = [];
   const parens = [];
   if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
+
+  const endsValue = () => prev === 'str' || prev === ')' || prev === ']' || prev === '}'
+    || (/^[\w$]+$/.test(prev) && !REGEX_AFTER_WORD.has(prev));
+
+  const opensObject = () => OPERATOR.test(prev) || prev === '++' || prev === '--'
+    || (REGEX_AFTER_WORD.has(prev) && !BLOCK_AFTER_WORD.has(prev));
 
   const regexAllowed = () => {
     if (prev === '' || prev === 'ctl)') return true;
@@ -108,12 +119,14 @@ function jsRanges(src, from = 0, to = src.length) {
     if (c === '/' && regexAllowed()) { skipRegex(); prev = 'str'; continue; }
     if (c === '(') { parens.push(CONTROL_WORDS.has(prev)); prev = c; i++; continue; }
     if (c === ')') { prev = parens.pop() ? 'ctl)' : c; i++; continue; }
-    if (c === '{') { braces.push('{'); prev = c; i++; continue; }
+    if ((c === '+' || c === '-') && d === c) { i += 2; if (!endsValue()) prev = c + c; continue; }
+    if (c === '=' && d === '>') { i += 2; prev = '=>'; continue; }
+    if (c === '{') { braces.push(opensObject() ? 'object' : 'block'); prev = c; i++; continue; }
     if (c === '}') {
       const top = braces.pop();
       i++;
       if (top === 'tpl') prev = resumeTemplate() === 'expr' ? '' : 'str';
-      else prev = c;
+      else prev = top === 'block' ? '' : c;
       continue;
     }
     if (/[\w$]/.test(c)) {
@@ -175,29 +188,78 @@ function hashRanges(src) {
   return out;
 }
 
-function configRanges(src) {
+function tomlRanges(src) {
   const out = [];
   let i = 0;
-  for (const line of src.split('\n')) {
-    let quote = null;
-    for (let j = 0; j < line.length; j++) {
-      const c = line[j];
-      if (quote) {
-        if (c === '\\' && quote === '"') j++;
-        else if (c === quote) quote = null;
-      } else if (c === '"' || c === "'") {
-        quote = c;
-      } else if (c === '#' && (j === 0 || /\s/.test(line[j - 1]))) {
-        out.push([i + j, i + line.length]);
-        break;
-      }
+  let quote = null;
+  while (i < src.length) {
+    if (quote) {
+      if (quote.length === 1 && src[i] === '\n') quote = null;
+      else if (quote !== "'" && quote !== "'''" && src[i] === '\\') i++;
+      else if (src.startsWith(quote, i)) { i += quote.length; quote = null; continue; }
+      i++;
+      continue;
     }
+    const c = src[i];
+    if (c === '"' || c === "'") {
+      quote = src.startsWith(c.repeat(3), i) ? c.repeat(3) : c;
+      i += quote.length;
+      continue;
+    }
+    if (c === '#') {
+      let e = src.indexOf('\n', i);
+      if (e === -1) e = src.length;
+      out.push([i, e]);
+      i = e;
+      continue;
+    }
+    i++;
+  }
+  return out;
+}
+
+const indentOf = (line) => line.search(/\S|$/);
+
+function lineHashes(line, offset, out, state) {
+  for (let j = 0; j < line.length; j++) {
+    const c = line[j];
+    if (state.quote) {
+      if (state.quote === '"' && c === '\\') j++;
+      else if (state.quote === "'" && c === "'" && line[j + 1] === "'") j++;
+      else if (c === state.quote) state.quote = null;
+      continue;
+    }
+    const before = line.slice(0, j);
+    if ((c === '"' || c === "'") && state.opensAt(before)) { state.quote = c; continue; }
+    if (c === '#' && (j === 0 || /\s/.test(line[j - 1]))) { out.push([offset + j, offset + line.length]); return; }
+  }
+}
+
+const YAML_VALUE_START = (before) => /(^\s*|^\s*-\s+|:\s+|[[{,]\s*)$/.test(before);
+const SHELL_WORD_START = (before) => before === '' || /\s$/.test(before);
+const BLOCK_SCALAR = /^(\s*)(?:-\s+)?(?:([^#'"\s][^#'"]*?):\s+)?[|>][-+0-9]*\s*(#.*)?$/;
+
+function yamlRanges(src) {
+  const out = [];
+  let i = 0;
+  let block = null;
+  const state = { quote: null, opensAt: YAML_VALUE_START };
+  for (const line of src.split('\n')) {
+    if (block && (line.trim() === '' || indentOf(line) > block.indent)) {
+      if (block.shell) lineHashes(line, i, out, { quote: null, opensAt: SHELL_WORD_START });
+      i += line.length + 1;
+      continue;
+    }
+    block = null;
+    lineHashes(line, i, out, state);
+    const m = !state.quote && line.match(BLOCK_SCALAR);
+    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' };
     i += line.length + 1;
   }
   return out;
 }
 
-const RANGES = { js: jsRanges, css: cssRanges, html: htmlRanges, hash: hashRanges, config: configRanges };
+const RANGES = { js: jsRanges, css: cssRanges, html: htmlRanges, hash: hashRanges, yaml: yamlRanges, toml: tomlRanges };
 
 export function findComments(src, kind) {
   return RANGES[kind](src).map(([s, e]) => ({
