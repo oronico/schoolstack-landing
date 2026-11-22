@@ -175,7 +175,7 @@ function htmlRanges(src) {
   for (const m of src.matchAll(re)) {
     if (m[0].startsWith('<!--')) { out.push([m.index, m.index + m[0].length]); continue; }
     if (!m[1] || /^(textarea|title)$/i.test(m[1])) continue;
-    const start = m.index + m[0].indexOf('>') + 1;
+    const start = m.index + m[1].length + m[2].length + 2;
     const end = start + m[3].length;
     if (m[1].toLowerCase() === 'style') out.push(...cssRanges(src, start, end));
     else if (!/type\s*=\s*["']?application\/(ld\+)?json/i.test(m[2])) out.push(...jsRanges(src, start, end));
@@ -252,14 +252,14 @@ function yamlRanges(src) {
   const state = { quote: null, opensAt: YAML_VALUE_START };
   for (const line of src.split('\n')) {
     if (block && (line.trim() === '' || indentOf(line) > block.indent)) {
-      if (block.shell) lineHashes(line, i, out, { quote: null, opensAt: SHELL_WORD_START });
+      if (block.shell) lineHashes(line, i, out, block.shell);
       i += line.length + 1;
       continue;
     }
     block = null;
     lineHashes(line, i, out, state);
     const m = !state.quote && line.match(BLOCK_SCALAR);
-    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' };
+    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' && { quote: null, opensAt: SHELL_WORD_START } };
     i += line.length + 1;
   }
   return out;

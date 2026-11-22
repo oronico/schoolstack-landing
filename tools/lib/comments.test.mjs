@@ -106,6 +106,8 @@ test('comment markers in attributes, textarea and title are text', () => {
   const page = '<input placeholder="<!-- example -->" data-x=\'<!-- y -->\'>\n<textarea><!-- x --></textarea>\n<title><!-- t --></title>\n<!-- real -->';
   assert.deepEqual(lines(page, 'html'), [4]);
   assert.deepEqual(lines('<a title="x > y">a</a><!-- yes --><script>f(); // yes</script>', 'html'), [1, 1]);
+  assert.deepEqual(texts('<style media="(width > 500px)">/* yes */ p { color: red; }</style>', 'html'), ['/* yes */']);
+  assert.deepEqual(texts('<script data-x=\'a>b\'>f(); // yes</script>', 'html'), ['// yes']);
 });
 
 test('hash comments only where # opens the line', () => {
@@ -123,6 +125,7 @@ test('YAML strings and block scalars over several lines', () => {
   assert.deepEqual(lines('description: |\n  # Heading\n  text\nname: x # yes\n', 'yaml'), [4]);
   assert.deepEqual(lines('k: "one\n  # two"\nj: 1 # yes\n', 'yaml'), [3]);
   assert.deepEqual(lines('- run: | # yes\n    echo "a # b"\n    # yes, a shell comment\n    ls\n', 'yaml'), [1, 3]);
+  assert.deepEqual(lines('run: |\n  echo "first\n  # Heading\n  last"\n  # yes\n', 'yaml'), [5]);
 });
 
 test('TOML comments, but not inside strings of one line or several', () => {
