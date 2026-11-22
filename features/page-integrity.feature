@@ -29,7 +29,7 @@ Feature: Structural facts no other check derives
     did not exist.
 
     Given the page is loaded at <width> pixels wide
-    Then the <role> face is Quicksand or Nunito, loaded, and distinct from the fallback
+    Then the <role> face is Quicksand or Inter, loaded, and distinct from the fallback
 
     Examples:
       | width | role    |

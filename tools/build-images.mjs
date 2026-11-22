@@ -287,7 +287,7 @@ built.push(await renderIcon('rounded', 180, 'favicon.png'));
 
 // The OG card. Rendered last because it is the only step that needs the network.
 await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 1200, 630,
-  ['Quicksand', 'Nunito']);
+  ['Quicksand', 'Inter']);
 built.push('og-image.png');
 
 socket.close();
