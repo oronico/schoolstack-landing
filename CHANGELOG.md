@@ -14,6 +14,8 @@ prepared for review; Netlify deploys on merge to `main`.
   clipboard-copy-element: the Clipboard API, with a select-and-copy
   fallback.
 - Every check that reads the pages now reads `/giving` too.
+- Its own link-preview card, `og-giving.png`, built by `build-images` from
+  `tools/og-giving.html` in the same design as the site card.
 
 ## 2026-11-22: Body copy in Inter, the brand's text face
 - Body copy on every page, Enrollment Audit and the link-preview card is

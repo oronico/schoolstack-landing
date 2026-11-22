@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SchoolStack giving guide card source</title>
+<!-- Netlify publishes the repo root, so this template is reachable over HTTP.
+     It is a rendering source, not a page - keep it out of the index. -->
+<meta name="robots" content="noindex, nofollow">
+<!-- The site's own self-hosted fonts, by relative path. This template used to
+     pull from fonts.googleapis.com, which the render sandbox cannot reach: the
+     fetch failed silently, Chromium fell back to DejaVu Sans, and an off-brand
+     card shipped. Local files cannot fail that way. -->
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Brand tokens, the same values as the :root block in css/site.css.
+     The link-preview card for /giving, in the same design as the site card
+     (tools/og-image.html): flat navy, paper text, the headline's second half
+     in gold. No gradient, no shadow. */
+  :root {
+    --ink:    #1E293B;
+    --paper:  #FAF9F7;
+    --accent: #FBBF24;
+  }
+
+  html, body { width: 1200px; height: 630px; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 72px 84px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Owner-supplied wordmark, white-on-navy twin, as used in the site footer. */
+  .logo { display: block; height: 52px; width: auto; align-self: flex-start; }
+
+  h1 {
+    margin-top: auto;
+    font-family: 'Quicksand', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 92px;
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+  }
+  h1 em { font-style: normal; color: var(--accent); display: block; }
+
+  .sub {
+    margin-top: 26px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    opacity: 0.92;
+  }
+
+  .foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .foot .url { color: var(--accent); }
+</style>
+</head>
+<body>
+  <img class="logo" src="../assets/logos/schoolstack-logo-white.6519c89c.svg" alt="SchoolStack">
+
+  <h1>Year-end giving,<em>in one afternoon.</em></h1>
+  <p class="sub">Three emails, a thank-you, and the AI prompts to write them.</p>
+
+  <div class="foot">
+    <span>A guide for school leaders</span>
+    <span class="url">schoolstack.ai/giving</span>
+  </div>
+</body>
+</html>
