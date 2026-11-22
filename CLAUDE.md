@@ -186,7 +186,7 @@ of page text unless the owner settles the word.
 
 ```
 npm test                        # everything below, in order, plus the feature suite
-node tools/verify-content.mjs   # files: redirects, structured data, voice rules, anchors, fonts
+node tools/verify-content.mjs   # files: redirects, structured data, voice rules, anchors, fonts, comments
 node tools/verify-render.mjs    # layout: stretched images, heading order, overflow, dead CTAs
 node tools/verify-headers.mjs   # the CSP does not block the page it protects
 node tools/verify-calculator.mjs # the durability snapshot, driven by keyboard and typing
@@ -262,6 +262,14 @@ Why each exists:
   per student") and fails if it does not reproduce the printed answer. The
   same mistake shipped twice: the math in cents, the working line rounded to
   the dollar (#32, then #31).
+- **no comments** (owner, November 2026) — code carries no comments.
+  `verify-content` finds them with `tools/lib/comments.mjs`. Why the code is
+  the way it is goes in `docs/adr/`, one ADR per topic; a known shortcut
+  goes in an issue. `COMMENT_DEBT` is a ratchet like `KNOWN_DEBT`: it
+  records the comments each file may still carry, and fails when a count
+  moves without it. `/delete-comment` sorts and clears what is left. The
+  676 comments of 22 November 2026 were 455 decisions, 195 repeats of the
+  code, 21 stale and 12 excuses (ADR 0001).
 - **verify-headers** — a CSP is applied at the Netlify edge, so neither local
   development nor the diff will tell you it blocked your own stylesheet.
 - **build-images** — the OG card once shipped in DejaVu Sans because the

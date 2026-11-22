@@ -1,20 +1,3 @@
-/**
- * The durability snapshot on the landing page: a one-year illustration of
- * facilities and staffing against the tuition and funding a school enters.
- * Not a budget; SchoolStack Budget is where the five-year plan gets built.
- *
- * One file, two readers. The browser loads it as a classic script (the CSP
- * allows script-src 'self', nothing else) and it mounts itself on
- * [data-budget-calculator]. Node `require`s it from
- * tools/lib/budget-calculator.test.mjs and features/, so the arithmetic is
- * tested in the exact code that ships rather than a copy that could drift.
- *
- * Everything runs on the visitor's device. No request leaves the page.
- *
- * Money is held in whole cents so a decimal tuition like $10,000.50 times 50
- * students lands on $500,025.00 exactly, with no floating-point dust. Figures
- * are shown to the nearest dollar.
- */
 (function (root, factory) {
   var api = factory();
   if (typeof module === 'object' && module.exports) {
@@ -32,25 +15,15 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  /* -------------------------------------------------------------------------
-     Settings. The starting allocations (15% facilities, 60% staffing) are
-     illustrative assumptions for a founder to adjust, not benchmarks: the
-     page says so, and nothing here treats either as a ceiling or a norm.
-     Tuition is the average a school expects to COLLECT per student, so a
-     founder with discounts or free seats enters the net figure; the snapshot
-     stays two inputs and two sliders on purpose.
-     ------------------------------------------------------------------------- */
   var DEFAULTS = { tuition: 10000, students: 50, facilitiesPct: 15, staffingPct: 60 };
 
   var LIMITS = {
-    tuition: { min: 0, max: 1000000 },     // per student, per year
+    tuition: { min: 0, max: 1000000 },
     students: { min: 0, max: 10000 },
     facilitiesPct: { min: 0, max: 40 },
     staffingPct: { min: 0, max: 90 },
   };
 
-  // Below this share remaining, the page suggests a closer look at what it
-  // still has to cover. It never reads a larger remainder as healthy.
   var TIGHT_BELOW_PCT = 15;
 
   var MESSAGES = {
@@ -58,11 +31,6 @@
     tight: 'What remains may be tight. Make sure it covers your other operating expenses and reserves.',
   };
 
-  /* -------------------------------------------------------------------------
-     Parsing. Each returns { value, error }: value is null whenever error is set.
-     ------------------------------------------------------------------------- */
-
-  // Accepts "10000", "10,000", "$10,000.50", " 9500 ". Rejects anything else.
   function parseTuition(raw) {
     var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
     if (s === '') return { value: null, error: 'Enter tuition or funding per student.' };
@@ -73,7 +41,6 @@
     if (n > LIMITS.tuition.max) {
       return { value: null, error: 'Enter an amount up to ' + formatUSD(LIMITS.tuition.max) + ' per student.' };
     }
-    // Round to the cent: a fourth decimal place is a typo, not a price.
     return { value: Math.round(n * 100) / 100, error: null };
   }
 
@@ -82,7 +49,6 @@
     if (s === '') return { value: null, error: 'Enter the number of ' + what + ', or 0.' };
     if (/^-/.test(s)) return { value: null, error: 'Enter 0 or more ' + what + '.' };
     if (/^\d*\.\d*$/.test(s) && s !== '.') {
-      // "50.0" is a whole number written long; "50.5" is not.
       if (Number(s) === Math.floor(Number(s))) s = String(Math.floor(Number(s)));
       else return { value: null, error: 'Enter a whole number of ' + what + '.' };
     }
@@ -94,20 +60,13 @@
 
   function parseStudents(raw) { return parseCount(raw, 'students', LIMITS.students.max); }
 
-  /* -------------------------------------------------------------------------
-     Break-even. The enrollment a year of running the school needs: total
-     yearly expenses (debt service included, one-time purchases left out, the
-     same basis SchoolStack Budget uses) divided by what each student brings
-     in, rounded up to a whole student. Held in cents like the snapshot.
-     ------------------------------------------------------------------------- */
   var BE_DEFAULTS = { expenses: 600000, perStudent: 10000 };
 
   var BE_LIMITS = {
-    expenses: { min: 0, max: 50000000 },   // per year
-    perStudent: { min: 1, max: 1000000 },  // per student, per year
+    expenses: { min: 0, max: 50000000 },
+    perStudent: { min: 1, max: 1000000 },
   };
 
-  // The money parser both break-even fields share. Same rules as tuition.
   function parseAmount(raw, emptyMessage, max, perWhat) {
     var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
     if (s === '') return { value: null, error: emptyMessage };
@@ -137,9 +96,6 @@
     var e = Math.round(Math.max(0, Number(input.expenses) || 0) * 100);
     var p = Math.round(Math.max(0, Number(input.perStudent) || 0) * 100);
     if (p <= 0) return { students: null, expenses: e / 100, perStudent: 0, collected: 0, cushion: 0, exact: false };
-    // Whole cents in, so this is integer arithmetic: the smallest whole number
-    // of students whose collections reach the expenses. The two guards keep a
-    // float quotient that lands a hair off a whole number from moving it.
     var q = Math.floor(e / p);
     while (q > 0 && q * p > e) q--;
     while (q * p < e) q++;
@@ -154,17 +110,12 @@
     };
   }
 
-  // Sliders cannot leave their range in a browser, but the API can be called
-  // with anything, so clamp and round rather than trust the caller.
   function clampPct(v, key) {
     var n = Math.round(Number(v));
     if (!isFinite(n)) n = DEFAULTS[key];
     return Math.min(LIMITS[key].max, Math.max(LIMITS[key].min, n));
   }
 
-  /* -------------------------------------------------------------------------
-     The arithmetic. Pure: numbers in, numbers out.
-     ------------------------------------------------------------------------- */
   function calculate(input) {
     var tuition = Math.max(0, Number(input.tuition) || 0);
     var students = Math.max(0, Math.floor(Number(input.students) || 0));
@@ -175,9 +126,6 @@
 
     var facilitiesCents = Math.round(revenueCents * facilitiesPct / 100);
     var staffingCents = Math.round(revenueCents * staffingPct / 100);
-    // What remains after the two allocations, for other expenses and reserves,
-    // so the three parts always sum back to revenue exactly. Negative means a
-    // deficit.
     var remainingCents = revenueCents - facilitiesCents - staffingCents;
     var allocatedPct = facilitiesPct + staffingPct;
     var remainingPct = 100 - allocatedPct;
@@ -198,12 +146,6 @@
     };
   }
 
-  /* The stacked bar, as widths in percent of the track. No segment is ever
-     negative, and facilities + staffing + remaining always fill the track.
-     When the allocations pass 100% the track rescales to the total, a marker
-     shows where revenue ends, and `deficit` is the width of the hatched
-     overlay from that marker to the end: it lies over the two allocations
-     rather than beside them. */
   function barSegments(facilitiesPct, staffingPct) {
     var total = facilitiesPct + staffingPct;
     var scale = Math.max(100, total);
@@ -217,31 +159,22 @@
     };
   }
 
-  /* -------------------------------------------------------------------------
-     Formatting
-     ------------------------------------------------------------------------- */
   var usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0, minimumFractionDigits: 0 });
   var usdCents = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   var plain = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
-  // Nearest dollar, and a true minus sign so a deficit reads at a glance.
   function formatUSD(n) {
     var r = Math.round(n);
     if (r === 0) return usd.format(0);
     return (r < 0 ? '−' : '') + usd.format(Math.abs(r));
   }
 
-  // Whole dollars when the figure is whole, cents when it is not. The
-  // break-even working and sentence use this: rounding $600,000.25 to
-  // "$600,000" made "$600,000 ÷ $10,000" read as exactly 60 beside an
-  // answer of 61, which is right, and looked wrong.
   function formatUSDExact(n) {
     var cents = Math.round(n * 100);
     if (cents % 100 === 0) return formatUSD(cents / 100);
     return (cents < 0 ? '−' : '') + '$' + usdCents.format(Math.abs(cents) / 100);
   }
 
-  // For the tuition box after the visitor leaves it: keeps cents only if typed.
   function formatTuitionField(n) {
     return n % 1 === 0 ? plain.format(n) : usdCents.format(n);
   }
@@ -250,10 +183,6 @@
     return (n < 0 ? '−' : '') + Math.abs(n) + '%';
   }
 
-  /* -------------------------------------------------------------------------
-     The component. Finds its parts by data-calc attributes, so the markup in
-     index.html owns the layout and copy and this file owns behaviour.
-     ------------------------------------------------------------------------- */
   function mount(el) {
     if (!el || el.__budgetCalc) return null;
     var q = function (name) { return el.querySelector('[data-calc="' + name + '"]'); };
@@ -292,8 +221,6 @@
       var s = parseStudents(parts.students.value);
       showFieldError(parts.tuition, parts.tuitionError, t.error);
       showFieldError(parts.students, parts.studentsError, s.error);
-      // An invalid entry keeps the last good figure on screen rather than
-      // flashing to $0, and the field says what to change.
       if (!t.error) last.tuition = t.value;
       if (!s.error) last.students = s.value;
       el.toggleAttribute('data-stale', !!(t.error || s.error));
@@ -319,7 +246,6 @@
         r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year');
       parts.staffing.setAttribute('aria-valuetext',
         r.staffing.pct + ' percent, ' + formatUSD(r.staffing.annual) + ' a year');
-      // The filled part of each slider track, for the hand-styled sliders.
       [parts.facilities, parts.staffing].forEach(function (input) {
         var min = Number(input.min) || 0, max = Number(input.max) || 100;
         input.style.setProperty('--fill', ((Number(input.value) - min) / (max - min) * 100) + '%');
@@ -338,14 +264,9 @@
             : 'remaining for other expenses and reserves ' + r.remaining.pct + '%') + '.');
       }
       el.setAttribute('data-status', r.status);
-      // Past 100% the legend swaps "Other expenses and reserves" for "Over the
-      // tuition and funding entered", so
-      // the same shortfall is not listed twice.
       if (parts.deficitLegend) parts.deficitLegend.hidden = r.status !== 'over';
       if (parts.remainingLegend) parts.remainingLegend.hidden = r.status === 'over';
 
-      // Only rewrite the live region when the message changes, so a screen
-      // reader hears it once rather than on every slider step.
       if (parts.alert && parts.alert.textContent !== r.message) parts.alert.textContent = r.message;
       return r;
     }
@@ -362,7 +283,6 @@
       parts[k].addEventListener('input', render);
       parts[k].addEventListener('change', render);
     });
-    // Tidy the boxes once the visitor is done with them: "10000" -> "10,000".
     parts.tuition.addEventListener('blur', function () {
       var t = parseTuition(parts.tuition.value);
       if (!t.error) parts.tuition.value = formatTuitionField(t.value);
@@ -379,17 +299,12 @@
     return el.__budgetCalc;
   }
 
-  /* The break-even card. Its parts carry data-be attributes; its figures use
-     data-out names starting "be-", so it never collides with the snapshot. */
   function breakEvenSentence(r) {
     var who = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
     if (r.exact) return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', exactly what a year costs.';
     return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', ' + formatUSDExact(r.cushion) + ' above what a year costs.';
   }
 
-  // "$600,000 ÷ $10,000 per student", plus ", rounded up" on a remainder.
-  // The snapshot's working line. Exact to the cent, like the total above it,
-  // so the printed sum always multiplies out to the printed answer.
   function revenueFormula(r) {
     return formatUSDExact(r.tuition) + ' \u00d7 ' + plain.format(r.students)
       + (r.students === 1 ? ' student' : ' students');
@@ -436,7 +351,6 @@
       var p = parsePerStudent(parts.perStudent.value);
       showFieldError(parts.expenses, parts.expensesError, e.error);
       showFieldError(parts.perStudent, parts.perStudentError, p.error);
-      // Like the snapshot: a bad entry keeps the last good answer on screen.
       if (!e.error) last.expenses = e.value;
       if (!p.error) last.perStudent = p.value;
       el.toggleAttribute('data-stale', !!(e.error || p.error));

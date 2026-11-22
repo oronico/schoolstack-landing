@@ -1,15 +1,3 @@
-/**
- * Enrollment Audit's scoring, plan and seat math, apart from the page.
- *
- * One file, two readers, like js/budget-calculator.js. The browser loads it
- * as a classic script before the page's own script, which reads it from
- * window.SchoolStackEnrollmentAudit. Node `require`s it from
- * tools/lib/enrollment-audit.test.mjs, so the tests run the code that ships.
- *
- * Every function here takes the audit (the answers a visitor has given) and
- * returns a value. None reads the page or the browser's storage, so each can
- * be checked with plain numbers.
- */
 (function (root, factory) {
   var api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
@@ -23,7 +11,6 @@
    {id:"yi",name:"Yield",q:"Do accepted families show up on day one?",color:"--st-yi"},
    {id:"re",name:"Retention",q:"Do your families come back next year?",color:"--st-re"}
   ];
-  // w = weight 1 to 3 (effect on enrollment). only: "tuition" limits to tuition schools. grades: shown only for those grades.
   const ITEMS=[
    {id:"a1",st:"aw",w:3,s:"Referral tools for current families",p:"Current families have an easy way to refer others: a link to share, a person to call and a few facts to pass on.",why:"Families trust another parent more than any ad. A happy family will send others if you make it easy and tell them what to say.",act:"Give every current family a referral card: a short link, the name of the person to call and three facts about the school. Ask for referrals at pickup and in your next newsletter."},
    {id:"a2",st:"aw",w:2,s:"Track referrals on the inquiry form",p:"Our inquiry form asks how the family heard about us, and we count referrals as their own line.",why:"If you don't count referrals, you can't tell whether your parent ambassadors are working.",act:"Add two questions to your inquiry form: “How did you hear about us?” and “Do you know a family enrolled here?” Report referral inquiries each month."},
@@ -83,9 +70,6 @@
      {id:"hb3",t:"They know the routine",items:["y1","p3"]},
      {id:"hb4",t:"They don't know what else is out there",items:["a3","a4"]}]}
   ];
-  // Grades are stored, matched and given element ids by their id, never by
-  // their label: the label is wording on the page and free to change. Answers
-  // saved before November 2026 hold labels; load() turns them into ids.
   const GRADES=[{id:"prek",label:"PreK"},{id:"k-2",label:"K to 2"},{id:"3-5",label:"3 to 5"},{id:"6-8",label:"6 to 8"},{id:"9-12",label:"9 to 12"}];
   const gradeLabel=id=>(GRADES.find(g=>g.id===id)||{label:id}).label;
   const MONTHS=["Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"];
@@ -93,11 +77,8 @@
   const VAL={yes:2,partly:1,no:0};
   const KEY="ss-enrollment-path-v2";
   const NUMS=["current","reRate","driver","goal","rInq","rApp","rYield"];
-  // Last year's counts. Each rate is the next count down the funnel over the
-  // one above it, filled in once both are entered.
   const COUNTS=["lInq","lApp","lOff","lEnr"];
   const FROM_COUNTS=[["rInq","lApp","lInq"],["rApp","lOff","lApp"],["rYield","lEnr","lOff"]];
-  // The lowest percentage each rate field takes; the highest is 100.
   const RATES={reRate:0,rInq:1,rApp:1,rYield:1};
   
   const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
@@ -106,13 +87,8 @@
    forces:["pu2","pl1","pl5","an1","an3","hb2"],current:72,reRate:85,driver:80,goal:96,rInq:50,rApp:80,rYield:65};
   const BLANK=()=>({example:false,name:"",state:"",type:"tuition",offer:"7",grades:[],ans:{},forces:[],current:"",reRate:"",driver:"",goal:"",rInq:"",rApp:"",rYield:""});
   
-  // Saves before November 2026 hold the labels as they read then. The map is
-  // frozen at those words, so rewording a label later cannot drop a saved choice.
   const OLD_GRADE_LABELS={"PreK":"prek","K to 2":"k-2","3 to 5":"3-5","6 to 8":"6-8","9 to 12":"9-12"};
   const ANSWERS=["yes","partly","no","na"];
-  // One reader for answers from the browser's storage and from a saved file.
-  // It keeps only what the tool knows, in the shape it expects, and returns
-  // null for anything that is not an audit.
   function clean(o){
     if(!o||typeof o!=="object"||!o.ans||typeof o.ans!=="object")return null;
     const c=BLANK(),str=(v,max)=>typeof v==="string"||typeof v==="number"?String(v).slice(0,max):"";
@@ -126,26 +102,19 @@
     const fo=[];FORCES.forEach(f=>f.opts.forEach(x=>fo.push(x.id)));
     c.forces=(Array.isArray(o.forces)?o.forces:[]).filter(id=>fo.includes(id));
     NUMS.concat(COUNTS).forEach(k=>{const x=parseFloat(o[k]);c[k]=isFinite(x)&&x>=0?String(x):""});
-    // A rate saved before the fields held their range is brought into it, so
-    // the field shows the figure the seat math counts.
     Object.keys(RATES).forEach(k=>{const x=parseFloat(c[k]);if(isFinite(x))c[k]=String(Math.min(Math.max(x,RATES[k]),100))});
     return c;
   }
 
-  // Saved files carry this tag. It keeps the tool's first name so files
-  // saved before the rename still open (CLAUDE.md section 9).
   const FILE_TOOL="schoolstack-enrollment-path";
 
   const stageOf=id=>STAGES.find(st=>st.id===id);
   const shown=(s,i)=>(!i.only||s.type===i.only)&&(!i.grades||!(s.grades||[]).length||i.grades.some(g=>s.grades.includes(g)));
   const visible=s=>ITEMS.filter(i=>shown(s,i));
   const scored=s=>visible(s).filter(i=>s.ans[i.id]!=="na");
-  // A force option is offered only while at least one practice it points to is
-  // on screen: a charter school has no cost sheet to move up the plan.
   const optShown=(s,o)=>o.items.some(id=>{const it=ITEMS.find(i=>i.id===id);return it&&shown(s,it)});
   const marked=s=>{const m=[];FORCES.forEach(f=>f.opts.forEach(o=>{if(s.forces.includes(o.id)&&optShown(s,o))m.push({f,o})}));return m};
 
-  /* Scoring */
   function boost(s,id){return marked(s).filter(x=>x.o.items.includes(id)).length}
   function ranked(s){
     return scored(s).filter(i=>s.ans[i.id]==="no"||s.ans[i.id]==="partly").map(i=>{
@@ -153,9 +122,6 @@
       return {...i,gap,score:gap*(i.w+boost(s,i.id))+(gap===2?0.5:0)};
     }).sort((a,b)=>b.score-a.score||b.w-a.w);
   }
-  // The plan holds nine steps. Each force the school marked brings in the
-  // first open practice on its list, the one that answers it most directly;
-  // the other places go by rank.
   const PLAN_SIZE=9;
   function planned(s){
     const r=ranked(s),pick=new Set();
@@ -164,16 +130,9 @@
     return {plan:r.filter(i=>pick.has(i.id)),rest:r.filter(i=>!pick.has(i.id))};
   }
   function pct(s,list){if(!list.length)return 0;return Math.round(list.reduce((t,i)=>t+(VAL[s.ans[i.id]]||0),0)/(list.length*2)*100)}
-  // A practice not yet answered counts as zero, so a score read early looks
-  // like a failing one. It shows once four in five practices are answered,
-  // the same share the benchmark form asks for.
   function progress(s){const all=visible(s).length,done=visible(s).filter(i=>s.ans[i.id]).length,need=Math.ceil(all*0.8);return {all,done,need,ready:all>0&&done>=need}}
 
-  /* Seat math */
   function n(v,d){const x=parseFloat(v);return isFinite(x)&&x>=0?x:d}
-  /* A percentage the visitor typed, as a fraction, or null when they have not
-     entered one. Never a stand-in: the seat math shows no figure it would have
-     to invent a rate for. */
   function rateOf(v,lo){const x=parseFloat(v);return isFinite(x)&&x>=0?Math.min(Math.max(x,lo),100)/100:null}
   function seatMath(s){
     const cur=n(s.current,0),re=rateOf(s.reRate,0),drv=n(s.driver,0),goal=n(s.goal,0);
@@ -185,20 +144,13 @@
     const funnel=(seats,yy,rr)=>{const offers=Math.ceil(seats/(yy??ry)),apps=Math.ceil(offers/ra),inq=Math.ceil(apps/ri);return {seats,offers,apps,inq}};
     return {cur,re,drv,goal,back,target,fill,funnel,ri,ra,ry,funnelReady};
   }
-  // How many fewer inquiries each lever saves, or null where it does not
-  // apply. Call only once the funnel is ready.
   function levers(m){
     const seats=m.fill(m.target),f=m.funnel(seats),out={reenroll:null,yield:null};
     if(m.cur&&m.re<0.96){const back2=Math.round(m.cur*Math.min(m.re+0.05,1)),seats2=Math.max(0,Math.ceil(m.target-back2)),f2=m.funnel(seats2);out.reenroll=f.inq-f2.inq}
     if(m.ry<0.9){const f3=m.funnel(seats,Math.min(m.ry+0.1,0.99));out.yield=f.inq-f3.inq}
     return out;
   }
-  // A rate the visitor typed, brought into its field's range, or null when
-  // it is not a number.
   function clampRate(id,v){const x=parseFloat(v);if(!isFinite(x))return null;return Math.min(Math.max(x,RATES[id]),100)}
-  // The rates a changed count is part of, worked out from last year's counts.
-  // Only those: a rate the visitor set by hand stays as they set it when an
-  // unrelated count changes.
   function ratesFromCount(s,changed){
     const out=[];
     FROM_COUNTS.filter(([,top,bottom])=>top===changed||bottom===changed).forEach(([rate,top,bottom])=>{
@@ -209,7 +161,6 @@
     return out;
   }
 
-  /* Calendar */
   function span(a,b){const set=new Set();for(let i=a;i<=b;i++)set.add(i);return set}
   function lanes(s){
     const roll=s.offer==="rolling",o=roll?null:parseInt(s.offer,10),g=s.grades||[];
@@ -226,7 +177,6 @@
     return L;
   }
 
-  /* The plan as text, for copying */
   function planText(s){
     const {plan:r,rest}=planned(s),sc=scored(s),L=[];
     L.push(`${s.name||"Our school"}${s.state?" ("+s.state+")":""}: 90-day enrollment plan`);
@@ -251,13 +201,11 @@
     return L.join("\n");
   }
 
-  /* Saved files */
   function fileBody(s,now){return JSON.stringify({tool:FILE_TOOL,version:2,saved:now.toISOString(),audit:s},null,2)}
   function fileName(s,now){
     const slug=(s.name||"audit").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"audit";
     return `enrollment-audit-${slug}-${now.toISOString().slice(0,10)}.json`;
   }
-  // The audit in a saved file, or null for anything that is not one.
   function readFile(text){
     try{const o=JSON.parse(text);return o&&o.tool===FILE_TOOL?clean(o.audit):null}catch(err){return null}
   }

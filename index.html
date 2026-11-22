@@ -9,18 +9,12 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#1E293B">
 
-  <!-- Icons. The ?v= query busts the long-lived favicon cache browsers keep.
-       It is each file's content hash, which tools/build-images.mjs stamps on
-       every page; verify-content fails if one falls behind. Never type it. -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=bb61dd97">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=df3734c2">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=e35e5f62">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1f18d080">
   <link rel="manifest" href="/site.webmanifest">
 
-  <!-- Open Graph. The title here is shorter than the SEO <title> above: this is
-       the text a person reads in an iMessage or Slack preview, where the job is
-       to earn the tap. -->
   <meta property="og:title" content="Back-office tools for small schools, built with the people who run them.">
   <meta property="og:description" content="SchoolStack is the back office for schools of 20 to 250 students, built on QuickBooks Online. Get early access, or use our free community, budgeting, and funding tools today.">
   <meta property="og:type" content="website">
@@ -33,23 +27,16 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="SchoolStack: the back office small schools run on. For schools of 20 to 250 students, built on QuickBooks Online. Three free tools open now.">
 
-  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Back-office tools for small schools, built with the people who run them.">
   <meta name="twitter:description" content="SchoolStack is the back office for schools of 20 to 250 students, built on QuickBooks Online. Get early access, or use our free community, budgeting, and funding tools today.">
   <meta name="twitter:image" content="https://schoolstack.ai/og-image.png?v=1685341e">
   <meta name="twitter:image:alt" content="SchoolStack: the back office small schools run on. For schools of 20 to 250 students, built on QuickBooks Online. Three free tools open now.">
 
-  <!-- Self-hosted rather than linked from fonts.googleapis.com: no third party
-       in the request path, and no blocking round trip to another origin before
-       the first headline can paint. Regenerate with tools/fetch-fonts.mjs.
-       Only the latin files are preloaded; latin-ext loads on demand. -->
   <link rel="preload" href="/fonts/quicksand-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
 
-  <!-- Structured data. The FAQ entries below must stay word-for-word identical
-       to the visible #faq section; Google drops markup that does not match. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -161,8 +148,6 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV. Written out on every page; tools/lib/page-audit.mjs chromeDrift()
-       fails the build if the copies stop matching. -->
   <nav aria-label="Main">
     <a href="/" class="nav-brand" aria-label="SchoolStack home">
       <img src="/assets/logos/schoolstack-logo.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
@@ -175,8 +160,6 @@
       <a href="#faq">FAQ</a>
       <a href="/enrollment/">Enrollment Audit</a>
     </div>
-    <!-- Phones and narrow tablets. A <details> opens and closes with no
-         script at all; js/site.js only closes it after a link is chosen. -->
     <details class="nav-menu" id="nav-menu">
       <summary>Menu</summary>
       <div class="nav-menu-panel">
@@ -192,7 +175,6 @@
 
   <main id="main">
 
-  <!-- HERO -->
   <div class="hero-wrap">
   <section class="hero">
     <div class="hero-badge">
@@ -217,9 +199,6 @@
   </section>
   </div>
 
-  <!-- THE TOOLS. Three are promoted: Space, Budget and Access. Lending Lab is
-       off the public site while it gets more work; its /go/ routes stay in
-       _redirects for links already shared (see tools/verify-render.mjs). -->
   <section class="section" id="tools">
     <div class="label">Complimentary today</div>
     <h2>Start with the question in front of you.</h2>
@@ -261,16 +240,6 @@
     </p>
   </section>
 
-  <!-- THE PLATFORM. In development for 2027. QuickBooks Online stays the
-       accounting system of record; Advanced is NOT required, though the FAQ
-       suggests nonprofits review it for Form 990 categorization. The QBO
-       integration rolls out with the design partner pilot from November 2026. Gusto is planned: SchoolStack does not run
-       payroll. Do not claim Gusto is live, or that everything ships at once.
-       Design partner schools use the platform today; it opens to more schools
-       in 2027 (owner, November 2026: say so warmly, and say "early access"). Its
-       captions match the narration word for word, including "deserve" in the
-       closing line, which repeats the hero; the voice check reads this page,
-       not the captions file. -->
   <section class="section section-narrow" id="platform">
     <div class="label">Opening to more schools in 2027</div>
     <h2>One connected back office, built for small schools.</h2>
@@ -283,10 +252,6 @@
       </video>
       <figcaption id="platform-film-note">Shown: SchoolStack today, built with our design partner schools. It opens to more schools in 2027.</figcaption>
     </figure>
-    <!-- The jobs founders hire SchoolStack for, in the words they used in
-         design partner calls and demos (owner, November 2026). Each answer
-         is something the film shows today; capabilities may arrive in
-         stages, so do not add one the film does not show. -->
     <ul class="platform-jobs">
       <li><strong>Will we make payroll in June?</strong> Cash coming in from tuition, ESAs and scholarships, against what goes out.</li>
       <li><strong>Who still owes us tuition?</strong> Every student's tuition, discounts and payment plan, with past-due flagged early.</li>
@@ -299,15 +264,6 @@
     </div>
   </section>
 
-  <!-- THE EARLY LIST (owner, November 2026). An interest form for early
-       access and product updates; it replaced the design partner
-       application. The Netlify form keeps its name, early-access, so the
-       dashboard and notifications carry on, and its id is that name too:
-       #early-access is the one id every link on the site uses. The older
-       ids still land here, because links to them are already out in the
-       world: #design-partners (the September 2026 application) on the
-       empty marker just above the band, so it lands where #early-access
-       does, and #apply and #signup further down. Link to none of them. -->
   <span class="anchor-alias" id="design-partners" aria-hidden="true"></span>
   <section class="signup" id="early-access">
     <div class="cohort-hero">
@@ -318,19 +274,10 @@
     </div>
 
     <div class="signup-form-wrap" id="apply">
-      <!-- tabindex="-1" makes the heading a focusable fragment target: a link
-           to #apply-heading moves keyboard focus onto it as it scrolls (the
-           skip-link mechanism), and the next Tab lands on the first field.
-           The site's own links go to #early-access, the band above, so the
-           reader sees what the list is before the fields. -->
       <h3 id="apply-heading" tabindex="-1">Your details</h3>
-      <!-- id="signup" is the anchor the page carried until September 2026, kept
-           so links already shared to /#signup still land on the form. -->
       <div id="signup" data-state="idle">
         <form class="signup-form" id="signupForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-labelledby="apply-heading">
           <input type="hidden" name="form-name" value="early-access">
-          <!-- Spam trap. Hidden from every visitor and from assistive tech; a
-               bot that fills in every field it finds trips it. -->
           <p class="hp" aria-hidden="true"><label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
 
           <div class="form-group">
@@ -440,13 +387,6 @@
     </div>
   </section>
 
-  <!-- DURABILITY SNAPSHOT. A founder surface, and deliberately not called a
-       budget: it is a one-year illustration of facilities and staffing
-       against the tuition and funding a school enters, and SchoolStack Budget
-       is where the five-year plan gets built. It groups costs; it does not
-       classify them, so staffing is never described as outside program. The values in the markup are
-       the defaults, so the section reads correctly before
-       js/budget-calculator.js runs and nothing moves when it does. -->
   <section class="section" id="budget-calculator" aria-labelledby="calc-heading">
     <div class="label">Free durability snapshot</div>
     <h2 id="calc-heading">How far do your tuition and funding go?</h2>
@@ -536,7 +476,6 @@
       </div>
     </div>
 
-
     <p class="platform-note calc-note">
       A one-year illustration for planning only. It assumes you collect the full amount entered and
       leaves out any revenue you have not entered, such as grants or fundraising. It does not
@@ -603,10 +542,6 @@
     </div>
   </section>
 
-  <!-- ENROLLMENT AUDIT. A self-audit, not a fourth tool (CLAUDE.md section 7):
-       it sits apart from the three tool cards, is never called free, and
-       opens in the same tab. The picture is the real tool's scorecard for
-       its built-in example school, not a mock. -->
   <section class="enroll-band" aria-labelledby="enroll-heading">
     <div class="enroll-text">
       <div class="label">Recruitment and enrollment</div>
@@ -625,8 +560,6 @@
     </figure>
   </section>
 
-  <!-- FOUNDER INTRO. Brief by design: full biographies and values live on
-       /about. -->
   <section class="section section-narrow founder-intro" aria-labelledby="founder-heading">
     <div class="label">The people behind SchoolStack</div>
     <h2 id="founder-heading">Built with an understanding of what schools carry.</h2>
@@ -638,8 +571,6 @@
     <p class="founder-link"><a href="/about">Meet the people behind SchoolStack</a></p>
   </section>
 
-  <!-- WHO IS BEHIND THIS: the incubator and the funders in one band, which
-       until November 2026 were two bands with a full-size heading each. -->
   <section class="section backing" style="padding-top: 0;">
     <div class="label">Who is behind this</div>
     <h2>Incubated by Building Hope Impact Fund</h2>
@@ -672,7 +603,6 @@
     </div>
   </section>
 
-  <!-- FAQ -->
   <section class="section section-narrow" id="faq">
     <div class="label">FAQ</div>
     <h2>Common questions</h2>
@@ -715,15 +645,12 @@
 
   </main>
 
-  <!-- FOOTER. Shared with every page; see the NAV note. -->
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
           <img src="/assets/logos/schoolstack-logo-white.6519c89c.svg" alt="SchoolStack" width="1296" height="204">
           <p>The back office small schools run on. Built by a founder, for founders.</p>
-          <!-- One sign-up (owner, November 2026): the early list. This block
-               links to it; there is no second form. -->
           <div class="newsletter">
             <h2 class="newsletter-heading">Stay ready.</h2>
             <p class="newsletter-blurb">Early access news and product updates from SchoolStack. Unsubscribe any time.</p>
@@ -764,9 +691,6 @@
     </div>
   </footer>
 
-  <!-- The budget calculator. A file rather than inline so the Node tests run
-       the same arithmetic the page does. Outside /assets/, so it is not under
-       the year-long immutable cache and needs no hash in its name. -->
   <script src="/js/budget-calculator.js" defer></script>
   <script src="/js/site.js" defer></script>
   <script>
@@ -777,18 +701,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var btn = document.getElementById('submitBtn');
   var errorEl = document.getElementById('formError');
   var successEl = document.getElementById('formSuccess');
-  // Restored from the markup, not a literal, so relabelling the button in
-  // HTML cannot leave the error path putting the old label back.
   var label = btn.textContent;
 
-  // The application is a state machine with four states. Each state fixes
-  // everything a visitor can see, so no mix of half-updated flags can show
-  // (say) the error and the thank-you together. ON lists, for each state,
-  // the events it answers and where each one leads, in the shape XState,
-  // Robot and javascript-state-machine all use. An event a state does not
-  // list is ignored, as in xstate/fsm. The current state is written to
-  // #signup as data-state, the convention Radix uses, and that is what
-  // tools/verify-form.mjs and the feature steps read.
   var VIEW = {
     idle:       { form: true,  busy: false, error: false, success: false },
     submitting: { form: true,  busy: true,  error: false, success: false },
@@ -818,8 +732,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function writeError() {
-    // Built with DOM calls rather than innerHTML: the wording is ours, but the
-    // habit keeps the handler safe if a server message is ever shown here.
     errorEl.textContent = '';
     errorEl.appendChild(document.createTextNode(
       "We couldn't add you to the list. Your answers are still here. Please try again or email "));
@@ -832,8 +744,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    // Only idle and failed answer SUBMIT, so a second Enter keypress
-    // while the first request is out does nothing.
     if (!send('SUBMIT')) return;
 
     fetch('/', {
@@ -848,10 +758,6 @@ document.addEventListener('DOMContentLoaded', function() {
       if (heading) heading.focus();
     })
     .catch(function() {
-      // Every failure, whether the server said no or the request never left
-      // the device, reads the same: the answers are kept, and there is a
-      // person to email. The browser's own wording ("Failed to fetch") is
-      // never shown.
       writeError();
       send('FAIL');
     });

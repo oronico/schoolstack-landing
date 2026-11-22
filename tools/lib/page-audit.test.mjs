@@ -1,9 +1,3 @@
-/**
- * Tests for the structural checks. Both directions, same reasoning as
- * copy-rules.test.mjs: a check only exercised against a page that already
- * passes proves nothing.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -27,7 +21,6 @@ test('anchorTargets collects every in-page target with its lines', () => {
 });
 
 test('anchorTargets ignores a bare # placeholder', () => {
-  // verify-render already fails those separately, as links that go nowhere.
   assert.equal(anchorTargets('<a href="#">x</a>').size, 0);
 });
 
@@ -66,10 +59,6 @@ test('servedFontFamilies reads the @font-face families', () => {
   const out = servedFontFamilies("@font-face{font-family: 'Quicksand';}@font-face{font-family: 'Inter';}");
   assert.deepEqual([...out].sort(), ['Inter', 'Quicksand']);
 });
-
-/* ---------------------------------------------------------------------------
-   The real files
-   --------------------------------------------------------------------------- */
 
 test('index.html has no dangling anchors', () => {
   assert.deepEqual(danglingAnchors(page()), []);
@@ -138,15 +127,11 @@ test('index.html opens no new tab without rel=noopener', () => {
 });
 
 test('every family the page asks for is a family fonts.css serves', () => {
-  // The drift this guards: the files still load, so nothing 4xxs, and the whole
-  // site paints in Trebuchet MS with every other check green.
   const wanted = declaredFontFamilies(css());
   const served = servedFontFamilies(readFileSync(join(ROOT, 'fonts/fonts.css'), 'utf8'));
   assert.deepEqual(Object.keys(wanted).sort(), ['body', 'display']);
   for (const family of Object.values(wanted)) assert.ok(served.has(family), family);
 });
-
-/* ---- Stable ids (November 2026) ---- */
 
 const faqItem = (id, q, a) => `<details class="faq-item"${id ? ` id="${id}"` : ''}>\n<summary><h3>${q}</h3></summary>\n<p>${a}</p></details>`;
 const entity = (id, q, a) => ({ '@id': id && `https://schoolstack.ai/#${id}`, name: q, acceptedAnswer: { text: a } });

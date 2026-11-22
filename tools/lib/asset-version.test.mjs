@@ -1,7 +1,3 @@
-/**
- * The ?v= versions on the icons and the link-preview card are content
- * hashes. These tests show the check fails a stale one and the stamp fixes it.
- */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
