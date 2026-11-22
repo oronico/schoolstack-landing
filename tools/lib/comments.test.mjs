@@ -131,6 +131,9 @@ test('YAML strings and block scalars over several lines', () => {
   assert.deepEqual(lines('- run: | # yes\n    echo "a # b"\n    # yes, a shell comment\n    ls\n', 'yaml'), [1, 3]);
   assert.deepEqual(lines('run: |\n  echo "first\n  # Heading\n  last"\n  # yes\n', 'yaml'), [5]);
   assert.deepEqual(lines('run: |\n  message="first # Heading"\n  x=a\'b # c\'d\n  ls # yes\n', 'yaml'), [4]);
+  assert.deepEqual(lines("run: |\n  cat <<'EOF'\n  # Heading\n  EOF\n  ls # yes\n", 'yaml'), [5]);
+  assert.deepEqual(lines('run: |\n  cat <<-END > f\n  # text\n  END\n  # yes\n', 'yaml'), [5]);
+  assert.deepEqual(lines('run: |\n  echo \\" # yes\n  echo ok # yes\n', 'yaml'), [2, 3]);
 });
 
 test('TOML comments, but not inside strings of one line or several', () => {

@@ -245,6 +245,11 @@ function lineHashes(line, offset, out, state) {
       else if (c === state.quote) state.quote = null;
       continue;
     }
+    if (state.shell && c === '\\') { j++; continue; }
+    if (state.shell && c === '<' && line[j + 1] === '<') {
+      const h = line.slice(j).match(/^<<-?\s*(['"]?)([\w.-]+)\1/);
+      if (h) { state.heredocs.push(h[2]); j += h[0].length - 1; continue; }
+    }
     const before = line.slice(0, j);
     if ((c === '"' || c === "'") && state.opensAt(before)) { state.quote = c; continue; }
     if (c === '#' && (j === 0 || /\s/.test(line[j - 1]))) { out.push([offset + j, offset + line.length]); return; }
@@ -262,14 +267,19 @@ function yamlRanges(src) {
   const state = { quote: null, opensAt: YAML_VALUE_START };
   for (const line of src.split('\n')) {
     if (block && (line.trim() === '' || indentOf(line) > block.indent)) {
-      if (block.shell) lineHashes(line, i, out, block.shell);
+      const sh = block.shell;
+      if (sh && sh.inHeredoc) { if (line.trim() === sh.inHeredoc) sh.inHeredoc = null; }
+      else if (sh) {
+        lineHashes(line, i, out, sh);
+        if (!sh.quote && sh.heredocs.length) sh.inHeredoc = sh.heredocs.shift();
+      }
       i += line.length + 1;
       continue;
     }
     block = null;
     lineHashes(line, i, out, state);
     const m = !state.quote && line.match(BLOCK_SCALAR);
-    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' && { quote: null, opensAt: SHELL_QUOTE } };
+    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' && { quote: null, opensAt: SHELL_QUOTE, shell: true, heredocs: [], inHeredoc: null } };
     i += line.length + 1;
   }
   return out;
