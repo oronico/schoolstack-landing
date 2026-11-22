@@ -1,10 +1,3 @@
-/**
- * Tests for the landing-page budget calculator.
- *
- * They load js/budget-calculator.js itself, the file the browser runs, so
- * there is one implementation of the arithmetic and it is the one under test.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
@@ -14,10 +7,6 @@ const calc = require('../../js/budget-calculator.js');
 const { calculate, parseTuition, parseStudents, barSegments, formatUSD, DEFAULTS, MESSAGES } = calc;
 
 const run = (over = {}) => calculate({ ...DEFAULTS, ...over });
-
-/* ---------------------------------------------------------------------------
-   The worked examples from the brief
-   --------------------------------------------------------------------------- */
 
 test('defaults: $10,000 x 50 students is $500,000, split 15 / 60 / 25', () => {
   const r = run();
@@ -32,10 +21,6 @@ test('defaults: $10,000 x 50 students is $500,000, split 15 / 60 / 25', () => {
   assert.equal(r.status, 'ok');
   assert.equal(r.message, '');
 });
-
-/* ---------------------------------------------------------------------------
-   The edge cases the brief names
-   --------------------------------------------------------------------------- */
 
 test('zero enrollment gives zero dollars everywhere, and percentages still add up', () => {
   const r = run({ students: 0 });
@@ -57,9 +42,7 @@ test('zero tuition gives zero dollars everywhere', () => {
 test('decimal tuition is exact to the cent, with no floating-point dust', () => {
   const r = run({ tuition: 10000.5, students: 50 });
   assert.equal(r.revenue.annual, 500025);
-  // 0.1 + 0.2 territory: $0.10 x 3 must be $0.30, not 0.30000000000000004.
   assert.equal(run({ tuition: 0.1, students: 3 }).revenue.annual, 0.3);
-  // The three parts always sum back to revenue exactly.
   const odd = run({ tuition: 9999.99, students: 37, facilitiesPct: 17, staffingPct: 59 });
   const sum = Math.round((odd.facilities.annual + odd.staffing.annual + odd.remaining.annual) * 100);
   assert.equal(sum, Math.round(odd.revenue.annual * 100));
@@ -87,21 +70,14 @@ test('over 100% allocated: a negative remainder, the over-revenue warning, no ne
 });
 
 test('the tight warning starts below 15% remaining, not at it', () => {
-  assert.equal(run({ facilitiesPct: 25, staffingPct: 60 }).status, 'ok');     // 15% left
-  assert.equal(run({ facilitiesPct: 26, staffingPct: 60 }).status, 'tight');  // 14% left
-  assert.equal(run({ facilitiesPct: 40, staffingPct: 61 }).status, 'over');   // -1%
+  assert.equal(run({ facilitiesPct: 25, staffingPct: 60 }).status, 'ok');
+  assert.equal(run({ facilitiesPct: 26, staffingPct: 60 }).status, 'tight');
+  assert.equal(run({ facilitiesPct: 40, staffingPct: 61 }).status, 'over');
 });
-
-/* ---------------------------------------------------------------------------
-   No benchmarks. The starting allocations are illustrations to adjust, so the
-   result carries no verdict about any one percentage, and no message reads a
-   remainder as proof of financial health.
-   --------------------------------------------------------------------------- */
 
 test('no percentage is judged against a ceiling or benchmark', () => {
   const r = run({ facilitiesPct: 30 });
   assert.equal('facilitiesAboveCeiling' in r, false);
-  // Facilities at 30% with 40% staffing leaves 30%: nothing to flag.
   assert.equal(run({ facilitiesPct: 30, staffingPct: 40 }).status, 'ok');
 });
 
@@ -112,10 +88,6 @@ test('the messages describe the inputs and never call a mix healthy', () => {
   }
 });
 
-/* ---------------------------------------------------------------------------
-   The bar
-   --------------------------------------------------------------------------- */
-
 test('the bar fills the track exactly and never goes negative', () => {
   for (let f = 0; f <= 40; f += 1) {
     for (let s = 0; s <= 90; s += 1) {
@@ -123,22 +95,17 @@ test('the bar fills the track exactly and never goes negative', () => {
       const total = b.facilities + b.staffing + b.remaining;
       assert.ok(Math.abs(total - 100) < 0.05, `${f}/${s} fills ${total}%`);
       assert.ok(Object.values(b).every((v) => v >= 0), `${f}/${s} has a negative segment`);
-      // The deficit overlay runs from the revenue mark to the end, no further.
       assert.ok(Math.abs(b.revenueMark + b.deficit - 100) < 0.05, `${f}/${s} overlay misses the end`);
     }
   }
 });
 
 test('over 100%, the revenue mark sits where revenue ends on the rescaled track', () => {
-  const b = barSegments(40, 85); // 125% allocated
+  const b = barSegments(40, 85);
   assert.equal(b.revenueMark, 80);
   assert.equal(b.deficit, 20);
   assert.equal(b.remaining, 0);
 });
-
-/* ---------------------------------------------------------------------------
-   Input validation
-   --------------------------------------------------------------------------- */
 
 test('tuition accepts the ways people type money', () => {
   for (const [raw, want] of [['10000', 10000], ['10,000', 10000], ['$10,000.50', 10000.5],

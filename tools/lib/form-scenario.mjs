@@ -1,16 +1,3 @@
-/**
- * The signup form driver, shared by verify-form.mjs and the Cucumber steps.
- *
- * It was inline in verify-form.mjs until the feature files needed the same
- * four submit outcomes. Two copies of a fetch stub would drift, and the drift
- * would be invisible: both suites would still go green while asserting
- * different things.
- *
- * The stub replaces window.fetch rather than intercepting at the network layer,
- * so the page's own submit handler runs untouched and every assertion is about
- * what it did.
- */
-
 export const FILL = `
   form.querySelector('#firstName').value = 'Ada';
   form.querySelector('#email').value = 'ada@example.org';
@@ -19,7 +6,6 @@ export const FILL = `
   form.querySelector('#accountingPlatform').value = 'QuickBooks Online';
 `;
 
-/** The answers FILL typed, read back off the form after a submit attempt. */
 export const ANSWERS = {
   firstName: 'Ada',
   email: 'ada@example.org',
@@ -28,13 +14,11 @@ export const ANSWERS = {
   accountingPlatform: 'QuickBooks Online',
 };
 
-/** Which form a scenario drives, by the ids the page gives its parts. */
 export const APPLICATION = {
   form: 'signupForm', button: 'submitBtn', error: 'formError', success: 'formSuccess',
   box: 'signup', fill: FILL,
 };
 
-/** The four outcomes a visitor can meet, named as the page experiences them. */
 export const MODES = {
   ok: 'the submission succeeds',
   'server-error': 'the server answers 500',
@@ -43,11 +27,6 @@ export const MODES = {
   retry: 'the server answers 500, then they try again',
 };
 
-/**
- * An expression that submits a form under `mode` and reports what the page
- * did. Pass fill:false to submit an empty form, which the browser should
- * refuse outright.
- */
 export function scenario(mode, { fill = true, target = APPLICATION } = {}) {
   const t = target;
   return `(async () => {

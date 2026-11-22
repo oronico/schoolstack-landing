@@ -1,13 +1,3 @@
-/**
- * Shared plumbing for the checks in tools/: a static server that serves the
- * site the way Netlify does, and a headless Chromium driven over CDP.
- *
- * This exists because verify-headers.mjs and verify-render.mjs had grown
- * identical copies of the browser bootstrap - finding Chromium, waiting for
- * the DevTools URL, matching request ids to replies, tearing the profile back
- * down. Two copies drift; three would be a decision to let them.
- */
-
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, mkdtempSync, rmSync, statSync } from 'node:fs';
@@ -17,9 +7,6 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-// Must cover every extension the site serves. An unknown type falls through to
-// application/octet-stream, which the nosniff header then makes Chromium reject
-// outright - producing a CSP-shaped failure that is really a gap here.
 export const TYPES = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon',
@@ -29,23 +16,13 @@ export const TYPES = {
   '.mp4': 'video/mp4', '.vtt': 'text/vtt',
 };
 
-/**
- * Serve the repo root over HTTP on a free port.
- *
- * `headersFor(path)` is the hook verify-headers.mjs uses to apply the real
- * _headers rules; without it the server sends Content-Type and nothing else.
- */
 export async function serveSite({ headersFor = () => ({}) } = {}) {
   const server = createServer((req, res) => {
     const path = decodeURIComponent(req.url.split('?')[0]);
     let file = join(ROOT, path === '/' ? 'index.html' : path);
-    // Netlify serves about.html at /about, and so does this. Without it the
-    // About page would 404 here while working in production.
     if (!extname(file) && !existsSync(file) && existsSync(file + '.html')) file += '.html';
-    // And a directory serves its index.html, as /enrollment/ does.
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
     const headers = { ...headersFor(path) };
-    // A path that escapes ROOT is refused rather than served.
     if (!file.startsWith(ROOT) || !existsSync(file)) {
       res.writeHead(404, headers);
       return res.end('not found');
@@ -75,15 +52,6 @@ export function findChrome() {
   return found;
 }
 
-/**
- * Launch headless Chromium, attach to a blank page, and return a CDP client.
- *
- *   send(method, params)   - call a method on the attached page
- *   on(handler)            - every protocol event, for Log/Network/Runtime
- *   evaluate(expr, opts)   - run an expression, JSON.parse the result
- *   navigate(url)          - returns the errorText, or null when it worked
- *   close()                - browser, profile directory, and all
- */
 export async function launchBrowser({ extraArgs = [] } = {}) {
   const profile = mkdtempSync(join(tmpdir(), 'ss-check-'));
   const chrome = spawn(findChrome(), [
@@ -139,8 +107,6 @@ export async function launchBrowser({ extraArgs = [] } = {}) {
       return nav.errorText || null;
     },
 
-    /* Every check ends up asking the page a question and reading a JSON answer
-       back. awaitPromise lets the expression be an async IIFE. */
     async evaluate(expression, { awaitPromise = false } = {}) {
       const { result, exceptionDetails } = await send('Runtime.evaluate', {
         expression, returnByValue: true, awaitPromise,
@@ -153,7 +119,7 @@ export async function launchBrowser({ extraArgs = [] } = {}) {
       ws.close();
       chrome.kill();
       await new Promise((r) => { chrome.once('exit', r); setTimeout(r, 4000); });
-      try { rmSync(profile, { recursive: true, force: true }); } catch { /* best effort */ }
+      try { rmSync(profile, { recursive: true, force: true }); } catch {}
     },
   };
 }

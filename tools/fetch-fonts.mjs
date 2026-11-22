@@ -1,24 +1,4 @@
 #!/usr/bin/env node
-/**
- * Downloads the site's webfonts from Google Fonts and writes them, plus a
- * local stylesheet, into fonts/. Run only when FAMILIES below changes:
- *
- *   node tools/fetch-fonts.mjs
- *
- * The site serves these files itself rather than linking fonts.googleapis.com.
- * That is worth the committed binaries three times over:
- *
- *  1. The Google Fonts <link> is render-blocking and costs two extra DNS +
- *     TLS handshakes before a single headline can paint.
- *  2. It removes a third party from the request path of every visitor, which
- *     is the reason the CSP no longer needs to allow fonts.gstatic.com.
- *  3. tools/build-images.mjs renders the share card in a sandbox with no route
- *     to fonts.googleapis.com. Fetching at render time failed silently there -
- *     Chromium fell back to DejaVu Sans and produced an off-brand card that
- *     shipped before anyone noticed. Local files cannot fail that way.
- *
- * Both families are SIL Open Font License 1.1, which permits self-hosting.
- */
 
 import { execFileSync } from 'node:child_process';
 import { writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -28,25 +8,13 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEST = join(ROOT, 'fonts');
 
-// Keep in sync with --font-display / --font-body in index.html.
-//
-// Quicksand and Nunito are the SchoolStack brand faces, shared with Space,
-// Budget and Access. Do not substitute them.
-//
-// Weights are a RANGE, not a list, which makes Google return one variable font
-// per subset covering every weight in between - one file instead of one per
-// weight, for roughly the size of a single static instance.
 const FAMILIES = [
   { name: 'Quicksand', from: 400, to: 700 },
   { name: 'Nunito', from: 400, to: 800 },
 ];
 
-// Only Latin. The full Google response also carries Cyrillic, Greek and
-// Vietnamese subsets, which would roughly triple the bytes for glyphs this
-// site never renders.
 const KEEP_SUBSETS = new Set(['latin', 'latin-ext']);
 
-// Asking as an old browser gets TTF instead of WOFF2, which is ~2x the size.
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 
 const curl = (url, out) => {
@@ -64,7 +32,6 @@ for (const family of FAMILIES) {
   const spec = `${family.name.replace(/ /g, '+')}:wght@${family.from}..${family.to}`;
   const css = curl(`https://fonts.googleapis.com/css2?family=${spec}&display=swap`);
 
-  // Google emits `/* subset */` immediately before each @font-face it labels.
   const parts = css.split(/\/\*\s*([a-z-]+)\s*\*\//i).slice(1);
   for (let i = 0; i < parts.length; i += 2) {
     const subset = parts[i].trim();

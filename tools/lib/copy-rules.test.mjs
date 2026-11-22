@@ -1,11 +1,3 @@
-/**
- * Tests for the voice rules.
- *
- * Every rule gets both directions: copy that must pass, and copy that must
- * fail. A rule only tested against the page as it stands today proves nothing -
- * it would still pass if the regex matched nothing at all.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -17,10 +9,6 @@ import {
 } from './copy-rules.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
-
-/* ---------------------------------------------------------------------------
-   stripNonCopy
-   --------------------------------------------------------------------------- */
 
 test('beta, closed or not, is a voice fault on the page and in share text', () => {
   const page = (body) => `<html><head><meta name="description" content="${body.meta}"></head><body><p>${body.p}</p>`
@@ -40,16 +28,11 @@ test('stripNonCopy removes comments, scripts and styles', () => {
 });
 
 test('stripNonCopy keeps the JSON-LD block, which is reader-facing copy', () => {
-  // Its FAQ answers must stay identical to the visible FAQ, so they are as much
-  // a voice surface as the page. An earlier version stripped every <script>
-  // and hid one instance of "deserves".
   const out = stripNonCopy('<script type="application/ld+json">{"text":"deserves"}</script>');
   assert.ok(out.includes('deserves'));
 });
 
 test('stripNonCopy preserves line numbers', () => {
-  // Removed regions become their own newlines, so a hit reported at line N is
-  // at line N of index.html. Without this the h1 was reported 680 lines early.
   const src = 'a\n<!--\nx\ny\n-->\nb';
   const out = stripNonCopy(src);
   assert.equal(out.split('\n').length, src.split('\n').length);
@@ -61,10 +44,6 @@ test('locate reports one hit per match with a 1-based line', () => {
   assert.equal(hits.length, 1);
   assert.equal(hits[0].line, 2);
 });
-
-/* ---------------------------------------------------------------------------
-   Surface extraction
-   --------------------------------------------------------------------------- */
 
 test('headlines reads h1 to h3 and flattens inner markup', () => {
   const out = headlines('<h1>The <em>back</em> office</h1><h4>ignored</h4>');
@@ -80,10 +59,6 @@ test('shareMeta reads the fields a reader meets before the page', () => {
   const out = shareMeta('<title>T</title><meta property="og:title" content="O">');
   assert.deepEqual(out, [{ where: '<title>', text: 'T' }, { where: 'og:title', text: 'O' }]);
 });
-
-/* ---------------------------------------------------------------------------
-   The rules, in both directions
-   --------------------------------------------------------------------------- */
 
 const clean = '<h1>The back office small schools run on.</h1>'
   + '<p>Estimates in our tools are for planning only and are not loan eligibility.</p>';
@@ -129,8 +104,6 @@ test('an invented user count fails', () => {
 });
 
 test('a narrative number is not a user count', () => {
-  // The founder's quote says "we met over 100 school founders". True, and not a
-  // usage claim. An earlier regex triggered on "over" and failed this line.
   assert.deepEqual(
     voiceFaults(`${clean}<p>Last summer we met over 100 school founders who had quit careers.</p>`).faults,
     []);
@@ -147,16 +120,7 @@ test('the disclaimer counts even when the footer wraps it across lines', () => {
   assert.deepEqual(voiceFaults(wrapped).faults, []);
 });
 
-/* ---------------------------------------------------------------------------
-   The ratchet
-   --------------------------------------------------------------------------- */
-
 test('the ratchet records the debt the owner chose to keep', () => {
-  // Was 0 for a few hours, then 8 when the owner restored the original hero
-  // and share copy. The September 2026 redesign took it to 1: the hero
-  // headline the owner specified. CLAUDE.md section 2 still retires the word:
-  // the file and the page disagree on that line, and settling it is the
-  // owner's call. This number tracks the page, not the preference.
   assert.equal(KNOWN_DEBT.entitlement, 1);
 });
 
@@ -181,17 +145,11 @@ test('ENTITLEMENT_WORDS matches the forms that actually appear', () => {
   assert.ok(!new RegExp(ENTITLEMENT_WORDS.source, 'i').test('undeserving'));
 });
 
-/* ---------------------------------------------------------------------------
-   The real page
-   --------------------------------------------------------------------------- */
-
 test('index.html raises no voice faults', () => {
   assert.deepEqual(voiceFaults(page()).faults, []);
 });
 
 test('index.html carries exactly the recorded entitlement debt', () => {
-  // If this fails low, the copy improved: lower KNOWN_DEBT in copy-rules.mjs.
-  // Never raise it.
   assert.equal(voiceFaults(page()).debt.length, KNOWN_DEBT.entitlement);
 });
 
