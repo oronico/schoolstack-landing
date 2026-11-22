@@ -246,6 +246,7 @@ function lineHashes(line, offset, out, state) {
       continue;
     }
     if (state.shell && c === '\\') { j++; continue; }
+    if (state.shell && line.startsWith('<<<', j)) { j += 2; continue; }
     if (state.shell && c === '<' && line[j + 1] === '<') {
       const h = line.slice(j).match(/^<<-?\s*(['"]?)([\w.-]+)\1/);
       if (h) { state.heredocs.push(h[2]); j += h[0].length - 1; continue; }
