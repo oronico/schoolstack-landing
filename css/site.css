@@ -53,10 +53,10 @@
   --step-3: clamp(1.51875rem, 1.4004rem + 0.4857vw, 1.8375rem); /* 24.3 -> 29.4  */
   --step-4: clamp(2rem, 1.7214rem + 1.1429vw, 2.75rem);         /* 32 -> 44      */
 
-  /* Quicksand and Nunito are the SchoolStack brand faces, shared with
-     Space, Budget and Access. Do not substitute them. */
+  /* Quicksand (headings) and Inter (body copy) are the SchoolStack brand
+     faces, shared with Space, Budget and Access. Do not substitute them. */
   --font-display: 'Quicksand', 'Trebuchet MS', sans-serif;
-  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Two measures. Every full-width band aligns to --container with
      --gutter inside it; prose bands use --measure. */

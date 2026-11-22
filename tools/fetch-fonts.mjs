@@ -30,15 +30,17 @@ const DEST = join(ROOT, 'fonts');
 
 // Keep in sync with --font-display / --font-body in index.html.
 //
-// Quicksand and Nunito are the SchoolStack brand faces, shared with Space,
-// Budget and Access. Do not substitute them.
+// Quicksand (headings) and Inter (body copy) are the SchoolStack brand faces,
+// shared with Space, Budget and Access (owner, November 2026). Do not
+// substitute them. The logo's lettering is Montserrat ExtraBold, outlined in
+// the SVG, so no font file is needed for it.
 //
 // Weights are a RANGE, not a list, which makes Google return one variable font
 // per subset covering every weight in between - one file instead of one per
 // weight, for roughly the size of a single static instance.
 const FAMILIES = [
   { name: 'Quicksand', from: 400, to: 700 },
-  { name: 'Nunito', from: 400, to: 800 },
+  { name: 'Inter', from: 400, to: 800 },
 ];
 
 // Only Latin. The full Google response also carries Cyrillic, Greek and
