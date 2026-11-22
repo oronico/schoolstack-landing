@@ -65,7 +65,19 @@ rings on every page; `verify-calculator` checks tap targets and field sizes.
     tall, and its copy at least 12px; verify-calculator fails anything
     smaller. The break-even "start your enrollment audit" link is
     `inline-flex` with `min-height: 44px` for that reason. Enrollment Audit
-    makes every control 44px under `(pointer: coarse)`.
+    makes every control 44px and every field 16px under `(pointer: coarse)`
+    (#52), so iPhone Safari does not zoom the page when a field takes focus.
+    verify-a11y opens Enrollment Audit at 390px as a touch screen and fails
+    any control under 44px or field under 16px (`tools/lib/touch-audit.mjs`),
+    disclosure `<summary>`s included: Bugbot found the "Work them out from
+    last year's counts" summary at 33px, now 45px.
+    It first asks whether the browser reports a touch screen and fails if
+    not, because a failed emulation would pass with empty lists. Links in
+    running text (WCAG 2.5.8's inline exception) and the skip link, which
+    only a keyboard reaches, are exempt. The logo link in the nav and in
+    Enrollment Audit's masthead is a 48px tap target around the 32px logo:
+    `--sp-2` of padding above and below, with a matching negative margin, so
+    the bar keeps its height and nothing moves.
 
 ### Live regions
 

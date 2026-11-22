@@ -2,6 +2,7 @@
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { FOCUS_PROBE, ringProblem } from './lib/focus-audit.mjs';
+import { TOUCH_AUDIT } from './lib/touch-audit.mjs';
 
 async function tabWalk() {
   await browser.evaluate('(document.activeElement && document.activeElement.blur(), scrollTo(0, 0), 0)');
@@ -178,6 +179,23 @@ for (const width of VIEWPORTS) {
   const blind = stops.map((p) => [p, ringProblem(p)]).filter(([, why]) => why);
   console.log(`${' '.repeat(13)}focus: ${stops.length} Tab stops, ${blind.length} without a visible ring`);
   for (const [p, why] of blind) fail(`${path} ${width}px  "${p.label}" (${p.tag}): ${why}`);
+}
+
+{
+  const where = '/enrollment/ 390px touch';
+  await browser.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+  await browser.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+  const navError = await browser.navigate(site.base + '/enrollment/');
+  if (navError) fail(`${where}  navigation failed: ${navError}`);
+  else {
+    await sleep(1000);
+    const t = await browser.evaluate(TOUCH_AUDIT);
+    console.log(`${where}  ${t.controls} controls, ${t.short.length} under 44px, ${t.smallText.length} fields under 16px`);
+    if (!t.coarse) fail(`${where}  the browser did not report a touch screen, so the tap-target check proved nothing`);
+    for (const s of t.short) fail(`${where}  tap target under 44px: ${s}`);
+    for (const s of t.smallText) fail(`${where}  ${s} text, so iPhones zoom the page when it is tapped`);
+  }
+  await browser.send('Emulation.setTouchEmulationEnabled', { enabled: false });
 }
 
 await browser.close();

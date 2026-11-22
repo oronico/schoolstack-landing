@@ -3,6 +3,19 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: One button style, and a tidy-up
+- Every "Get early access" button (hero, early list form, the footer of
+  every page) now looks the same: one style, where there were three
+  with different padding, borders and hovers. The footer one gains the
+  hero's arrow.
+- The SchoolStack logo in the nav, and on Enrollment Audit, is now a
+  48px tap target on phones (it was 32px). Nothing on screen moves.
+- Styles nothing used are gone from the stylesheet (the old consent
+  checkbox and two form layouts); every page looks the same pixel for
+  pixel.
+- A check now opens Enrollment Audit as a phone's touch screen and fails
+  if any control drops under 44px or any field under 16px text.
+
 ## 2026-11-22: No code comments
 Owner request.
 - All 676 code comments were sorted and 675 deleted: 1,514 lines. 455
