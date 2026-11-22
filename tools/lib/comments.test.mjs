@@ -62,6 +62,10 @@ test('a regex after a statement block, division after an object literal', () => 
   assert.deepEqual(lines('const f = () => {}\n/[/*]/.test(v);', 'js'), []);
   assert.deepEqual(lines('const r = {} / 2; // yes', 'js'), [1]);
   assert.deepEqual(lines('const r = f({ a: 1 }.a / 2); // yes', 'js'), [1]);
+  assert.deepEqual(lines('const ratio = function () {} / 2; // explanation', 'js'), [1]);
+  assert.deepEqual(lines('const k = class {} / 2; // explanation', 'js'), [1]);
+  assert.deepEqual(lines('const f = function (a = {}) { return 1; } / 2; // yes', 'js'), [1]);
+  assert.deepEqual(lines('function g() {}\n/[/*]/.test(v);', 'js'), []);
 });
 
 test('postfix ++ and -- end a value, so a slash after them divides', () => {
@@ -126,6 +130,7 @@ test('YAML strings and block scalars over several lines', () => {
   assert.deepEqual(lines('k: "one\n  # two"\nj: 1 # yes\n', 'yaml'), [3]);
   assert.deepEqual(lines('- run: | # yes\n    echo "a # b"\n    # yes, a shell comment\n    ls\n', 'yaml'), [1, 3]);
   assert.deepEqual(lines('run: |\n  echo "first\n  # Heading\n  last"\n  # yes\n', 'yaml'), [5]);
+  assert.deepEqual(lines('run: |\n  message="first # Heading"\n  x=a\'b # c\'d\n  ls # yes\n', 'yaml'), [4]);
 });
 
 test('TOML comments, but not inside strings of one line or several', () => {

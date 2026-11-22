@@ -44,6 +44,7 @@ function jsRanges(src, from = 0, to = src.length) {
   let prev = '';
   const braces = [];
   const parens = [];
+  let exprBodyAt = -1;
   if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
 
   const endsValue = () => prev === 'str' || prev === 'prop' || prev === ')' || prev === ']' || prev === '}'
@@ -126,7 +127,14 @@ function jsRanges(src, from = 0, to = src.length) {
     if (c === ')') { prev = parens.pop() ? 'ctl)' : c; i++; continue; }
     if ((c === '+' || c === '-') && d === c) { i += 2; if (!endsValue()) prev = c + c; continue; }
     if (c === '=' && d === '>') { i += 2; prev = '=>'; continue; }
-    if (c === '{') { braces.push(opensObject() ? 'object' : 'block'); prev = c; i++; continue; }
+    if (c === '{') {
+      const body = exprBodyAt === parens.length;
+      if (body) exprBodyAt = -1;
+      braces.push(body || opensObject() ? 'object' : 'block');
+      prev = c;
+      i++;
+      continue;
+    }
     if (c === '}') {
       const top = braces.pop();
       i++;
@@ -137,7 +145,9 @@ function jsRanges(src, from = 0, to = src.length) {
     if (IDENT.test(c)) {
       const s = i;
       while (i < to && IDENT.test(src[i])) i++;
-      prev = prev === '.' ? 'prop' : src.slice(s, i);
+      const word = src.slice(s, i);
+      if ((word === 'function' || word === 'class') && prev !== '.' && opensObject()) exprBodyAt = parens.length;
+      prev = prev === '.' ? 'prop' : word;
       continue;
     }
     prev = c;
@@ -242,7 +252,7 @@ function lineHashes(line, offset, out, state) {
 }
 
 const YAML_VALUE_START = (before) => /(^\s*|^\s*-\s+|:\s+|[[{,]\s*)$/.test(before);
-const SHELL_WORD_START = (before) => before === '' || /\s$/.test(before);
+const SHELL_QUOTE = () => true;
 const BLOCK_SCALAR = /^(\s*)(?:-\s+)?(?:([^#'"\s][^#'"]*?):\s+)?[|>][-+0-9]*\s*(#.*)?$/;
 
 function yamlRanges(src) {
@@ -259,7 +269,7 @@ function yamlRanges(src) {
     block = null;
     lineHashes(line, i, out, state);
     const m = !state.quote && line.match(BLOCK_SCALAR);
-    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' && { quote: null, opensAt: SHELL_WORD_START } };
+    if (m) block = { indent: indentOf(line), shell: m[2] === 'run' && { quote: null, opensAt: SHELL_QUOTE } };
     i += line.length + 1;
   }
   return out;
