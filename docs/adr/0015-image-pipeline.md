@@ -33,10 +33,10 @@ load. (CLAUDE.md §3)
    profile, because Chromium keeps writing after SIGTERM and an early
    `rmSync` throws `ENOTEMPTY`. A failure to delete is ignored: a leftover
    temp folder does no harm, and must not fail a build that worked.
-6. `tools/og-image.html` uses a light ground, not the site's navy, because
-   the share card is a first impression. It pins each block absolutely on
-   its fixed 1200x630 canvas, so the layout holds however the headline
-   wraps.
+6. `tools/og-image.html` matches the Facebook and LinkedIn covers (owner,
+   November 2026): flat navy, paper text, "Know your numbers." with "Fill
+   your seats." in gold, no gradient and no shadow. The stacked bars appear
+   only inside the logo. It was a light gradient card until then.
 7. `tools/optimize-images.mjs` uses headless Chromium as its WebP encoder,
    so the repo needs no native image package. It converts only images of
    60 KB or more; below that, the saving is not worth another file to keep
