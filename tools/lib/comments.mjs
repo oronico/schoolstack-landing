@@ -66,7 +66,7 @@ function jsRanges(src, from = 0, to = src.length) {
     while (i < to) {
       if (src[i] === '\\') { i += 2; continue; }
       if (src[i] === '`') { i++; return; }
-      if (src[i] === '$' && src[i + 1] === '{') { i += 2; braces.push('tpl'); return; }
+      if (src[i] === '$' && src[i + 1] === '{') { i += 2; braces.push('tpl'); return 'expr'; }
       i++;
     }
   };
@@ -104,7 +104,7 @@ function jsRanges(src, from = 0, to = src.length) {
     }
     if (/\s/.test(c)) { i++; continue; }
     if (c === '"' || c === "'") { skipString(c); prev = 'str'; continue; }
-    if (c === '`') { skipTemplate(); prev = 'str'; continue; }
+    if (c === '`') { prev = skipTemplate() === 'expr' ? '' : 'str'; continue; }
     if (c === '/' && regexAllowed()) { skipRegex(); prev = 'str'; continue; }
     if (c === '(') { parens.push(CONTROL_WORDS.has(prev)); prev = c; i++; continue; }
     if (c === ')') { prev = parens.pop() ? 'ctl)' : c; i++; continue; }
@@ -112,7 +112,8 @@ function jsRanges(src, from = 0, to = src.length) {
     if (c === '}') {
       const top = braces.pop();
       i++;
-      if (top === 'tpl') { resumeTemplate(); prev = 'str'; } else prev = c;
+      if (top === 'tpl') prev = resumeTemplate() === 'expr' ? '' : 'str';
+      else prev = c;
       continue;
     }
     if (/[\w$]/.test(c)) {

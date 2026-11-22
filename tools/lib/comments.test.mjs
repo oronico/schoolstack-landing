@@ -36,6 +36,9 @@ test('template literals, nested ${} included', () => {
   assert.deepEqual(lines('const u = `https://${host}/a//b ${ f({ x: `//${y}` }) } /* no */`;', 'js'), []);
   assert.deepEqual(lines('const u = `${a}`; // yes', 'js'), [1]);
   assert.deepEqual(lines('const u = `${ /* yes */ a}`;', 'js'), [1]);
+  assert.deepEqual(lines('const s = `${/[/*]/.test(v)}`;', 'js'), []);
+  assert.deepEqual(lines('const s = `a${x}b${/[/*]/.test(v)}`;', 'js'), []);
+  assert.deepEqual(lines('const s = `${a}` / 2; // yes', 'js'), [1]);
 });
 
 test('regex literals are not comments, division is not a regex', () => {
