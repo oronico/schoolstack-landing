@@ -70,6 +70,12 @@ test('postfix ++ and -- end a value, so a slash after them divides', () => {
   assert.deepEqual(lines('const r = x + ++n; /[/*]/.test(v);', 'js'), []);
 });
 
+test('a keyword used as a property name ends a value', () => {
+  assert.deepEqual(lines('const ratio = metrics.in / metrics.out; // explanation', 'js'), [1]);
+  assert.deepEqual(lines('const r = a?.return / 2; /* yes */', 'js'), [1]);
+  assert.deepEqual(lines('if (x in y) /[/*]/.test(v);', 'js'), []);
+});
+
 test('a shebang is not a comment', () => {
   assert.deepEqual(lines('#!/usr/bin/env node\nrun();', 'js'), []);
 });

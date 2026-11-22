@@ -42,7 +42,7 @@ function jsRanges(src, from = 0, to = src.length) {
   const parens = [];
   if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
 
-  const endsValue = () => prev === 'str' || prev === ')' || prev === ']' || prev === '}'
+  const endsValue = () => prev === 'str' || prev === 'prop' || prev === ')' || prev === ']' || prev === '}'
     || (/^[\w$]+$/.test(prev) && !REGEX_AFTER_WORD.has(prev));
 
   const opensObject = () => OPERATOR.test(prev) || prev === '++' || prev === '--'
@@ -50,6 +50,7 @@ function jsRanges(src, from = 0, to = src.length) {
 
   const regexAllowed = () => {
     if (prev === '' || prev === 'ctl)') return true;
+    if (prev === 'prop') return false;
     if (/^[\w$]+$/.test(prev)) return REGEX_AFTER_WORD.has(prev);
     return !/^[)\]}'"`]$/.test(prev) && prev !== 'str';
   };
@@ -132,7 +133,7 @@ function jsRanges(src, from = 0, to = src.length) {
     if (/[\w$]/.test(c)) {
       const s = i;
       while (i < to && /[\w$]/.test(src[i])) i++;
-      prev = src.slice(s, i);
+      prev = prev === '.' ? 'prop' : src.slice(s, i);
       continue;
     }
     prev = c;
