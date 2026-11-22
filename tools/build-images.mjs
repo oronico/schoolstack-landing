@@ -225,7 +225,7 @@ built.push(await renderIcon('maskable', 512, 'icon-512.png'));
 built.push(await renderIcon('rounded', 180, 'favicon.png'));
 
 await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 1200, 630,
-  ['Quicksand', 'Nunito']);
+  ['Quicksand', 'Inter']);
 built.push('og-image.png');
 
 socket.close();

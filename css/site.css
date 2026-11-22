@@ -28,7 +28,7 @@
   --step-4: clamp(2rem, 1.7214rem + 1.1429vw, 2.75rem);
 
   --font-display: 'Quicksand', 'Trebuchet MS', sans-serif;
-  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --container: 1080px;
   --gutter: var(--sp-6);

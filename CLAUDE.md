@@ -26,14 +26,17 @@ broken once and cost a round trip.
 
 ## 1. Brand, and the two things not to touch
 
-**Quicksand (headings) and Nunito (body) are the SchoolStack brand faces.**
-They are shared with Space, Budget, Access and Lending Lab. Do not substitute
-them, do not "modernise" them, do not swap them because a specimen looks
-better in isolation. They are set once, in `:root`:
+**Quicksand (headings) and Inter (body copy) are the SchoolStack brand
+faces**, the same as Space's `shared/design-tokens.json`. The logo's lettering
+is **Montserrat ExtraBold**, outlined in the SVG files, so no page loads it
+(owner, November 2026; this site used Nunito for body copy until then, and
+was the only one that did). They are shared with Space, Budget, Access and
+Lending Lab. Do not substitute them, do not "modernise" them, do not swap them
+because a specimen looks better in isolation. They are set once, in `:root`:
 
 ```css
 --font-display: 'Quicksand', ...;
---font-body: 'Nunito', ...;
+--font-body: 'Inter', ...;
 ```
 
 They are **self-hosted** in `fonts/`, not linked from Google. That is

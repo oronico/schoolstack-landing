@@ -10,7 +10,7 @@ const DEST = join(ROOT, 'fonts');
 
 const FAMILIES = [
   { name: 'Quicksand', from: 400, to: 700 },
-  { name: 'Nunito', from: 400, to: 800 },
+  { name: 'Inter', from: 400, to: 800 },
 ];
 
 const KEEP_SUBSETS = new Set(['latin', 'latin-ext']);

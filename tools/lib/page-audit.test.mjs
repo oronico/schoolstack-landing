@@ -51,13 +51,13 @@ test('target=_blank with rel=noopener passes, in either attribute order', () => 
 });
 
 test('declaredFontFamilies reads the custom properties, not any rule using them', () => {
-  const out = declaredFontFamilies("--font-display: 'Quicksand', sans-serif; --font-body: 'Nunito', sans-serif;");
-  assert.deepEqual(out, { display: 'Quicksand', body: 'Nunito' });
+  const out = declaredFontFamilies("--font-display: 'Quicksand', sans-serif; --font-body: 'Inter', sans-serif;");
+  assert.deepEqual(out, { display: 'Quicksand', body: 'Inter' });
 });
 
 test('servedFontFamilies reads the @font-face families', () => {
-  const out = servedFontFamilies("@font-face{font-family: 'Quicksand';}@font-face{font-family: 'Nunito';}");
-  assert.deepEqual([...out].sort(), ['Nunito', 'Quicksand']);
+  const out = servedFontFamilies("@font-face{font-family: 'Quicksand';}@font-face{font-family: 'Inter';}");
+  assert.deepEqual([...out].sort(), ['Inter', 'Quicksand']);
 });
 
 test('index.html has no dangling anchors', () => {

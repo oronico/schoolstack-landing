@@ -4,9 +4,12 @@ Status: accepted. Recorded 22 November 2026 from code comments (ADR 0001).
 
 ## Context
 
-Quicksand (headings) and Nunito (body) are the brand faces shared with Space,
-Budget and Access. They are set once, as `--font-display` and `--font-body` in
-`css/site.css` `:root`, and must not be swapped. (CLAUDE.md §1)
+Quicksand (headings) and Inter (body copy) are the brand faces shared with
+Space, Budget and Access (owner, November 2026; the site set body copy in
+Nunito until then). They are set once, as `--font-display` and `--font-body`
+in `css/site.css` `:root`, and must not be swapped. The logo's lettering is
+Montserrat ExtraBold, outlined in the SVG, so the site loads no font file for
+it. (CLAUDE.md §1)
 
 ## Decisions
 

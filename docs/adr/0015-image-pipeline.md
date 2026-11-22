@@ -6,7 +6,7 @@ Status: accepted. Recorded 22 November 2026 from code comments (ADR 0001).
 
 `tools/build-images.mjs` renders the favicons and the share card from vector
 sources in headless Chromium, so no PNG is edited by hand. It uses the fonts
-in `fonts/`, needs no network, and fails if Quicksand or Nunito did not
+in `fonts/`, needs no network, and fails if Quicksand or Inter did not
 load. (CLAUDE.md §3)
 
 ## Decisions
