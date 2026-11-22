@@ -71,7 +71,14 @@ points below are the ones the stylesheet's comments carried.
 14. The `.label` over a band heading is sentence case, `--muted` and
     `--step--1`: it names the band, and the heading leads.
 15. `.btn-primary` is `--accent` and marks the one primary action in a view;
-    every other button is ink (`.btn-secondary`). (CLAUDE.md §4)
+    every other button is ink (`.btn-secondary`). Every "Get early access"
+    (hero, early list form, the footer of every page) is `.btn-primary`, one
+    style where there were three (owner, November 2026: "One style"). On
+    the ink bands (`.signup`, `footer`) its hover turns paper, because an
+    ink hover would vanish into the ground. It sets `line-height: inherit`
+    because a `<button>` does not inherit it and a link does, so the submit
+    button is as tall as the links. `.form-submit` adds only the full width
+    and the disabled look. (CLAUDE.md §4)
 16. The three `.tool-card`s carry no colour: each product's colour lives in
     its logo artwork. (CLAUDE.md §4)
 17. `.enroll-band` is a full-bleed ink band after the calculator. It puts
