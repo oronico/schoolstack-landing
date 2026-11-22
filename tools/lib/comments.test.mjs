@@ -76,6 +76,11 @@ test('a keyword used as a property name ends a value', () => {
   assert.deepEqual(lines('if (x in y) /[/*]/.test(v);', 'js'), []);
 });
 
+test('a Unicode name ends a value too', () => {
+  assert.deepEqual(lines('const ratio = quantité / total; // explanation', 'js'), [1]);
+  assert.deepEqual(lines('const r = ñ / 2; /* yes */', 'js'), [1]);
+});
+
 test('a shebang is not a comment', () => {
   assert.deepEqual(lines('#!/usr/bin/env node\nrun();', 'js'), []);
 });
@@ -95,6 +100,12 @@ test('HTML comments, plus the script and style inside the page', () => {
     '<script>const s = "<!-- not -->";</script>',
   ].join('\n');
   assert.deepEqual(lines(page, 'html'), [1, 3, 4]);
+});
+
+test('comment markers in attributes, textarea and title are text', () => {
+  const page = '<input placeholder="<!-- example -->" data-x=\'<!-- y -->\'>\n<textarea><!-- x --></textarea>\n<title><!-- t --></title>\n<!-- real -->';
+  assert.deepEqual(lines(page, 'html'), [4]);
+  assert.deepEqual(lines('<a title="x > y">a</a><!-- yes --><script>f(); // yes</script>', 'html'), [1, 1]);
 });
 
 test('hash comments only where # opens the line', () => {

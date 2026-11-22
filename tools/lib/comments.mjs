@@ -30,6 +30,10 @@ const CONTROL_WORDS = new Set(['if', 'while', 'for', 'with']);
 
 const REGEX_AFTER_WORD = new Set(['return', 'typeof', 'case', 'in', 'of', 'delete', 'void', 'throw', 'new', 'else', 'do', 'yield', 'await', 'instanceof']);
 
+const IDENT = /[\p{ID_Continue}$\u200c\u200d]/u;
+
+const WORD = /^[\p{ID_Continue}$\u200c\u200d]+$/u;
+
 const BLOCK_AFTER_WORD = new Set(['else', 'do', 'try', 'finally']);
 
 const OPERATOR = /^[=(,:?[!&|+\-*%<>~^]$/;
@@ -43,7 +47,7 @@ function jsRanges(src, from = 0, to = src.length) {
   if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
 
   const endsValue = () => prev === 'str' || prev === 'prop' || prev === ')' || prev === ']' || prev === '}'
-    || (/^[\w$]+$/.test(prev) && !REGEX_AFTER_WORD.has(prev));
+    || (WORD.test(prev) && !REGEX_AFTER_WORD.has(prev));
 
   const opensObject = () => OPERATOR.test(prev) || prev === '++' || prev === '--'
     || (REGEX_AFTER_WORD.has(prev) && !BLOCK_AFTER_WORD.has(prev));
@@ -51,7 +55,7 @@ function jsRanges(src, from = 0, to = src.length) {
   const regexAllowed = () => {
     if (prev === '' || prev === 'ctl)') return true;
     if (prev === 'prop') return false;
-    if (/^[\w$]+$/.test(prev)) return REGEX_AFTER_WORD.has(prev);
+    if (WORD.test(prev)) return REGEX_AFTER_WORD.has(prev);
     return !/^[)\]}'"`]$/.test(prev) && prev !== 'str';
   };
 
@@ -130,9 +134,9 @@ function jsRanges(src, from = 0, to = src.length) {
       else prev = top === 'block' ? '' : c;
       continue;
     }
-    if (/[\w$]/.test(c)) {
+    if (IDENT.test(c)) {
       const s = i;
-      while (i < to && /[\w$]/.test(src[i])) i++;
+      while (i < to && IDENT.test(src[i])) i++;
       prev = prev === '.' ? 'prop' : src.slice(s, i);
       continue;
     }
@@ -167,9 +171,10 @@ function cssRanges(src, from = 0, to = src.length) {
 
 function htmlRanges(src) {
   const out = [];
-  const re = /<!--[\s\S]*?-->|<(script|style)\b([^>]*)>([\s\S]*?)<\/\1\s*>/gi;
+  const re = /<!--[\s\S]*?-->|<(script|style|textarea|title)\b((?:"[^"]*"|'[^']*'|[^>"'])*)>([\s\S]*?)<\/\1\s*>|<\/?[a-z][^\s/>]*(?:"[^"]*"|'[^']*'|[^>"'])*>/gi;
   for (const m of src.matchAll(re)) {
     if (m[0].startsWith('<!--')) { out.push([m.index, m.index + m[0].length]); continue; }
+    if (!m[1] || /^(textarea|title)$/i.test(m[1])) continue;
     const start = m.index + m[0].indexOf('>') + 1;
     const end = start + m[3].length;
     if (m[1].toLowerCase() === 'style') out.push(...cssRanges(src, start, end));
