@@ -1,10 +1,3 @@
-/**
- * The SchoolStack suite says who owns it and who founded it in the same words
- * in every app (docs/brand/suite-language.md in the SchoolStack Space repo).
- * The footer is copied into each page by hand, so this checks every page
- * still carries the credit and the copyright line, and that no old phrase
- * comes back.
- */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -13,15 +6,12 @@ import { ROOT } from './harness.mjs';
 import { stripNonCopy } from './copy-rules.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
-// Pages wrap long lines, so compare with whitespace collapsed.
 const flat = (s) => s.replace(/\s+/g, ' ');
 
 const SUPPORT = 'SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.';
 const CREDIT = `${SUPPORT} Founder &amp; Product Developer: Allison Serafin`;
 const COPYRIGHT = '&copy; 2026 Building Hope Impact Fund. All rights reserved.';
 const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html'];
-// Terms and Privacy are legal text that counsel owns; "a program of" stays
-// there and nowhere else.
 const LEGAL = new Set(['privacy.html', 'terms.html']);
 
 test('every page footer carries the credit and the copyright line', () => {

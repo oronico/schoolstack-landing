@@ -1,25 +1,14 @@
-/**
- * Voice steps. Every assertion delegates to tools/lib/copy-rules.mjs, the same
- * module verify-content.mjs and the unit tests call.
- */
-
 import assert from 'node:assert/strict';
 import { Given, Then } from '@cucumber/cucumber';
 import { ctx } from '../support/world.mjs';
 import { voiceFaults, KNOWN_DEBT, DISCLAIMER } from '../../tools/lib/copy-rules.mjs';
 
-/* A sample needs the disclaimer to isolate the rule under test, otherwise
-   every Scenario Outline row also trips the missing-disclaimer rule. */
 const DISCLAIMER_LINE = '<p>Estimates in our tools are for planning only and are not loan eligibility.</p>';
 
 Given('the published page', function () {
   this.sample = ctx.html;
 });
 
-/* The surface is named rather than hand-written as markup: a Gherkin {string}
-   is delimited by quotes, so an Examples cell cannot carry the double quotes a
-   raw <meta ... content="..."> needs. Naming the surface reads as intent and
-   keeps the wrapper in one place. */
 const SURFACES = {
   headline: (t) => `<h1>${t}</h1>`,
   CTA: (t) => `<button>${t}</button>`,
@@ -64,7 +53,6 @@ Then('entitlement framing appears on no more lines than the recorded debt', func
 
 Then('every remaining line is named in the run output', function () {
   const { debt } = voiceFaults(this.sample);
-  // The ratchet only turns if someone can see what is left to fix.
   for (const d of debt) {
     assert.ok(d.line > 0 && d.text, 'each remaining instance reports a line and its text');
   }

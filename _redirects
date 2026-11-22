@@ -1,34 +1,14 @@
-# Canonicalise on the apex. <link rel="canonical"> already points there, and a
-# www copy that also answers 200 splits ranking signals between two hostnames.
 https://www.schoolstack.ai/*    https://schoolstack.ai/:splat    301!
 
-# Outbound CTA instrumentation.
-#
-# Netlify Analytics is built from CDN request logs, so it can only ever see
-# requests to this domain. Every tool CTA points off-site, which means clicking
-# "Open Space" is invisible to it - the one number worth having. Routing those
-# clicks through /go/* makes each one a logged first-party request.
-#
-# 302, deliberately, NOT 301: a 301 is cached by the browser, so the second and
-# every later click never reaches the CDN and never gets counted. 302 keeps
-# every click observable. robots.txt disallows /go/ so crawlers do not inflate it.
 /go/space          https://space.schoolstack.ai          302
 /go/budget         https://budget.schoolstack.ai         302
 /go/access         https://access.schoolstack.ai         302
-# Lending Lab is not promoted on schoolstack.ai while it gets more work, so
-# nothing on the site links these two. They stay so that links already shared
-# (emails, decks) keep working; tools/verify-render.mjs lists them as the only
-# rules allowed to have no CTA on the page.
 /go/lending-lab    https://www.lendinglab.org            302
 /go/screener       https://www.lendinglab.org/screener   302
 
-# Clean URLs for the other pages. Netlify already serves about.html at
-# /about (and so on); these state it rather than relying on the default.
 /about             /about.html                           200
 /privacy           /privacy.html                         200
 /terms             /terms.html                           200
 /giving            /giving.html                          200
 
-# Enrollment Audit lives at /enrollment/ (enrollment/index.html). Send the
-# no-slash address to it too, so both open the tool and share one URL.
 /enrollment        /enrollment/                          301

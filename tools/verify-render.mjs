@@ -1,24 +1,4 @@
 #!/usr/bin/env node
-/**
- * Loads the built page in headless Chromium at three viewports and asserts
- * things that only exist once the browser has laid the page out:
- *
- *   node tools/verify-render.mjs
- *
- *  1. No image is stretched, at normal text size and at 150%. Compares each image's RENDERED aspect ratio to its
- *     natural one. This exists because adding width/height attributes to stop
- *     layout shift, without the matching `height: auto`, silently welded the
- *     dashboard preview to 768px tall and squashed it - and a source-level
- *     check that only looked for the attributes reported success.
- *  2. Heading levels never skip (h2 -> h4).
- *  3. Nothing overflows horizontally.
- *  4. The page is actually there. See EXPECT below - without it, every check
- *     above reports only on elements it finds, so a page that failed to load
- *     has nothing to stretch, no headings to skip and nothing to overflow,
- *     and passes.
- *
- * Exits non-zero on any failure, naming the element and the numbers.
- */
 
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -26,10 +6,8 @@ import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { RETIRED_ANCHORS } from './lib/page-audit.mjs';
 
 const VIEWPORTS = [1440, 820, 390];
-const TOLERANCE = 0.02; // ratio drift we accept before calling it a stretch
+const TOLERANCE = 0.02;
 
-/* Lists every image whose rendered shape differs from its natural one.
-   A string, because it runs inside the page; both passes below use it. */
 const STRETCHED_JS = `() => {
   const out = [];
   for (const img of document.images) {
@@ -50,55 +28,31 @@ const STRETCHED_JS = `() => {
   return out;
 }`;
 
-/* Larger text, as a visitor gets by raising the browser's default font
-   size. A height in rem grows with it while max-width stops the width at
-   the container, so an image can squash only here: the tool logos did on
-   #49, at 150%, and the pass at normal size was green. */
 const LARGE_TEXT = '150%';
 
-/* The floor: what has to be on the page before a green run means anything.
-   Deliberately floors and landmarks rather than exact counts, so ordinary copy
-   and layout edits do not trip it - the failure being caught here is a blank
-   or half-rendered page, not a paragraph that moved. Update these when the
-   page genuinely changes shape. */
 const PAGES = {
   '/': {
-    minImages: 8,    // logo, three tool marks, two funders, BHIF, footer logo
+    minImages: 8,
     h1: 1,
     minTextChars: 4000,
-    // Landmarks: the anchor targets the nav points at, plus the form the whole
-    // page exists to feed.
     ids: ['budget-calculator', 'tools', 'platform', 'early-access', 'faq', 'signupForm', 'submitBtn',
-      // Retired anchors for the early list. Links to them are already out in
-      // the world, so they must keep landing on the form.
       'design-partners', 'apply', 'signup',
-      // js/site.js finds the phone menu by this id.
       'nav-menu'],
   },
-  // Loaded by its clean URL, as a visitor opening or refreshing it would.
   '/about': {
-    minImages: 3,    // logo, BHIF, footer logo
+    minImages: 3,
     h1: 1,
     minTextChars: 3000,
     ids: ['people', 'values', 'contact', 'allison-name', 'daniel-name', 'nav-menu'],
   },
-  '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: ['nav-menu'] },  // logo, footer logo
+  '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: ['nav-menu'] },
   '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: ['nav-menu'] },
-  // The year-end giving guide: logo and footer logo, one step per band.
   '/giving': { minImages: 2, h1: 1, minTextChars: 5000, ids: ['plan', 'gifts', 'amounts', 'list', 'write', 'send', 'thanks', 'prompt-list', 'prompt-emails', 'nav-menu'] },
-  // A stand-alone tool page with its own masthead: wordmark only.
   '/enrollment/': { minImages: 1, h1: 1, minTextChars: 4000, ids: ['main', 'audit', 'forces', 'phases', 'cal'] },
 };
 
-/* Lending Lab is not promoted on schoolstack.ai for now. Its two /go/ rules
-   stay in _redirects so links already shared keep working, and they are the
-   only rules allowed to have no CTA on the page. Anything else unlinked is
-   still a CTA that fell off. */
 const UNLINKED_ON_PURPOSE = new Set(['/go/lending-lab', '/go/screener']);
 
-/* Words that must not reach a reader while Lending Lab is off the site, and
-   the tool count it took with it. Checked against rendered text, which is
-   what a visitor sees, so a comment in the source does not trip it. */
 const RETIRED = [/lending lab/i, /\bfour tools\b/i, /\ball four\b/i, /check your fit/i];
 
 const site = await serveSite();
@@ -272,9 +226,6 @@ for (const width of VIEWPORTS) {
         .map((l) => l.trim().split(/\s+/)[0]),
     );
     const dead = r.goLinks.filter((h) => !declared.has(h));
-    // And the other direction. A rule with no link is a CTA that fell off the
-    // page - the tool is still reachable, nobody can get to it from here, and
-    // the link-to-rule check above stays perfectly green about it.
     const unlinked = [...declared].filter((p) => p.startsWith('/go/') && !r.goLinks.includes(p) && !UNLINKED_ON_PURPOSE.has(p));
     console.log(`        ${r.goLinks.length} /go/ CTAs, unmatched in _redirects: ${dead.length || 'none'}`
       + `, redirect rules with no CTA: ${unlinked.length || 'none'}`);

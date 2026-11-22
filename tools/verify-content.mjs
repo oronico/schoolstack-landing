@@ -1,28 +1,4 @@
 #!/usr/bin/env node
-/**
- * Checks the things that are true about the FILES rather than about the page
- * once a browser has it:
- *
- *   node tools/verify-content.mjs
- *
- * No browser, no server, no network. Everything here is invisible to the other
- * three checks, each for its own reason:
- *
- *  1. _redirects semantics. verify-render confirms every /go/ CTA has a rule
- *     and every rule has a CTA, but says nothing about the status code. The
- *     file itself documents why 302 is load-bearing: a 301 is cached by the
- *     browser, so only the first click per person ever reaches the CDN and the
- *     counts silently undercount. A one-character edit there is invisible.
- *  2. Structured data. The FAQ block in the JSON-LD has to stay word for word
- *     identical to the visible FAQ or Google drops the markup. Nothing warns
- *     you; the rich result just stops appearing.
- *  3. Assets nothing ever requests. og-image.png and the manifest icons are
- *     named in metadata that a page load never fetches, so a rename breaks
- *     every share card and every installed icon while all three browser checks
- *     stay green.
- *
- * Exits non-zero on any failure, naming the file and the values.
- */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
@@ -31,15 +7,12 @@ import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
 import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
+import { commentCounts, commentDrift } from './lib/comments.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
-// Every page other than the home page. Each shares its nav and footer and
-// meets the same link, anchor and voice rules.
 const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html', 'giving.html'];
 const others = OTHER_PAGES.map((f) => ({ f, html: read(f) }));
-// Stand-alone tool pages: their own masthead rather than the shared nav and
-// footer (like Space and Budget), but the same link, anchor and voice rules.
 const TOOL_PAGES = ['enrollment/index.html'];
 const tools = TOOL_PAGES.map((f) => ({ f, html: read(f) }));
 const allPages = [...others, ...tools];
@@ -49,9 +22,6 @@ const failures = [];
 const fail = (msg) => failures.push(msg);
 const check = (ok, msg) => { if (!ok) fail(msg); return ok; };
 
-/* ---------------------------------------------------------------------------
-   1. _redirects
-   --------------------------------------------------------------------------- */
 const rules = read('_redirects').split('\n')
   .map((l) => l.trim())
   .filter((l) => l && !l.startsWith('#'))
@@ -67,8 +37,6 @@ console.log(`_redirects: ${rules.length} rules (${go.length} /go/, ${apex.length
 
 check(go.length > 0, '_redirects declares no /go/ rules at all');
 for (const r of go) {
-  // 302 on purpose. A 301 is cached by the browser, so the second and every
-  // later click never reaches the CDN and never gets counted.
   check(r.code === '302',
     `${r.from} is a ${r.code || 'bare'} redirect, expected 302 - a cached 301 makes every click after the first invisible to analytics`);
   check(/^https:\/\//.test(r.to || ''),
@@ -80,13 +48,9 @@ for (const r of apex) {
 }
 check(apex.length === 1, `${apex.length} www canonicalising rules, expected exactly 1`);
 
-/* ---------------------------------------------------------------------------
-   2. Structured data, and the metadata that has to agree with itself
-   --------------------------------------------------------------------------- */
 const ldRaw = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
 let ld = null;
 if (!check(ldRaw, 'index.html has no JSON-LD block')) {
-  // nothing further to check
 } else {
   try {
     ld = JSON.parse(ldRaw[1]);
@@ -100,15 +64,10 @@ const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\
 if (ld) {
   const graph = ld['@graph'] || [ld];
   const faqNode = graph.find((n) => n['@type'] === 'FAQPage');
-  // Keyed on the id, not the class list: the section's classes are a layout
-  // decision and changing one should not silently stop this check running.
   const faqSection = html.match(/<section[^>]*\bid="faq"[\s\S]*?<\/section>/);
 
   if (check(faqNode, 'the JSON-LD declares no FAQPage')
       && check(faqSection, 'index.html has no #faq section to compare the FAQPage against')) {
-    // Paired by id, not by position: a reorder is not a failure, and a real
-    // difference is named by the question it is in. Google drops FAQ markup
-    // that does not match the visible copy, silently.
     const problems = faqDrift(faqSection[0], faqNode.mainEntity);
     console.log(`FAQ: ${faqNode.mainEntity.length} in JSON-LD, paired by id: ${problems.length ? problems.length + ' problem(s)' : 'all match'}`);
     for (const p of problems) fail(`FAQ: ${p}`);
@@ -125,15 +84,10 @@ const manifest = JSON.parse(read('site.webmanifest'));
 console.log(`Canonical: ${canonical}  og:url: ${ogUrl}  sitemap: ${sitemapLoc}`);
 check(canonical && ogUrl === canonical, `og:url is "${ogUrl}" but canonical is "${canonical}"`);
 check(canonical && sitemapLoc === canonical, `sitemap.xml lists "${sitemapLoc}" but canonical is "${canonical}"`);
-/* No build step can date a page from git, so a <lastmod> here is typed by
-   hand, and it went stale within days. Search engines use one only while it
-   stays accurate, so the sitemap carries none. */
 check(!/<lastmod>/.test(read('sitemap.xml')), 'sitemap.xml carries a <lastmod>: nothing keeps a hand-typed date true, so leave it out');
 check(themeMeta?.toLowerCase() === manifest.theme_color?.toLowerCase(),
   `<meta theme-color> is "${themeMeta}" but the manifest says "${manifest.theme_color}"`);
 
-/* The declared share-card size has to match the file, or the card is cropped
-   or letterboxed by whoever renders it. Read the real size out of the PNG. */
 function pngSize(file) {
   const b = readFileSync(join(ROOT, file));
   if (b.length < 24 || b.readUInt32BE(0) !== 0x89504e47) return null;
@@ -153,31 +107,22 @@ if (ogImage) {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   3. Everything referenced, including what a page load never asks for
-   --------------------------------------------------------------------------- */
 const referenced = new Set();
 const note = (p) => { if (p && !/^(https?:|mailto:|data:|#)/.test(p)) referenced.add(p.split('?')[0].replace(/^\//, '')); };
 
 for (const m of [html, ...allPages.map((o) => o.html)].join('\n').matchAll(/(?:href|src)="([^"]+)"/g)) note(m[1].split('#')[0]);
-// Absolute metadata URLs on our own domain are still our files.
 for (const m of html.matchAll(/content="https:\/\/schoolstack\.ai\/([^"]+\.(?:png|svg|webp|ico))"/g)) note(m[1]);
 for (const i of manifest.icons) note(i.src);
-// url() inside fonts/fonts.css resolves against fonts/, not the repo root.
 for (const m of read('fonts/fonts.css').matchAll(/url\(([^)]+)\)/g)) {
   const href = m[1].replace(/['"]/g, '').split('?')[0];
   note(href.startsWith('/') ? href : join('fonts', href));
 }
 
-// Netlify serves about.html at /about, so a clean URL counts when its .html
-// file exists.
 const missing = [...referenced].filter((p) => !p.startsWith('go/')
   && !existsSync(join(ROOT, p)) && !existsSync(join(ROOT, p + '.html')));
 console.log(`Referenced files: ${referenced.size}, missing: ${missing.length || 'none'}`);
 for (const p of missing) fail(`${p} is referenced but is not in the repo`);
 
-/* Orphans are reported, not failed: a brand asset can be committed ahead of the
-   page that will use it. Silence about them is what lets the pile grow. */
 const orphans = [];
 for (const dir of ['assets/logos', 'images']) {
   if (!existsSync(join(ROOT, dir))) continue;
@@ -192,18 +137,12 @@ if (orphans.length) {
   for (const o of orphans) console.log('  - ' + o);
 }
 
-/* ---------------------------------------------------------------------------
-   4. Voice. The rules in CLAUDE.md section 2, which until now lived only in
-      Markdown and so bound whoever remembered to read it.
-   --------------------------------------------------------------------------- */
 const voice = voiceFaults(html);
 const ratchet = KNOWN_DEBT.entitlement === 0
   ? `entitlement framing: ${voice.debt.length || 'none'}`
   : `entitlement debt ${voice.debt.length}/${KNOWN_DEBT.entitlement}`;
 console.log(`\nVoice: ${voice.faults.length || 'no'} fault(s), ${ratchet}`);
 for (const f of voice.faults) fail(f);
-// The About page meets the same rules. Its "deserves" count is its own, so a
-// first instance there fails here rather than hiding under the home page's.
 for (const o of allPages) {
   const v = voiceFaults(o.html);
   console.log(`Voice on ${o.f}: ${v.faults.length || 'no'} fault(s), "deserves" on ${v.debt.length} line(s)`);
@@ -211,18 +150,11 @@ for (const o of allPages) {
   if (v.debt.length) fail(`${o.f} carries "deserves" on line(s) ${v.debt.map((d) => d.line).join(', ')} - CLAUDE.md retires it`);
 }
 
-/* Printed on every run, passing or failing. A ratchet nobody reads is a
-   ratchet that never turns. */
 if (voice.debt.length) {
   console.log(`  "deserves" on ${voice.debt.length} line(s) - CLAUDE.md retires it:`);
   for (const d of voice.debt) console.log(`    line ${d.line}: ${d.text.slice(0, 96)}`);
 }
 
-/* ---------------------------------------------------------------------------
-   5. Structure nothing else derives: anchors that scroll nowhere, outbound
-      links missing rel=noopener, and the font families the page asks for
-      against the ones fonts.css actually serves.
-   --------------------------------------------------------------------------- */
 const dangling = [
   ...danglingAnchors(html),
   ...allPages.flatMap((o) => danglingAnchors(o.html, html).map((d) => ({ ...d, target: `${d.target} (${o.f})` }))),
@@ -234,22 +166,14 @@ const served = servedFontFamilies(read('fonts/fonts.css'));
 
 console.log(`Anchors: ${dangling.length || 'none'} dangling  |  target=_blank without noopener: ${unsafe.length || 'none'}`);
 
-/* Retired ids stay on the page so links already shared keep working, but the
-   site itself links only to the current id (RETIRED_ANCHORS names it). */
 const retired = [{ f: 'index.html', html }, ...allPages].flatMap((o) => retiredAnchorLinks(o.html).map((r) => ({ ...r, f: o.f })));
 console.log(`Retired anchors linked: ${retired.length || 'none'}`);
 for (const r of retired) fail(`${r.f}:${r.line} links to #${r.id}, a retired id kept only for old links; link to #${r.use}`);
 
-/* /assets is cached for a year as immutable, so every file a page uses from
-   it carries its own content hash in its name (sha256, first 8 hex digits).
-   A same-name edit would leave returning visitors on the old bytes. */
 const assetRefs = [{ html }, ...allPages].flatMap((o) => [...o.html.matchAll(/(?:src|href|poster|content)="\/(assets\/[^"?#]+)"/g)].map((m) => m[1]));
 const assetProblems = assetHashDrift(assetRefs, (p) => readFileSync(join(ROOT, p)), (b) => createHash('sha256').update(b).digest('hex'));
 console.log(`Assets: ${new Set(assetRefs).size} referenced from /assets, ${assetProblems.length ? assetProblems.length + ' named wrongly' : 'each named by its own content hash'}`);
 for (const p of assetProblems) fail(p);
-/* The icons, the preview card and the images in /images keep fixed URLs,
-   so their ?v= is each file's content hash; tools/stamp-versions.mjs
-   stamps it. */
 const staleVersions = VERSIONED_PAGES.flatMap((f) => versionDrift(read(f), ROOT).map((d) => ({ ...d, f })));
 const bareImages = VERSIONED_PAGES.flatMap((f) => unversionedImages(read(f)).map((r) => ({ ...r, f })));
 console.log(`Icon, card and image versions: ${staleVersions.length + bareImages.length ? (staleVersions.length + bareImages.length) + ' out of date or missing' : 'each matches its file'}`);
@@ -261,8 +185,6 @@ console.log(`Fonts: page asks for ${Object.values(wanted).join(' + ')}, fonts.cs
 
 console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on index.html and ${OTHER_PAGES.join(', ')}`);
 
-/* The privacy policy's promises, held to the code. A new application field
-   has to be listed there, and the site must not start using cookies. */
 const privacyHtml = read('privacy.html');
 const formDrift = FORMS.map((f) => ({ ...f, ...privacyFieldDrift(html, privacyHtml, f) }));
 const fields = { unlisted: formDrift.flatMap((f) => f.unlisted), stale: formDrift.flatMap((f) => f.stale) };
@@ -285,6 +207,12 @@ for (const [role, family] of Object.entries(wanted)) {
   check(served.has(family),
     `--font-${role} asks for '${family}' but fonts/fonts.css serves no such @font-face - the page would render in the fallback with every other check green`);
 }
+
+const comments = commentCounts(ROOT);
+const commentTotal = Object.values(comments).reduce((a, b) => a + b, 0);
+console.log(`Comments: ${commentTotal || 'none'}${commentTotal ? ` in ${Object.keys(comments).length} file(s), the recorded debt` : ''}`);
+for (const [f, n] of Object.entries(comments)) console.log(`  ${f}: ${n}`);
+for (const d of commentDrift(comments)) fail(d);
 
 if (failures.length) {
   console.log(`\n${failures.length} failure(s):`);

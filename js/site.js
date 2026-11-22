@@ -1,15 +1,3 @@
-/**
- * Behaviour shared by every page. Kept tiny on purpose: the nav menu works
- * without it (a <details> element opens and closes on its own), and this only
- * tidies up after a choice is made.
- *
- *  - Choosing a link in the phone menu closes the menu, so an in-page link
- *    ("The tools") does not leave the panel covering the section it scrolled
- *    to.
- *  - Escape closes the menu and puts focus back on its button.
- *  - Widening the window past the phone layout closes it too.
- *  - A link to a FAQ question opens its answer (second block below).
- */
 (function () {
   'use strict';
   var menu = document.getElementById('nav-menu');
@@ -32,11 +20,6 @@
   }
 })();
 
-/**
- * A link to a FAQ question (/#faq-cost) opens its answer. Each question is a
- * <details> with a stable id; browsers scroll to a closed <details> but leave
- * it shut, so a shared link would land on a question with no answer showing.
- */
 (function () {
   'use strict';
   function openTarget() {
@@ -48,14 +31,6 @@
   window.addEventListener('hashchange', openTarget);
 })();
 
-/**
- * Copy buttons on the giving guide. A button names the <pre> it copies by
- * id (data-copy="prompt-list"). The pattern follows GitHub's
- * clipboard-copy-element: the Clipboard API where the browser has it, and
- * a selection plus execCommand('copy') where it does not. The label reads
- * "Copied" for two seconds, and a polite live region says so for screen
- * readers, which do not announce a button's label changing.
- */
 (function () {
   'use strict';
   var buttons = document.querySelectorAll('[data-copy]');
@@ -74,8 +49,9 @@
     sel.addRange(range);
     var ok = false;
     try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (!ok) return Promise.reject();
     sel.removeAllRanges();
-    return ok ? Promise.resolve() : Promise.reject();
+    return Promise.resolve();
   }
 
   Array.prototype.forEach.call(buttons, function (btn) {
@@ -91,8 +67,8 @@
         btn.textContent = 'Copied';
         status.textContent = 'Copied to your clipboard.';
       }, function () {
-        btn.textContent = 'Select and copy';
-        status.textContent = 'Copy did not work here. Select the text and copy it.';
+        btn.textContent = 'Text selected';
+        status.textContent = 'Copy did not work here. The text is selected: copy it from your keyboard or menu.';
       }).then(function () {
         setTimeout(function () { btn.textContent = label; status.textContent = ''; }, 2000);
       });

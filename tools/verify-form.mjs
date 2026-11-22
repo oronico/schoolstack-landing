@@ -1,33 +1,8 @@
 #!/usr/bin/env node
-/**
- * Drives the early list form in headless Chromium:
- *
- *   node tools/verify-form.mjs
- *
- * The form is the only behaviour on the site and the only thing the page is
- * ultimately for. Everything about it fails quietly:
- *
- *  - Netlify pairs a submission to a form by the hidden `form-name` field. If
- *    it stops matching the form's `name`, Netlify answers 200, the visitor
- *    reads "You're on the list", and the sign-up is discarded. Nothing
- *    anywhere goes red.
- *  - The submit handler restores the button label after an error. If that
- *    label drifts from the markup, every visitor who hits a submission error
- *    gets a button relabelled to the old wording.
- *  - The error path is the one visitors meet on a bad day, and it is the least
- *    likely to have been opened in a browser.
- *
- * So the checks below are the contract (read off the rendered DOM) and the
- * four submit outcomes: success, server error, network failure, and a form
- * the browser refuses to submit at all.
- *
- * Exits non-zero on any failure, naming what it saw.
- */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { scenario, ANSWERS } from './lib/form-scenario.mjs';
 
-// Asserted in the error path below, so it is named once rather than inline.
 const SUPPORT_EMAIL = 'allison@schoolstack.ai';
 
 const site = await serveSite();
@@ -41,8 +16,6 @@ const check = (ok, msg) => { if (!ok) fail(msg); return ok; };
 async function load(path = '/', formId = 'signupForm') {
   const navError = await browser.navigate(site.base + path);
   if (navError) { fail(`navigation failed: ${navError}`); return false; }
-  // The submit handler binds on DOMContentLoaded, so nothing below is
-  // meaningful until the document is done.
   const ready = await browser.evaluate(`(async () => {
     for (let i = 0; i < 100 && document.readyState !== 'complete'; i++) {
       await new Promise((r) => setTimeout(r, 50));
@@ -52,9 +25,6 @@ async function load(path = '/', formId = 'signupForm') {
   return check(ready, `${path} loaded but #${formId} never appeared`);
 }
 
-/* ---------------------------------------------------------------------------
-   1. The Netlify contract, read off the rendered form rather than the source.
-   --------------------------------------------------------------------------- */
 if (await load()) {
   const f = await browser.evaluate(`JSON.stringify((() => {
     const form = document.getElementById('signupForm');
@@ -97,8 +67,6 @@ if (await load()) {
   check(f.potName ? f.potPresent : true, `netlify-honeypot names "${f.potName}" but no such field exists`);
   check(f.potName ? f.potHidden : true, `the ${f.potName} honeypot is visible to people, not just bots`);
   check(f.potName ? f.potAriaHidden : true, `the ${f.potName} honeypot is not aria-hidden, so a screen reader announces it as a real field`);
-  // The application proper. The marketing consent is deliberately NOT here: it
-  // is a separate ask and must never gate the submit.
   for (const name of ['firstName', 'email', 'schoolName', 'schoolState']) {
     check(f.required.includes(name), `required fields are ${JSON.stringify(f.required)}, expected ${name} among them`);
   }
@@ -106,17 +74,10 @@ if (await load()) {
   for (const el of f.unlabelled) fail(`the ${el} field has no <label for>`);
 }
 
-/* ---------------------------------------------------------------------------
-   2. The four ways a submit ends.
-
-   window.fetch is replaced per scenario, so the page's own handler runs
-   untouched and every assertion is about what it did.
-   --------------------------------------------------------------------------- */
 const run = async (mode, opts) => (await load())
   ? browser.evaluate(scenario(mode, opts), { awaitPromise: true })
   : null;
 
-/* --- a submission that works ------------------------------------------------ */
 const ok = await run('ok');
 if (ok) {
   console.log(`Success path: ${ok.calls.length} request(s), form ${ok.formShown ? 'still shown' : 'hidden'}, `
@@ -130,7 +91,6 @@ if (ok) {
       (call.contentType || '').startsWith('application/x-www-form-urlencoded'),
       `submitted as ${call.contentType || 'no content type'}, expected application/x-www-form-urlencoded`,
     );
-    // The field Netlify routes on has to survive the trip through FormData.
     check(body.get('form-name') === 'early-access',
       `the posted body carries form-name="${body.get('form-name')}", expected "early-access"`);
     for (const [name, value] of Object.entries(ANSWERS)) {
@@ -142,7 +102,6 @@ if (ok) {
   check(ok.state === 'submitted', `after a successful submit #signup reads data-state="${ok.state}", expected "submitted"`);
 }
 
-/* --- the server says no ----------------------------------------------------- */
 const bad = await run('server-error');
 if (bad) {
   console.log(`Server error: error ${bad.errorShown ? 'shown' : 'MISSING'} "${bad.errorText}", `
@@ -153,30 +112,20 @@ if (bad) {
   check(!bad.successShown, 'a rejected submit showed the confirmation panel anyway');
   check(bad.formShown, 'a rejected submit hid the form, leaving nothing to retry with');
   check(bad.state === 'failed', `after a server error #signup reads data-state="${bad.state}", expected "failed"`);
-  // "Your answers are still here" is a promise the error copy makes.
   for (const [name, value] of Object.entries(ANSWERS)) {
     check(bad.values[name] === value, `after a server error ${name} reads "${bad.values[name]}", expected the typed "${value}"`);
   }
   check(bad.errorText.includes(SUPPORT_EMAIL),
     `a rejected submit showed "${bad.errorText}", which does not offer ${SUPPORT_EMAIL} as a way through`);
   check(!bad.disabled, 'the submit button stayed disabled after an error - the visitor cannot retry');
-  // The handler restores this label from a literal. If the markup is reworded
-  // and the literal is not, this is where the two drift apart.
   check(bad.label === bad.initialLabel,
     `the button came back reading "${bad.label}" but the page ships it reading "${bad.initialLabel}"`);
 }
 
-/* --- the network drops ------------------------------------------------------ */
 const dropped = await run('network-error');
 if (dropped) {
   console.log(`Network failure: error ${dropped.errorShown ? 'shown' : 'MISSING'} "${dropped.errorText}"`);
   check(dropped.errorShown && dropped.errorText.length > 0, 'a failed request showed no error message');
-  /* The message a visitor reads when their connection died has to be one we
-     wrote. This check was added the other way round - it first recorded that
-     the page showed the browser's own "Failed to fetch", because the handler
-     read `err.message || <friendly fallback>` and a failed fetch always has a
-     message, so the fallback and the support address in it were unreachable.
-     The person least able to get through was told the least. */
   check(!/failed to fetch|networkerror|load failed/i.test(dropped.errorText),
     `a dropped connection showed the browser's own words: "${dropped.errorText}"`);
   check(dropped.errorText.includes(SUPPORT_EMAIL),
@@ -188,7 +137,6 @@ if (dropped) {
     `after a failed request the button reads "${dropped.label}", expected "${dropped.initialLabel}"`);
 }
 
-/* --- while the request is in flight ----------------------------------------- */
 const inFlight = await run('pending');
 if (inFlight) {
   console.log(`In flight: button ${inFlight.disabled ? 'disabled' : 'STILL LIVE'}, label "${inFlight.label}"`);
@@ -198,9 +146,6 @@ if (inFlight) {
   check(inFlight.state === 'submitting', `while in flight #signup reads data-state="${inFlight.state}", expected "submitting"`);
 }
 
-/* --- a retry after an error -------------------------------------------------- */
-// The failed state exists so the visitor can try again. This walks the one
-// path back out of it: a 500, a second click, then success.
 const retry = await run('retry');
 if (retry) {
   console.log(`Retry: ${retry.calls.length} request(s), states ${retry.states.join(' -> ')}`);
@@ -211,7 +156,6 @@ if (retry) {
     'after a successful retry the page still shows the form or the error');
 }
 
-/* --- nothing filled in ------------------------------------------------------ */
 const empty = await run('ok', { fill: false });
 if (empty) {
   console.log(`Empty form: ${empty.calls.length} request(s) sent`);

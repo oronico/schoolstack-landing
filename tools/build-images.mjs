@@ -1,19 +1,4 @@
 #!/usr/bin/env node
-/**
- * Regenerates every raster brand asset the site serves: the OG share card and
- * the full favicon / app-icon set. Everything is rendered from vector sources
- * with headless Chromium, so there is no binary editing step and no drift
- * between the SVG mark and its PNG fallbacks.
- *
- *   node tools/build-images.mjs
- *
- * Chromium is located via CHROME_BIN, then the Playwright browser cache, then
- * a few common system paths. Nothing here touches the network: the OG card uses
- * the self-hosted fonts in fonts/, and the run asserts they actually loaded
- * rather than trusting that they did.
- *
- * Run tools/fetch-fonts.mjs first if fonts/ is empty.
- */
 
 import { PAGES as VERSIONED_PAGES, stampVersions } from './lib/asset-version.mjs';
 import { spawn } from 'node:child_process';
@@ -24,19 +9,6 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-/* ---------------------------------------------------------------------------
-   Brand geometry - the single source of truth for the mark.
-
-   Deliberately identical to the Space and Budget favicons so the three
-   products read as one family: off-white ground, left-aligned bars, tight
-   gaps, and a mark that fills ~80% of the box. Lifted from Budget's
-   favicon.svg, which uses a 40-unit box.
-
-   SchoolStack is the parent brand, so unlike the single-hue product marks it
-   carries all three founding hues. The amber is the 600-weight (#F59E0B)
-   rather than the 400 used on dark backgrounds - the lighter tone washes out
-   against an off-white ground at 16px.
-   --------------------------------------------------------------------------- */
 const GROUND = '#FAF9F7';
 const BOX = 40;
 const CORNER = 9;
@@ -58,15 +30,6 @@ function markGroup(scale = 1) {
   return `<g transform="translate(${c} ${c}) scale(${scale}) translate(${-c} ${-c})">${bars}</g>`;
 }
 
-/**
- * @param {'rounded'|'square'|'maskable'} variant
- *   rounded  - browser tab favicons, nothing masks them, so keep the radius
- *   square   - apple-touch-icon; iOS applies its own corner radius, and a
- *              pre-rounded source would double-round
- *   maskable - Android adaptive icons. The family geometry runs to ~80% of the
- *              box, which a circular mask would clip, so the mark is scaled
- *              into the inner safe zone here and only here.
- */
 function iconSvg(variant) {
   const radius = variant === 'rounded' ? CORNER : 0;
   const scale = variant === 'maskable' ? 0.72 : 1;
@@ -76,9 +39,6 @@ function iconSvg(variant) {
     + `</svg>`;
 }
 
-/* ---------------------------------------------------------------------------
-   Chromium
-   --------------------------------------------------------------------------- */
 function findChrome() {
   const candidates = [process.env.CHROME_BIN].filter(Boolean);
 
@@ -107,15 +67,6 @@ function findChrome() {
   return found;
 }
 
-/* ---------------------------------------------------------------------------
-   Chromium, driven over the DevTools protocol.
-
-   The `--screenshot` CLI flag is not usable here: modern headless Chrome sizes
-   the viewport to the *window* minus chrome, so `--window-size=1200,630` yields
-   a 543px-tall viewport and pads the capture. Anything anchored to the bottom
-   of the card lands in that dead band and silently disappears. Setting the
-   metrics explicitly via Emulation.setDeviceMetricsOverride is exact.
-   --------------------------------------------------------------------------- */
 class CDP {
   constructor(ws) {
     this.ws = ws;
@@ -203,7 +154,6 @@ const { targetId } = await cdp.send('Target.createTarget', { url: 'about:blank' 
 const { sessionId } = await cdp.send('Target.attachToTarget', { targetId, flatten: true });
 await cdp.send('Page.enable', {}, sessionId);
 
-/** Screenshot an HTML file at an exact pixel size. */
 async function shoot(htmlPath, outPath, width, height, expectFonts) {
   await cdp.send(
     'Emulation.setDeviceMetricsOverride',
@@ -215,16 +165,12 @@ async function shoot(htmlPath, outPath, width, height, expectFonts) {
   await cdp.send('Page.navigate', { url: `file://${htmlPath}` }, sessionId);
   await loaded;
 
-  // Webfonts land after load; capturing before they settle renders fallbacks.
   await cdp.send(
     'Runtime.evaluate',
     { expression: 'document.fonts.ready.then(() => 0)', awaitPromise: true },
     sessionId,
   );
 
-  // Then prove they actually arrived. A missing font does not throw - the text
-  // simply renders in DejaVu Sans and the card looks subtly, shippably wrong.
-  // That exact failure reached production once; it does not get to happen twice.
   if (expectFonts?.length) {
     const { result } = await cdp.send(
       'Runtime.evaluate',
@@ -265,13 +211,8 @@ ${iconSvg(variant)}`;
   return outName;
 }
 
-/* ---------------------------------------------------------------------------
-   Build
-   --------------------------------------------------------------------------- */
 const built = [];
 
-// The vector favicon every modern browser prefers, kept byte-identical to the
-// rounded PNG fallbacks below.
 writeFileSync(join(ROOT, 'favicon.svg'), iconSvg('rounded') + '\n');
 built.push('favicon.svg');
 
@@ -281,24 +222,18 @@ built.push(await renderIcon('square', 180, 'apple-touch-icon.png'));
 built.push(await renderIcon('maskable', 192, 'icon-192.png'));
 built.push(await renderIcon('maskable', 512, 'icon-512.png'));
 
-// Legacy /favicon.png request path - some crawlers and older clients still ask
-// for it by name, so keep it pointing at a correctly sized, current-brand file.
 built.push(await renderIcon('rounded', 180, 'favicon.png'));
 
-// The OG card. Rendered last because it is the only step that needs the network.
 await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 1200, 630,
   ['Quicksand', 'Inter']);
 built.push('og-image.png');
 
-// The giving guide's own link-preview card (/giving).
 await shoot(join(ROOT, 'tools', 'og-giving.html'), join(ROOT, 'og-giving.png'), 1200, 630,
   ['Quicksand', 'Inter']);
 built.push('og-giving.png');
 
 socket.close();
 chrome.kill();
-// Chromium keeps flushing its profile for a moment after SIGTERM; removing the
-// directory out from under it races and throws ENOTEMPTY.
 await new Promise((done) => {
   chrome.once('exit', done);
   setTimeout(done, 5000);
@@ -307,7 +242,6 @@ rmSync(work, { recursive: true, force: true });
 try {
   rmSync(profile, { recursive: true, force: true });
 } catch {
-  /* a leftover temp profile is harmless */
 }
 
 for (const name of built) {
@@ -316,9 +250,6 @@ for (const name of built) {
 }
 console.log(`\n${built.length} assets written to ${ROOT}`);
 
-// Stamp each icon and the preview card's ?v= with its content hash, on every
-// page and the manifest, so a rebuilt image reaches returning visitors and
-// social sites without anyone remembering to bump a number.
 const stamped = [];
 for (const page of VERSIONED_PAGES) {
   const before = readFileSync(join(ROOT, page), 'utf8');
