@@ -3,6 +3,19 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: The giving guide, sharpened
+- The opening names the worry first: asking for money feels awkward, and a
+  clear ask with real numbers gives people a way to help.
+- A note for anyone starting after December 1.
+- Step 2 points founders without a cost-per-student figure to SchoolStack
+  Budget, and says what to check before choosing a donation tool.
+- Step 4 ends with Allison's offer to read a school's draft letter.
+- Step 2 lists what gifts can fund, from scholarships to gas cards, and
+  how named gifts must be spent.
+- Step 4 teaches a three-part story, with a made-up example labeled as one.
+- "Pass it on": one tap to email the guide to another founder.
+- Prints cleanly, and carries Article structured data for search.
+
 ## 2026-11-22: Year-end giving guide at /giving
 - A new page for school leaders: year-end giving in one afternoon, from
   the owner's guide. Six timed steps, three send dates, AI prompts and
