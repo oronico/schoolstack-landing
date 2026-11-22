@@ -2,7 +2,7 @@ export const TOUCH_AUDIT = `JSON.stringify((() => {
   const shown = (e) => { const q = e.getBoundingClientRect(); return q.width > 0 && q.height > 0 && getComputedStyle(e).visibility !== 'hidden'; };
   const name = (e) => (e.id ? '#' + e.id : e.tagName.toLowerCase() + (e.className ? '.' + String(e.className).split(' ')[0] : ''))
     + ' "' + (e.textContent || e.value || '').trim().replace(/\\s+/g, ' ').slice(0, 24) + '"';
-  const controls = [...document.querySelectorAll('button, a, select, input:not([type=radio]):not([type=checkbox]):not([type=hidden]), label:has(> input[type=radio]), label:has(> input[type=checkbox])')]
+  const controls = [...document.querySelectorAll('button, a, summary, select, input:not([type=radio]):not([type=checkbox]):not([type=hidden]), label:has(> input[type=radio]), label:has(> input[type=checkbox])')]
     .filter(shown)
     .filter((e) => !e.classList.contains('skip-link'))
     .filter((e) => !(e.tagName === 'A' && getComputedStyle(e).display === 'inline'));

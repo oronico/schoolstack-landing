@@ -68,7 +68,9 @@ rings on every page; `verify-calculator` checks tap targets and field sizes.
     makes every control 44px and every field 16px under `(pointer: coarse)`
     (#52), so iPhone Safari does not zoom the page when a field takes focus.
     verify-a11y opens Enrollment Audit at 390px as a touch screen and fails
-    any control under 44px or field under 16px (`tools/lib/touch-audit.mjs`).
+    any control under 44px or field under 16px (`tools/lib/touch-audit.mjs`),
+    disclosure `<summary>`s included: Bugbot found the "Work them out from
+    last year's counts" summary at 33px, now 45px.
     It first asks whether the browser reports a touch screen and fails if
     not, because a failed emulation would pass with empty lists. Links in
     running text (WCAG 2.5.8's inline exception) and the skip link, which
