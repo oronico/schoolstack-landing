@@ -680,15 +680,14 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 
 .signup-form { display: grid; gap: var(--sp-4); text-align: left; }
 .form-group { display: flex; flex-direction: column; }
-.form-group > label, .group-label {
+.form-group > label {
   font-size: var(--step--1);
   font-weight: 700;
   color: var(--paper);
   margin-bottom: var(--sp-1);
 }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
 /* Paper fields on the ink band: they read as places to type. */
-.form-group input[type="text"], .form-group input[type="email"], .form-group select, .form-group textarea {
+.form-group input[type="text"], .form-group input[type="email"], .form-group select {
   padding: var(--sp-3) var(--sp-4);
   border: 1px solid var(--paper);
   border-radius: var(--r-sm);
@@ -698,9 +697,8 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
   font-size: var(--step-0);
   width: 100%;
 }
-.form-group textarea { resize: vertical; }
-.form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted); }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+.form-group input::placeholder { color: var(--muted); }
+.form-group input:focus, .form-group select:focus {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
@@ -710,19 +708,6 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .form-submit:disabled, .form-submit:disabled:hover { background: var(--paper); color: var(--muted); cursor: not-allowed; }
 .form-help { color: var(--paper); font-size: var(--step--1); text-align: center; }
 .form-help a { color: var(--accent); font-weight: 700; }
-.consent-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-3);
-  border: 1px solid var(--line-on-ink);
-  border-radius: var(--r-sm);
-  padding: var(--sp-3) var(--sp-4);
-  cursor: pointer;
-}
-.consent-item:hover { border-color: var(--paper); }
-.consent-item input { width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; margin-top: var(--sp-1); }
-.consent-item span { font-size: var(--step--1); color: var(--paper); line-height: 1.5; }
-.consent-item strong { font-weight: 800; }
 .form-success {
   background: var(--paper);
   color: var(--ink);
@@ -908,7 +893,6 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .platform-jobs { grid-template-columns: 1fr; }
   .enroll-band { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: var(--sp-7); }
   .enroll-shot { max-width: 280px; margin-inline: auto; }
-  .form-row { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; gap: var(--sp-5); }
   .partner-row, .backers { gap: var(--sp-6); }
   .incubator { grid-template-columns: 1fr; gap: var(--sp-4); }
