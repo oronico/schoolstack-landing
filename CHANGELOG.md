@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: Body copy in Inter, the brand's text face
+- Body copy on every page, Enrollment Audit and the link-preview card is
+  now Inter, as in Space, Budget and Access (owner). Headings stay in
+  Quicksand; the logo's lettering stays Montserrat ExtraBold, drawn into
+  the SVG. The site was the only SchoolStack app setting copy in Nunito.
+- Inter is self-hosted like the other faces, one variable file for
+  weights 400 to 800: 48 KB, 9 KB more than Nunito.
+
 ## 2026-11-21: Five more stable names
 - A replaced image in `/images` (funder logos, the scorecard) now reaches
   returning visitors at once. Each link carries its file's content hash,

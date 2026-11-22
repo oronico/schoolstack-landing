@@ -37,7 +37,7 @@ Then('every declared font family has a matching @font-face', function () {
   }
 });
 
-Then('the {word} face is Quicksand or Nunito, loaded, and distinct from the fallback',
+Then('the {word} face is Quicksand or Inter, loaded, and distinct from the fallback',
   async function (role) {
     const f = await ctx.browser.evaluate(`JSON.stringify((() => {
       const ctx2 = document.createElement('canvas').getContext('2d');
@@ -57,7 +57,7 @@ Then('the {word} face is Quicksand or Nunito, loaded, and distinct from the fall
       };
     })())`);
 
-    assert.ok(['Quicksand', 'Nunito'].includes(f.want),
+    assert.ok(['Quicksand', 'Inter'].includes(f.want),
       `--font-${role} asks for '${f.want}', expected a SchoolStack brand face`);
     assert.ok(f.inFaceSet,
       `no @font-face with family '${f.want}' is loaded (faces: ${f.faceStatus}) - the page is painting in a fallback`);
