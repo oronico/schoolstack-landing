@@ -27,6 +27,10 @@ nav and footer with the other pages and meets the same checks.
    region says so, because a screen reader does not announce a button's
    label changing. If both ways fail, the text stays selected and the button
    reads "Text selected", so the reader can copy it by hand.
+   Each button keeps its own label timer and the live region one timer, and
+   both restart on a new click, so a second copy shows its full two seconds.
+   The live region is cleared and set again after 100 ms, so a screen reader
+   announces a repeated copy too.
 4. The guide's numbered lists (`.guide-list`) space their items with
    margins, not a grid, so each item keeps its list marker in every browser.
 5. Two sets of facts on the page must stay true, with their sources linked

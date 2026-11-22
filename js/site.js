@@ -54,8 +54,24 @@
     return Promise.resolve();
   }
 
+  var statusTimer = 0;
+  function announce(msg) {
+    clearTimeout(statusTimer);
+    status.textContent = '';
+    statusTimer = setTimeout(function () {
+      status.textContent = msg;
+      statusTimer = setTimeout(function () { status.textContent = ''; }, 4000);
+    }, 100);
+  }
+
   Array.prototype.forEach.call(buttons, function (btn) {
     var label = btn.textContent;
+    var labelTimer = 0;
+    function show(text) {
+      clearTimeout(labelTimer);
+      btn.textContent = text;
+      labelTimer = setTimeout(function () { btn.textContent = label; }, 2000);
+    }
     btn.addEventListener('click', function () {
       var el = document.getElementById(btn.getAttribute('data-copy'));
       if (!el) return;
@@ -64,13 +80,11 @@
         ? navigator.clipboard.writeText(text).catch(function () { return fallback(el); })
         : fallback(el);
       copy.then(function () {
-        btn.textContent = 'Copied';
-        status.textContent = 'Copied to your clipboard.';
+        show('Copied');
+        announce('Copied to your clipboard.');
       }, function () {
-        btn.textContent = 'Text selected';
-        status.textContent = 'Copy did not work here. The text is selected: copy it from your keyboard or menu.';
-      }).then(function () {
-        setTimeout(function () { btn.textContent = label; status.textContent = ''; }, 2000);
+        show('Text selected');
+        announce('Copy did not work here. The text is selected: copy it from your keyboard or menu.');
       });
     });
   });
