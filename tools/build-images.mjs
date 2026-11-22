@@ -228,6 +228,10 @@ await shoot(join(ROOT, 'tools', 'og-image.html'), join(ROOT, 'og-image.png'), 12
   ['Quicksand', 'Inter']);
 built.push('og-image.png');
 
+await shoot(join(ROOT, 'tools', 'og-giving.html'), join(ROOT, 'og-giving.png'), 1200, 630,
+  ['Quicksand', 'Inter']);
+built.push('og-giving.png');
+
 socket.close();
 chrome.kill();
 await new Promise((done) => {

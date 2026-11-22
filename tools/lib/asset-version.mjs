@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-export const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'enrollment/index.html', 'site.webmanifest'];
+export const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html', 'enrollment/index.html', 'site.webmanifest'];
 
 const REF = /((?:href=|content=|src=|"src":\s*)"(?:https:\/\/schoolstack\.ai)?\/)((?:images\/)?[\w.-]+\.(?:png|svg|ico|webp|jpg))\?v=([^"]*)"/g;
 

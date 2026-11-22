@@ -3,6 +3,21 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: Year-end giving guide at /giving
+- A new page for school leaders: year-end giving in one afternoon, from
+  the owner's guide. Six timed steps, three send dates, AI prompts and
+  email templates with Copy buttons, Gmail mail merge step by step, and
+  the IRS receipt rules with links to the IRS pages.
+- Linked from the footer's About column on every page and listed in the
+  sitemap. Not in the top menu or on the home page.
+- The Copy buttons live in `js/site.js` and follow GitHub's
+  clipboard-copy-element: the Clipboard API, with a select-and-copy
+  fallback.
+- Every check that reads the pages now reads `/giving` too.
+- Its own link-preview card, `og-giving.png`, built by `build-images` from
+  `tools/og-giving.html` in the same design as the site card.
+- Its decisions are ADR 0018; the page carries no comments (ADR 0001).
+
 ## 2026-11-22: One button style, and a tidy-up
 - Every "Get early access" button (hero, early list form, the footer of
   every page) now looks the same: one style, where there were three

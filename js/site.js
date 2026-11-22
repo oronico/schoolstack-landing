@@ -30,3 +30,62 @@
   openTarget();
   window.addEventListener('hashchange', openTarget);
 })();
+
+(function () {
+  'use strict';
+  var buttons = document.querySelectorAll('[data-copy]');
+  if (!buttons.length) return;
+
+  var status = document.createElement('p');
+  status.className = 'sr-only';
+  status.setAttribute('aria-live', 'polite');
+  document.body.appendChild(status);
+
+  function fallback(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (!ok) return Promise.reject();
+    sel.removeAllRanges();
+    return Promise.resolve();
+  }
+
+  var statusTimer = 0;
+  function announce(msg) {
+    clearTimeout(statusTimer);
+    status.textContent = '';
+    statusTimer = setTimeout(function () {
+      status.textContent = msg;
+      statusTimer = setTimeout(function () { status.textContent = ''; }, 4000);
+    }, 100);
+  }
+
+  Array.prototype.forEach.call(buttons, function (btn) {
+    var label = btn.textContent;
+    var labelTimer = 0;
+    function show(text) {
+      clearTimeout(labelTimer);
+      btn.textContent = text;
+      labelTimer = setTimeout(function () { btn.textContent = label; }, 2000);
+    }
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      if (!el) return;
+      var text = el.textContent;
+      var copy = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(text).catch(function () { return fallback(el); })
+        : fallback(el);
+      copy.then(function () {
+        show('Copied');
+        announce('Copied to your clipboard.');
+      }, function () {
+        show('Text selected');
+        announce('Copy did not work here. The text is selected: copy it from your keyboard or menu.');
+      });
+    });
+  });
+})();

@@ -24,6 +24,7 @@ follow stay in `CLAUDE.md`; where an ADR repeats one, it cites the section.
 | [0015](0015-image-pipeline.md) | The image pipeline |
 | [0016](0016-browser-checks-harness.md) | The browser checks and their harness |
 | [0017](0017-test-approach.md) | How the tests are built |
+| [0018](0018-giving-guide.md) | The year-end giving guide |
 
 To add a decision, put it under the ADR whose topic it belongs to. Start a
 new ADR only for a topic none covers: take the next number and add it to

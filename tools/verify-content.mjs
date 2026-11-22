@@ -11,7 +11,7 @@ import { commentCounts, commentDrift } from './lib/comments.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
-const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html'];
+const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html', 'giving.html'];
 const others = OTHER_PAGES.map((f) => ({ f, html: read(f) }));
 const TOOL_PAGES = ['enrollment/index.html'];
 const tools = TOOL_PAGES.map((f) => ({ f, html: read(f) }));

@@ -752,6 +752,79 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 .legal ul { margin: var(--sp-2) 0 var(--sp-2) var(--sp-5); display: grid; gap: var(--sp-1); }
 .legal a { font-weight: 700; }
 
+.section.guide { padding-block: var(--sp-7); border-top: 1px solid var(--line); }
+.section.guide:first-of-type { border-top: none; }
+.section.guide .label, .section.guide h2 { text-align: left; }
+.section.guide h2 { font-size: var(--step-3); margin-bottom: var(--sp-3); }
+.guide h3 { font-size: var(--step-1); margin: var(--sp-6) 0 var(--sp-3); }
+.guide p + p, .guide p + .guide-formula, .guide-formula + table { margin-top: var(--sp-3); }
+.guide a { font-weight: 700; text-underline-offset: 3px; }
+.guide-note { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
+
+.guide-steps { list-style: none; counter-reset: step; margin: var(--sp-5) 0 0; border-top: 1px solid var(--line); }
+.guide-steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: var(--sp-6) 1fr auto;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.guide-steps li::before { content: counter(step); font-family: var(--font-display); font-weight: 700; font-size: var(--step-1); }
+.guide-steps a { text-decoration: none; padding-block: var(--sp-1); }
+.guide-steps a:hover { text-decoration: underline; }
+.guide-steps span { font-size: var(--step--1); color: var(--muted); white-space: nowrap; }
+
+.guide-dates { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); gap: var(--sp-3); margin: 0 0 var(--sp-4); }
+.guide-dates li { border-top: 2px solid var(--ink); padding-top: var(--sp-2); }
+.guide-numbers { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.guide-dates strong, .guide-dates span { display: block; }
+.guide-dates span { color: var(--muted); font-size: var(--step--1); }
+
+.guide-cards { list-style: none; display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
+.guide-cards li { border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); }
+.guide-cards strong { display: block; }
+
+.guide-list { margin: var(--sp-3) 0 var(--sp-4) var(--sp-5); }
+.guide-list li + li { margin-top: var(--sp-2); }
+
+.guide-formula { font-weight: 700; border-left: 2px solid var(--accent); padding-left: var(--sp-3); }
+.guide-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.guide-table th, .guide-table td { text-align: left; padding: var(--sp-2) var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.guide-table td:last-child, .guide-table th:last-child { text-align: right; padding-right: 0; font-weight: 700; }
+
+.guide-copy { position: relative; margin: var(--sp-3) 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-sm); }
+.guide-copy pre {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: var(--sp-7) var(--sp-4) var(--sp-4);
+}
+.copy-btn {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  font: 800 var(--step--1) var(--font-body);
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: var(--ink);
+  cursor: pointer;
+}
+.copy-btn:hover { background: var(--ink); color: var(--paper); }
+
+.guide-example { margin: var(--sp-4) 0; border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); }
+.guide-example summary { list-style: none; cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); }
+.guide-example summary::-webkit-details-marker { display: none; }
+.guide-example summary::after { content: '+'; font-size: var(--step-2); line-height: 1; }
+.guide-example[open] summary::after { content: '\2212'; }
+.guide-example blockquote { border-left: 2px solid var(--ink); padding-left: var(--sp-4); margin-top: var(--sp-3); display: grid; gap: var(--sp-3); }
+
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .nav-menu { display: block; }
