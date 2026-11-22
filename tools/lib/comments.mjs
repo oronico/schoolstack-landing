@@ -9,7 +9,8 @@ const KIND = [
   [/\.(m?js)$/, 'js'],
   [/\.css$/, 'css'],
   [/\.(html|xml)$/, 'html'],
-  [/(\.ya?ml|\.toml|\.feature|\.txt|^_headers|^_redirects|\.gitignore)$/, 'hash'],
+  [/(\.ya?ml|\.toml)$/, 'config'],
+  [/(\.feature|\.txt|^_headers|^_redirects|\.gitignore)$/, 'hash'],
 ];
 
 export function kindOf(path) {
@@ -24,6 +25,8 @@ const lineAt = (src, i) => {
   return n;
 };
 
+const CONTROL_WORDS = new Set(['if', 'while', 'for', 'with']);
+
 const REGEX_AFTER_WORD = new Set(['return', 'typeof', 'case', 'in', 'of', 'delete', 'void', 'throw', 'new', 'else', 'do', 'yield', 'await', 'instanceof']);
 
 function jsRanges(src, from = 0, to = src.length) {
@@ -31,10 +34,11 @@ function jsRanges(src, from = 0, to = src.length) {
   let i = from;
   let prev = '';
   const braces = [];
+  const parens = [];
   if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
 
   const regexAllowed = () => {
-    if (prev === '') return true;
+    if (prev === '' || prev === 'ctl)') return true;
     if (/^[\w$]+$/.test(prev)) return REGEX_AFTER_WORD.has(prev);
     return !/^[)\]}'"`]$/.test(prev) && prev !== 'str';
   };
@@ -102,6 +106,8 @@ function jsRanges(src, from = 0, to = src.length) {
     if (c === '"' || c === "'") { skipString(c); prev = 'str'; continue; }
     if (c === '`') { skipTemplate(); prev = 'str'; continue; }
     if (c === '/' && regexAllowed()) { skipRegex(); prev = 'str'; continue; }
+    if (c === '(') { parens.push(CONTROL_WORDS.has(prev)); prev = c; i++; continue; }
+    if (c === ')') { prev = parens.pop() ? 'ctl)' : c; i++; continue; }
     if (c === '{') { braces.push('{'); prev = c; i++; continue; }
     if (c === '}') {
       const top = braces.pop();
@@ -168,7 +174,29 @@ function hashRanges(src) {
   return out;
 }
 
-const RANGES = { js: jsRanges, css: cssRanges, html: htmlRanges, hash: hashRanges };
+function configRanges(src) {
+  const out = [];
+  let i = 0;
+  for (const line of src.split('\n')) {
+    let quote = null;
+    for (let j = 0; j < line.length; j++) {
+      const c = line[j];
+      if (quote) {
+        if (c === '\\' && quote === '"') j++;
+        else if (c === quote) quote = null;
+      } else if (c === '"' || c === "'") {
+        quote = c;
+      } else if (c === '#' && (j === 0 || /\s/.test(line[j - 1]))) {
+        out.push([i + j, i + line.length]);
+        break;
+      }
+    }
+    i += line.length + 1;
+  }
+  return out;
+}
+
+const RANGES = { js: jsRanges, css: cssRanges, html: htmlRanges, hash: hashRanges, config: configRanges };
 
 export function findComments(src, kind) {
   return RANGES[kind](src).map(([s, e]) => ({

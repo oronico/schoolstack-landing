@@ -14,7 +14,8 @@ test('kindOf maps each file to the comment syntax it uses', () => {
   assert.equal(kindOf('sitemap.xml'), 'html');
   assert.equal(kindOf('_headers'), 'hash');
   assert.equal(kindOf('_redirects'), 'hash');
-  assert.equal(kindOf('.github/workflows/verify.yml'), 'hash');
+  assert.equal(kindOf('.github/workflows/verify.yml'), 'config');
+  assert.equal(kindOf('netlify.toml'), 'config');
   assert.equal(kindOf('features/signup.feature'), 'hash');
   assert.equal(kindOf('package.json'), null);
   assert.equal(kindOf('CLAUDE.md'), null);
@@ -45,6 +46,13 @@ test('regex literals are not comments, division is not a regex', () => {
   assert.deepEqual(lines('const r = (a) / (b) / c; /* yes */', 'js'), [1]);
 });
 
+test('a regex after a control-flow condition is not a comment', () => {
+  assert.deepEqual(lines('if (ok) /[/*]/.test(value);', 'js'), []);
+  assert.deepEqual(lines('while (f(x)) /a\\/\\/b/.test(s);', 'js'), []);
+  assert.deepEqual(lines('for (const a of b) /[/*]/.exec(a);', 'js'), []);
+  assert.deepEqual(lines('const r = (a) / 2; // yes', 'js'), [1]);
+});
+
 test('a shebang is not a comment', () => {
   assert.deepEqual(lines('#!/usr/bin/env node\nrun();', 'js'), []);
 });
@@ -68,6 +76,11 @@ test('HTML comments, plus the script and style inside the page', () => {
 
 test('hash comments only where # opens the line', () => {
   assert.deepEqual(lines('# one\n/go/x https://y.org/#z 302\n  # two\n', 'hash'), [1, 3]);
+});
+
+test('YAML and TOML comments, trailing ones included', () => {
+  assert.deepEqual(texts('name: Verify # explanation\n# own line\n', 'config'), ['# explanation', '# own line']);
+  assert.deepEqual(lines('url: https://x.org/#frag\nrun: echo "a # b"\nk: \'c # d\'\nv: x#y\n', 'config'), []);
 });
 
 test('the ratchet fails a rise and asks for the baseline to drop on a fall', () => {
