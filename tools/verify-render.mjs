@@ -84,6 +84,8 @@ const PAGES = {
   },
   '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: ['nav-menu'] },  // logo, footer logo
   '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: ['nav-menu'] },
+  // The year-end giving guide: logo and footer logo, one step per band.
+  '/giving': { minImages: 2, h1: 1, minTextChars: 5000, ids: ['plan', 'gifts', 'amounts', 'list', 'write', 'send', 'thanks', 'prompt-list', 'prompt-emails', 'nav-menu'] },
   // A stand-alone tool page with its own masthead: wordmark only.
   '/enrollment/': { minImages: 1, h1: 1, minTextChars: 4000, ids: ['main', 'audit', 'forces', 'phases', 'cal'] },
 };

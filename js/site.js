@@ -47,3 +47,55 @@
   openTarget();
   window.addEventListener('hashchange', openTarget);
 })();
+
+/**
+ * Copy buttons on the giving guide. A button names the <pre> it copies by
+ * id (data-copy="prompt-list"). The pattern follows GitHub's
+ * clipboard-copy-element: the Clipboard API where the browser has it, and
+ * a selection plus execCommand('copy') where it does not. The label reads
+ * "Copied" for two seconds, and a polite live region says so for screen
+ * readers, which do not announce a button's label changing.
+ */
+(function () {
+  'use strict';
+  var buttons = document.querySelectorAll('[data-copy]');
+  if (!buttons.length) return;
+
+  var status = document.createElement('p');
+  status.className = 'sr-only';
+  status.setAttribute('aria-live', 'polite');
+  document.body.appendChild(status);
+
+  function fallback(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    sel.removeAllRanges();
+    return ok ? Promise.resolve() : Promise.reject();
+  }
+
+  Array.prototype.forEach.call(buttons, function (btn) {
+    var label = btn.textContent;
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      if (!el) return;
+      var text = el.textContent;
+      var copy = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(text).catch(function () { return fallback(el); })
+        : fallback(el);
+      copy.then(function () {
+        btn.textContent = 'Copied';
+        status.textContent = 'Copied to your clipboard.';
+      }, function () {
+        btn.textContent = 'Select and copy';
+        status.textContent = 'Copy did not work here. Select the text and copy it.';
+      }).then(function () {
+        setTimeout(function () { btn.textContent = label; status.textContent = ''; }, 2000);
+      });
+    });
+  });
+})();

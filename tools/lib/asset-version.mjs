@@ -16,7 +16,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 /** Files that carry versioned references to the root-level images. */
-export const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'enrollment/index.html', 'site.webmanifest'];
+export const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html', 'enrollment/index.html', 'site.webmanifest'];
 
 /* A reference with a ?v= query to a root-level file or one in /images:
    href="/favicon.svg?v=…", content="https://schoolstack.ai/og-image.png?v=…",

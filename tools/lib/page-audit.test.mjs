@@ -128,7 +128,7 @@ test('cookieUse spots code that would break the no-cookies promise', () => {
 });
 
 test('every page shares the home page nav and footer', () => {
-  for (const p of ['about.html', 'privacy.html', 'terms.html']) {
+  for (const p of ['about.html', 'privacy.html', 'terms.html', 'giving.html']) {
     assert.deepEqual(chromeDrift(page(), readFileSync(join(ROOT, p), 'utf8')), [], p);
   }
 });
@@ -183,7 +183,7 @@ test('retiredAnchorLinks catches a link to a retired id, on the page and from an
 });
 
 test('no page links a retired id, and each retired id still exists on the home page', () => {
-  for (const f of ['index.html', 'about.html', 'privacy.html', 'terms.html']) {
+  for (const f of ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html']) {
     assert.deepEqual(retiredAnchorLinks(readFileSync(join(ROOT, f), 'utf8')), [], f);
   }
   const ids = elementIds(page());

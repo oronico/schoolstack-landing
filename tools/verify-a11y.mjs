@@ -163,7 +163,7 @@ const AUDIT = `(async () => {
   });
 })()`;
 
-for (const path of ['/', '/about', '/privacy', '/terms', '/enrollment/'])
+for (const path of ['/', '/about', '/privacy', '/terms', '/giving', '/enrollment/'])
 for (const width of VIEWPORTS) {
   await browser.send('Emulation.setDeviceMetricsOverride',
     { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });

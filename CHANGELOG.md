@@ -3,6 +3,18 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: Year-end giving guide at /giving
+- A new page for school leaders: year-end giving in one afternoon, from
+  the owner's guide. Six timed steps, three send dates, AI prompts and
+  email templates with Copy buttons, Gmail mail merge step by step, and
+  the IRS receipt rules with links to the IRS pages.
+- Linked from the footer's About column on every page and listed in the
+  sitemap. Not in the top menu or on the home page.
+- The Copy buttons live in `js/site.js` and follow GitHub's
+  clipboard-copy-element: the Clipboard API, with a select-and-copy
+  fallback.
+- Every check that reads the pages now reads `/giving` too.
+
 ## 2026-11-22: Body copy in Inter, the brand's text face
 - Body copy on every page, Enrollment Audit and the link-preview card is
   now Inter, as in Space, Budget and Access (owner). Headings stay in

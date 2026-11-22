@@ -19,7 +19,7 @@ const flat = (s) => s.replace(/\s+/g, ' ');
 const SUPPORT = 'SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.';
 const CREDIT = `${SUPPORT} Founder &amp; Product Developer: Allison Serafin`;
 const COPYRIGHT = '&copy; 2026 Building Hope Impact Fund. All rights reserved.';
-const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html'];
+const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html'];
 // Terms and Privacy are legal text that counsel owns; "a program of" stays
 // there and nowhere else.
 const LEGAL = new Set(['privacy.html', 'terms.html']);

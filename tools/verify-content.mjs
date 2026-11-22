@@ -36,7 +36,7 @@ const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
 // Every page other than the home page. Each shares its nav and footer and
 // meets the same link, anchor and voice rules.
-const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html'];
+const OTHER_PAGES = ['about.html', 'privacy.html', 'terms.html', 'giving.html'];
 const others = OTHER_PAGES.map((f) => ({ f, html: read(f) }));
 // Stand-alone tool pages: their own masthead rather than the shared nav and
 // footer (like Space and Budget), but the same link, anchor and voice rules.
