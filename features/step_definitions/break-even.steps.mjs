@@ -1,10 +1,3 @@
-/**
- * Break-even steps. They load js/budget-calculator.js, the file the page runs,
- * as do tools/lib/break-even.test.mjs and tools/verify-calculator.mjs. The
- * refusal step for the two break-even fields lives with the snapshot's, in
- * budget-calculator.steps.mjs, so one sentence covers all four fields.
- */
-
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { Given, Then } from '@cucumber/cucumber';
@@ -18,7 +11,6 @@ Given('yearly expenses of {float} and {float} per student', function (expenses, 
   this.beInput = { expenses, perStudent };
 });
 
-// Read as the page prints it: "60 students", "1 student", "50,000,000 students".
 Then(/^the school needs (.+) to break even$/, function (want) {
   const n = result(this).students;
   assert.equal(`${n.toLocaleString('en-US')} ${n === 1 ? 'student' : 'students'}`, want);

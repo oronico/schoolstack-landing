@@ -1,8 +1,3 @@
-/**
- * Signup steps. The submit driver is tools/lib/form-scenario.mjs, the same
- * module verify-form.mjs uses, so both suites stub fetch identically.
- */
-
 import assert from 'node:assert/strict';
 import { When, Then } from '@cucumber/cucumber';
 import { ctx, loadPage } from '../support/world.mjs';
@@ -16,8 +11,6 @@ const MODE_FOR = {
   'the server answers 500, then they try again': 'retry',
 };
 
-/* Each scenario submits once, so the page is reloaded first: a form already
-   replaced by its confirmation cannot be submitted again. */
 When('a visitor submits the form and {}', async function (outcome) {
   const mode = MODE_FOR[outcome];
   assert.ok(mode, `unknown outcome "${outcome}"`);
@@ -29,8 +22,6 @@ When('a visitor submits the form empty', async function () {
   await loadPage(1440);
   this.result = await ctx.browser.evaluate(scenario('ok', { fill: false }), { awaitPromise: true });
 });
-
-/* --- the Netlify contract, read off the rendered DOM ----------------------- */
 
 const attr = async (sel, name) => ctx.browser.evaluate(
   `JSON.stringify(document.querySelector(${JSON.stringify(sel)})?.getAttribute(${JSON.stringify(name)}) ?? null)`);
@@ -67,9 +58,6 @@ Then('the {string} field is required', async function (name) {
   assert.equal(required, true, `${name} is not required`);
 });
 
-/* --- what the page did ----------------------------------------------------- */
-
-// #signup carries the form's state (idle, submitting, failed, submitted).
 Then('the form is in the {string} state', function (state) {
   assert.equal(this.result.state, state);
 });

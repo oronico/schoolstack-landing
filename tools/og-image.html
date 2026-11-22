@@ -3,21 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>SchoolStack OG card source</title>
-<!-- Netlify publishes the repo root, so this template is reachable over HTTP.
-     It is a rendering source, not a page - keep it out of the index. -->
 <meta name="robots" content="noindex, nofollow">
-<!-- The site's own self-hosted fonts, by relative path. This template used to
-     pull from fonts.googleapis.com, which the render sandbox cannot reach: the
-     fetch failed silently, Chromium fell back to DejaVu Sans, and an off-brand
-     card shipped. Local files cannot fail that way. -->
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Brand tokens, the same values as the :root block in css/site.css.
-     The card matches the Facebook and LinkedIn covers (owner, November 2026):
-     flat navy, paper text, the campaign line's second half in gold. No
-     gradient, no shadow, and the stacked bars appear only inside the logo. */
   :root {
     --ink:    #1E293B;
     --paper:  #FAF9F7;
@@ -36,7 +26,6 @@
     flex-direction: column;
   }
 
-  /* Owner-supplied wordmark, white-on-navy twin, as used in the site footer. */
   .logo { display: block; height: 52px; width: auto; align-self: flex-start; }
 
   h1 {

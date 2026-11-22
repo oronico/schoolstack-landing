@@ -1,9 +1,3 @@
-/**
- * Budget calculator steps. They load js/budget-calculator.js, the file the
- * page runs, as do tools/lib/budget-calculator.test.mjs and
- * tools/verify-calculator.mjs, so one implementation is checked three ways.
- */
-
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { Given, Then } from '@cucumber/cucumber';

@@ -1,9 +1,3 @@
-/**
- * Structural steps. The file-level assertions delegate to
- * tools/lib/page-audit.mjs; the "which face got painted" assertion asks the
- * browser, because only a browser can answer it.
- */
-
 import assert from 'node:assert/strict';
 import { Given, Then } from '@cucumber/cucumber';
 import { ctx, loadPage } from '../support/world.mjs';

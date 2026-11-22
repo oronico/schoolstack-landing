@@ -1,15 +1,3 @@
-/**
- * Every working line the calculators print must reproduce the answer they
- * print beside it.
- *
- * The same mistake shipped twice: the arithmetic ran in whole cents while the
- * line showing the working rounded to the dollar, so the page printed a sum
- * that did not add up. Cursor Bugbot caught it on the break-even card (#32,
- * fixed) and on the snapshot (#31, merged unfixed and live until November
- * 2026). This test reads the printed text back, as a visitor would, for
- * amounts with cents, so a third card cannot repeat it.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
@@ -18,7 +6,6 @@ const require = createRequire(import.meta.url);
 const calc = require('../../js/budget-calculator.js');
 const { calculate, revenueFormula, formatUSDExact, breakEven, breakEvenFormula, DEFAULTS } = calc;
 
-/** "$10,000.50" -> 1000050 (cents). Accepts the minus sign formatUSD prints. */
 const cents = (s) => {
   const m = String(s).replace(/[−-]/, '-').match(/-?\$?([\d,]+(?:\.\d{2})?)/);
   assert.ok(m, `no amount in "${s}"`);

@@ -39,8 +39,6 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV. Written out on every page; tools/lib/page-audit.mjs chromeDrift()
-       fails the build if the copies stop matching. -->
   <nav aria-label="Main">
     <a href="/" class="nav-brand" aria-label="SchoolStack home">
       <img src="/assets/logos/schoolstack-logo.5df767fb.svg" alt="SchoolStack" width="1296" height="204">
@@ -53,8 +51,6 @@
       <a href="/#faq">FAQ</a>
       <a href="/enrollment/">Enrollment Audit</a>
     </div>
-    <!-- Phones and narrow tablets. A <details> opens and closes with no
-         script at all; js/site.js only closes it after a link is chosen. -->
     <details class="nav-menu" id="nav-menu">
       <summary>Menu</summary>
       <div class="nav-menu-panel">
@@ -70,11 +66,6 @@
 
   <main id="main">
 
-  <!-- PRIVACY. Every statement here is a fact about how the site is built,
-       and the checks hold it to that: verify-content fails if the
-       application form gains a field this page does not list, or if the
-       site starts setting cookies or loading an outside script. Change the
-       site and this page together. Drafted November 2026 for legal review. -->
   <div class="hero-wrap">
   <section class="hero legal-hero">
     <h1>Privacy policy</h1>
@@ -198,15 +189,12 @@
 
   </main>
 
-  <!-- FOOTER. Shared with every page; see the NAV note. -->
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
           <img src="/assets/logos/schoolstack-logo-white.6519c89c.svg" alt="SchoolStack" width="1296" height="204">
           <p>The back office small schools run on. Built by a founder, for founders.</p>
-          <!-- One sign-up (owner, November 2026): the early list. This block
-               links to it; there is no second form. -->
           <div class="newsletter">
             <h2 class="newsletter-heading">Stay ready.</h2>
             <p class="newsletter-blurb">Early access news and product updates from SchoolStack. Unsubscribe any time.</p>

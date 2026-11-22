@@ -1,15 +1,3 @@
-/**
- * Unit tests for the logic that decides what the header check tests against.
- *
- *   node --test tools/lib/
- *
- * A bug here does not turn a check red, it turns a check into a liar: the
- * verifier serves the site with whatever these functions return, so a rule
- * that goes missing in parsing means a page served without that header and
- * then reported as passing. That is the one failure mode the browser-driven
- * checks cannot catch, because from their side everything looks fine.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -25,8 +13,6 @@ test('parseHeaders reads a pattern and its indented headers', () => {
 });
 
 test('parseHeaders keeps every colon after the first', () => {
-  // CSP values are full of them. Splitting on the wrong one truncates the
-  // policy, and the site is then verified against a policy nobody serves.
   const [rule] = parseHeaders("/*\n  Content-Security-Policy: default-src 'self'; img-src 'self' data:\n");
   assert.deepEqual(rule.headers, [['Content-Security-Policy', "default-src 'self'; img-src 'self' data:"]]);
 });
@@ -61,8 +47,6 @@ test('matches anchors both ends', () => {
 });
 
 test('matches escapes regex metacharacters in the pattern', () => {
-  // Without escaping, the dot in /*.png is "any character" and this passes,
-  // so a rule meant for images silently applies to unrelated paths.
   assert.ok(matches('/*.png', '/icon-192.png'));
   assert.ok(!matches('/*.png', '/iconXpng'));
   assert.ok(matches('/a+b', '/a+b'));
@@ -99,8 +83,6 @@ test('cspFaults catches a wildcard and a plaintext origin', () => {
 });
 
 test("cspFaults catches 'unsafe-eval' while allowing 'unsafe-inline'", () => {
-  // unsafe-inline is load-bearing here: the page ships its stylesheet and its
-  // form handler inline. unsafe-eval is not, and never should be.
   assert.deepEqual(cspFaults(GOOD), []);
   assert.ok(cspFaults(GOOD.replace("script-src 'self'", "script-src 'unsafe-eval' 'self'"))
     .includes("script-src allows 'unsafe-eval'"));
