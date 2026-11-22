@@ -16,6 +16,20 @@ prepared for review; Netlify deploys on merge to `main`.
 - A check now opens Enrollment Audit as a phone's touch screen and fails
   if any control drops under 44px or any field under 16px text.
 
+## 2026-11-22: No code comments
+Owner request.
+- All 676 code comments were sorted and 675 deleted: 1,514 lines. 455
+  recorded a decision, 195 repeated the code, 21 were stale and 12 excused
+  a shortcut.
+- The decisions now live in 17 ADRs under `docs/adr/`, by topic.
+- The shortcuts are issues #68 to #74, plus #75 for a decision the code no
+  longer meets.
+- `verify-content` now fails a new comment. `COMMENT_DEBT` records the one
+  left, the generated licence header in `fonts/fonts.css`.
+- `/delete-comment` repeats the sort.
+- Nothing a visitor sees changes. The pages lose their HTML comments, and
+  `robots.txt` now disallows `/docs/` and `/.claude/`.
+
 ## 2026-11-22: Body copy in Inter, the brand's text face
 - Body copy on every page, Enrollment Audit and the link-preview card is
   now Inter, as in Space, Budget and Access (owner). Headings stay in

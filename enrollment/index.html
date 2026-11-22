@@ -16,9 +16,6 @@
 <meta property="og:url" content="https://schoolstack.ai/enrollment/">
 <meta property="og:image" content="https://schoolstack.ai/og-image.png?v=1685341e">
 <meta name="twitter:card" content="summary_large_image">
-<!-- The brand faces, self-hosted like the rest of the site: the CSP forbids
-     every outside origin, so a Google Fonts link would be blocked and the
-     page would paint in a fallback. -->
 <link rel="preload" href="/fonts/quicksand-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/fonts/fonts.css">
@@ -27,21 +24,14 @@
 body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
-/* Layout: navy masthead with the five-stage path, then a two-column work area (audit left, sticky scorecard right) that stacks on phones; forces, plan, seat math and calendar run full width below. */
 :root{
   --navy:#1E293B; --cream:#FAF9F7; --amber:#D97706; --teal:#0D9488; --blue:#3A6AA6; --green:#328555;
   --bg:#FAF9F7; --surface:#FFFFFF; --surface-2:#F1EFEA; --fg:#1E293B; --muted:#56606F; --line:#DDD9D0;
   --mast:#1E293B; --mast-fg:#FAF9F7;
   --yes:#328555; --part:#D97706; --part-text:#B45309; --no:#B42318;
   --st-aw:#D97706; --st-co:#0D9488; --st-ap:#3A6AA6; --st-yi:#328555; --st-re:#1E293B;
-  /* The same hues, darkened where they color small text (stage and force
-     labels), so 11px type clears 4.5:1 on white. Bars and borders keep the
-     brighter values above. */
   --st-aw-t:#B45309; --st-co-t:#0F766E; --st-ap-t:#3A6AA6; --st-yi-t:#2F7D50; --st-re-t:#1E293B; --no-t:#B42318;
   --focus:#3A6AA6;
-  /* Quicksand and Inter are the SchoolStack brand faces (CLAUDE.md section 1).
-     --font-display and --font-body carry the same names as the home page so
-     the site's font checks read this page the same way. */
   --font-display:'Quicksand', 'Trebuchet MS', sans-serif;
   --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --f-display:var(--font-display);
@@ -70,20 +60,16 @@ p{margin:0}
 a{color:inherit}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
-/* On the navy masthead the blue ring is 2.64:1; use the masthead's own text colour. */
 .mast :focus-visible{outline-color:var(--mast-fg)}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 .num{font-variant-numeric:tabular-nums}
 .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
-/* Masthead */
 .mast{background:var(--mast);color:var(--mast-fg)}
 .mast .wrap{padding-block:22px 34px;display:grid;gap:22px}
 .logo{display:flex;align-items:center;gap:10px}
 .logo{justify-self:start;text-decoration:none}
-/* 32px tall, 203px wide: the design kit's 200px minimum, and the size the site's nav uses. */
 .logo img{height:32px;width:auto;display:block}
-/* A 48px tap target around the 32px logo; the negative margin keeps the layout. */
 .logo{padding-block:8px;margin-block:-8px}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:var(--cream);padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;text-decoration:none}
 .skip-link:focus{left:0}
@@ -95,23 +81,19 @@ button,input,select{font:inherit;color:inherit}
 .path span{font-size:13px;color:#C7CED9;display:block;margin-top:4px}
 @media (max-width:820px){.path{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* Example banner */
 .banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:24px}
 
-/* Buttons */
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
 .btn:hover{border-color:var(--fg)}
 .btn.primary{background:var(--navy);color:var(--cream);border-color:var(--navy)}
 :root[data-theme="dark"] .btn.primary{background:var(--cream);color:var(--navy);border-color:var(--cream)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{background:var(--cream);color:var(--navy);border-color:var(--cream)}}
 
-/* Sections */
 section.block{padding-block:40px 8px}
 .sec-head{display:grid;gap:8px;margin-bottom:20px;max-width:70ch}
 .sec-head h2{font-size:clamp(24px,3.4vw,32px)}
 .sec-head p{color:var(--muted)}
 
-/* School profile */
 .profile{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
 .field{display:grid;gap:6px;min-width:0;align-content:start}
 .field label,.field .lbl{font-size:13px;font-weight:600}
@@ -130,7 +112,6 @@ section.block{padding-block:40px 8px}
 a.btn{display:inline-block;text-decoration:none;justify-self:start}
 a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 
-/* Audit */
 .work{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
 @media (max-width:980px){.work{grid-template-columns:1fr}}
 .stage{margin-bottom:28px}
@@ -151,18 +132,13 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .seg input:checked+span.n{background:var(--no);color:#fff}
 .seg input:checked+span.x{background:var(--surface-2);color:var(--muted)}
 .seg input:focus-visible+span{outline:3px solid var(--focus);outline-offset:-3px}
-/* A checked answer fills its segment, so the ring takes the segment's own text colour, which already contrasts with the fill. */
 .seg input:checked:focus-visible+span{outline-color:currentColor}
-/* The dark theme's lighter green and red hold white text at 2.9:1, so those fills take dark text, as Partly does. */
 :root[data-theme="dark"] .seg input:checked+span.y,:root[data-theme="dark"] .seg input:checked+span.n{color:#1E293B}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg input:checked+span.y,:root:not([data-theme="light"]) .seg input:checked+span.n{color:#1E293B}}
 @media (max-width:560px){.item{grid-template-columns:1fr}}
 
-/* Scorecard */
 .score{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px}
 @media (max-width:980px){.score{position:static}}
-/* Where the scorecard drops under the practices, a slim line of progress
-   stays in view while the visitor answers. */
 .audit-col{min-width:0}
 .prog{display:none}
 @media (max-width:980px){
@@ -183,7 +159,6 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .topgaps li{font-size:13.5px;display:grid;grid-template-columns:10px 1fr;gap:8px;align-items:start}
 .topgaps li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--sc);margin-top:5px}
 
-/* Forces */
 .forces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 @media (max-width:760px){.forces{grid-template-columns:1fr}}
 .force{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;min-width:0}
@@ -200,7 +175,6 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .forcemap{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;font-size:13px;color:var(--muted)}
 .forcemap b{color:var(--fg)}
 
-/* Plan */
 .phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 @media (max-width:900px){.phases{grid-template-columns:1fr}}
 .phase{display:grid;gap:12px;align-content:start;min-width:0}
@@ -219,7 +193,6 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
 .panel h3{font-size:19px;margin-bottom:6px}
 
-/* Seat math */
 .seat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .seat .full{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
 .counts{grid-column:1/-1;font-size:13.5px}
@@ -235,7 +208,6 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .frow b{font-family:var(--f-mark);font-weight:800;text-align:right}
 .note{font-size:13px;color:var(--muted);margin-top:10px}
 
-/* Calendar */
 .cal-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
 .cal{display:grid;grid-template-columns:210px repeat(12,minmax(44px,1fr));gap:8px 0;min-width:770px;font-size:13px}
 .cal .mh{font-size:12px;font-weight:600;color:var(--muted);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
@@ -251,9 +223,6 @@ footer b{color:var(--fg)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--navy);color:var(--cream);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px}
 .copybox{width:100%;min-height:160px;margin-top:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px;font-family:var(--f-body);font-size:13px;color:var(--fg)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
-/* Touch screens. Fields take 16px text: below that, iPhone Safari zooms the
-   page whenever one takes focus. Every control is at least 44px tall, the
-   size the rest of the site holds. A mouse keeps the denser layout. */
 @media (pointer: coarse){
   .field input[type=text],.field input[type=number],.field select,.copybox{font-size:16px}
   .field input[type=text],.field input[type=number],.field select{min-height:44px}
@@ -423,14 +392,8 @@ footer b{color:var(--fg)}
 <script src="/js/enrollment-audit.js"></script>
 <script>
 (function(){
-// The scoring, plan and seat math live in /js/enrollment-audit.js, which
-// the unit tests load too. This script draws the page and keeps the answers.
 const A=window.SchoolStackEnrollmentAudit;
 const {STAGES,ITEMS,FORCES,GRADES,MONTHS,MONTHS_LONG,KEY,NUMS,COUNTS,RATES,STATES,EXAMPLE,BLANK,clean,gradeLabel,stageOf}=A;
-// Turn on only after the Airtable form "Share your enrollment numbers with SchoolStack" is published.
-// Before turning it on: CLAUDE.md asks the owner to approve any third-party
-// form handler, privacy.html must say what is shared and where it goes, and
-// the footer line "They are not sent to SchoolStack" must change with it.
 const SHARE_ENABLED=false;
 const FORM_URL="https://airtable.com/appk92KPCWOm8X8B7/pagQxyBNwXId3KkCa/form";
 let S;
@@ -445,7 +408,6 @@ const scored=()=>A.scored(S);
 const optShown=o=>A.optShown(S,o);
 const marked=()=>A.marked(S);
 
-/* Static UI */
 $("schoolState").innerHTML='<option value="">Choose</option>'+STATES.map(s=>`<option value="${s}">${s}</option>`).join("");
 const om=$("offerMonth");
 om.innerHTML='<option value="rolling">Rolling, all year</option>'+MONTHS_LONG.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
@@ -478,7 +440,6 @@ function syncProfile(){
   $("exampleBanner").hidden=!S.example;
 }
 
-/* Scoring */
 const boost=id=>A.boost(S,id);
 const ranked=()=>A.ranked(S);
 const planned=()=>A.planned(S);
@@ -496,7 +457,6 @@ function renderScore(){
   $("topgaps").innerHTML=top.length?top.map(i=>`<li style="--sc:var(${stageOf(i.st).color})"><span>${esc(i.s)}</span></li>`).join(""):`<li style="--sc:var(--line)"><span>No gaps marked yet.</span></li>`;
 }
 
-/* Plan */
 function renderPlan(){
   $("planName").textContent=S.name?S.name+"'s":"Your";
   const {plan:r,rest}=planned();
@@ -567,7 +527,6 @@ function renderShare(){
 }
 function renderAll(){renderScore();renderPlan();renderShare()}
 
-/* Events */
 document.addEventListener("change",e=>{
   const t=e.target;
   if(t.name&&t.name.startsWith("q-")){S.ans[t.name.slice(2)]=t.value}
@@ -605,8 +564,6 @@ $("copyPlan").addEventListener("click",()=>{
   try{navigator.clipboard.writeText(txt).then(()=>toast("Plan copied"),fallback)}catch(err){fallback()}
 });
 
-// A saved audit is a small file on the visitor's own device. The tool
-// writes it and reads it back in the browser; nothing is sent anywhere.
 $("saveFile").addEventListener("click",()=>{
   const now=new Date();
   const a=document.createElement("a"),url=URL.createObjectURL(new Blob([A.fileBody(S,now)],{type:"application/json"}));

@@ -1,13 +1,3 @@
-/**
- * Tests for the break-even card on the landing page.
- *
- * Like budget-calculator.test.mjs, they load js/budget-calculator.js itself,
- * the file the browser runs, so the arithmetic under test is the shipped one.
- * Break-even here is total yearly expenses (debt service in, one-time
- * purchases out) divided by what each student brings in, rounded up to a
- * whole student.
- */
-
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
@@ -26,7 +16,6 @@ test('defaults: $600,000 at $10,000 a student is exactly 60 students', () => {
 });
 
 test('a remainder rounds UP to the next whole student, never down', () => {
-  // $600,001 needs 61 students: 60 would leave the school $1 short.
   const r = breakEven({ expenses: 600001, perStudent: 10000 });
   assert.equal(r.students, 61);
   assert.equal(r.exact, false);
@@ -38,34 +27,27 @@ test('a remainder rounds UP to the next whole student, never down', () => {
 
 test('cents are exact: $12,345.67 per student against $1,000,000', () => {
   const r = breakEven({ expenses: 1000000, perStudent: 12345.67 });
-  // 81 x 12,345.67 = 999,999.27, one cent-group short; 82 covers it.
   assert.equal(r.students, 82);
   assert.equal(r.collected, 1012344.94);
   assert.equal(Math.round(r.cushion * 100), 1234494);
 });
 
 test('a case where float division lands a hair off a whole number', () => {
-  // 0.1 + 0.2 style dust: 700 x $0.70 is $490 exactly in cents.
   const r = breakEven({ expenses: 490, perStudent: 0.7 });
   assert.equal(r.students, 700);
   assert.equal(r.exact, true);
 });
 
 test('the working never reads as a different answer than the count', () => {
-  // Bugbot, PR #32: $600,000.25 needs 61 students, but whole-dollar rounding
-  // printed "$600,000 ÷ $10,000", which reads as exactly 60.
   const r = breakEven({ expenses: 600000.25, perStudent: 10000 });
   assert.equal(r.students, 61);
   assert.equal(breakEvenFormula(r), '$600,000.25 ÷ $10,000 per student, rounded up');
   assert.equal(breakEvenSentence(r), 'At 61 students you collect $610,000, $9,999.75 above what a year costs.');
-  // Cents on the per-student side are shown too, and whole figures stay whole.
   const c = breakEven({ expenses: 1000000, perStudent: 12345.67 });
   assert.equal(breakEvenFormula(c), '$1,000,000 ÷ $12,345.67 per student, rounded up');
   assert.equal(breakEvenSentence(c), 'At 82 students you collect $1,012,344.94, $12,344.94 above what a year costs.');
   assert.equal(breakEvenFormula(breakEven(BE_DEFAULTS)), '$600,000 ÷ $10,000 per student');
 });
-
-/* Adversarial rows: zero, tiny and huge for each money input. */
 
 test('zero expenses need zero students', () => {
   const r = breakEven({ expenses: 0, perStudent: 10000 });
@@ -76,7 +58,6 @@ test('zero expenses need zero students', () => {
 test('a tiny expense still needs one whole student', () => {
   const r = breakEven({ expenses: 0.01, perStudent: 10000 });
   assert.equal(r.students, 1);
-  // A cent of expenses leaves a cushion of $9,999.99, shown to the cent.
   assert.equal(breakEvenSentence(r), 'At 1 student you collect $10,000, $9,999.99 above what a year costs.');
 });
 

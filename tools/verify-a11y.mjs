@@ -1,28 +1,9 @@
 #!/usr/bin/env node
-/**
- * Accessibility checks that need a laid-out page to answer:
- *
- *   node tools/verify-a11y.mjs
- *
- * verify-render already covers heading order. This covers the rest of what a
- * keyboard or a screen reader meets first, and the one thing only a browser
- * can compute: the actual contrast between rendered text and whatever colour
- * ends up behind it.
- *
- * Hand written rather than axe-core on purpose. This repo carries no
- * dependencies at all - the fonts are self-hosted so the CSP can forbid every
- * external origin - and adding the first one, with a lockfile and an install
- * step in CI, is a decision for the owner rather than a side effect of a test.
- * axe would be more thorough; these are the rules that matter most here.
- */
 
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { FOCUS_PROBE, ringProblem } from './lib/focus-audit.mjs';
 import { TOUCH_AUDIT } from './lib/touch-audit.mjs';
 
-/* Walk the page with real Tab presses, as a keyboard user does, and probe
-   each stop's focus ring. Stops when focus comes back round or leaves the
-   page; the cap is a backstop, not the expected end. */
 async function tabWalk() {
   await browser.evaluate('(document.activeElement && document.activeElement.blur(), scrollTo(0, 0), 0)');
   const key = (type) => browser.send('Input.dispatchKeyEvent',
@@ -47,9 +28,6 @@ const VIEWPORTS = [1440, 390];
 const site = await serveSite();
 const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
 await browser.send('Page.enable');
-// Keep the page focused as a visitor's tab is. Without this, the synthetic
-// Tab presses below leave headless Chrome treating the page as unfocused,
-// and a scripted focus() on the next page no longer shows the skip link.
 await browser.send('Emulation.setFocusEmulationEnabled', { enabled: true });
 
 const failures = [];
@@ -203,7 +181,6 @@ for (const width of VIEWPORTS) {
   for (const [p, why] of blind) fail(`${path} ${width}px  "${p.label}" (${p.tag}): ${why}`);
 }
 
-/* Enrollment Audit on a phone's touch screen: 44px controls, 16px fields. */
 {
   const where = '/enrollment/ 390px touch';
   await browser.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });

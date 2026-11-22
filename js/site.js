@@ -1,15 +1,3 @@
-/**
- * Behaviour shared by every page. Kept tiny on purpose: the nav menu works
- * without it (a <details> element opens and closes on its own), and this only
- * tidies up after a choice is made.
- *
- *  - Choosing a link in the phone menu closes the menu, so an in-page link
- *    ("The tools") does not leave the panel covering the section it scrolled
- *    to.
- *  - Escape closes the menu and puts focus back on its button.
- *  - Widening the window past the phone layout closes it too.
- *  - A link to a FAQ question opens its answer (second block below).
- */
 (function () {
   'use strict';
   var menu = document.getElementById('nav-menu');
@@ -32,11 +20,6 @@
   }
 })();
 
-/**
- * A link to a FAQ question (/#faq-cost) opens its answer. Each question is a
- * <details> with a stable id; browsers scroll to a closed <details> but leave
- * it shut, so a shared link would land on a question with no answer showing.
- */
 (function () {
   'use strict';
   function openTarget() {

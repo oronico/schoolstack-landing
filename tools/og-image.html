@@ -3,18 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>SchoolStack OG card source</title>
-<!-- Netlify publishes the repo root, so this template is reachable over HTTP.
-     It is a rendering source, not a page - keep it out of the index. -->
 <meta name="robots" content="noindex, nofollow">
-<!-- The site's own self-hosted fonts, by relative path. This template used to
-     pull from fonts.googleapis.com, which the render sandbox cannot reach: the
-     fetch failed silently, Chromium fell back to DejaVu Sans, and an off-brand
-     card shipped. Local files cannot fail that way. -->
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Brand tokens - kept in sync with the :root block in index.html */
   :root {
     --ink:     #1E293B;
     --body:    #475569;
@@ -28,16 +21,11 @@
   body {
     position: relative;
     overflow: hidden;
-    /* Light and warm rather than the dark navy of the site chrome: a share
-       card is a first impression, and this one has to feel welcoming. */
     background: linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 45%, #ECFDF5 100%);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Absolute anchors rather than flex: the card is a fixed 1200x630 canvas, so
-     pinning each block to its edge keeps the composition stable no matter how
-     the headline wraps. */
   .logo {
     position: absolute;
     top: 64px; left: 78px;
@@ -70,7 +58,6 @@
     letter-spacing: -0.02em;
     color: var(--ink);
   }
-  /* The turn of the headline, carried in brand amber. */
   h1 em { font-style: normal; color: var(--amber); }
 
   .sub {
@@ -81,7 +68,6 @@
     max-width: 720px;
   }
 
-  /* Trust and no-risk signals, the two things that actually earn the click. */
   .chips {
     position: absolute;
     left: 78px; bottom: 60px;
