@@ -245,6 +245,15 @@ Why each exists:
   passing Enrollment Audit's answer buttons, whose rings were 1.2:1 on red.
   It runs in the light theme only. It cannot reach a state that needs a
   submit, so the thank-you panel was checked by hand.
+- **touch targets** — on a touch screen Enrollment Audit's controls are
+  44px tall and its fields use 16px text, from one `(pointer: coarse)`
+  block (#52). Nothing checked it until November 2026, so `verify-a11y`
+  now opens the page at 390px as a touch screen and fails any control
+  under 44px or field under 16px (`tools/lib/touch-audit.mjs`). It first
+  asks the browser whether it reports a touch screen and fails if not, so
+  a broken emulation cannot pass. With the block removed it fails 171
+  controls. The calculator's own tap targets are checked by
+  `verify-calculator`.
 - **Enrollment Audit's math** lives in `js/enrollment-audit.js`, loaded by
   the page and by `tools/lib/enrollment-audit.test.mjs`, the same pattern
   as the calculator. Before it moved there (November 2026) six PRs in two
@@ -330,6 +339,11 @@ the ink early list band, the paper calculator, the ink Enrollment Audit
 band, paper again, the ink footer. The free tools sit directly under the
 hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
+
+**One primary button.** Every "Get early access" (hero, early list form,
+the footer of every page) is `.btn-primary`: accent ground, ink text. On
+the ink bands its hover turns paper instead of ink, which would vanish into
+the ground (owner, November 2026: "One style"; it was three).
 
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
