@@ -10,6 +10,7 @@ prepared for review; Netlify deploys on merge to `main`.
   the SVG. The site was the only SchoolStack app setting copy in Nunito.
 - Inter is self-hosted like the other faces, one variable file for
   weights 400 to 800: 48 KB, 9 KB more than Nunito.
+- The two Nunito files are gone from `fonts/` (owner approved).
 
 ## 2026-11-21: Five more stable names
 - A replaced image in `/images` (funder logos, the scorecard) now reaches
