@@ -66,6 +66,7 @@ nav and footer with the other pages and meets the same checks.
     filled in and no address, so a reader forwards it in one tap and the
     page sends nothing itself.
 16. A print stylesheet hides the nav, footer, buttons and closing bands, so
-    a printed guide is just the steps.
+    a printed guide is just the steps. It is scoped to `body.guide-page`,
+    because the stylesheet is shared and other pages print in full.
 17. The page carries Article JSON-LD for search. Its `image` has no `?v=`,
     because `stamp-versions` stamps attributes, not JSON.

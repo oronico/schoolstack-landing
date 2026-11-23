@@ -14,6 +14,11 @@ Early access is not open yet; a school can sign up for it (owner).
 - `verify-content` fails "Get early access" and "early access open"
   anywhere in page copy or share text.
 
+## 2026-11-22: Print styles for the giving guide only
+- The giving guide's print styles now apply to that page alone. The home
+  page and About print in full again, with their buttons, contact band and
+  footer (Bugbot on #80).
+
 ## 2026-11-22: The giving guide, sharpened
 - The opening names the worry first: asking for money feels awkward, and a
   clear ask with real numbers gives people a way to help.
