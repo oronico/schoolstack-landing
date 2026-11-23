@@ -896,7 +896,7 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .guide-page .about-contact { padding-block: var(--sp-4) 0; break-inside: avoid; }
   .guide-page .about-contact .section-desc { margin-bottom: var(--sp-3); }
   .guide-page .about-contact h2 { font-size: var(--step-2); }
-  .guide-page .about-contact .section-desc::after { content: " Get early access at schoolstack.ai."; color: var(--ink); font-weight: 700; }
+  .guide-page .about-contact .section-desc::after { content: " Sign up for early access at schoolstack.ai."; color: var(--ink); font-weight: 700; }
   .guide-page footer { background: none; color: var(--ink); padding: 0; break-inside: avoid; }
   .guide-page .footer-inner { padding-inline: 0; }
   .guide-page .footer-bottom { border-top: 1px solid var(--line); padding-top: var(--sp-3); }

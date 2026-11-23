@@ -15,7 +15,7 @@ test('beta, closed or not, is a voice fault on the page and in share text', () =
     + '<p>Estimates are for planning only and are not loan eligibility.</p></body></html>';
   assert.ok(voiceFaults(page({ meta: 'x', p: 'In closed beta with design partners' })).faults.some((f) => /beta/.test(f)));
   assert.ok(voiceFaults(page({ meta: 'Now in Beta.', p: 'x' })).faults.some((f) => /beta/i.test(f)));
-  assert.ok(!voiceFaults(page({ meta: 'x', p: 'Early access list now open' })).faults.some((f) => /beta/i.test(f)));
+  assert.ok(!voiceFaults(page({ meta: 'x', p: 'Sign up for early access' })).faults.some((f) => /beta/i.test(f)));
   assert.ok(!voiceFaults(page({ meta: 'x', p: '<!-- not "closed beta" in a comment -->' })).faults.some((f) => /beta/i.test(f)));
 });
 
@@ -159,4 +159,14 @@ test('USER_COUNT is anchored to adoption verbs', () => {
   assert.ok(re().test('used by 1,200 founders'));
   assert.ok(!re().test('schools of 10 to 500 students'));
   assert.ok(!re().test('we met over 100 school founders'));
+});
+
+test('copy that claims early access is open, or offers it, is a voice fault; signing up is not', () => {
+  const page = (body) => `<html><head><meta name="description" content="${body.meta}"></head><body><p>${body.p}</p>`
+    + '<p>Estimates are for planning only and are not loan eligibility.</p></body></html>';
+  assert.ok(voiceFaults(page({ meta: 'x', p: 'Get early access' })).faults.some((f) => /Sign up for early access/.test(f)));
+  assert.ok(voiceFaults(page({ meta: 'x', p: 'Early access now open' })).faults.some((f) => /not open yet/.test(f)));
+  assert.ok(voiceFaults(page({ meta: 'Get early access, or use the tools.', p: 'x' })).faults.some((f) => /not open yet/.test(f)));
+  assert.ok(!voiceFaults(page({ meta: 'x', p: 'Sign up for early access' })).faults.some((f) => /not open yet/.test(f)));
+  assert.ok(!voiceFaults(page({ meta: 'x', p: 'Early access news and product updates' })).faults.some((f) => /not open yet/.test(f)));
 });

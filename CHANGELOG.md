@@ -3,6 +3,17 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: Sign up for early access, not "get" it
+Early access is not open yet; a school can sign up for it (owner).
+- Every "Get early access" button, the early list heading and the search
+  and share descriptions now say "Sign up for early access", on every
+  page including the giving page. The nav and footer links say "Sign up".
+- The hero badge said "Early access now open". It now says "Opening to
+  more schools in 2027", which is true and says something the button
+  does not.
+- `verify-content` fails "Get early access" and "early access open"
+  anywhere in page copy or share text.
+
 ## 2026-11-22: The giving guide prints as a branded document
 - The logo heads the first page, and every page carries the guide's name,
   its address and its page number.
