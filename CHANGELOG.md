@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: The footer's About list splits in three
+The About column carried nine links (owner: "hilariously long").
+- Four columns of three on every page: The tools, Resources (Enrollment
+  Audit, the giving guide, FAQ), About (About Us, the platform, Building
+  Hope Impact Fund) and Connect (Sign up, contact, Instagram).
+- On a phone the link columns sit two across instead of one: the home
+  page footer is 175px shorter at 390px wide.
+
 ## 2026-11-23: Sign up for early access, not "get" it
 Early access is not open yet; a school can sign up for it (owner).
 - Every "Get early access" button, the early list heading and the search
