@@ -789,6 +789,11 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 .guide-list { margin: var(--sp-3) 0 var(--sp-4) var(--sp-5); }
 .guide-list li + li { margin-top: var(--sp-2); }
 
+.guide-callout { margin-top: var(--sp-4); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: var(--r-sm); }
+.guide-uses { list-style: none; display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-3) 0; }
+.guide-uses li { border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--sp-1) var(--sp-3); font-size: var(--step--1); font-weight: 700; }
+.guide-story p:first-child { border-left: 2px solid var(--ink); padding-left: var(--sp-4); }
+.guide-share { margin-top: var(--sp-4); }
 .guide-formula { font-weight: 700; border-left: 2px solid var(--accent); padding-left: var(--sp-3); }
 .guide-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
 .guide-table th, .guide-table td { text-align: left; padding: var(--sp-2) var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -857,6 +862,11 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .calc-inputs, .calc-results { padding: var(--sp-5) var(--sp-4); }
   .calc-legend li { grid-template-columns: 12px 1fr auto; }
   .calc-legend .amt { grid-column: 2 / -1; text-align: left; min-width: 0; margin-top: calc(-1 * var(--sp-2)); color: var(--muted); }
+}
+@media print {
+  nav, footer, .skip-link, .hero-cta, .copy-btn, #share, .about-contact { display: none; }
+  .section.guide { padding-block: var(--sp-4); }
+  .guide-copy pre { padding-top: var(--sp-4); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

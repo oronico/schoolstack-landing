@@ -35,6 +35,23 @@
   <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/css/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": "https://schoolstack.ai/giving#article",
+    "headline": "Year-end giving, in one afternoon",
+    "description": "A guide for small school leaders: three emails and a thank-you, sent December 1 to 31, with AI prompts and email templates to copy, Gmail mail merge step by step, and the IRS receipt rules.",
+    "url": "https://schoolstack.ai/giving",
+    "image": "https://schoolstack.ai/og-giving.png",
+    "datePublished": "2026-11-22",
+    "dateModified": "2026-11-22",
+    "inLanguage": "en-US",
+    "author": { "@type": "Organization", "name": "SchoolStack", "url": "https://schoolstack.ai" },
+    "publisher": { "@type": "Organization", "name": "SchoolStack", "url": "https://schoolstack.ai" },
+    "about": ["Fundraising", "Year-end giving", "Small schools", "Microschools"]
+  }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -71,8 +88,9 @@
     <div class="label">A guide for school leaders</div>
     <h1>Year-end giving, in one afternoon</h1>
     <p class="subtitle">
-      Three emails and a thank-you, sent between December 1 and 31. Built for schools of 20 to
-      250 students with no development staff.
+      Asking for money can feel awkward, especially from families you already ask for tuition.
+      A clear ask with real numbers gives people a way to help. This plan takes one afternoon:
+      three emails and a thank-you, sent between December 1 and 31.
     </p>
     <div class="hero-cta">
       <a class="btn-primary" href="#plan">See the plan</a>
@@ -100,6 +118,7 @@
       <li><strong>Dec 29</strong><span>Last call</span></li>
     </ul>
     <p>Send each email only to people who have not given yet. Anyone who gives gets a thank-you instead.</p>
+    <p class="guide-callout"><strong>Starting after December 1?</strong> Follow the same steps, send your letter as soon as it is ready, and keep the December 29 last call. A story email fits in between if you have a week to spare.</p>
   </section>
 
   <section class="section section-narrow guide" id="gifts" aria-labelledby="gifts-heading">
@@ -120,10 +139,20 @@
     <h2 id="amounts-heading">Set up one link and three amounts</h2>
     <p>
       One giving link that opens on a phone, shows your three amounts and asks for no account. If
-      the payment tool you already use offers a donation page, start there.
+      the tool you use for tuition payments offers a donation page, start there.
+    </p>
+    <p>
+      Most donation tools are free to start and make their money from card fees or from a tip they
+      ask your donor to add. Before you choose one, check what you pay on each gift and whether
+      donors see a tip request.
     </p>
     <p>Price each amount from one number: what it costs to teach one student for one school day.</p>
     <p class="guide-formula">Yearly spending ÷ students ÷ school days (often about 180)</p>
+    <p>
+      No clear figure for yearly spending per student? SchoolStack Budget works out your cost per
+      student from the budget you build in it, at no cost to your school.
+      <a href="/go/budget" target="_blank" rel="noopener noreferrer">Open Budget</a>
+    </p>
     <table class="guide-table">
       <thead>
         <tr><th scope="col">Amount</th><th scope="col">Covers</th><th scope="col">Example</th></tr>
@@ -135,6 +164,18 @@
       </tbody>
     </table>
     <p class="guide-note">Example at $42.50 a school day. Round yours to clean numbers.</p>
+
+    <h3>Name what gifts will fund</h3>
+    <ul class="guide-uses">
+      <li>Scholarships</li>
+      <li>Supplies</li>
+      <li>Field trips</li>
+      <li>Gas cards for families</li>
+      <li>Operating costs</li>
+      <li>Special programs</li>
+    </ul>
+    <p>Tie each amount to one of them, priced from your own costs: a day of one student’s learning, a field trip seat, a month of gas for one family.</p>
+    <p class="guide-note">A gift given for a named use must be spent on it. To keep room to choose, ask for gifts “where they are needed most.” Your accountant can show you how to track named gifts.</p>
   </section>
 
   <section class="section section-narrow guide" id="list" aria-labelledby="list-heading">
@@ -189,6 +230,22 @@ My lists:
       <li><strong>What comes next, and what it costs.</strong> The next classroom, grade or hire.</li>
       <li><strong>One ask, with a date.</strong> One amount, one deadline, one link.</li>
     </ol>
+
+    <h3>Find your story</h3>
+    <p>
+      Numbers show what a gift does. A story makes people care. Pick one student, one family or one
+      teacher, ask their permission first (a family’s, for a student), use a first name only,
+      and tell it in three short parts:
+    </p>
+    <ol class="guide-list">
+      <li><strong>Before.</strong> Where they were at the start of the year.</li>
+      <li><strong>What changed.</strong> What your school did, in one plain sentence.</li>
+      <li><strong>What a gift makes possible next.</strong> The same help for the next family.</li>
+    </ol>
+    <div class="guide-example guide-story">
+      <p>Last spring, Maya’s family moved across town and lost their ride to school. A $50 gas card each month got her back to class, and she finished the year reading on grade level. Four more families need the same help this winter.</p>
+      <p class="guide-note">A made-up example. Tell your own, with permission.</p>
+    </div>
     <p>Fill in the brackets, paste this into your AI assistant, and check every number before you send.</p>
     <div class="guide-copy">
       <button type="button" class="copy-btn" data-copy="prompt-emails">Copy prompt</button>
@@ -200,14 +257,16 @@ About my school:
 - Families waiting for a seat: [number, or leave out]
 - Cost to teach one student for one school day: $[amount]
 - My three gift amounts: $[day], $[week], $[month]
+- What gifts will fund: [scholarships / supplies / field trips / gas cards / operating costs / a special program, or "where needed most"]
 - What we want to do next, and what it costs: [next step and cost]
+- One true story, first name only, with the family's permission: [before / what changed / what a gift makes possible next]
 - Giving link: [link]
 - Gifts to us are tax-deductible: [yes / no / not sure]
 - My name and role: [name, role]
 
 Write:
-1. A December 1 letter under 250 words built on four things: one number that changed this year, what a gift buys in our own costs, what comes next and what it costs, and one ask with a December 31 deadline.
-2. A December 15 email of five sentences or fewer telling one true story: [the story].
+1. A December 1 letter under 250 words built on four things: one number that changed this year, what a gift buys in our own costs, what comes next and what it costs, and one ask with a December 31 deadline. Open with one sentence of the story.
+2. A December 15 email of five sentences or fewer that tells the story in full.
 3. A December 29 email of two lines: our year-end giving closes Thursday, and the link.
 4. A thank-you I can send within 48 hours.
 
@@ -239,6 +298,7 @@ Rules: short sentences that read well on a phone. A subject line for each. Tell 
 Our year-end giving closes Thursday, December 31. If you have meant to give, here is the link: [link]. Thank you.</pre>
     </div>
     <p class="guide-note">Use only your own photos, and only of students whose families have said yes.</p>
+    <p class="guide-callout"><strong>Want a second read?</strong> Email your draft letter to Allison at <a href="mailto:allison@schoolstack.ai">allison@schoolstack.ai</a>, and she will read it before you send.</p>
   </section>
 
   <section class="section section-narrow guide" id="send" aria-labelledby="send-heading">
@@ -307,6 +367,12 @@ With thanks,
       <li><strong>Repeat donors</strong><span>Also gave last year</span></li>
     </ul>
     <p>Next December starts from them. In the spring, send each donor one line on what their gift did.</p>
+  </section>
+
+  <section class="section section-narrow guide" id="share" aria-labelledby="share-heading">
+    <h2 id="share-heading">Pass it on</h2>
+    <p>Know a founder who could use this before December 1? Send it to them.</p>
+    <p class="guide-share"><a class="btn-secondary" href="mailto:?subject=A%20year-end%20giving%20plan%20for%20your%20school&amp;body=This%20might%20help%20with%20year-end%20giving%3A%20https%3A%2F%2Fschoolstack.ai%2Fgiving">Email this guide</a></p>
   </section>
 
   <section class="section section-narrow about-contact" aria-labelledby="close-heading" style="padding-top: 0;">
