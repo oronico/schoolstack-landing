@@ -1,0 +1,33 @@
+# SchoolStack
+
+> SchoolStack puts recruitment, enrollment and accounting in one place for schools of 20 to 250 students, on QuickBooks Online. Three tools are complimentary for every school today, funded by philanthropy: Space, Budget and Access. Design partner schools use the full platform today, and it opens to more schools in 2027.
+
+SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund. It is built around the questions small school founders ask most: Will we make payroll in June? Who still owes us tuition? Will we fill our seats? What do I show my board, my lender or my investors?
+
+QuickBooks Online stays the accounting system of record. SchoolStack does not run payroll and does not replace QuickBooks or Gusto. Pricing for the 2027 platform has not been finalized.
+
+## Tools
+
+- [SchoolStack Space](https://space.schoolstack.ai/): community intelligence and facilities. Who lives near a school, nearby schools and local organizations, plus guides to planning, leasing and buying school space.
+- [SchoolStack Budget](https://budget.schoolstack.ai/): an annual budget or a five-year financial plan, built step by step, with reports for a board or lender.
+- [SchoolStack Access](https://access.schoolstack.ai/): funding and policy guidance, such as the education freedom tax credit.
+
+Space, Budget and Access are open to any school. Estimates are for planning only and are not loan eligibility.
+
+## Resources
+
+- [Enrollment Audit](https://schoolstack.ai/enrollment/): a self-audit of how a school gets found, chosen, joined and kept, with a plan. Answers stay in the visitor's browser.
+- [Year-end giving guide](https://schoolstack.ai/giving): a plan for a nonprofit school's year-end appeal, with email templates and AI prompts.
+- [Get ready for SchoolStack](https://schoolstack.ai/ready): seven things a school gathers before its first day on SchoolStack, from QuickBooks Online and reconciled books to a budget, a roster, last year's statements and the lease.
+- [FAQ](https://schoolstack.ai/#faq): what schools can use today, who SchoolStack is for, cost, QuickBooks Online and 2027.
+- [About SchoolStack](https://schoolstack.ai/about): the people and values behind SchoolStack.
+
+## Early access
+
+- [Sign up for early access](https://schoolstack.ai/#early-access): schools can sign up for early access to the full platform and for product updates.
+- Contact: allison@schoolstack.ai
+
+## Optional
+
+- [Privacy](https://schoolstack.ai/privacy)
+- [Terms](https://schoolstack.ai/terms)
