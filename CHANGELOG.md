@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: A readiness checklist at /ready
+Seven things a school gathers before its first day on SchoolStack: its
+books in QuickBooks Online, reconciled through last month, a chart of
+accounts that tells its money apart, a five-year budget, a roster with each
+student's funding, last year's statements and the lease.
+- Linked from the footer's Resources column on every page and from the
+  early list's thank-you panel.
+- In the sitemap and every check the other pages run (ADR 0019).
+
 ## 2026-11-23: The footer's About list splits in three
 The About column carried nine links (owner: "hilariously long").
 - Four columns of three on every page: The tools, Resources (Enrollment

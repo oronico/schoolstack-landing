@@ -871,11 +871,23 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   @bottom-left { content: "SchoolStack  ·  Year-end giving, in one afternoon  ·  schoolstack.ai/giving"; font: 8pt Inter, sans-serif; color: #5B677A; }
   @bottom-right { content: counter(page) " of " counter(pages); font: 8pt Inter, sans-serif; color: #5B677A; }
 }
+@page ready {
+  size: letter;
+  margin: 0.6in 0.65in 0.75in;
+  @bottom-left { content: "SchoolStack  ·  Get ready for SchoolStack  ·  schoolstack.ai/ready"; font: 8pt Inter, sans-serif; color: #5B677A; }
+  @bottom-right { content: counter(page) " of " counter(pages); font: 8pt Inter, sans-serif; color: #5B677A; }
+}
 @media print {
   html:has(body.guide-page) { font-size: 15px; }
   .guide-page { page: guide; background: #fff; }
   .guide-page nav { position: static; padding: 0 0 var(--sp-3); border-bottom: 2px solid var(--ink); background: none; }
   .guide-page nav::after { content: "schoolstack.ai/giving"; font-weight: 700; font-size: var(--step--1); color: var(--muted); }
+  .guide-page.ready-page { page: ready; }
+  .ready-page nav::after { content: "schoolstack.ai/ready"; }
+  .ready-page #checklist { padding-top: var(--sp-2); }
+  .ready-page #checklist h2 { margin-bottom: 0; }
+  .ready-page .guide-cards li { padding: var(--sp-2) var(--sp-3); }
+  .ready-page .hero { padding-bottom: 0; }
   .guide-page .nav-links, .guide-page .nav-menu, .guide-page .skip-link, .guide-page .hero-cta, .guide-page .copy-btn, .guide-page #share, .guide-page .about-contact .btn-primary, .guide-page .footer-top { display: none; }
   .guide-page main { padding-top: 0; }
   .guide-page .hero { padding: var(--sp-5) 0 var(--sp-3); }
