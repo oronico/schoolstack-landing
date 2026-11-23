@@ -65,6 +65,8 @@ export const EM_DASH = /—/g;
 
 export const BETA = /\bbeta\b/gi;
 
+export const ACCESS_CLAIM = /\b(?:get early access|early access (?:is )?(?:now )?open)\b/gi;
+
 export const USER_COUNT = /\b(?:join(?:ed|s)?|trusted by|used by|loved by|serving)\s+(?:over\s+|more than\s+)?[\d,]+\+?\s+(?:schools?|founders?|leaders?|users?|customers?)\b/gi;
 
 export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
@@ -90,6 +92,10 @@ export function voiceFaults(html) {
 
   for (const hit of locate(copy, BETA)) {
     faults.push(`line ${hit.line} says "${hit.match}" - CLAUDE.md: say "early access", never "beta" or "closed beta"`);
+  }
+
+  for (const hit of locate(copy, ACCESS_CLAIM)) {
+    faults.push(`line ${hit.line} says "${hit.match}" - early access is not open yet; say "Sign up for early access" (owner, November 2026)`);
   }
 
   for (const hit of locate(copy, USER_COUNT)) {

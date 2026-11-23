@@ -37,6 +37,9 @@ count rises. (CLAUDE.md §2, §3)
    names what the reader is owed, not the value received. (CLAUDE.md §2)
 6. `BETA` fails "beta" anywhere in page copy, the head and share text
    included. The word is "early access". (CLAUDE.md §7)
+   `ACCESS_CLAIM` fails "Get early access" and "early access (now) open"
+   the same way: early access is not open yet, and the true offer is "Sign
+   up for early access" (owner, November 2026). (CLAUDE.md §7)
 7. `USER_COUNT` fires only on adoption verbs (join, trusted by, used by,
    loved by, serving) before a number. An earlier version also fired on
    "over" and "more than", and failed the true founder quote "we met over

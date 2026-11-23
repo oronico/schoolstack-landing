@@ -351,7 +351,7 @@ band, paper again, the ink footer. The free tools sit directly under the
 hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
 
-**One primary button.** Every "Get early access" (hero, early list form,
+**One primary button.** Every "Sign up for early access" (hero, early list form,
 the footer of every page) is `.btn-primary`: accent ground, ink text. On
 the ink bands its hover turns paper instead of ink, which would vanish into
 the ground (owner, November 2026: "One style"; it was three).
@@ -447,8 +447,15 @@ styles: its five stage colours and answer colours carry meaning.
 - **Who it is for: schools of 20 to 250 students** (owner, November 2026).
   The hero, the early list and the FAQ say so. Space, Budget and Access stay
   open to any school, so the range never reads as a door shut.
-- **The goal of the page is early access to the full product.** "Get early
-  access" is the primary button in the hero and on the form; the free tools
+- **The goal of the page is sign-ups for early access to the full
+  product.** Early access is not open: a school can sign up for it, and
+  nothing more yet (owner, November 2026: "Early access is not true. Sign
+  up for early access is true."). "Sign up for early access" is the primary
+  button in the hero, on the form and in every footer; the nav and footer
+  links read "Sign up". Never "Get early access" or "early access open":
+  `ACCESS_CLAIM` in `tools/lib/copy-rules.mjs` fails both, share text
+  included. Words that are true stay ("Early access news", "Early access
+  starts with schools on QuickBooks Online"). The free tools
   are the secondary action. The platform band names the jobs founders hire
   SchoolStack for, in the words they used in design partner calls and
   demos (payroll, who owes tuition, filling seats, the board). Add a job

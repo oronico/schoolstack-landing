@@ -71,7 +71,7 @@ points below are the ones the stylesheet's comments carried.
 14. The `.label` over a band heading is sentence case, `--muted` and
     `--step--1`: it names the band, and the heading leads.
 15. `.btn-primary` is `--accent` and marks the one primary action in a view;
-    every other button is ink (`.btn-secondary`). Every "Get early access"
+    every other button is ink (`.btn-secondary`). Every "Sign up for early access"
     (hero, early list form, the footer of every page) is `.btn-primary`, one
     style where there were three (owner, November 2026: "One style"). On
     the ink bands (`.signup`, `footer`) its hover turns paper, because an
