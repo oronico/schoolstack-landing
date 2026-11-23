@@ -31,3 +31,13 @@ count clicks out to the tools. (CLAUDE.md §5)
 8. `/enrollment` redirects to `/enrollment/` with a 301, so both addresses
    open the tool under one URL. A 301 is right here: it sets the canonical
    address, and nothing counts these clicks.
+9. The footer's tool links go straight to each tool, not through `/go/`
+   (November 2026). `/go/` is robots-blocked and a 302, so the links passed
+   none of schoolstack.ai's standing to the tools, and no page linked them
+   directly. The buttons in the page body stay on `/go/`, so the counts that
+   matter still come in; footer clicks are given up. (CLAUDE.md §5)
+10. The repo's own files (`CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`,
+    `features/` and the rest) are forced to `404.html` with `404!`, because
+    Netlify publishes the repo root and robots.txt only asks crawlers not to
+    look. A forced rule wins over a file that exists, which a plain rule does
+    not. (CLAUDE.md §5)
