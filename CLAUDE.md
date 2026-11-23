@@ -439,7 +439,7 @@ styles: its five stage colours and answer colours carry meaning.
   the rename still open; do not change them (section 9).
 - **Enrollment Audit is not a fourth product** (owner, November 2026). It is
   a self-audit of a school's recruitment and enrollment, reached from the
-  main nav, the phone menu, the footer's About column, its own ink band on
+  main nav, the phone menu, the footer's Resources column, its own ink band on
   the home page after the calculator (with a real screenshot of the example
   audit's scorecard), and a link under the break-even result. It is not a tool
   card and not counted in "three tools". Never call it free. Its logo file

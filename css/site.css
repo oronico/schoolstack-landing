@@ -663,13 +663,15 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 
 footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var(--sp-6); }
 .footer-inner { max-width: var(--container); padding-inline: var(--gutter); margin: 0 auto; }
-.footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: var(--sp-6); padding-bottom: var(--sp-6); border-bottom: 1px solid var(--line-on-ink); }
+.footer-top { display: grid; grid-template-columns: minmax(19rem, 2fr) repeat(4, 1fr); gap: var(--sp-6); padding-bottom: var(--sp-6); border-bottom: 1px solid var(--line-on-ink); }
 .footer-brand img { height: var(--logo-h); width: auto; display: block; margin-bottom: var(--sp-3); }
 .footer-brand p { font-size: var(--step--1); max-width: 40ch; }
 .footer-col h2 { color: var(--paper); font-family: var(--font-body); font-weight: 800; font-size: var(--step--1); margin-bottom: var(--sp-3); }
 .footer-col ul { list-style: none; display: grid; gap: var(--sp-2); }
 .footer-col a { color: var(--paper); text-decoration: none; font-size: var(--step--1); }
 .footer-col a:hover { text-decoration: underline; }
+.footer-col .footer-icon { display: inline-flex; padding: var(--sp-1); margin: calc(var(--sp-1) * -1); }
+.footer-col .footer-icon:hover { color: var(--accent); }
 .footer-bottom { padding-top: var(--sp-5); text-align: center; }
 .footer-bottom a { color: var(--accent); text-decoration: none; font-weight: 700; }
 .footer-legal { font-size: var(--step--1); margin-top: var(--sp-3); }
@@ -851,7 +853,7 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .platform-jobs { grid-template-columns: 1fr; }
   .enroll-band { grid-template-columns: 1fr; gap: var(--sp-6); padding-block: var(--sp-7); }
   .enroll-shot { max-width: 280px; margin-inline: auto; }
-  .footer-top { grid-template-columns: 1fr; gap: var(--sp-5); }
+  .footer-top { gap: var(--sp-5); }
   .partner-row, .backers { gap: var(--sp-6); }
   .incubator { grid-template-columns: 1fr; gap: var(--sp-4); }
   .incubator img { width: 88px; }

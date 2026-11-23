@@ -11,7 +11,7 @@ nav and footer with the other pages and meets the same checks.
 
 ## Decisions
 
-1. It is linked from the footer's About column on every page and listed in
+1. It is linked from the footer's Resources column on every page and listed in
    the sitemap, not from the top menu or the home page: it is seasonal, and
    the home page keeps to less copy (CLAUDE.md §2). People reach it from
    the link the owner shares.
