@@ -65,8 +65,26 @@ nav and footer with the other pages and meets the same checks.
 15. "Pass it on" is a `mailto:` link with the subject and the page's URL
     filled in and no address, so a reader forwards it in one tap and the
     page sends nothing itself.
-16. A print stylesheet hides the nav, footer, buttons and closing bands, so
-    a printed guide is just the steps. It is scoped to `body.guide-page`,
-    because the stylesheet is shared and other pages print in full.
+16. The guide prints as a branded document, because schools print it and
+    pass it to a board member or a colleague (owner, November 2026:
+    "branded and polished for a high end professional brand"). It is
+    scoped to `body.guide-page`, because the stylesheet is shared and other
+    pages print in full. In print:
+    - a named page (`@page guide`) on US Letter, with the guide's name, its
+      address and "page X of Y" in the bottom margin of every page;
+    - the logo heads page 1 over a navy rule, with the guide's address
+      where the nav links were;
+    - each step starts on its own page, so a reader can hand out one step;
+    - cards sit two across and no card, prompt, callout or table breaks
+      across pages;
+    - each outside link prints its address beside it (`data-print` on the
+      link, a short form chosen by hand), so the page works on paper;
+    - `js/site.js` opens every closed `<details>` before printing and
+      closes them after, so the example letter prints;
+    - the copy buttons, the share band and the footer's sign-up line drop
+      out; the closing band keeps its line and adds the address to visit;
+      the credit and copyright stay, word for word, on the last page.
+    The guide prints on 10 pages. A prompt that does not fit beside its
+    step takes the next page whole rather than splitting.
 17. The page carries Article JSON-LD for search. Its `image` has no `?v=`,
     because `stamp-versions` stamps attributes, not JSON.
