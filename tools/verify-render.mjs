@@ -47,6 +47,7 @@ const PAGES = {
   },
   '/privacy': { minImages: 2, h1: 1, minTextChars: 2500, ids: ['nav-menu'] },
   '/terms': { minImages: 2, h1: 1, minTextChars: 2000, ids: ['nav-menu'] },
+  '/404': { minImages: 2, h1: 1, minTextChars: 500, ids: ['nav-menu'] },
   '/giving': { minImages: 2, h1: 1, minTextChars: 5000, ids: ['plan', 'gifts', 'amounts', 'list', 'write', 'send', 'thanks', 'prompt-list', 'prompt-emails', 'nav-menu'] },
   '/enrollment/': { minImages: 1, h1: 1, minTextChars: 4000, ids: ['main', 'audit', 'forces', 'phases', 'cal'] },
 };

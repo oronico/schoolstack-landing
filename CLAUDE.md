@@ -378,7 +378,20 @@ styles: its five stage colours and answer colours carry meaning.
   only rules allowed to have no CTA.
 - `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
   rule states it). The local harness does the same.
-- `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
+- `robots.txt` disallows `/go/` and nothing else. It used to list the repo's
+  own files (`/docs/`, `/tools/`, `CLAUDE.md` was not even on it), which only
+  asked polite crawlers to look away and told everyone else where to look.
+- **The repo's own files are not served** (November 2026). Netlify publishes
+  the repo root, so `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/` and the
+  rest answered 200 to anyone. `_redirects` now forces each to `404.html`
+  with `404!`. A new top-level file that is not a page or an asset needs a
+  line there too.
+- **The footer links the tools directly** (`https://space.schoolstack.ai/`
+  and so on), so schoolstack.ai passes its standing to them: a robots-blocked
+  302 passes none. The buttons in the page body keep `/go/`, so clicks there
+  are still counted. Footer clicks are not.
+- `llms.txt` is the site summary for AI tools, in Markdown as llmstxt.org
+  specifies. It follows section 2 and section 7 like page copy does.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
   list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a

@@ -3,6 +3,20 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: Search and AI crawlers see the site, not the repo
+From a technical SEO audit of schoolstack.ai, Space and Budget.
+- `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`, `features/` and the other
+  repo files answered 200 on the live site. Each now returns a 404, and the
+  site has a real 404 page (noindex) with the shared nav and footer.
+- robots.txt no longer lists the repo's folders; it disallows `/go/` only.
+- The footer's Space, Budget and Access links go straight to each tool. No
+  page linked them directly before, so the parent site passed them nothing.
+  The buttons in the page body still go through `/go/` and are counted.
+- `/llms.txt`: what SchoolStack is, the three tools, the Enrollment Audit,
+  the giving guide and early access, in the llmstxt.org format.
+- The home page's structured data names Space, Budget and Access as web
+  applications published by SchoolStack.
+
 ## 2026-11-23: The footer's About list splits in three
 The About column carried nine links (owner: "hilariously long").
 - Four columns of three on every page: The tools, Resources (Enrollment

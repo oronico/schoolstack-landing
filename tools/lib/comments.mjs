@@ -16,6 +16,7 @@ const KIND = [
 
 export function kindOf(path) {
   const name = path.split('/').pop();
+  if (name === 'llms.txt') return null;
   for (const [re, kind] of KIND) if (re.test(name)) return kind;
   return null;
 }
