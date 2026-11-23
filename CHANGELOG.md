@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-22: The giving guide prints as a branded document
+- The logo heads the first page, and every page carries the guide's name,
+  its address and its page number.
+- Each step starts on its own page. Cards, prompts and callouts never
+  split across pages.
+- Outside links print their address, and the example letter prints open.
+- The credit and copyright close the last page, under the early access
+  line. The guide prints on ten pages.
+
 ## 2026-11-22: Print styles for the giving guide only
 - The giving guide's print styles now apply to that page alone. The home
   page and About print in full again, with their buttons, contact band and

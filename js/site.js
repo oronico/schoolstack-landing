@@ -89,3 +89,19 @@
     });
   });
 })();
+
+(function () {
+  'use strict';
+  if (!document.body.classList.contains('guide-page')) return;
+  var opened = [];
+  window.addEventListener('beforeprint', function () {
+    opened = Array.prototype.filter.call(document.querySelectorAll('details:not([open])'), function (d) {
+      return !d.classList.contains('nav-menu');
+    });
+    opened.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () {
+    opened.forEach(function (d) { d.open = false; });
+    opened = [];
+  });
+})();

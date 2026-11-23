@@ -863,10 +863,46 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .calc-legend li { grid-template-columns: 12px 1fr auto; }
   .calc-legend .amt { grid-column: 2 / -1; text-align: left; min-width: 0; margin-top: calc(-1 * var(--sp-2)); color: var(--muted); }
 }
+@page guide {
+  size: letter;
+  margin: 0.6in 0.65in 0.75in;
+  @bottom-left { content: "SchoolStack  ·  Year-end giving, in one afternoon  ·  schoolstack.ai/giving"; font: 8pt Inter, sans-serif; color: #5B677A; }
+  @bottom-right { content: counter(page) " of " counter(pages); font: 8pt Inter, sans-serif; color: #5B677A; }
+}
 @media print {
-  .guide-page nav, .guide-page footer, .guide-page .skip-link, .guide-page .hero-cta, .guide-page .copy-btn, .guide-page #share, .guide-page .about-contact { display: none; }
-  .section.guide { padding-block: var(--sp-4); }
-  .guide-copy pre { padding-top: var(--sp-4); }
+  html:has(body.guide-page) { font-size: 15px; }
+  .guide-page { page: guide; background: #fff; }
+  .guide-page nav { position: static; padding: 0 0 var(--sp-3); border-bottom: 2px solid var(--ink); background: none; }
+  .guide-page nav::after { content: "schoolstack.ai/giving"; font-weight: 700; font-size: var(--step--1); color: var(--muted); }
+  .guide-page .nav-links, .guide-page .nav-menu, .guide-page .skip-link, .guide-page .hero-cta, .guide-page .copy-btn, .guide-page #share, .guide-page .about-contact .btn-primary, .guide-page .footer-top { display: none; }
+  .guide-page main { padding-top: 0; }
+  .guide-page .hero { padding: var(--sp-5) 0 var(--sp-3); }
+  .guide-page .guide-steps li { padding-block: var(--sp-1); }
+  .guide-page .guide-cards { grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+  .guide-page .hero h1 { font-size: var(--step-3); margin-bottom: var(--sp-2); }
+  .guide-page .hero .subtitle { font-size: var(--step-0); margin-bottom: 0; }
+  .guide-page #plan { padding-top: var(--sp-3); }
+  .guide-page .hero-wrap { border-bottom: none; }
+  .guide-page .section { padding-inline: 0; max-width: none; }
+  .guide-page .section.guide { padding-block: var(--sp-5); }
+  .guide-page h2, .guide-page h3, .guide-page .label { break-after: avoid; }
+  .guide-page #gifts, .guide-page #amounts, .guide-page #list, .guide-page #write, .guide-page #send, .guide-page #thanks { break-before: page; border-top: none; padding-top: 0; }
+  .guide-page .section.guide h2 + p { break-after: avoid; }
+  .guide-page .guide-cards li, .guide-page .guide-copy, .guide-page .guide-callout, .guide-page .guide-example, .guide-page .guide-table, .guide-page .guide-steps li, .guide-page .guide-dates, .guide-page .guide-list li, .guide-page .guide-formula { break-inside: avoid; }
+  .guide-page .guide-copy pre { padding-top: var(--sp-3); }
+  .guide-page .guide-example summary::after { content: none; }
+  .guide-page .guide a[data-print]::after { content: " (" attr(data-print) ")"; font-weight: 400; font-size: 0.85em; color: var(--muted); }
+  .guide-page .guide a[href="/go/budget"]::after { content: " (budget.schoolstack.ai)"; font-weight: 400; font-size: 0.85em; color: var(--muted); }
+  .guide-page .about-contact { padding-block: var(--sp-4) 0; break-inside: avoid; }
+  .guide-page .about-contact .section-desc { margin-bottom: var(--sp-3); }
+  .guide-page .about-contact h2 { font-size: var(--step-2); }
+  .guide-page .about-contact .section-desc::after { content: " Get early access at schoolstack.ai."; color: var(--ink); font-weight: 700; }
+  .guide-page footer { background: none; color: var(--ink); padding: 0; break-inside: avoid; }
+  .guide-page .footer-inner { padding-inline: 0; }
+  .guide-page .footer-bottom { border-top: 1px solid var(--line); padding-top: var(--sp-3); }
+  .guide-page .footer-legal { margin-top: var(--sp-1); }
+  .guide-page .footer-bottom p { font-size: 8.5pt; }
+  .guide-page .footer-bottom a { color: var(--ink); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
