@@ -670,6 +670,8 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 .footer-col ul { list-style: none; display: grid; gap: var(--sp-2); }
 .footer-col a { color: var(--paper); text-decoration: none; font-size: var(--step--1); }
 .footer-col a:hover { text-decoration: underline; }
+.footer-col .footer-icon { display: inline-flex; padding: var(--sp-1); margin: calc(var(--sp-1) * -1); }
+.footer-col .footer-icon:hover { color: var(--accent); }
 .footer-bottom { padding-top: var(--sp-5); text-align: center; }
 .footer-bottom a { color: var(--accent); text-decoration: none; font-weight: 700; }
 .footer-legal { font-size: var(--step--1); margin-top: var(--sp-3); }

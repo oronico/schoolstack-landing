@@ -7,7 +7,8 @@ prepared for review; Netlify deploys on merge to `main`.
 The About column carried nine links (owner: "hilariously long").
 - Four columns of three on every page: The tools, Resources (Enrollment
   Audit, the giving guide, FAQ), About (About Us, the platform, Building
-  Hope Impact Fund) and Connect (Sign up, contact, Instagram).
+  Hope Impact Fund) and Connect (Sign up, contact, and the Instagram glyph
+  in place of the word, from Simple Icons, CC0).
 - On a phone the link columns sit two across instead of one: the home
   page footer is 175px shorter at 390px wide.
 
