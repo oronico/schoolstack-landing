@@ -864,7 +864,7 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .calc-legend .amt { grid-column: 2 / -1; text-align: left; min-width: 0; margin-top: calc(-1 * var(--sp-2)); color: var(--muted); }
 }
 @media print {
-  nav, footer, .skip-link, .hero-cta, .copy-btn, #share, .about-contact { display: none; }
+  .guide-page nav, .guide-page footer, .guide-page .skip-link, .guide-page .hero-cta, .guide-page .copy-btn, .guide-page #share, .guide-page .about-contact { display: none; }
   .section.guide { padding-block: var(--sp-4); }
   .guide-copy pre { padding-top: var(--sp-4); }
 }
