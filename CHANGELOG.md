@@ -3,6 +3,59 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: No inline script, so the CSP forbids it
+- The early list form's script moved from `index.html` to `js/signup.js`,
+  and Enrollment Audit's page script from `enrollment/index.html` to
+  `js/enrollment-page.js`, unchanged byte for byte.
+- `script-src` in `_headers` is now `'self'` only, so an injected
+  `<script>` cannot run. `cspFaults()` fails `'unsafe-inline'` there.
+- `verify-headers` now loads every page in `sitemap.xml` under the real
+  headers, not just `/`, so a script left inline on any page fails it.
+- Styles still allow `'unsafe-inline'`; moving them out is the second half
+  of #68.
+
+## 2026-11-24: verify-content fails, not crashes, on a share card that is not a PNG
+- If `og:image` pointed at a file that is not a PNG, `verify-content`
+  crashed reading its size and skipped every check after it. It now fails
+  with a message naming the file, and the other checks still run.
+- The size check moved to `ogImageSizeFault()` in `tools/lib/page-audit.mjs`,
+  with unit tests.
+
+## 2026-11-24: Two heredocs on one workflow command
+- When one shell command in a workflow opens two heredocs
+  (`cat <<FIRST <<SECOND`), the comment check read a `#` line in the second
+  body as a comment. It now moves to the next heredoc when one closes.
+  Codex found this on #76.
+
+## 2026-11-24: Say "free" for Space, Budget and Access
+- The tools band, the 404 page, the home-screen description, `llms.txt` and
+  the giving guide said "complimentary" or "at no cost". They now say
+  "free", the word founders search for, and still name the three tools.
+  CLAUDE.md section 7 states the rule.
+
+## 2026-11-24: The comment check parses JavaScript with acorn
+Owner approved.
+- `tools/lib/comments.mjs` now finds JavaScript comments with acorn, a
+  devDependency that never reaches a browser, in place of 130 lines that
+  guessed at JavaScript's syntax and missed cases review kept finding.
+- JavaScript that cannot be parsed now fails the check by name. It used to
+  be scanned anyway, and could hide a comment.
+- CSS, HTML, YAML, TOML and the `#` files keep their own rules.
+- Nothing a visitor sees changes.
+
+## 2026-11-24: The home-screen description names the three tools
+- When someone adds the site to a phone's home screen, its description read
+  "Free planning tools ... funding, and financing". "Financing" pointed at
+  Lending Lab, which the site does not promote, and a bare "Free" did not
+  name the tools that cost nothing. It now reads "Space, Budget and Access:
+  planning tools for small-school founders, at no cost."
+
+## 2026-11-23: The repo's own files are no longer served
+- `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`, `features/` and the other
+  repo files answered 200 on the live site. Each now returns a 404, and the
+  site has a real 404 page (noindex) with the shared nav and footer.
+- robots.txt no longer lists the repo's folders; it disallows `/go/` only.
+
 ## 2026-11-23: A readiness checklist at /ready
 Seven things a school gathers before its first day on SchoolStack: its
 books in QuickBooks Online, reconciled through last month, a chart of

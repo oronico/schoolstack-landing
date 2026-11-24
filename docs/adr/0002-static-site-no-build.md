@@ -10,8 +10,8 @@ What is committed is what ships, and every file in the repo has a public URL.
 ## Decisions
 
 1. The site has no runtime dependency. `npm ci` installs dev tools only
-   (Cucumber and its parser), and none of them reaches a browser, so the CSP
-   can keep forbidding every outside origin. (CLAUDE.md §3)
+   (Cucumber and acorn), and none of them reaches a browser, so the CSP can
+   keep forbidding every outside origin. (CLAUDE.md §3)
 2. `node_modules/` is gitignored, because a committed dependency tree would
    be served from the CDN. (CLAUDE.md §3)
 3. `robots.txt` disallows the files that are reachable but are not pages:

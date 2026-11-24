@@ -31,3 +31,8 @@ count clicks out to the tools. (CLAUDE.md §5)
 8. `/enrollment` redirects to `/enrollment/` with a 301, so both addresses
    open the tool under one URL. A 301 is right here: it sets the canonical
    address, and nothing counts these clicks.
+9. The repo's own files (`CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`,
+   `features/` and the rest) are forced to `404.html` with `404!`, because
+   Netlify publishes the repo root and robots.txt only asks crawlers not to
+   look. A forced rule wins over a file that exists, which a plain rule does
+   not. (CLAUDE.md §5)
