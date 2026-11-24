@@ -15,9 +15,9 @@ Change both, or the check stops you.
 
 **Tool pages** are the exception. `enrollment/index.html` (served at
 `/enrollment/`) is Enrollment Audit, a stand-alone tool with its own masthead,
-like Space and Budget. It does not share the nav and footer, but it meets
-every other rule: self-hosted brand faces through `--font-display` and
-`--font-body`, no outside origins, `/go/` routes for tool links, the
+like Space and Budget, and its own stylesheet, `css/enrollment.css`. It does
+not share the nav and footer, but it meets every other rule: self-hosted
+brand faces through `--font-display` and `--font-body`, no outside origins, `/go/` routes for tool links, the
 planning-only disclaimer, and the content, render and accessibility checks
 (`TOOL_PAGES` in `verify-content`).
 

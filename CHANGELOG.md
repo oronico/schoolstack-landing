@@ -3,6 +3,19 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: No inline styles, so the CSP forbids them too
+- Enrollment Audit's `<style>` block moved to `css/enrollment.css`.
+- Every `style` attribute on the pages became a class. Enrollment Audit's
+  script no longer writes them either: its colours are a `data-tone`
+  attribute, and its bar widths are set through the element's `style`
+  object, which the CSP allows.
+- The calculator's two slider fills start from CSS, as its bar does.
+- `style-src` in `_headers` is now `'self'` only, and `cspFaults()` fails
+  `'unsafe-inline'` there. This finishes #68.
+- No page looks different: every element's computed style matches `main`
+  on all eight pages, at 1440px and 390px, on screen and in print, light
+  and dark, with Enrollment Audit both filled in and cleared.
+
 ## 2026-11-24: No inline script, so the CSP forbids it
 - The early list form's script moved from `index.html` to `js/signup.js`,
   and Enrollment Audit's page script from `enrollment/index.html` to

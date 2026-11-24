@@ -325,6 +325,8 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
   touch-action: pan-y;
 }
 .calc-staffing input[type="range"] { --range: var(--muted); }
+.calc-slider [data-calc="facilities"] { --fill: 37.5%; }
+.calc-slider [data-calc="staffing"] { --fill: 66.67%; }
 .calc-slider input[type="range"]::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: 4px;
@@ -655,7 +657,9 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .partner-row { display: flex; justify-content: center; align-items: flex-start; gap: var(--sp-7); flex-wrap: wrap; }
 .partner { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); text-decoration: none; max-width: 240px; }
 .partner-mark { height: 76px; display: flex; align-items: center; justify-content: center; }
-.partner-mark img { object-fit: contain; }
+.partner-mark img { object-fit: contain; width: auto; height: auto; max-width: 100%; max-height: 72px; }
+.partner-mark .mark-square { max-height: 76px; }
+.partner-mark .mark-wide { max-height: 46px; }
 .partner-name { font-size: var(--step--1); font-weight: 700; color: var(--muted); }
 .partner:hover .partner-name { color: var(--ink); }
 
@@ -920,3 +924,4 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+.section.section-follow { padding-top: 0; }
