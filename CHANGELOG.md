@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: verify-content fails, not crashes, on a share card that is not a PNG
+- If `og:image` pointed at a file that is not a PNG, `verify-content`
+  crashed reading its size and skipped every check after it. It now fails
+  with a message naming the file, and the other checks still run.
+- The size check moved to `ogImageSizeFault()` in `tools/lib/page-audit.mjs`,
+  with unit tests.
+
 ## 2026-11-24: Two heredocs on one workflow command
 - When one shell command in a workflow opens two heredocs
   (`cat <<FIRST <<SECOND`), the comment check read a `#` line in the second

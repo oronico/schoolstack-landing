@@ -4,7 +4,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs, ogImageSizeFault } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
 import { commentScan, commentDrift } from './lib/comments.mjs';
@@ -88,22 +88,15 @@ check(!/<lastmod>/.test(read('sitemap.xml')), 'sitemap.xml carries a <lastmod>: 
 check(themeMeta?.toLowerCase() === manifest.theme_color?.toLowerCase(),
   `<meta theme-color> is "${themeMeta}" but the manifest says "${manifest.theme_color}"`);
 
-function pngSize(file) {
-  const b = readFileSync(join(ROOT, file));
-  if (b.length < 24 || b.readUInt32BE(0) !== 0x89504e47) return null;
-  return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
-}
-
 const ogImage = meta(/property="og:image" content="([^"]+)"/);
 const ogW = meta(/property="og:image:width" content="([^"]+)"/);
 const ogH = meta(/property="og:image:height" content="([^"]+)"/);
 if (ogImage) {
   const path = ogImage.replace(/^https?:\/\/[^/]+\//, '').replace(/[?#].*$/, '');
   if (check(existsSync(join(ROOT, path)), `og:image points at ${ogImage}, which is not in the repo`)) {
-    const size = pngSize(path);
-    console.log(`og:image: ${path} is ${size.w}x${size.h}, declared ${ogW}x${ogH}`);
-    check(size && String(size.w) === ogW && String(size.h) === ogH,
-      `og:image declares ${ogW}x${ogH} but ${path} is ${size?.w}x${size?.h}`);
+    const fault = ogImageSizeFault(path, readFileSync(join(ROOT, path)), ogW, ogH);
+    console.log(`og:image: ${path}, declared ${ogW}x${ogH}: ${fault ? 'WRONG' : 'matches'}`);
+    if (fault) fail(fault);
   }
 }
 
