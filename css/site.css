@@ -887,7 +887,7 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .ready-page #checklist { padding-top: var(--sp-2); }
   .ready-page #checklist h2 { margin-bottom: 0; }
   .ready-page .guide-cards li { padding: var(--sp-2) var(--sp-3); }
-  .ready-page .hero { padding-bottom: 0; }
+  .guide-page.ready-page .hero { padding-bottom: 0; }
   .guide-page .nav-links, .guide-page .nav-menu, .guide-page .skip-link, .guide-page .hero-cta, .guide-page .copy-btn, .guide-page #share, .guide-page .about-contact .btn-primary, .guide-page .footer-top { display: none; }
   .guide-page main { padding-top: 0; }
   .guide-page .hero { padding: var(--sp-5) 0 var(--sp-3); }
