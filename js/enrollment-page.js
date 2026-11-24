@@ -121,7 +121,7 @@ function renderShare(){
   if(S.grades.length)add("Grades enrolled",S.grades.map(gradeLabel).join(","));
   add("Offers go out",S.offer==="rolling"?"Rolling":MONTHS_LONG[parseInt(S.offer,10)]);
   [["Students enrolled now","current"],["Expected re-enrollment %","reRate"],["Budget driver","driver"],["Enrollment goal","goal"],["Inquiry to application %","rInq"],["Application to offer %","rApp"],["Offer to enrolled %","rYield"]].forEach(([k,f])=>{const v=parseFloat(S[f]);if(isFinite(v))add(k,Math.round(v))});
-  if(visible().filter(i=>S.ans[i.id]).length>=visible().length*0.8){
+  if(progress().ready){
     add("Audit score",pct(sc));
     STAGES.forEach(s=>add(s.name+" score",pct(sc.filter(i=>i.st===s.id))));
     add("Biggest gaps",ranked().slice(0,3).map(i=>i.s).join("; "));
