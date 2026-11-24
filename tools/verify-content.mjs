@@ -4,10 +4,10 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs, ogImageSizeFault } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
-import { commentCounts, commentDrift } from './lib/comments.mjs';
+import { commentScan, commentDrift } from './lib/comments.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -88,22 +88,15 @@ check(!/<lastmod>/.test(read('sitemap.xml')), 'sitemap.xml carries a <lastmod>: 
 check(themeMeta?.toLowerCase() === manifest.theme_color?.toLowerCase(),
   `<meta theme-color> is "${themeMeta}" but the manifest says "${manifest.theme_color}"`);
 
-function pngSize(file) {
-  const b = readFileSync(join(ROOT, file));
-  if (b.length < 24 || b.readUInt32BE(0) !== 0x89504e47) return null;
-  return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
-}
-
 const ogImage = meta(/property="og:image" content="([^"]+)"/);
 const ogW = meta(/property="og:image:width" content="([^"]+)"/);
 const ogH = meta(/property="og:image:height" content="([^"]+)"/);
 if (ogImage) {
   const path = ogImage.replace(/^https?:\/\/[^/]+\//, '').replace(/[?#].*$/, '');
   if (check(existsSync(join(ROOT, path)), `og:image points at ${ogImage}, which is not in the repo`)) {
-    const size = pngSize(path);
-    console.log(`og:image: ${path} is ${size.w}x${size.h}, declared ${ogW}x${ogH}`);
-    check(size && String(size.w) === ogW && String(size.h) === ogH,
-      `og:image declares ${ogW}x${ogH} but ${path} is ${size?.w}x${size?.h}`);
+    const fault = ogImageSizeFault(path, readFileSync(join(ROOT, path)), ogW, ogH);
+    console.log(`og:image: ${path}, declared ${ogW}x${ogH}: ${fault ? 'WRONG' : 'matches'}`);
+    if (fault) fail(fault);
   }
 }
 
@@ -208,11 +201,12 @@ for (const [role, family] of Object.entries(wanted)) {
     `--font-${role} asks for '${family}' but fonts/fonts.css serves no such @font-face - the page would render in the fallback with every other check green`);
 }
 
-const comments = commentCounts(ROOT);
+const { counts: comments, unreadable } = commentScan(ROOT);
 const commentTotal = Object.values(comments).reduce((a, b) => a + b, 0);
 console.log(`Comments: ${commentTotal || 'none'}${commentTotal ? ` in ${Object.keys(comments).length} file(s), the recorded debt` : ''}`);
 for (const [f, n] of Object.entries(comments)) console.log(`  ${f}: ${n}`);
 for (const d of commentDrift(comments)) fail(d);
+for (const u of unreadable) fail(u);
 
 if (failures.length) {
   console.log(`\n${failures.length} failure(s):`);
