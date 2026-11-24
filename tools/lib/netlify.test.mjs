@@ -60,7 +60,7 @@ test('headersFor merges every matching rule, last one winning', () => {
 });
 
 const GOOD = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; "
-  + "form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'";
+  + "form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'";
 
 test('cspFaults accepts a policy that does its job', () => {
   assert.deepEqual(cspFaults(GOOD), []);
@@ -82,10 +82,12 @@ test('cspFaults catches a wildcard and a plaintext origin', () => {
     .includes('img-src allows plaintext http://cdn.example.com'));
 });
 
-test("cspFaults catches 'unsafe-eval' while allowing 'unsafe-inline'", () => {
+test("cspFaults catches 'unsafe-eval' and 'unsafe-inline' in script-src", () => {
   assert.deepEqual(cspFaults(GOOD), []);
   assert.ok(cspFaults(GOOD.replace("script-src 'self'", "script-src 'unsafe-eval' 'self'"))
     .includes("script-src allows 'unsafe-eval'"));
+  assert.ok(cspFaults(GOOD.replace("script-src 'self'", "script-src 'self' 'unsafe-inline'"))
+    .includes("script-src allows 'unsafe-inline'"));
 });
 
 test('the real _headers parses into rules that cover the site', () => {

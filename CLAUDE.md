@@ -544,7 +544,7 @@ and to this list, and give the check that covers it a line.
 
 | Component | Where | Attribute | States | Checked by |
 | --- | --- | --- | --- | --- |
-| Early list form | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
+| Early list form | `js/early-list.js` | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
 | Phone menu | `js/site.js` | `#nav-menu[open]` | open, closed (the browser keeps it) | `verify-render` checks the id is on every page |

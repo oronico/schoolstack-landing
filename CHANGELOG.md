@@ -3,6 +3,14 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: No inline script, so script-src is 'self' only
+- The early list form handler moved from `index.html` to
+  `js/early-list.js`, and Enrollment Audit's page script to
+  `js/enrollment-page.js`.
+- The CSP drops `'unsafe-inline'` from `script-src`, and the header check
+  now fails if it comes back. `style-src` keeps it for Enrollment Audit's
+  coloured scorecard (#68).
+
 ## 2026-11-23: A readiness checklist at /ready
 Seven things a school gathers before its first day on SchoolStack: its
 books in QuickBooks Online, reconciled through last month, a chart of

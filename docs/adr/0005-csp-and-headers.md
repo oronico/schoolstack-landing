@@ -17,9 +17,13 @@ diff shows a CSP blocking the site's own files. (CLAUDE.md §3, §5)
    it, though FLoC is withdrawn. Some Chromium builds log it as an unknown
    feature, so verify-headers lets that one exact message through and no
    other.
-4. `'unsafe-inline'` stays in `script-src` and `style-src` while the pages
-   carry inline script, styles and style attributes. Issue #68 tracks moving
-   them out and dropping it. `'unsafe-eval'` is never allowed.
+4. `script-src` is `'self'` only (November 2026): the early list handler
+   lives in `js/early-list.js` and Enrollment Audit's page script in
+   `js/enrollment-page.js`, and `cspFaults()` fails `'unsafe-inline'` or
+   `'unsafe-eval'` in `script-src`. `style-src` keeps `'unsafe-inline'`,
+   because Enrollment Audit builds its scorecard as HTML strings with
+   `style` attributes that carry each stage's colour; issue #68 stays open
+   for that half.
 5. The `_headers` parser, path matcher and CSP rules live in
    `tools/lib/netlify.mjs` with unit tests. A bug there would not fail
    verify-headers; it would make it pass against headers nobody serves.
