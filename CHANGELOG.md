@@ -3,6 +3,17 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: No inline script, so the CSP forbids it
+- The early list form's script moved from `index.html` to `js/signup.js`,
+  and Enrollment Audit's page script from `enrollment/index.html` to
+  `js/enrollment-page.js`, unchanged byte for byte.
+- `script-src` in `_headers` is now `'self'` only, so an injected
+  `<script>` cannot run. `cspFaults()` fails `'unsafe-inline'` there.
+- `verify-headers` now loads every page in `sitemap.xml` under the real
+  headers, not just `/`, so a script left inline on any page fails it.
+- Styles still allow `'unsafe-inline'`; moving them out is the second half
+  of #68.
+
 ## 2026-11-24: verify-content fails, not crashes, on a share card that is not a PNG
 - If `og:image` pointed at a file that is not a PNG, `verify-content`
   crashed reading its size and skipped every check after it. It now fails

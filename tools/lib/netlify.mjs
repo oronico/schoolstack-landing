@@ -49,5 +49,6 @@ export function cspFaults(value) {
     for (const v of vals.filter((x) => /^http:/i.test(x))) faults.push(`${name} allows plaintext ${v}`);
   }
   if (directives.get('script-src')?.includes("'unsafe-eval'")) faults.push("script-src allows 'unsafe-eval'");
+  if (directives.get('script-src')?.includes("'unsafe-inline'")) faults.push("script-src allows 'unsafe-inline'");
   return faults;
 }
