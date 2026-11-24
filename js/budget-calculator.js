@@ -32,16 +32,7 @@
   };
 
   function parseTuition(raw) {
-    var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
-    if (s === '') return { value: null, error: 'Enter tuition or funding per student.' };
-    if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
-    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: 'Use numbers only, like 10,000 or 9,500.50.' };
-    var n = Number(s);
-    if (!isFinite(n)) return { value: null, error: 'Use numbers only, like 10,000 or 9,500.50.' };
-    if (n > LIMITS.tuition.max) {
-      return { value: null, error: 'Enter an amount up to ' + formatUSD(LIMITS.tuition.max) + ' per student.' };
-    }
-    return { value: Math.round(n * 100) / 100, error: null };
+    return parseAmount(raw, 'Enter tuition or funding per student.', LIMITS.tuition.max, 'per student', '10,000 or 9,500.50');
   }
 
   function parseCount(raw, what, max) {
@@ -67,13 +58,14 @@
     perStudent: { min: 1, max: 1000000 },
   };
 
-  function parseAmount(raw, emptyMessage, max, perWhat) {
+  function parseAmount(raw, emptyMessage, max, perWhat, example) {
+    var numbersOnly = 'Use numbers only, like ' + (example || '600,000 or 9,500.50') + '.';
     var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
     if (s === '') return { value: null, error: emptyMessage };
     if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
-    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: 'Use numbers only, like 600,000 or 9,500.50.' };
+    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: numbersOnly };
     var n = Number(s);
-    if (!isFinite(n)) return { value: null, error: 'Use numbers only, like 600,000 or 9,500.50.' };
+    if (!isFinite(n)) return { value: null, error: numbersOnly };
     if (n > max) return { value: null, error: 'Enter an amount up to ' + formatUSD(max) + ' ' + perWhat + '.' };
     return { value: Math.round(n * 100) / 100, error: null };
   }
@@ -183,6 +175,25 @@
     return (n < 0 ? '−' : '') + Math.abs(n) + '%';
   }
 
+  function setOut(el, name, value) {
+    var nodes = el.querySelectorAll('[data-out="' + name + '"]');
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].textContent !== value) nodes[i].textContent = value;
+    }
+  }
+
+  function showFieldError(input, errorEl, message) {
+    if (message) {
+      input.setAttribute('aria-invalid', 'true');
+      errorEl.textContent = message;
+      errorEl.hidden = false;
+    } else {
+      input.removeAttribute('aria-invalid');
+      errorEl.textContent = '';
+      errorEl.hidden = true;
+    }
+  }
+
   function mount(el) {
     if (!el || el.__budgetCalc) return null;
     var q = function (name) { return el.querySelector('[data-calc="' + name + '"]'); };
@@ -197,24 +208,7 @@
 
     var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students };
 
-    function setText(name, value) {
-      var nodes = el.querySelectorAll('[data-out="' + name + '"]');
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].textContent !== value) nodes[i].textContent = value;
-      }
-    }
-
-    function showFieldError(input, errorEl, message) {
-      if (message) {
-        input.setAttribute('aria-invalid', 'true');
-        errorEl.textContent = message;
-        errorEl.hidden = false;
-      } else {
-        input.removeAttribute('aria-invalid');
-        errorEl.textContent = '';
-        errorEl.hidden = true;
-      }
-    }
+    function setText(name, value) { setOut(el, name, value); }
 
     function render() {
       var t = parseTuition(parts.tuition.value);
@@ -327,24 +321,7 @@
 
     var last = { expenses: BE_DEFAULTS.expenses, perStudent: BE_DEFAULTS.perStudent };
 
-    function setText(name, value) {
-      var nodes = el.querySelectorAll('[data-out="' + name + '"]');
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].textContent !== value) nodes[i].textContent = value;
-      }
-    }
-
-    function showFieldError(input, errorEl, message) {
-      if (message) {
-        input.setAttribute('aria-invalid', 'true');
-        errorEl.textContent = message;
-        errorEl.hidden = false;
-      } else {
-        input.removeAttribute('aria-invalid');
-        errorEl.textContent = '';
-        errorEl.hidden = true;
-      }
-    }
+    function setText(name, value) { setOut(el, name, value); }
 
     function render() {
       var e = parseExpenses(parts.expenses.value);
