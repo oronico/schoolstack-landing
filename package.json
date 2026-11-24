@@ -21,6 +21,7 @@
     "optimize:images": "node tools/optimize-images.mjs"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^13.2.1"
+    "@cucumber/cucumber": "^13.2.1",
+    "acorn": "^8.19.0"
   }
 }

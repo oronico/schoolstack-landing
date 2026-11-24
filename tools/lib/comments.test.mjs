@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { findComments, kindOf, commentDrift, commentCounts, COMMENT_DEBT } from './comments.mjs';
+import { findComments, kindOf, commentDrift, commentScan, COMMENT_DEBT } from './comments.mjs';
 import { ROOT } from './harness.mjs';
 
 const lines = (src, kind) => findComments(src, kind).map((c) => c.line);
@@ -19,6 +19,7 @@ test('kindOf maps each file to the comment syntax it uses', () => {
   assert.equal(kindOf('features/signup.feature'), 'hash');
   assert.equal(kindOf('package.json'), null);
   assert.equal(kindOf('CLAUDE.md'), null);
+  assert.equal(kindOf('llms.txt'), null);
   assert.equal(kindOf('assets/logos/x.svg'), null);
 });
 
@@ -44,7 +45,7 @@ test('template literals, nested ${} included', () => {
 test('regex literals are not comments, division is not a regex', () => {
   assert.deepEqual(lines(`s.replace(/\\/\\*[\\s\\S]*?\\*\\//g, '');`, 'js'), []);
   assert.deepEqual(lines(`const re = /[/]/; x.split(/\\/\\//);`, 'js'), []);
-  assert.deepEqual(lines('return /a\\/\\/b/.test(s);', 'js'), []);
+  assert.deepEqual(lines('function f(s) { return /a\\/\\/b/.test(s); }', 'js'), []);
   assert.deepEqual(lines('const half = a / 2; // yes', 'js'), [1]);
   assert.deepEqual(lines('const r = (a) / (b) / c; /* yes */', 'js'), [1]);
 });
@@ -76,13 +77,23 @@ test('postfix ++ and -- end a value, so a slash after them divides', () => {
 
 test('a keyword used as a property name ends a value', () => {
   assert.deepEqual(lines('const ratio = metrics.in / metrics.out; // explanation', 'js'), [1]);
-  assert.deepEqual(lines('const r = a?.return / 2; /* yes */', 'js'), [1]);
+  assert.deepEqual(lines('const r = a.return / 2; /* yes */', 'js'), [1]);
+  assert.throws(() => findComments('const r = a?.return / 2; /* yes */', 'js'), /cannot parse/, 'acorn 8.19 misreads this; it must fail loudly, not hide the comment');
   assert.deepEqual(lines('if (x in y) /[/*]/.test(v);', 'js'), []);
 });
 
 test('a Unicode name ends a value too', () => {
   assert.deepEqual(lines('const ratio = quantité / total; // explanation', 'js'), [1]);
   assert.deepEqual(lines('const r = ñ / 2; /* yes */', 'js'), [1]);
+});
+
+test('JavaScript that does not parse is reported, never counted as clean', () => {
+  assert.throws(() => findComments('const = ; // hidden', 'js'), /cannot parse as JavaScript/);
+  assert.throws(() => findComments('<script>if (</script>', 'html'), /cannot parse as JavaScript/);
+});
+
+test('a classic script that only parses outside a module still counts', () => {
+  assert.deepEqual(lines('with (o) { x = 1; } // yes', 'js'), [1]);
 });
 
 test('a shebang is not a comment', () => {
@@ -152,6 +163,8 @@ test('the ratchet fails a rise and asks for the baseline to drop on a fall', () 
 });
 
 test('the repo carries exactly the comments COMMENT_DEBT records', () => {
-  assert.deepEqual(commentDrift(commentCounts(ROOT)), [], 'run node tools/verify-content.mjs for the list');
+  const { counts, unreadable } = commentScan(ROOT);
+  assert.deepEqual(unreadable, []);
+  assert.deepEqual(commentDrift(counts), [], 'run node tools/verify-content.mjs for the list');
   assert.deepEqual(Object.keys(COMMENT_DEBT), Object.keys(COMMENT_DEBT).sort(), 'keep COMMENT_DEBT sorted by path');
 });
