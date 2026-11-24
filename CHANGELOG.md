@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: Say "free" for Space, Budget and Access
+- The tools band, the 404 page, the home-screen description, `llms.txt` and
+  the giving guide said "complimentary" or "at no cost". They now say
+  "free", the word founders search for, and still name the three tools.
+  CLAUDE.md section 7 states the rule.
+
 ## 2026-11-24: The home-screen description names the three tools
 - When someone adds the site to a phone's home screen, its description read
   "Free planning tools ... funding, and financing". "Financing" pointed at

@@ -490,10 +490,11 @@ styles: its five stage colours and answer colours carry meaning.
   "Shown: SchoolStack today, built with our design partner schools." Keep
   that line wherever the film appears. The film follows the free tools, and
   the early list band follows the film.
-- **Space, Budget and Access are complimentary, funded by philanthropy so
-  more schools can flourish** (owner, November 2026). Name the three tools
-  whenever you say so: a bare "complimentary" read as if the platform were
-  free too, and its pricing is not settled. The tools band says it and
+- **Space, Budget and Access are free, funded by philanthropy so more
+  schools can flourish** (owner, November 2026). Say "free", not
+  "complimentary" or "at no cost": it is the word founders search for (owner,
+  24 November 2026). Name the three tools whenever you say so: a bare "free"
+  reads as if the platform were free too, and its pricing is not settled. The tools band says it and
   thanks Stand Together Trust and the Beth and Ravenel Curry Foundation.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
