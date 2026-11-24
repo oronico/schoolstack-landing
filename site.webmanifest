@@ -1,7 +1,7 @@
 {
   "name": "SchoolStack",
   "short_name": "SchoolStack",
-  "description": "Space, Budget and Access: planning tools for small-school founders, at no cost.",
+  "description": "Space, Budget and Access: free planning tools for small-school founders.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

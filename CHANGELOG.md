@@ -9,6 +9,12 @@ prepared for review; Netlify deploys on merge to `main`.
   body as a comment. It now moves to the next heredoc when one closes.
   Codex found this on #76.
 
+## 2026-11-24: Say "free" for Space, Budget and Access
+- The tools band, the 404 page, the home-screen description, `llms.txt` and
+  the giving guide said "complimentary" or "at no cost". They now say
+  "free", the word founders search for, and still name the three tools.
+  CLAUDE.md section 7 states the rule.
+
 ## 2026-11-24: The comment check parses JavaScript with acorn
 Owner approved.
 - `tools/lib/comments.mjs` now finds JavaScript comments with acorn, a
