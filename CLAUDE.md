@@ -378,7 +378,14 @@ styles: its five stage colours and answer colours carry meaning.
   only rules allowed to have no CTA.
 - `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
   rule states it). The local harness does the same.
-- `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
+- `robots.txt` disallows `/go/` and nothing else. It used to list the repo's
+  own folders, which only asked polite crawlers to look away and told
+  everyone else where to look.
+- **The repo's own files are not served** (November 2026). Netlify publishes
+  the repo root, so `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/` and the
+  rest answered 200 to anyone. `_redirects` forces each to `404.html` with
+  `404!`. A new top-level file that is not a page or an asset needs a line
+  there too.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
   list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a

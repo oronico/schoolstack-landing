@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-23: The repo's own files are no longer served
+- `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`, `features/` and the other
+  repo files answered 200 on the live site. Each now returns a 404, and the
+  site has a real 404 page (noindex) with the shared nav and footer.
+- robots.txt no longer lists the repo's folders; it disallows `/go/` only.
+
 ## 2026-11-23: A readiness checklist at /ready
 Seven things a school gathers before its first day on SchoolStack: its
 books in QuickBooks Online, reconciled through last month, a chart of
