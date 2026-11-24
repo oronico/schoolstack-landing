@@ -15,9 +15,9 @@ Change both, or the check stops you.
 
 **Tool pages** are the exception. `enrollment/index.html` (served at
 `/enrollment/`) is Enrollment Audit, a stand-alone tool with its own masthead,
-like Space and Budget. It does not share the nav and footer, but it meets
-every other rule: self-hosted brand faces through `--font-display` and
-`--font-body`, no outside origins, `/go/` routes for tool links, the
+like Space and Budget, and its own stylesheet, `css/enrollment.css`. It does
+not share the nav and footer, but it meets every other rule: self-hosted
+brand faces through `--font-display` and `--font-body`, no outside origins, `/go/` routes for tool links, the
 planning-only disclaimer, and the content, render and accessibility checks
 (`TOOL_PAGES` in `verify-content`).
 
@@ -196,9 +196,11 @@ node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts
 npx cucumber-js                 # the same checks, read as specifications
 ```
 
-Cucumber is the repo's **only** dependency, and it is a devDependency: it
-never reaches a browser, so the CSP goes on forbidding every external origin
-and the site still ships as one static file. `node_modules/` is gitignored
+Cucumber and acorn are the repo's **only** dependencies, and both are
+devDependencies: neither reaches a browser, so the CSP goes on forbidding
+every external origin and the site still ships as one static file. Acorn
+(owner, November 2026) parses JavaScript for the comment check, because a
+hand-written scanner kept missing cases (ADR 0001). `node_modules/` is gitignored
 because Netlify publishes from the repo root — anything committed there is
 served.
 
@@ -378,7 +380,18 @@ styles: its five stage colours and answer colours carry meaning.
   only rules allowed to have no CTA.
 - `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
   rule states it). The local harness does the same.
-- `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
+- `robots.txt` disallows `/go/` and nothing else. It used to list the repo's
+  own folders, which only asked polite crawlers to look away and told
+  everyone else where to look.
+- **The repo's own files are not served** (November 2026). Netlify publishes
+  the repo root, so `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/` and the
+  rest answered 200 to anyone. `_redirects` forces each to `404.html` with
+  `404!`. A new top-level file that is not a page or an asset needs a line
+  there too.
+- `llms.txt` describes the site for AI tools, in the llmstxt.org format
+  (November 2026). It is markdown, so the comment check skips it. It links
+  the tools by their own domains, never `/go/`, so a crawler does not
+  count as a click. Keep its facts in step with section 7.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
   list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a
@@ -407,8 +420,9 @@ styles: its five stage colours and answer colours carry meaning.
 - Do not write an unfamiliar feature from scratch (owner, November 2026).
   First search GitHub for open-source projects that solve it, compare two
   or three of their approaches, and say in the PR which one you follow and
-  why. Cucumber is the only dependency (section 3), so most often you borrow
-  the pattern, not the package; adding a package needs the owner.
+  why. Cucumber and acorn are the only dependencies (section 3), so most
+  often you borrow the pattern, not the package; adding a package needs the
+  owner.
 - Build only what was asked (owner, November 2026). Anything extra goes in
   the PR description as a proposal, not in the code, and do not design for
   rare or future cases nobody asked about. Agents broke this three times in
@@ -479,10 +493,11 @@ styles: its five stage colours and answer colours carry meaning.
   "Shown: SchoolStack today, built with our design partner schools." Keep
   that line wherever the film appears. The film follows the free tools, and
   the early list band follows the film.
-- **Space, Budget and Access are complimentary, funded by philanthropy so
-  more schools can flourish** (owner, November 2026). Name the three tools
-  whenever you say so: a bare "complimentary" read as if the platform were
-  free too, and its pricing is not settled. The tools band says it and
+- **Space, Budget and Access are free, funded by philanthropy so more
+  schools can flourish** (owner, November 2026). Say "free", not
+  "complimentary" or "at no cost": it is the word founders search for (owner,
+  24 November 2026). Name the three tools whenever you say so: a bare "free"
+  reads as if the platform were free too, and its pricing is not settled. The tools band says it and
   thanks Stand Together Trust and the Beth and Ravenel Curry Foundation.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
@@ -544,7 +559,7 @@ and to this list, and give the check that covers it a line.
 
 | Component | Where | Attribute | States | Checked by |
 | --- | --- | --- | --- | --- |
-| Early list form | `index.html`, inline script | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
+| Early list form | `js/signup.js` | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
 | Phone menu | `js/site.js` | `#nav-menu[open]` | open, closed (the browser keeps it) | `verify-render` checks the id is on every page |

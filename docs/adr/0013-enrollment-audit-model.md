@@ -5,8 +5,9 @@ Status: accepted. Recorded 22 November 2026 from code comments (ADR 0001).
 ## Context
 
 `js/enrollment-audit.js` holds the scoring, the plan, the seat math and the
-saved-file code. The page loads it before its own script, which only draws
-and keeps answers; `tools/lib/enrollment-audit.test.mjs` requires it. Its
+saved-file code. The page loads it before its own script,
+`js/enrollment-page.js`, which only draws and keeps answers;
+`tools/lib/enrollment-audit.test.mjs` requires it. Its
 functions take the audit and return values, never touching the page or
 storage, so plain data can test them. A change to the math goes there with a
 test. (CLAUDE.md §3)

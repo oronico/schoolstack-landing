@@ -31,11 +31,22 @@ And an excuse makes a shortcut look settled, so the next change copies it.
    - why a check failed: the check's own failure message;
    - what a test holds: the test's name;
    - a known shortcut: a GitHub issue.
-3. `tools/lib/comments.mjs` finds comments. It reads strings, template
-   literals, regex literals and inline scripts and styles, so a `//` inside
-   a URL or a regex does not count. It needs no parser package, because
-   Cucumber stays the only dependency (CLAUDE.md §3). Its results matched
-   acorn's on every file in the repo.
+3. `tools/lib/comments.mjs` finds comments. JavaScript, inline `<script>`
+   included, is parsed by acorn, a devDependency (owner, November 2026).
+   CSS, HTML, YAML (with the shell in `run:` blocks), TOML and the `#` files
+   use rules written here, which read strings and quoted values, so a `//`
+   in a URL or a `#` in a string does not count.
+   - Acorn because a hand-written JavaScript scanner took ten review rounds
+     and still missed cases. Telling a regex from a division needs a
+     parser. Of the parsers compared, acorn has no dependencies of its own
+     and reports each comment's place; espree wraps it with three more
+     packages, @babel/parser brings @babel/types, and esprima has had no
+     release since 2018. strip-comments guesses with regexes, the weakness
+     being replaced.
+   - JavaScript acorn cannot parse fails the check by name rather than
+     counting as clean. Acorn 8.19 rejects valid code such as
+     `a?.return / 2`, a keyword named as a property after `?.`; that case
+     fails loudly, so it can never hide a comment.
 4. A ratchet holds the line. `COMMENT_DEBT` in `tools/lib/comments.mjs`
    records how many comments each file may carry; a file it does not list
    may carry none. `verify-content` fails when a count rises, and also when
