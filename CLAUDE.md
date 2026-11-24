@@ -196,9 +196,11 @@ node tools/build-images.mjs     # regenerates icons + OG card, asserts the fonts
 npx cucumber-js                 # the same checks, read as specifications
 ```
 
-Cucumber is the repo's **only** dependency, and it is a devDependency: it
-never reaches a browser, so the CSP goes on forbidding every external origin
-and the site still ships as one static file. `node_modules/` is gitignored
+Cucumber and acorn are the repo's **only** dependencies, and both are
+devDependencies: neither reaches a browser, so the CSP goes on forbidding
+every external origin and the site still ships as one static file. Acorn
+(owner, November 2026) parses JavaScript for the comment check, because a
+hand-written scanner kept missing cases (ADR 0001). `node_modules/` is gitignored
 because Netlify publishes from the repo root — anything committed there is
 served.
 
@@ -418,8 +420,9 @@ styles: its five stage colours and answer colours carry meaning.
 - Do not write an unfamiliar feature from scratch (owner, November 2026).
   First search GitHub for open-source projects that solve it, compare two
   or three of their approaches, and say in the PR which one you follow and
-  why. Cucumber is the only dependency (section 3), so most often you borrow
-  the pattern, not the package; adding a package needs the owner.
+  why. Cucumber and acorn are the only dependencies (section 3), so most
+  often you borrow the pattern, not the package; adding a package needs the
+  owner.
 - Build only what was asked (owner, November 2026). Anything extra goes in
   the PR description as a proposal, not in the code, and do not design for
   rare or future cases nobody asked about. Agents broke this three times in
