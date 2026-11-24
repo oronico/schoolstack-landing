@@ -6,6 +6,7 @@ export const COMMENT_DEBT = {
 };
 
 const KIND = [
+  [/^llms\.txt$/, null],
   [/\.(m?js)$/, 'js'],
   [/\.css$/, 'css'],
   [/\.(html|xml)$/, 'html'],
