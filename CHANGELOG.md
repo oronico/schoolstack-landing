@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: Two heredocs on one workflow command
+- When one shell command in a workflow opens two heredocs
+  (`cat <<FIRST <<SECOND`), the comment check read a `#` line in the second
+  body as a comment. It now moves to the next heredoc when one closes.
+  Codex found this on #76.
+
 ## 2026-11-24: Say "free" for Space, Budget and Access
 - The tools band, the 404 page, the home-screen description, `llms.txt` and
   the giving guide said "complimentary" or "at no cost". They now say

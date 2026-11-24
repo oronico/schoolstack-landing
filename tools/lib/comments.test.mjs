@@ -146,6 +146,7 @@ test('YAML strings and block scalars over several lines', () => {
   assert.deepEqual(lines('run: |\n  cat <<-END > f\n  # text\n  END\n  # yes\n', 'yaml'), [5]);
   assert.deepEqual(lines('run: |\n  echo \\" # yes\n  echo ok # yes\n', 'yaml'), [2, 3]);
   assert.deepEqual(lines('run: |\n  read -r value <<<EOF\n  # explanation\n', 'yaml'), [3]);
+  assert.deepEqual(lines('run: |\n  cat <<FIRST <<SECOND\n  text\n  FIRST\n  # Heading\n  SECOND\n  ls # yes\n', 'yaml'), [7]);
   assert.deepEqual(lines('run: |\n  grep x <<< "$v" # yes\n', 'yaml'), [2]);
 });
 
