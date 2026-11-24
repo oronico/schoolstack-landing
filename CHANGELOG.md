@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-24: The home-screen description names the three tools
+- When someone adds the site to a phone's home screen, its description read
+  "Free planning tools ... funding, and financing". "Financing" pointed at
+  Lending Lab, which the site does not promote, and a bare "Free" did not
+  name the tools that cost nothing. It now reads "Space, Budget and Access:
+  planning tools for small-school founders, at no cost."
+
 ## 2026-11-23: The repo's own files are no longer served
 - `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`, `features/` and the other
   repo files answered 200 on the live site. Each now returns a 404, and the
