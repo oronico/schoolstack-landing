@@ -9,6 +9,16 @@ prepared for review; Netlify deploys on merge to `main`.
   "free", the word founders search for, and still name the three tools.
   CLAUDE.md section 7 states the rule.
 
+## 2026-11-24: The comment check parses JavaScript with acorn
+Owner approved.
+- `tools/lib/comments.mjs` now finds JavaScript comments with acorn, a
+  devDependency that never reaches a browser, in place of 130 lines that
+  guessed at JavaScript's syntax and missed cases review kept finding.
+- JavaScript that cannot be parsed now fails the check by name. It used to
+  be scanned anyway, and could hide a comment.
+- CSS, HTML, YAML, TOML and the `#` files keep their own rules.
+- Nothing a visitor sees changes.
+
 ## 2026-11-24: The home-screen description names the three tools
 - When someone adds the site to a phone's home screen, its description read
   "Free planning tools ... funding, and financing". "Financing" pointed at
