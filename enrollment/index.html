@@ -554,10 +554,10 @@ document.addEventListener("input",e=>{
 function toast(msg){const el=$("toast");el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
 function resetBlank(){S=BLANK();save();syncProfile();renderAudit();renderForces();renderAll()}
 $("startOwn").addEventListener("click",()=>{resetBlank();toast("Example cleared. Your audit starts here.");$("schoolName").focus()});
-let armed=false;
+let disarm=null;
 $("resetAll").addEventListener("click",e=>{
-  if(!armed){armed=true;e.target.textContent="Click again to clear";setTimeout(()=>{armed=false;e.target.textContent="Clear all answers"},3000);return}
-  armed=false;e.target.textContent="Clear all answers";resetBlank();toast("Answers cleared");
+  if(!disarm){e.target.textContent="Click again to clear";disarm=setTimeout(()=>{disarm=null;e.target.textContent="Clear all answers"},3000);return}
+  clearTimeout(disarm);disarm=null;e.target.textContent="Clear all answers";resetBlank();toast("Answers cleared");
 });
 $("copyPlan").addEventListener("click",()=>{
   const txt=planText(),box=$("planText");box.value=txt;
