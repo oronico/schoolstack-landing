@@ -181,7 +181,7 @@ console.log(`Shared nav and footer: ${drift.length ? 'DRIFTED' : 'identical'} on
 const privacyHtml = read('privacy.html');
 const formDrift = FORMS.map((f) => ({ ...f, ...privacyFieldDrift(html, privacyHtml, f) }));
 const fields = { unlisted: formDrift.flatMap((f) => f.unlisted), stale: formDrift.flatMap((f) => f.stale) };
-const cookieFiles = ['index.html', ...OTHER_PAGES, ...TOOL_PAGES, 'js/site.js', 'js/budget-calculator.js', 'js/enrollment-audit.js', '_headers']
+const cookieFiles = ['index.html', ...OTHER_PAGES, ...TOOL_PAGES, 'js/site.js', 'js/budget-calculator.js', 'js/enrollment-audit.js', 'js/signup.js', 'js/enrollment-page.js', '_headers']
   .filter((f) => cookieUse(read(f)));
 console.log(`Privacy policy: form fields ${fields.unlisted.length || fields.stale.length ? 'DRIFTED' : 'match'}, cookies ${cookieFiles.length ? 'IN USE' : 'none'}`);
 for (const f of formDrift) {
