@@ -145,6 +145,7 @@
     return {cur,re,drv,goal,back,target,fill,funnel,ri,ra,ry,funnelReady};
   }
   function levers(m){
+    if(!m.funnelReady||m.re===null)return {reenroll:null,yield:null};
     const seats=m.fill(m.target),f=m.funnel(seats),out={reenroll:null,yield:null};
     if(m.cur&&m.re<0.96){const back2=Math.round(m.cur*Math.min(m.re+0.05,1)),seats2=Math.max(0,Math.ceil(m.target-back2)),f2=m.funnel(seats2);out.reenroll=f.inq-f2.inq}
     if(m.ry<0.9){const f3=m.funnel(seats,Math.min(m.ry+0.1,0.99));out.yield=f.inq-f3.inq}

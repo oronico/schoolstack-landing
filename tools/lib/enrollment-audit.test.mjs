@@ -78,6 +78,11 @@ test('the two levers, worked by hand', () => {
   assert.deepEqual(A.levers(A.seatMath(example())), { reenroll: 16, yield: 18 });
 });
 
+test('the levers wait for the funnel and the re-enrollment rate', () => {
+  assert.deepEqual(A.levers(A.seatMath(A.clean({ ...A.EXAMPLE, rInq: '' }))), { reenroll: null, yield: null });
+  assert.deepEqual(A.levers(A.seatMath(A.clean({ ...A.EXAMPLE, reRate: '' }))), { reenroll: null, yield: null });
+});
+
 test('the copied plan states the same seat math the page computes', () => {
   const lines = A.planText(example()).split('\n');
   assert.ok(lines.includes('SEAT MATH: about 61 students return. To reach our goal of 96, we need 35 new students: about 54 offers, 68 applications and 136 inquiries.'));
