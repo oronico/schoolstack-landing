@@ -378,7 +378,14 @@ styles: its five stage colours and answer colours carry meaning.
   only rules allowed to have no CTA.
 - `/about` is rewritten to `about.html` (Netlify would serve it anyway; the
   rule states it). The local harness does the same.
-- `robots.txt` disallows `/go/` and `/tools/` — neither is a page.
+- `robots.txt` disallows `/go/` and nothing else. It used to list the repo's
+  own folders, which only asked polite crawlers to look away and told
+  everyone else where to look.
+- **The repo's own files are not served** (November 2026). Netlify publishes
+  the repo root, so `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/` and the
+  rest answered 200 to anyone. `_redirects` forces each to `404.html` with
+  `404!`. A new top-level file that is not a page or an asset needs a line
+  there too.
 - `llms.txt` describes the site for AI tools, in the llmstxt.org format
   (November 2026). It is markdown, so the comment check skips it. It links
   the tools by their own domains, never `/go/`, so a crawler does not
