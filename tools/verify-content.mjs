@@ -7,7 +7,7 @@ import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
 import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
-import { commentCounts, commentDrift } from './lib/comments.mjs';
+import { commentScan, commentDrift } from './lib/comments.mjs';
 
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const html = read('index.html');
@@ -208,11 +208,12 @@ for (const [role, family] of Object.entries(wanted)) {
     `--font-${role} asks for '${family}' but fonts/fonts.css serves no such @font-face - the page would render in the fallback with every other check green`);
 }
 
-const comments = commentCounts(ROOT);
+const { counts: comments, unreadable } = commentScan(ROOT);
 const commentTotal = Object.values(comments).reduce((a, b) => a + b, 0);
 console.log(`Comments: ${commentTotal || 'none'}${commentTotal ? ` in ${Object.keys(comments).length} file(s), the recorded debt` : ''}`);
 for (const [f, n] of Object.entries(comments)) console.log(`  ${f}: ${n}`);
 for (const d of commentDrift(comments)) fail(d);
+for (const u of unreadable) fail(u);
 
 if (failures.length) {
   console.log(`\n${failures.length} failure(s):`);
