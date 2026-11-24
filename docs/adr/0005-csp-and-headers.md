@@ -17,9 +17,11 @@ diff shows a CSP blocking the site's own files. (CLAUDE.md §3, §5)
    it, though FLoC is withdrawn. Some Chromium builds log it as an unknown
    feature, so verify-headers lets that one exact message through and no
    other.
-4. `'unsafe-inline'` stays in `script-src` and `style-src` while the pages
-   carry inline script, styles and style attributes. Issue #68 tracks moving
-   them out and dropping it. `'unsafe-eval'` is never allowed.
+4. `script-src` is `'self'` only: every script is a file in `js/`, and
+   `cspFaults()` fails `'unsafe-inline'` or `'unsafe-eval'` there.
+   `'unsafe-inline'` stays in `style-src` while the pages carry a `<style>`
+   block and style attributes, and Enrollment Audit writes style attributes
+   into the HTML it builds. Issue #68 tracks moving them out too.
 5. The `_headers` parser, path matcher and CSP rules live in
    `tools/lib/netlify.mjs` with unit tests. A bug there would not fail
    verify-headers; it would make it pass against headers nobody serves.
@@ -38,8 +40,10 @@ diff shows a CSP blocking the site's own files. (CLAUDE.md §3, §5)
     strings, so `_headers` stays the one place the policy is written.
 11. verify-headers serves every response with `headersFor()` over the real
     `_headers`, loads the page in Chromium and fails on any CSP refusal,
-    console error or 4xx. It judges the headers on the response it fetched
-    for `/`, so a rule that parses but never applies still fails.
+    console error or 4xx. It loads `/` and then every other page
+    `sitemap.xml` lists, so a script left inline on one page fails. It judges
+    the headers on the response it fetched for `/`, so a rule that parses but
+    never applies still fails.
 12. Chromium does not raise CSP refusals as page errors, so verify-headers
     reads them from `Log.entryAdded` with source `security`.
 13. verify-calculator serves the site with the same rules, so a CSP that

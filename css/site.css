@@ -64,8 +64,6 @@ img { max-width: 100%; height: auto; }
   margin-bottom: var(--sp-2);
 }
 
-.bars { display: none; }
-
 .skip-link {
   position: absolute;
   left: -9999px;

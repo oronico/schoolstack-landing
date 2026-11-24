@@ -171,3 +171,15 @@ export function relativeFileRefs(html) {
   });
   return out;
 }
+
+export function pngSize(bytes) {
+  if (bytes.length < 24 || bytes.readUInt32BE(0) !== 0x89504e47) return null;
+  return { w: bytes.readUInt32BE(16), h: bytes.readUInt32BE(20) };
+}
+
+export function ogImageSizeFault(path, bytes, width, height) {
+  const size = pngSize(bytes);
+  if (!size) return `og:image ${path} is not a PNG, so its size cannot be read; build-images writes the share card as og-image.png`;
+  if (String(size.w) !== width || String(size.h) !== height) return `og:image declares ${width}x${height} but ${path} is ${size.w}x${size.h}`;
+  return null;
+}
