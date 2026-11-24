@@ -160,7 +160,7 @@ function yamlRanges(src) {
   for (const line of src.split('\n')) {
     if (block && (line.trim() === '' || indentOf(line) > block.indent)) {
       const sh = block.shell;
-      if (sh && sh.inHeredoc) { if (line.trim() === sh.inHeredoc) sh.inHeredoc = null; }
+      if (sh && sh.inHeredoc) { if (line.trim() === sh.inHeredoc) sh.inHeredoc = sh.heredocs.shift() ?? null; }
       else if (sh) {
         lineHashes(line, i, out, sh);
         if (!sh.quote && sh.heredocs.length) sh.inHeredoc = sh.heredocs.shift();
