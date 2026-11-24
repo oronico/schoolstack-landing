@@ -19,6 +19,7 @@ test('kindOf maps each file to the comment syntax it uses', () => {
   assert.equal(kindOf('features/signup.feature'), 'hash');
   assert.equal(kindOf('package.json'), null);
   assert.equal(kindOf('CLAUDE.md'), null);
+  assert.equal(kindOf('llms.txt'), null);
   assert.equal(kindOf('assets/logos/x.svg'), null);
 });
 

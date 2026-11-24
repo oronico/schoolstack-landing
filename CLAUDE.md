@@ -386,6 +386,10 @@ styles: its five stage colours and answer colours carry meaning.
   rest answered 200 to anyone. `_redirects` forces each to `404.html` with
   `404!`. A new top-level file that is not a page or an asset needs a line
   there too.
+- `llms.txt` describes the site for AI tools, in the llmstxt.org format
+  (November 2026). It is markdown, so the comment check skips it. It links
+  the tools by their own domains, never `/go/`, so a crawler does not
+  count as a click. Keep its facts in step with section 7.
 - The lead form is Netlify Forms (`name="early-access"`). It is the early
   list for early access and product updates (owner, November 2026: it was the
   design partner application from September to November). The name stays, because a
