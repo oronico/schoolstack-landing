@@ -50,5 +50,6 @@ export function cspFaults(value) {
   }
   if (directives.get('script-src')?.includes("'unsafe-eval'")) faults.push("script-src allows 'unsafe-eval'");
   if (directives.get('script-src')?.includes("'unsafe-inline'")) faults.push("script-src allows 'unsafe-inline'");
+  if (directives.get('style-src')?.includes("'unsafe-inline'")) faults.push("style-src allows 'unsafe-inline'");
   return faults;
 }

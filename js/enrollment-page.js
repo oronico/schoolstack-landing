@@ -9,6 +9,7 @@ if(!S) S=clean(EXAMPLE);
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const $=id=>document.getElementById(id);
+const sizeBars=el=>el.querySelectorAll("i[data-w]").forEach(i=>{i.style.width=i.dataset.w+"%"});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const visible=()=>A.visible(S);
 const scored=()=>A.scored(S);
@@ -23,7 +24,7 @@ $("grades").innerHTML=GRADES.map(g=>`<label class="chip"><input type="checkbox" 
 function renderAudit(){
   $("audit").innerHTML=STAGES.map(st=>{
     const items=visible().filter(i=>i.st===st.id);
-    return `<div class="stage" style="--sc:var(${st.color})"><div class="stage-head"><h3>${st.name}</h3><span class="q">${st.q}</span></div>`+
+    return `<div class="stage" data-tone="${st.color.slice(2)}"><div class="stage-head"><h3>${st.name}</h3><span class="q">${st.q}</span></div>`+
     items.map(it=>{
       const a=S.ans[it.id];
       const opts=[["yes","Yes","y"],["partly","Partly","p"],["no","Not yet","n"],["na","N/A","x"]];
@@ -33,7 +34,7 @@ function renderAudit(){
   }).join("");
 }
 function renderForces(){
-  $("forces").innerHTML=FORCES.map(f=>`<div class="force" style="--fc:var(${f.c});--fct:var(${f.c}-t)"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
+  $("forces").innerHTML=FORCES.map(f=>`<div class="force" data-tone="${f.c.slice(2)}"><div class="force-head"><span class="arrow" aria-hidden="true">${f.sym}</span><div><span class="side">${f.side}</span><h3>${f.name}</h3><p>${f.sub}</p></div></div>
     <div class="opts">${f.opts.filter(optShown).map(o=>{const on=S.forces.includes(o.id);return `<label class="opt ${on?"on":""}" for="fo-${o.id}"><input type="checkbox" id="fo-${o.id}" value="${o.id}" ${on?"checked":""}><span>${esc(o.t)}</span></label>`}).join("")}</div></div>`).join("");
 }
 function syncProfile(){
@@ -59,9 +60,10 @@ function renderScore(){
   $("progCount").textContent=`${pr.done} of ${pr.all} answered`;
   $("progScore").textContent=pr.ready?`Score ${pct(sc)}`:"";
   $("progFill").style.width=(pr.all?pr.done/pr.all*100:0)+"%";
-  $("meters").innerHTML=STAGES.map(st=>{const v=pct(sc.filter(i=>i.st===st.id));return pr.ready?`<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">${v}</span></div><div class="bar" role="img" aria-label="${st.name} ${v} out of 100"><i style="width:${v}%"></i></div></div>`:`<div class="meter" style="--sc:var(${st.color})"><div class="row"><span>${st.name}</span><span class="num">–</span></div><div class="bar" role="img" aria-label="${st.name} not scored yet"><i style="width:0%"></i></div></div>`}).join("");
+  $("meters").innerHTML=STAGES.map(st=>{const v=pct(sc.filter(i=>i.st===st.id));return pr.ready?`<div class="meter" data-tone="${st.color.slice(2)}"><div class="row"><span>${st.name}</span><span class="num">${v}</span></div><div class="bar" role="img" aria-label="${st.name} ${v} out of 100"><i data-w="${v}"></i></div></div>`:`<div class="meter" data-tone="${st.color.slice(2)}"><div class="row"><span>${st.name}</span><span class="num">–</span></div><div class="bar" role="img" aria-label="${st.name} not scored yet"><i data-w="0"></i></div></div>`}).join("");
+  sizeBars($("meters"));
   const top=ranked().slice(0,3);
-  $("topgaps").innerHTML=top.length?top.map(i=>`<li style="--sc:var(${stageOf(i.st).color})"><span>${esc(i.s)}</span></li>`).join(""):`<li style="--sc:var(--line)"><span>No gaps marked yet.</span></li>`;
+  $("topgaps").innerHTML=top.length?top.map(i=>`<li data-tone="${stageOf(i.st).color.slice(2)}"><span>${esc(i.s)}</span></li>`).join(""):`<li data-tone="line"><span>No gaps marked yet.</span></li>`;
 }
 
 function renderPlan(){
@@ -72,7 +74,7 @@ function renderPlan(){
     const steps=r.slice(k*3,k*3+3);
     return `<div class="phase"><h3>${ph[0]} <small>${ph[1]}</small></h3>`+(steps.length?steps.map(i=>{
       const st=stageOf(i.st),b=boost(i.id);
-      return `<div class="step" style="--sc:var(${st.color});--sct:var(${st.color}-t)"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status" style="color:var(${i.gap===2?"--no":"--part-text"})">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
+      return `<div class="step" data-tone="${st.color.slice(2)}"><span class="s-stage">${st.name} · ${esc(i.s)}</span><p class="s-do">${esc(i.act)}</p><p class="s-why">${esc(i.why)}</p><p class="s-status ${i.gap===2?"no":"part"}">${i.gap===2?"Not yet":"Partly"}${b?` · answers ${b} of the forces you marked`:""}</p></div>`;
     }).join(""):`<p class="empty">${k===0?"Mark practices Partly or Not yet in the audit to build this list.":"Nothing more to add here."}</p>`)+`</div>`;
   }).join("")+(rest.length?`<div class="phase also"><h3>Also open <small>After day 90</small></h3><ul class="rest">${rest.map(i=>`<li>${stageOf(i.st).name}: ${esc(i.s)}</li>`).join("")}</ul></div>`:"");
   renderSeat();renderCal();$("planText").value=planText();
@@ -90,8 +92,9 @@ function renderSeat(){
   if(!m.funnelReady){$("funnel").innerHTML=`<p class="note">Enter all three conversion rates to see the inquiries, applications and offers it takes to enroll ${seats} new students.</p>`;$("leverNote").textContent="";return}
   const f=m.funnel(seats);
   const max=Math.max(f.inq,1);
-  const row=(lbl,v,c)=>`<div class="frow"><span>${lbl}</span><div class="bar"><i style="width:${v/max*100}%;background:var(${c})"></i></div><b class="num">${v}</b></div>`;
-  $("funnel").innerHTML=`<p class="note" style="margin:6px 0 2px">To enroll ${seats} new students for your ${m.goal?"goal":"budget driver"}, you need about:</p>`+row("Inquiries",f.inq,"--st-aw")+row("Applications",f.apps,"--st-co")+row("Offers",f.offers,"--st-ap")+row("New students",seats,"--st-yi");
+  const row=(lbl,v,c)=>`<div class="frow"><span>${lbl}</span><div class="bar"><i data-tone="${c.slice(2)}" data-w="${v/max*100}"></i></div><b class="num">${v}</b></div>`;
+  $("funnel").innerHTML=`<p class="note note-funnel">To enroll ${seats} new students for your ${m.goal?"goal":"budget driver"}, you need about:</p>`+row("Inquiries",f.inq,"--st-aw")+row("Applications",f.apps,"--st-co")+row("Offers",f.offers,"--st-ap")+row("New students",seats,"--st-yi");
+  sizeBars($("funnel"));
   const notes=[],lv=A.levers(m);
   if(lv.reenroll!==null)notes.push(`Raise re-enrollment by 5 points and you need ${lv.reenroll} fewer inquiries.`);
   if(lv.yield!==null)notes.push(`Raise yield by 10 points and you need ${lv.yield} fewer.`);
@@ -103,7 +106,7 @@ function renderCal(){
   lanes().forEach(l=>{
     h+=`<div class="ln">${esc(l.n)}<small>${esc(l.s)}</small></div>`;
     for(let i=0;i<12;i++){
-      if(l.m.has(i)){const st=!l.m.has(i-1),en=!l.m.has(i+1);h+=`<div class="seg-b ${st?"start":""} ${en?"end":""}" style="--sc:var(${l.c});${l.faint?"opacity:.35":""}" title="${esc(l.n)}: ${MONTHS_LONG[i]}"></div>`}
+      if(l.m.has(i)){const st=!l.m.has(i-1),en=!l.m.has(i+1);h+=`<div class="seg-b ${st?"start":""} ${en?"end":""} ${l.faint?"faint":""}" data-tone="${l.c.slice(2)}" title="${esc(l.n)}: ${MONTHS_LONG[i]}"></div>`}
       else h+=`<div class="gap"></div>`;
     }
   });
