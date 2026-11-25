@@ -1,15 +1,9 @@
 import assert from 'node:assert/strict';
 import { When, Then } from '@cucumber/cucumber';
 import { ctx, loadPage } from '../support/world.mjs';
-import { scenario, ANSWERS } from '../../tools/lib/form-scenario.mjs';
+import { scenario, ANSWERS, MODES } from '../../tools/lib/form-scenario.mjs';
 
-const MODE_FOR = {
-  'the submission succeeds': 'ok',
-  'the server answers 500': 'server-error',
-  'the network drops': 'network-error',
-  'the request never settles': 'in-flight',
-  'the server answers 500, then they try again': 'retry',
-};
+const MODE_FOR = Object.fromEntries(Object.entries(MODES).map(([mode, outcome]) => [outcome, mode]));
 
 When('a visitor submits the form and {}', async function (outcome) {
   const mode = MODE_FOR[outcome];

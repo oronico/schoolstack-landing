@@ -1,11 +1,3 @@
-export const FILL = `
-  form.querySelector('#firstName').value = 'Ada';
-  form.querySelector('#email').value = 'ada@example.org';
-  form.querySelector('#schoolName').value = 'Lovelace Microschool';
-  form.querySelector('#schoolState').value = 'Ohio';
-  form.querySelector('#accountingPlatform').value = 'QuickBooks Online';
-`;
-
 export const ANSWERS = {
   firstName: 'Ada',
   email: 'ada@example.org',
@@ -13,6 +5,10 @@ export const ANSWERS = {
   schoolState: 'Ohio',
   accountingPlatform: 'QuickBooks Online',
 };
+
+export const FILL = Object.entries(ANSWERS)
+  .map(([id, value]) => `form.querySelector('#${id}').value = ${JSON.stringify(value)};`)
+  .join('\n');
 
 export const APPLICATION = {
   form: 'signupForm', button: 'submitBtn', error: 'formError', success: 'formSuccess',
