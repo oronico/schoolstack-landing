@@ -3,6 +3,20 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-25: Seat math lines up, and lands on the exact answer
+- Enrollment Audit's seat math fields line up in every row. A label that
+  wrapped to two lines pushed its input below its neighbour's on phones,
+  tablets and small laptops (46 of 129 widths from 320 to 1600px). The
+  fields now share rows through CSS subgrid, and each label sits just
+  above its own input.
+- The seat math could be off by one. Binary cannot hold 0.7 exactly, so
+  21 new students at 70% yield showed 31 offers, not 30; 25 students at
+  58% re-enrollment showed 14 returning, not 15; and 23 applications from
+  40 inquiries showed 57%, not 58%. The "raise re-enrollment" and "raise
+  yield" lines were off in about 1 case in 20. Each result is now snapped
+  to 9 decimal places before it is rounded, and grids of every
+  whole-number input match exact arithmetic.
+
 ## 2026-11-24: No inline styles, so the CSP forbids them too
 - Enrollment Audit's `<style>` block moved to `css/enrollment.css`.
 - Every `style` attribute on the pages became a class. Enrollment Audit's
