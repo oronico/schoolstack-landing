@@ -37,6 +37,8 @@ const violations = [];
 const consoleErrors = [];
 const failedRequests = [];
 let responsesSeen = 0;
+let onPage = '/';
+const tag = (text) => (onPage === '/' ? text : `${onPage}: ${text}`);
 
 browser.on((m) => {
   switch (m.method) {
@@ -44,19 +46,19 @@ browser.on((m) => {
       const e = m.params.entry;
       if (/^Error with Permissions-Policy header: Unrecognized feature: 'interest-cohort'\.$/.test(e.text)) break;
       if (e.level === 'error' || e.source === 'security') {
-        (/Content Security Policy|Refused to/i.test(e.text) ? violations : consoleErrors).push(e.text);
+        (/Content Security Policy|Refused to/i.test(e.text) ? violations : consoleErrors).push(tag(e.text));
       }
       break;
     }
     case 'Runtime.consoleAPICalled':
-      if (m.params.type === 'error') consoleErrors.push(m.params.args.map((a) => a.value ?? a.description).join(' '));
+      if (m.params.type === 'error') consoleErrors.push(tag(m.params.args.map((a) => a.value ?? a.description).join(' ')));
       break;
     case 'Runtime.exceptionThrown':
-      consoleErrors.push(m.params.exceptionDetails.text);
+      consoleErrors.push(tag(m.params.exceptionDetails.text));
       break;
     case 'Network.responseReceived':
       responsesSeen++;
-      if (m.params.response.status >= 400) failedRequests.push(`${m.params.response.status} ${m.params.response.url.replace(base, '')}`);
+      if (m.params.response.status >= 400) failedRequests.push(tag(`${m.params.response.status} ${m.params.response.url.replace(base, '')}`));
       break;
   }
 });
@@ -73,6 +75,19 @@ const dom = await browser.evaluate(`JSON.stringify({
   textChars: (document.body.innerText || '').trim().length,
   hasForm: !!document.getElementById('signupForm'),
 })`);
+
+const otherPages = [...readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').matchAll(/<loc>https?:\/\/[^/]+(\/[^<]*)<\/loc>/g)]
+  .map((m) => m[1]).filter((p) => p !== '/');
+const untitled = [];
+for (const path of otherPages) {
+  onPage = path;
+  const err = await browser.navigate(base + path);
+  if (err) untitled.push(`${path}: navigation failed: ${err}`);
+  await sleep(1500);
+  const { title } = await browser.evaluate(`JSON.stringify({ title: document.title.trim() })`);
+  if (!title) untitled.push(`${path}: the rendered page has no <title>`);
+}
+onPage = '/';
 
 const probe = await fetch(base + '/');
 const probeBody = await probe.text();
@@ -96,7 +111,8 @@ for (const [k, v] of Object.entries(seen)) {
 }
 const missing = Object.entries(seen).filter(([, v]) => !v).map(([k]) => k);
 
-const short = [];
+const short = [...untitled];
+if (otherPages.length < 5) short.push(`sitemap.xml lists ${otherPages.length + 1} pages, expected at least 6`);
 if (navError) short.push(`navigation failed: ${navError}`);
 if (probe.status !== 200) short.push(`/ answered ${probe.status}, expected 200`);
 if (!probeBody.includes('id="signupForm"')) short.push('/ did not serve the signup form');
@@ -108,6 +124,8 @@ if (dom.textChars < FLOOR.textChars) short.push(`${dom.textChars} characters of 
 
 console.log(`\nPage behind them: ${responsesSeen} responses, ${dom.images} images, `
   + `${dom.textChars} chars of copy, form ${dom.hasForm ? 'present' : 'MISSING'}`);
+
+console.log(`Also loaded under the same headers: ${otherPages.join(', ')}`);
 
 console.log(`\nCSP violations:  ${violations.length || 'none'}`);
 violations.forEach((v) => console.log('  ! ' + v));

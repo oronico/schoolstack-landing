@@ -1,11 +1,13 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { parse } from 'acorn';
 
 export const COMMENT_DEBT = {
   'fonts/fonts.css': 1,
 };
 
 const KIND = [
+  [/^llms\.txt$/, null],
   [/\.(m?js)$/, 'js'],
   [/\.css$/, 'css'],
   [/\.(html|xml)$/, 'html'],
@@ -26,134 +28,23 @@ const lineAt = (src, i) => {
   return n;
 };
 
-const CONTROL_WORDS = new Set(['if', 'while', 'for', 'with']);
-
-const REGEX_AFTER_WORD = new Set(['return', 'typeof', 'case', 'in', 'of', 'delete', 'void', 'throw', 'new', 'else', 'do', 'yield', 'await', 'instanceof']);
-
-const IDENT = /[\p{ID_Continue}$\u200c\u200d]/u;
-
-const WORD = /^[\p{ID_Continue}$\u200c\u200d]+$/u;
-
-const BLOCK_AFTER_WORD = new Set(['else', 'do', 'try', 'finally']);
-
-const OPERATOR = /^[=(,:?[!&|+\-*%<>~^]$/;
-
 function jsRanges(src, from = 0, to = src.length) {
-  const out = [];
-  let i = from;
-  let prev = '';
-  const braces = [];
-  const parens = [];
-  let exprBodyAt = -1;
-  if (src.startsWith('#!', i)) while (i < to && src[i] !== '\n') i++;
-
-  const endsValue = () => prev === 'str' || prev === 'prop' || prev === ')' || prev === ']' || prev === '}'
-    || (WORD.test(prev) && !REGEX_AFTER_WORD.has(prev));
-
-  const opensObject = () => OPERATOR.test(prev) || prev === '++' || prev === '--'
-    || (REGEX_AFTER_WORD.has(prev) && !BLOCK_AFTER_WORD.has(prev));
-
-  const regexAllowed = () => {
-    if (prev === '' || prev === 'ctl)') return true;
-    if (prev === 'prop') return false;
-    if (WORD.test(prev)) return REGEX_AFTER_WORD.has(prev);
-    return !/^[)\]}'"`]$/.test(prev) && prev !== 'str';
-  };
-
-  const skipString = (q) => {
-    i++;
-    while (i < to && src[i] !== q) {
-      if (src[i] === '\\') i++;
-      i++;
+  const code = src.slice(from, to);
+  const comments = [];
+  const parseAs = (sourceType) => parse(code, { ecmaVersion: 'latest', sourceType, allowHashBang: true, onComment: comments });
+  try {
+    parseAs('module');
+  } catch {
+    comments.length = 0;
+    try {
+      parseAs('script');
+    } catch (err) {
+      throw new Error(`cannot parse as JavaScript (${err.message}), so its comments cannot be counted`);
     }
-    i++;
-  };
-
-  const skipTemplate = () => {
-    i++;
-    while (i < to) {
-      if (src[i] === '\\') { i += 2; continue; }
-      if (src[i] === '`') { i++; return; }
-      if (src[i] === '$' && src[i + 1] === '{') { i += 2; braces.push('tpl'); return 'expr'; }
-      i++;
-    }
-  };
-
-  const resumeTemplate = () => {
-    while (i < to) {
-      if (src[i] === '\\') { i += 2; continue; }
-      if (src[i] === '`') { i++; return; }
-      if (src[i] === '$' && src[i + 1] === '{') { i += 2; braces.push('tpl'); return 'expr'; }
-      i++;
-    }
-  };
-
-  const skipRegex = () => {
-    i++;
-    let inClass = false;
-    while (i < to && src[i] !== '\n') {
-      const c = src[i];
-      if (c === '\\') { i += 2; continue; }
-      if (c === '[') inClass = true;
-      else if (c === ']') inClass = false;
-      else if (c === '/' && !inClass) break;
-      i++;
-    }
-    i++;
-    while (i < to && /[a-z]/i.test(src[i])) i++;
-  };
-
-  while (i < to) {
-    const c = src[i];
-    const d = src[i + 1];
-    if (c === '/' && d === '/') {
-      const s = i;
-      while (i < to && src[i] !== '\n') i++;
-      out.push([s, i]);
-      continue;
-    }
-    if (c === '/' && d === '*') {
-      const s = i;
-      const e = src.indexOf('*/', i + 2);
-      i = e === -1 ? to : e + 2;
-      out.push([s, i]);
-      continue;
-    }
-    if (/\s/.test(c)) { i++; continue; }
-    if (c === '"' || c === "'") { skipString(c); prev = 'str'; continue; }
-    if (c === '`') { prev = skipTemplate() === 'expr' ? '' : 'str'; continue; }
-    if (c === '/' && regexAllowed()) { skipRegex(); prev = 'str'; continue; }
-    if (c === '(') { parens.push(CONTROL_WORDS.has(prev)); prev = c; i++; continue; }
-    if (c === ')') { prev = parens.pop() ? 'ctl)' : c; i++; continue; }
-    if ((c === '+' || c === '-') && d === c) { i += 2; if (!endsValue()) prev = c + c; continue; }
-    if (c === '=' && d === '>') { i += 2; prev = '=>'; continue; }
-    if (c === '{') {
-      const body = exprBodyAt === parens.length;
-      if (body) exprBodyAt = -1;
-      braces.push(body || opensObject() ? 'object' : 'block');
-      prev = c;
-      i++;
-      continue;
-    }
-    if (c === '}') {
-      const top = braces.pop();
-      i++;
-      if (top === 'tpl') prev = resumeTemplate() === 'expr' ? '' : 'str';
-      else prev = top === 'block' ? '' : c;
-      continue;
-    }
-    if (IDENT.test(c)) {
-      const s = i;
-      while (i < to && IDENT.test(src[i])) i++;
-      const word = src.slice(s, i);
-      if ((word === 'function' || word === 'class') && prev !== '.' && opensObject()) exprBodyAt = parens.length;
-      prev = prev === '.' ? 'prop' : word;
-      continue;
-    }
-    prev = c;
-    i++;
   }
-  return out;
+  return comments
+    .filter((c) => !(c.start === 0 && code.startsWith('#!')))
+    .map((c) => [from + c.start, from + c.end]);
 }
 
 function cssRanges(src, from = 0, to = src.length) {
@@ -269,7 +160,7 @@ function yamlRanges(src) {
   for (const line of src.split('\n')) {
     if (block && (line.trim() === '' || indentOf(line) > block.indent)) {
       const sh = block.shell;
-      if (sh && sh.inHeredoc) { if (line.trim() === sh.inHeredoc) sh.inHeredoc = null; }
+      if (sh && sh.inHeredoc) { if (line.trim() === sh.inHeredoc) sh.inHeredoc = sh.heredocs.shift() ?? null; }
       else if (sh) {
         lineHashes(line, i, out, sh);
         if (!sh.quote && sh.heredocs.length) sh.inHeredoc = sh.heredocs.shift();
@@ -314,13 +205,18 @@ export function sourceFiles(root, dir = root) {
   return files.sort();
 }
 
-export function commentCounts(root) {
+export function commentScan(root) {
   const counts = {};
+  const unreadable = [];
   for (const f of sourceFiles(root)) {
-    const n = findComments(readFileSync(join(root, f), 'utf8'), kindOf(f)).length;
-    if (n) counts[f] = n;
+    try {
+      const n = findComments(readFileSync(join(root, f), 'utf8'), kindOf(f)).length;
+      if (n) counts[f] = n;
+    } catch (err) {
+      unreadable.push(`${f}: ${err.message}`);
+    }
   }
-  return counts;
+  return { counts, unreadable };
 }
 
 export function commentDrift(counts, debt = COMMENT_DEBT) {

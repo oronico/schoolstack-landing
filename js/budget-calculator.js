@@ -293,15 +293,18 @@
     return el.__budgetCalc;
   }
 
+  function studentsLabel(n) {
+    return plain.format(n) + (n === 1 ? ' student' : ' students');
+  }
+
   function breakEvenSentence(r) {
-    var who = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
+    var who = studentsLabel(r.students);
     if (r.exact) return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', exactly what a year costs.';
     return 'At ' + who + ' you collect ' + formatUSDExact(r.collected) + ', ' + formatUSDExact(r.cushion) + ' above what a year costs.';
   }
 
   function revenueFormula(r) {
-    return formatUSDExact(r.tuition) + ' \u00d7 ' + plain.format(r.students)
-      + (r.students === 1 ? ' student' : ' students');
+    return formatUSDExact(r.tuition) + ' \u00d7 ' + studentsLabel(r.students);
   }
 
   function breakEvenFormula(r) {
@@ -333,7 +336,7 @@
       el.toggleAttribute('data-stale', !!(e.error || p.error));
 
       var r = breakEven(last);
-      var result = plain.format(r.students) + (r.students === 1 ? ' student' : ' students');
+      var result = studentsLabel(r.students);
       setText('be-result', result);
       setText('be-formula', breakEvenFormula(r));
       setText('be-sentence', breakEvenSentence(r));
@@ -382,6 +385,7 @@
     formatUSDExact: formatUSDExact,
     breakEvenFormula: breakEvenFormula,
     revenueFormula: revenueFormula,
+    studentsLabel: studentsLabel,
     formatPct: formatPct,
     formatTuitionField: formatTuitionField,
     mount: mount,
