@@ -1,6 +1,6 @@
 # SchoolStack
 
-> SchoolStack is the back office for small schools of 20 to 250 students, from microschools to charters: recruitment, enrollment and accounting in one place, built on QuickBooks Online. Three tools are free for any school today: Space for community research and facilities planning, Budget for five-year financial planning, and Access for funding and policy guidance. SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.
+> SchoolStack is the back office for small schools, from microschools to charters: recruitment, enrollment and accounting in one place, built on QuickBooks Online. Three tools are free for any school today: Space for community research and facilities planning, Budget for five-year financial planning, and Access for funding and policy guidance. SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.
 
 SchoolStack turns a school's books and enrollment into answers to the questions founders ask: Will we make payroll in June? Who still owes us tuition? Will we fill our seats? What do I show my board? The founder decides; SchoolStack shows where things stand.
 

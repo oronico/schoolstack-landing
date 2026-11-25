@@ -3,6 +3,22 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-25: The headline says the job
+- The home page headline is "Families and finances, finally together.",
+  with "Run your school, not spreadsheets." under it (owner, 25 November
+  2026: "Deserve isn't a JTBD"). It was "The back office small schools
+  deserve. Built with the people who run them."
+- The line under it goes on: "For small schools: recruitment, enrollment,
+  budgeting and accounting in one place, so you can see what comes next."
+- No page names a student range now (owner: "remove 20-250 so we don't cut
+  a customer out"). The hero, the FAQ and its structured data, the share
+  text, the giving page's description and `llms.txt` say "small schools";
+  the early list drops its range line.
+- No page uses "deserves" now, so `KNOWN_DEBT.entitlement` is 0 and any
+  new instance fails `verify-content`.
+- Enrollment Audit's footer carries the credit line and the copyright line
+  every other page has, and `brand-credit.test.mjs` checks it too.
+
 ## 2026-11-25: One money parser and one set of render helpers (#70, #104)
 - `parseTuition` now calls `parseAmount`, the parser the break-even card
   already used, so the two cards' money fields follow one set of rules.
