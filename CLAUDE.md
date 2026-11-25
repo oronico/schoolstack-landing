@@ -346,8 +346,8 @@ margin, padding, gap, font size and colour in it is one of these:
   read a mixed colour.
 
 The home page alternates its ground to break up the scroll (order set by
-the owner, November 2026): the paper hero, free tools and platform film,
-the ink early list band, the paper calculator, the ink Enrollment Audit
+the owner, November 2026): the paper hero with the film, free tools, the
+founder note and funders, and the platform band, then the ink early list band, the paper calculator, the ink Enrollment Audit
 band, paper again, the ink footer. The free tools sit directly under the
 hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
@@ -485,20 +485,27 @@ styles: its five stage colours and answer colours carry meaning.
   schools go first and an accrual cohort follows, but **cash versus accrual
   is internal** (owner, November 2026): never put it on the site.
 - **Design partner schools use the platform today, and it opens to more
-  schools in 2027** (owner, November 2026). Say it that way. Do not write
+  schools in 2027** (owner, November 2026). Say it that way. More design
+  partners are welcome (owner, 25 November 2026): the platform band says
+  so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
   "early access" is the word. `verify-content` fails on the word (`BETA` in
-  `tools/lib/copy-rules.mjs`), share text included. The platform band carries the owner's film
-  (click to play, captions on by default, no autoplay), with the line
-  "Shown: SchoolStack today, built with our design partner schools." Keep
-  that line wherever the film appears. The film follows the free tools, and
-  the early list band follows the film.
+  `tools/lib/copy-rules.mjs`), share text included. The hero carries the owner's film, under its
+  two buttons (owner, 25 November 2026, the YC playbook in section 10; it was
+  in the platform band, at screen 3.5 on a phone): click to play, captions on
+  by default, no autoplay, with the line "Shown: SchoolStack today, built
+  with our design partner schools." Keep that line wherever the film appears.
+  After the free tools come the founder note ("Why I built SchoolStack", the
+  owner's approved words) and the funder row, then the platform band, then
+  the early list band.
 - **Space, Budget and Access are free, funded by philanthropy so more
   schools can flourish** (owner, November 2026). Say "free", not
   "complimentary" or "at no cost": it is the word founders search for (owner,
   24 November 2026). Name the three tools whenever you say so: a bare "free"
-  reads as if the platform were free too, and its pricing is not settled. The tools band says it and
-  thanks Stand Together Trust and the Beth and Ravenel Curry Foundation.
+  reads as if the platform were free too. Platform pricing will be released in
+  2027 (owner, 25 November 2026); until then no page names a price. The tools band says it, and
+  the funder row under the founder note thanks Stand Together Trust and the
+  Beth and Ravenel Curry Foundation, in the owner's words.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
   Gusto actions nobody has confirmed, or promise every platform capability
@@ -624,3 +631,14 @@ name, and never its position or its wording. Each rule below is checked.
 - **The sitemap carries no `<lastmod>`.** Sitemap tools take it from git at
   build time; with no build step it is typed by hand, and it was 13 days
   stale when removed. `verify-content` fails one.
+
+## 10. The landing page playbook (November 2026)
+
+The owner adopted the YC landing page playbook as the test for the home
+page (25 November 2026: "Remember the YC checklist"). It is written out in
+`docs/landing-playbook.md`: the six sections (hero, problem and
+transformation, social proof, pricing, FAQ, footer), the common mistakes,
+how each applies here, the 25 November scorecard, the agreed plan, and the
+approved founder note and funder line. Check a home page change against it.
+Where it disagrees with this file, this file wins: proof and footage stay
+real, and pricing waits for the owner. Next full review: early 2027.

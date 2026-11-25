@@ -4,7 +4,7 @@
 
 SchoolStack turns a school's books and enrollment into answers to the questions founders ask: Will we make payroll in June? Who still owes us tuition? Will we fill our seats? What do I show my board? The founder decides; SchoolStack shows where things stand.
 
-- Design partner schools use the connected platform today. It opens to more schools in 2027, and pricing for it has not been set. Schools can sign up for early access at https://schoolstack.ai/#early-access.
+- Design partner schools use the connected platform today. It opens to more schools in 2027, and its pricing will be released in 2027. Schools can sign up for early access at https://schoolstack.ai/#early-access.
 - QuickBooks Online stays the school's accounting system of record. SchoolStack does not require QuickBooks Online Advanced and does not process payroll; a Gusto integration is planned.
 - A school on another accounting platform can move its books to QuickBooks Online with SchoolStack's accounting partner. Contact allison@schoolstack.ai.
 - Space, Budget and Access are funded by philanthropy, with thanks to Stand Together Trust and the Beth and Ravenel Curry Foundation.
