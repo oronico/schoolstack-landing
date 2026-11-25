@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { PAGES as VERSIONED_PAGES, stampVersions } from './lib/asset-version.mjs';
-import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, statSync } from 'node:fs';
+import { launchBrowser } from './lib/harness.mjs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,147 +39,33 @@ function iconSvg(variant) {
     + `</svg>`;
 }
 
-function findChrome() {
-  const candidates = [process.env.CHROME_BIN].filter(Boolean);
-
-  const pwRoot = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
-  if (existsSync(pwRoot)) {
-    for (const entry of readdirSync(pwRoot)) {
-      if (!entry.startsWith('chromium-')) continue;
-      candidates.push(join(pwRoot, entry, 'chrome-linux', 'chrome'));
-      candidates.push(join(pwRoot, entry, 'chrome-mac', 'Chromium.app', 'Contents', 'MacOS', 'Chromium'));
-    }
-  }
-
-  candidates.push(
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/google-chrome',
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  );
-
-  const found = candidates.find((p) => p && existsSync(p));
-  if (!found) {
-    throw new Error(
-      'Could not find Chromium. Set CHROME_BIN to a Chrome or Chromium binary and re-run.',
-    );
-  }
-  return found;
-}
-
-class CDP {
-  constructor(ws) {
-    this.ws = ws;
-    this.seq = 0;
-    this.pending = new Map();
-    this.waiters = new Map();
-    ws.addEventListener('message', (ev) => {
-      const msg = JSON.parse(ev.data);
-      if (msg.id && this.pending.has(msg.id)) {
-        const { resolve, reject } = this.pending.get(msg.id);
-        this.pending.delete(msg.id);
-        if (msg.error) reject(new Error(`${msg.error.message} (${msg.error.code})`));
-        else resolve(msg.result);
-      } else if (msg.method) {
-        const key = `${msg.sessionId || ''}:${msg.method}`;
-        const waiting = this.waiters.get(key);
-        if (waiting?.length) {
-          this.waiters.set(key, []);
-          for (const resolve of waiting) resolve(msg.params);
-        }
-      }
-    });
-  }
-
-  send(method, params = {}, sessionId) {
-    const id = ++this.seq;
-    const payload = sessionId ? { id, method, params, sessionId } : { id, method, params };
-    return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject });
-      this.ws.send(JSON.stringify(payload));
-    });
-  }
-
-  once(method, sessionId) {
-    const key = `${sessionId || ''}:${method}`;
-    return new Promise((resolve) => {
-      this.waiters.set(key, [...(this.waiters.get(key) || []), resolve]);
-    });
-  }
-}
-
-const CHROME = findChrome();
 const work = mkdtempSync(join(tmpdir(), 'ss-images-'));
-const profile = mkdtempSync(join(tmpdir(), 'ss-chrome-'));
+const browser = await launchBrowser({ extraArgs: ['--hide-scrollbars'] });
+const { send } = browser;
+await send('Page.enable');
 
-const chrome = spawn(
-  CHROME,
-  [
-    '--headless',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--hide-scrollbars',
-    '--remote-debugging-port=0',
-    `--user-data-dir=${profile}`,
-    'about:blank',
-  ],
-  { stdio: ['ignore', 'pipe', 'pipe'] },
-);
-
-const wsUrl = await new Promise((resolve, reject) => {
-  let buffered = '';
-  const timer = setTimeout(() => reject(new Error('Timed out waiting for Chromium DevTools')), 30000);
-  chrome.stderr.on('data', (chunk) => {
-    buffered += chunk.toString();
-    const match = buffered.match(/DevTools listening on (ws:\/\/\S+)/);
-    if (match) {
-      clearTimeout(timer);
-      resolve(match[1]);
-    }
+function once(method) {
+  return new Promise((resolve) => {
+    const off = browser.on((msg) => {
+      if (msg.method === method) { off(); resolve(msg.params); }
+    });
   });
-  chrome.on('exit', (code) => {
-    clearTimeout(timer);
-    reject(new Error(`Chromium exited early (${code})\n${buffered}`));
-  });
-});
-
-const socket = new WebSocket(wsUrl);
-await new Promise((resolve, reject) => {
-  socket.addEventListener('open', resolve, { once: true });
-  socket.addEventListener('error', () => reject(new Error('DevTools socket failed')), { once: true });
-});
-
-const cdp = new CDP(socket);
-const { targetId } = await cdp.send('Target.createTarget', { url: 'about:blank' });
-const { sessionId } = await cdp.send('Target.attachToTarget', { targetId, flatten: true });
-await cdp.send('Page.enable', {}, sessionId);
+}
 
 async function shoot(htmlPath, outPath, width, height, expectFonts) {
-  await cdp.send(
-    'Emulation.setDeviceMetricsOverride',
-    { width, height, deviceScaleFactor: 1, mobile: false },
-    sessionId,
-  );
+  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
 
-  const loaded = cdp.once('Page.loadEventFired', sessionId);
-  await cdp.send('Page.navigate', { url: `file://${htmlPath}` }, sessionId);
+  const loaded = once('Page.loadEventFired');
+  await send('Page.navigate', { url: `file://${htmlPath}` });
   await loaded;
 
-  await cdp.send(
-    'Runtime.evaluate',
-    { expression: 'document.fonts.ready.then(() => 0)', awaitPromise: true },
-    sessionId,
-  );
+  await send('Runtime.evaluate', { expression: 'document.fonts.ready.then(() => 0)', awaitPromise: true });
 
   if (expectFonts?.length) {
-    const { result } = await cdp.send(
-      'Runtime.evaluate',
-      {
-        expression: `JSON.stringify([...document.fonts].filter(f => f.status === 'loaded').map(f => f.family))`,
-        returnByValue: true,
-      },
-      sessionId,
-    );
+    const { result } = await send('Runtime.evaluate', {
+      expression: `JSON.stringify([...document.fonts].filter(f => f.status === 'loaded').map(f => f.family))`,
+      returnByValue: true,
+    });
     const loaded = new Set(JSON.parse(result.value));
     const missing = expectFonts.filter((f) => !loaded.has(f));
     if (missing.length) {
@@ -192,10 +78,9 @@ async function shoot(htmlPath, outPath, width, height, expectFonts) {
     }
   }
 
-  const { data } = await cdp.send(
+  const { data } = await send(
     'Page.captureScreenshot',
     { format: 'png', clip: { x: 0, y: 0, width, height, scale: 1 }, captureBeyondViewport: true },
-    sessionId,
   );
   writeFileSync(outPath, Buffer.from(data, 'base64'));
 }
@@ -232,17 +117,8 @@ await shoot(join(ROOT, 'tools', 'og-giving.html'), join(ROOT, 'og-giving.png'), 
   ['Quicksand', 'Inter']);
 built.push('og-giving.png');
 
-socket.close();
-chrome.kill();
-await new Promise((done) => {
-  chrome.once('exit', done);
-  setTimeout(done, 5000);
-});
+await browser.close();
 rmSync(work, { recursive: true, force: true });
-try {
-  rmSync(profile, { recursive: true, force: true });
-} catch {
-}
 
 for (const name of built) {
   const kb = (statSync(join(ROOT, name)).size / 1024).toFixed(1);

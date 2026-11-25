@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import { spawn } from 'node:child_process';
-import { existsSync, readdirSync, readFileSync, writeFileSync, statSync, mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { launchBrowser } from './lib/harness.mjs';
+import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { dirname, join, resolve, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,20 +11,6 @@ const WRITE = process.argv.includes('--write');
 
 const MIN_BYTES = 60 * 1024;
 const QUALITY = 0.86;
-
-function findChrome() {
-  const pwRoot = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
-  const candidates = [process.env.CHROME_BIN].filter(Boolean);
-  if (existsSync(pwRoot)) {
-    for (const e of readdirSync(pwRoot)) {
-      if (e.startsWith('chromium-')) candidates.push(join(pwRoot, e, 'chrome-linux', 'chrome'));
-    }
-  }
-  candidates.push('/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome');
-  const found = candidates.find((p) => p && existsSync(p));
-  if (!found) throw new Error('Could not find Chromium. Set CHROME_BIN and re-run.');
-  return found;
-}
 
 const targets = readdirSync(SRC)
   .filter((f) => ['.png', '.jpg', '.jpeg'].includes(extname(f).toLowerCase()))
@@ -38,41 +23,8 @@ if (!targets.length) {
   process.exit(0);
 }
 
-const profile = mkdtempSync(join(tmpdir(), 'ss-opt-'));
-const chrome = spawn(findChrome(), [
-  '--headless', '--disable-gpu', '--no-sandbox', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank',
-], { stdio: ['ignore', 'pipe', 'pipe'] });
-
-const wsUrl = await new Promise((res, rej) => {
-  let buf = '';
-  const t = setTimeout(() => rej(new Error('Timed out waiting for Chromium')), 30000);
-  chrome.stderr.on('data', (c) => {
-    buf += c;
-    const m = buf.match(/DevTools listening on (ws:\/\/\S+)/);
-    if (m) { clearTimeout(t); res(m[1]); }
-  });
-  chrome.on('exit', (code) => { clearTimeout(t); rej(new Error(`Chromium exited ${code}`)); });
-});
-
-const ws = new WebSocket(wsUrl);
-await new Promise((r) => ws.addEventListener('open', r, { once: true }));
-let seq = 0;
-const pending = new Map();
-ws.addEventListener('message', (ev) => {
-  const m = JSON.parse(ev.data);
-  if (m.id && pending.has(m.id)) {
-    const q = pending.get(m.id); pending.delete(m.id);
-    m.error ? q.reject(new Error(m.error.message)) : q.resolve(m.result);
-  }
-});
-const send = (method, params = {}, sid) => new Promise((resolve, reject) => {
-  const id = ++seq;
-  pending.set(id, { resolve, reject });
-  ws.send(JSON.stringify(sid ? { id, method, params, sessionId: sid } : { id, method, params }));
-});
-
-const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
-const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
+const browser = await launchBrowser();
+const { send } = browser;
 
 let saved = 0;
 for (const t of targets) {
@@ -93,7 +45,7 @@ for (const t of targets) {
         webp: c.toDataURL('image/webp', ${QUALITY}).split(',')[1],
       });
     })()`,
-  }, sessionId);
+  });
 
   const { w, h, webp } = JSON.parse(result.value);
   const bytes = Buffer.from(webp, 'base64');
@@ -107,9 +59,7 @@ for (const t of targets) {
   }
 }
 
-ws.close(); chrome.kill();
-await new Promise((r) => { chrome.once('exit', r); setTimeout(r, 4000); });
-try { rmSync(profile, { recursive: true, force: true }); } catch {}
+await browser.close();
 
 console.log(WRITE
   ? `\nWrote ${targets.length} file(s), ${(saved / 1024).toFixed(0)} KB saved. Update the <img> tags to point at them.`

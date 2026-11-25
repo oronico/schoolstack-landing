@@ -43,10 +43,15 @@ export function findChrome() {
   const pwRoot = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
   if (existsSync(pwRoot)) {
     for (const entry of readdirSync(pwRoot)) {
-      if (entry.startsWith('chromium-')) candidates.push(join(pwRoot, entry, 'chrome-linux', 'chrome'));
+      if (!entry.startsWith('chromium-')) continue;
+      candidates.push(join(pwRoot, entry, 'chrome-linux', 'chrome'));
+      candidates.push(join(pwRoot, entry, 'chrome-mac', 'Chromium.app', 'Contents', 'MacOS', 'Chromium'));
     }
   }
-  candidates.push('/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome');
+  candidates.push(
+    '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  );
   const found = candidates.find((p) => p && existsSync(p));
   if (!found) throw new Error('Could not find Chromium. Set CHROME_BIN and re-run.');
   return found;
@@ -100,7 +105,7 @@ export async function launchBrowser({ extraArgs = [] } = {}) {
   return {
     send,
     sessionId,
-    on: (fn) => listeners.add(fn),
+    on: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
 
     async navigate(url) {
       const nav = await send('Page.navigate', { url });
