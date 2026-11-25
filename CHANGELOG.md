@@ -3,6 +3,16 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-25: One money parser and one set of render helpers (#70, #104)
+- `parseTuition` now calls `parseAmount`, the parser the break-even card
+  already used, so the two cards' money fields follow one set of rules.
+  Each passes its own messages and limit; no message changes.
+- `setOut` and `showFieldError` are written once and shared by both
+  cards, instead of a copy inside each.
+- Nothing a visitor sees moves: every parser, `calculate()` and
+  `breakEven()` give byte-identical results to the code before #104 over
+  a grid of inputs, error messages included.
+
 ## 2026-11-25: Seat math lines up, and lands on the exact answer
 - Enrollment Audit's seat math fields line up in every row. A label that
   wrapped to two lines pushed its input below its neighbour's on phones,
