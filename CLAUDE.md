@@ -624,3 +624,14 @@ name, and never its position or its wording. Each rule below is checked.
 - **The sitemap carries no `<lastmod>`.** Sitemap tools take it from git at
   build time; with no build step it is typed by hand, and it was 13 days
   stale when removed. `verify-content` fails one.
+
+## 10. The landing page playbook (November 2026)
+
+The owner adopted the YC landing page playbook as the test for the home
+page (25 November 2026: "Remember the YC checklist"). It is written out in
+`docs/landing-playbook.md`: the six sections (hero, problem and
+transformation, social proof, pricing, FAQ, footer), the common mistakes,
+how each applies here, the 25 November scorecard, the agreed plan, and the
+approved founder note and funder line. Check a home page change against it.
+Where it disagrees with this file, this file wins: proof and footage stay
+real, and pricing waits for the owner. Next full review: early 2027.
