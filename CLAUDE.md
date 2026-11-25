@@ -481,11 +481,16 @@ styles: its five stage colours and answer colours carry meaning.
   Advanced as required. The owner's guidance for nonprofits: review Advanced
   for the categorization Form 990 preparation needs. The FAQ says so.
 - **The QBO integration rolls out with the design partner pilot** from
-  November 2026 and opens more widely with the platform in 2027. Cash-basis
+  November 2026 and opens to all schools with the platform in 2027. Cash-basis
   schools go first and an accrual cohort follows, but **cash versus accrual
   is internal** (owner, November 2026): never put it on the site.
-- **Design partner schools use the platform today, and it opens to more
-  schools in 2027** (owner, November 2026). Say it that way. More design
+- **Design partner schools use the platform today, it rolls out in phases,
+  and it opens to all schools in 2027** (owner, 25 November 2026: "It's a
+  closed design partnership with phased design roll outs but it opens to all
+  schools in 2027"). Say "all schools", not "more schools", and keep
+  "closed" off the page. The founder note carries a real count: "Shaped with
+  more than 100 school leaders in 2026." (the owner met them that year). Use
+  no other count without a source. More design
   partners are welcome (owner, 25 November 2026): the platform band says
   so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and

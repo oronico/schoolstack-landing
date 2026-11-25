@@ -647,6 +647,7 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .founder-sign { margin-top: var(--sp-5); padding-left: var(--sp-5); color: var(--muted); }
 .founder-sign strong { color: var(--ink); }
 .founder-sign a { color: var(--ink); font-weight: 700; text-underline-offset: 3px; }
+.founder-proof { margin-top: var(--sp-2); padding-left: var(--sp-5); color: var(--muted); font-size: var(--step--1); }
 
 .backing { text-align: center; }
 .backing h2 { font-size: var(--step-2); }
