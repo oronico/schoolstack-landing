@@ -80,22 +80,16 @@ One pull request at a time:
 
 The line under the headline stays as approved on 25 November 2026.
 
-### Founder note (approved)
+### Founder note (approved, revised 25 November 2026)
 
 > **Why I built SchoolStack**
 >
-> "When I underwrote loans for small schools, I saw the same thing again
-> and again: tuition on one spreadsheet, ESA payments tracked in another
-> system, enrollment and recruitment on two more. Most school finance tools
-> weren't built for schools with several programs, many sources of revenue,
-> payroll, budgeting and accounting. So we built one, and we learned from
-> schools as we did.
+> "I built SchoolStack because I saw how hard school leaders work, and how hard it is to keep track of everything while running the back office on a careful budget. When I underwrote loans for small schools, I saw tuition on one spreadsheet, ESA payments tracked in another system, and enrollment and recruitment on two more. I also saw small mistakes, made without knowing, that could put a loan at risk. A timely AI nudge can catch them. We don't know what we don't know until someone teaches us.
 >
-> Because we're a nonprofit venture, Space, Budget and Access stay free,
-> and what we learn goes back to the whole sector as school options grow
-> faster than the systems that support them."
+> We chose to be a nonprofit venture to keep our mission and the schools we serve first. With philanthropy as our partner, we build tools for small schools that larger software companies seldom build, and Space, Budget and Access stay free. It's the honor of a lifetime to help brave school founders run their back office and get time back."
 >
 > **Allison Serafin**, Founder
+> Shaped by work with 200 schools in 2025 and 2026.
 
 ### Funder line (approved)
 

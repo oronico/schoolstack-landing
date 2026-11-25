@@ -488,9 +488,10 @@ styles: its five stage colours and answer colours carry meaning.
   and it opens to all schools in 2027** (owner, 25 November 2026: "It's a
   closed design partnership with phased design roll outs but it opens to all
   schools in 2027"). Say "all schools", not "more schools", and keep
-  "closed" off the page. The founder note carries a real count: "Shaped with
-  more than 100 school leaders in 2026." (the owner met them that year). Use
-  no other count without a source. More design
+  "closed" off the page. The founder note carries a real count: "Shaped by
+  work with 200 schools in 2025 and 2026." (owner, 25 November 2026: "200
+  unique school engagements over 2025 and 2026"). Use no other count
+  without a source. More design
   partners are welcome (owner, 25 November 2026): the platform band says
   so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
