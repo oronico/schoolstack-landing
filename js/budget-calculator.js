@@ -31,21 +31,8 @@
     tight: 'What remains may be tight. Make sure it covers your other operating expenses and reserves.',
   };
 
-  function parseAmount(raw, emptyMessage, max, perWhat, example) {
-    var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
-    if (s === '') return { value: null, error: emptyMessage };
-    if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
-    var numbersOnly = 'Use numbers only, like ' + example + ' or 9,500.50.';
-    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: numbersOnly };
-    var n = Number(s);
-    if (!isFinite(n)) return { value: null, error: numbersOnly };
-    if (n > max) return { value: null, error: 'Enter an amount up to ' + formatUSD(max) + ' ' + perWhat + '.' };
-    return { value: Math.round(n * 100) / 100, error: null };
-  }
-
   function parseTuition(raw) {
-    return parseAmount(raw, 'Enter tuition or funding per student.',
-      LIMITS.tuition.max, 'per student', '10,000');
+    return parseAmount(raw, 'Enter tuition or funding per student.', LIMITS.tuition.max, 'per student', '10,000 or 9,500.50');
   }
 
   function parseCount(raw, what, max) {
@@ -71,14 +58,26 @@
     perStudent: { min: 1, max: 1000000 },
   };
 
+  function parseAmount(raw, emptyMessage, max, perWhat, example) {
+    var numbersOnly = 'Use numbers only, like ' + (example || '600,000 or 9,500.50') + '.';
+    var s = String(raw == null ? '' : raw).trim().replace(/[$,\s]/g, '');
+    if (s === '') return { value: null, error: emptyMessage };
+    if (/^-/.test(s)) return { value: null, error: 'Enter an amount of $0 or more.' };
+    if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { value: null, error: numbersOnly };
+    var n = Number(s);
+    if (!isFinite(n)) return { value: null, error: numbersOnly };
+    if (n > max) return { value: null, error: 'Enter an amount up to ' + formatUSD(max) + ' ' + perWhat + '.' };
+    return { value: Math.round(n * 100) / 100, error: null };
+  }
+
   function parseExpenses(raw) {
     return parseAmount(raw, 'Enter your total yearly expenses, including debt service.',
-      BE_LIMITS.expenses.max, 'a year', '600,000');
+      BE_LIMITS.expenses.max, 'a year');
   }
 
   function parsePerStudent(raw) {
     var r = parseAmount(raw, 'Enter tuition or funding per student.',
-      BE_LIMITS.perStudent.max, 'per student', '600,000');
+      BE_LIMITS.perStudent.max, 'per student');
     if (!r.error && r.value < BE_LIMITS.perStudent.min) {
       return { value: null, error: 'Enter at least $1 per student.' };
     }
@@ -176,8 +175,8 @@
     return (n < 0 ? '−' : '') + Math.abs(n) + '%';
   }
 
-  function setText(root, name, value) {
-    var nodes = root.querySelectorAll('[data-out="' + name + '"]');
+  function setOut(el, name, value) {
+    var nodes = el.querySelectorAll('[data-out="' + name + '"]');
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i].textContent !== value) nodes[i].textContent = value;
     }
@@ -209,6 +208,8 @@
 
     var last = { tuition: DEFAULTS.tuition, students: DEFAULTS.students };
 
+    function setText(name, value) { setOut(el, name, value); }
+
     function render() {
       var t = parseTuition(parts.tuition.value);
       var s = parseStudents(parts.students.value);
@@ -223,17 +224,17 @@
         facilitiesPct: parts.facilities.value, staffingPct: parts.staffing.value,
       });
 
-      setText(el, 'revenue', formatUSDExact(r.revenue.annual));
-      setText(el, 'revenue-monthly', formatUSD(r.revenue.monthly));
-      setText(el, 'revenue-formula', revenueFormula(r));
+      setText('revenue', formatUSDExact(r.revenue.annual));
+      setText('revenue-monthly', formatUSD(r.revenue.monthly));
+      setText('revenue-formula', revenueFormula(r));
 
       ['facilities', 'staffing', 'remaining'].forEach(function (k) {
-        setText(el, k + '-pct', formatPct(r[k].pct));
-        setText(el, k + '-annual', formatUSD(r[k].annual));
-        setText(el, k + '-monthly', formatUSD(r[k].monthly));
+        setText(k + '-pct', formatPct(r[k].pct));
+        setText(k + '-annual', formatUSD(r[k].annual));
+        setText(k + '-monthly', formatUSD(r[k].monthly));
       });
-      setText(el, 'deficit-pct', formatPct(Math.max(0, r.allocatedPct - 100)));
-      setText(el, 'deficit-annual', formatUSD(Math.min(0, r.remaining.annual)));
+      setText('deficit-pct', formatPct(Math.max(0, r.allocatedPct - 100)));
+      setText('deficit-annual', formatUSD(Math.min(0, r.remaining.annual)));
 
       parts.facilities.setAttribute('aria-valuetext',
         r.facilities.pct + ' percent, ' + formatUSD(r.facilities.annual) + ' a year');
@@ -323,6 +324,8 @@
 
     var last = { expenses: BE_DEFAULTS.expenses, perStudent: BE_DEFAULTS.perStudent };
 
+    function setText(name, value) { setOut(el, name, value); }
+
     function render() {
       var e = parseExpenses(parts.expenses.value);
       var p = parsePerStudent(parts.perStudent.value);
@@ -334,9 +337,9 @@
 
       var r = breakEven(last);
       var result = studentsLabel(r.students);
-      setText(el, 'be-result', result);
-      setText(el, 'be-formula', breakEvenFormula(r));
-      setText(el, 'be-sentence', breakEvenSentence(r));
+      setText('be-result', result);
+      setText('be-formula', breakEvenFormula(r));
+      setText('be-sentence', breakEvenSentence(r));
 
       var announce = result + ' to break even.';
       if (parts.alert && parts.alert.textContent !== announce) parts.alert.textContent = announce;

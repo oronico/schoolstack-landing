@@ -34,9 +34,9 @@ tests run the shipped code. (CLAUDE.md §3)
 7. Every money field goes through one parser, `parseAmount`: tuition, and
    the break-even card's expenses and funding per student. Each caller
    passes only its own empty-field message, limit and example figure, so
-   the rules cannot drift apart (#70). It rounds input to the cent rather
-   than reject a third decimal place: "12.345" becomes 12.35. For the same
-   reason both cards share one `setText` and one `showFieldError`.
+   the rules cannot drift apart (#70, #104). It rounds input to the cent
+   rather than reject a third decimal place: "12.345" becomes 12.35. For
+   the same reason both cards share one `setOut` and one `showFieldError`.
 8. `parseCount` accepts a whole number written with a point ("50.0") and
    rejects a true fraction ("50.5") with a whole-number message.
 9. `calculate()` clamps and rounds both percentages through `clampPct`,
