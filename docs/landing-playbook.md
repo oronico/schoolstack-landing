@@ -68,8 +68,13 @@ long; the film began at screen 3.5 and the founder section at 11.6.
 
 One pull request at a time:
 
-1. Move the film into the hero. Under it, the founder note and a funder
-   row with the three logos and the thank-you line below.
+1. Move the film into the hero. Add the founder note and a funder row
+   with the three logos and the thank-you line. Done in #110: the film sits
+   under the hero's buttons, and the note and funders follow the free tools,
+   so the tools keep their place near the top. Measured at 390px, the film
+   is whole on the first screen, the founder note starts at screen 3.5
+   (was 11.6) and the funders at 4.4 (was 12.1). No photo of the owner
+   exists yet; add one beside the note when she sends it.
 2. Move the durability snapshot and break-even card to their own page,
    linked from the free tools, to bring the phone page to about 9 screens.
 

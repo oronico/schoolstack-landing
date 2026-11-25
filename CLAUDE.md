@@ -346,8 +346,8 @@ margin, padding, gap, font size and colour in it is one of these:
   read a mixed colour.
 
 The home page alternates its ground to break up the scroll (order set by
-the owner, November 2026): the paper hero, free tools and platform film,
-the ink early list band, the paper calculator, the ink Enrollment Audit
+the owner, November 2026): the paper hero with the film, free tools, the
+founder note and funders, and the platform band, then the ink early list band, the paper calculator, the ink Enrollment Audit
 band, paper again, the ink footer. The free tools sit directly under the
 hero, because visitors had to scroll 3.6 screens to reach them. Ink is the only other ground the five tokens
 allow, and two ink bands never touch.
@@ -490,18 +490,22 @@ styles: its five stage colours and answer colours carry meaning.
   so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
   "early access" is the word. `verify-content` fails on the word (`BETA` in
-  `tools/lib/copy-rules.mjs`), share text included. The platform band carries the owner's film
-  (click to play, captions on by default, no autoplay), with the line
-  "Shown: SchoolStack today, built with our design partner schools." Keep
-  that line wherever the film appears. The film follows the free tools, and
-  the early list band follows the film.
+  `tools/lib/copy-rules.mjs`), share text included. The hero carries the owner's film, under its
+  two buttons (owner, 25 November 2026, the YC playbook in section 10; it was
+  in the platform band, at screen 3.5 on a phone): click to play, captions on
+  by default, no autoplay, with the line "Shown: SchoolStack today, built
+  with our design partner schools." Keep that line wherever the film appears.
+  After the free tools come the founder note ("Why I built SchoolStack", the
+  owner's approved words) and the funder row, then the platform band, then
+  the early list band.
 - **Space, Budget and Access are free, funded by philanthropy so more
   schools can flourish** (owner, November 2026). Say "free", not
   "complimentary" or "at no cost": it is the word founders search for (owner,
   24 November 2026). Name the three tools whenever you say so: a bare "free"
   reads as if the platform were free too. Platform pricing will be released in
-  2027 (owner, 25 November 2026); until then no page names a price. The tools band says it and
-  thanks Stand Together Trust and the Beth and Ravenel Curry Foundation.
+  2027 (owner, 25 November 2026); until then no page names a price. The tools band says it, and
+  the funder row under the founder note thanks Stand Together Trust and the
+  Beth and Ravenel Curry Foundation, in the owner's words.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
   Gusto actions nobody has confirmed, or promise every platform capability
