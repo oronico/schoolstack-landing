@@ -5,8 +5,9 @@ Status: accepted. Recorded 22 November 2026 from code comments (ADR 0001).
 ## Context
 
 `js/enrollment-audit.js` holds the scoring, the plan, the seat math and the
-saved-file code. The page loads it before its own script, which only draws
-and keeps answers; `tools/lib/enrollment-audit.test.mjs` requires it. Its
+saved-file code. The page loads it before its own script,
+`js/enrollment-page.js`, which only draws and keeps answers;
+`tools/lib/enrollment-audit.test.mjs` requires it. Its
 functions take the audit and return values, never touching the page or
 storage, so plain data can test them. A change to the math goes there with a
 test. (CLAUDE.md §3)
@@ -42,6 +43,13 @@ test. (CLAUDE.md §3)
 8. The funnel rounds every step up, because part of a family cannot enroll:
    35 ÷ 65% = 53.8, so 54 offers. It rounds up even where rounding to
    nearest would go down: 15.4 offers become 16.
+   Every result is snapped to 9 decimal places (`snap()`) before it is
+   rounded, because binary cannot hold 0.7 exactly: 21 ÷ 70% came out
+   30.000000000000004 and showed 31 offers, not 30. The same snap rounds
+   25 × 58% = 14.5 up to 15 returning students and 23 ÷ 40 = 57.5% up to
+   58%; both showed one less before. A grid of every whole-number input
+   matched exact integer arithmetic once the snap was in, for the seat
+   math, the funnel, the levers and the rates from counts.
 9. `rateOf()` returns `null` when no rate was entered, never a default, and
    seat math shows no figure that would need one.
 10. `RATES` sets each rate's floor; the ceiling is 100. Re-enrollment may be
@@ -53,8 +61,8 @@ test. (CLAUDE.md §3)
 12. `ratesFromCount()` recomputes only the rates that use the changed count,
     so a rate set by hand stays put when an unrelated count changes.
 13. `levers()` raises re-enrollment by 5 points and yield by 10, and reports
-    how many fewer inquiries each saves. It is called only once the funnel
-    is ready; issue #73 tracks making it safe without that.
+    how many fewer inquiries each saves. It returns nulls until the funnel
+    rates and the re-enrollment rate are entered (#73).
 
 ### Saved audits
 

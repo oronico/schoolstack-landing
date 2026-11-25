@@ -1,0 +1,35 @@
+# SchoolStack
+
+> SchoolStack is the back office for small schools of 20 to 250 students, from microschools to charters: recruitment, enrollment and accounting in one place, built on QuickBooks Online. Three tools are free for any school today: Space for community research and facilities planning, Budget for five-year financial planning, and Access for funding and policy guidance. SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.
+
+SchoolStack turns a school's books and enrollment into answers to the questions founders ask: Will we make payroll in June? Who still owes us tuition? Will we fill our seats? What do I show my board? The founder decides; SchoolStack shows where things stand.
+
+- Design partner schools use the connected platform today. It opens to more schools in 2027, and pricing for it has not been set. Schools can sign up for early access at https://schoolstack.ai/#early-access.
+- QuickBooks Online stays the school's accounting system of record. SchoolStack does not require QuickBooks Online Advanced and does not process payroll; a Gusto integration is planned.
+- A school on another accounting platform can move its books to QuickBooks Online with SchoolStack's accounting partner. Contact allison@schoolstack.ai.
+- Space, Budget and Access are funded by philanthropy, with thanks to Stand Together Trust and the Beth and Ravenel Curry Foundation.
+
+## Tools
+
+- [SchoolStack Space](https://space.schoolstack.ai): Community Intelligence for any address (census demographics, nearby schools, community organizations and the local zoning office), the Space Calculator, the Renovation Estimator and facility guides.
+- [SchoolStack Budget](https://budget.schoolstack.ai): Build a five-year financial model for a small school, including break-even enrollment.
+- [SchoolStack Access](https://access.schoolstack.ai): Funding and policy guidance for small schools, including the education freedom tax credit.
+
+## Guides
+
+- [Enrollment Audit](https://schoolstack.ai/enrollment/): Score how a small school gets found, chosen, joined and kept, and leave with a 90-day enrollment plan and the seat math to reach its budget driver.
+- [Break-even enrollment and durability snapshot](https://schoolstack.ai/#budget-calculator): How many students a school needs to cover a year of costs, and how far tuition and funding go against facilities and staffing. Estimates are for planning only and are not loan eligibility.
+- [Year-end giving guide](https://schoolstack.ai/giving): Run a small school's year-end giving in one afternoon: three emails, a thank-you, AI prompts and a Gmail mail merge.
+- [Get ready for SchoolStack](https://schoolstack.ai/ready): Seven things a small school gathers before its first day on SchoolStack, from reconciled books to last year's statements.
+- [School Sizing Reference](https://space.schoolstack.ai/guides/school-sizing-reference): How much space a school needs per student, and how much lot.
+- [Finding Space for Your Microschool](https://space.schoolstack.ai/guides/finding-space-for-your-microschool): Where microschools find space without a traditional commercial lease.
+- [School Space Outreach](https://space.schoolstack.ai/guides/school-space-outreach-guide): How to share or rent space from a church, charter school, YMCA or other nonprofit.
+- [Understanding Your School Lease](https://space.schoolstack.ai/guides/understanding-school-lease-terms): What to check and negotiate before signing a school lease.
+- [School Site Selection Checklist](https://space.schoolstack.ai/guides/school-site-selection-checklist): How to choose a neighborhood and judge a site.
+- [School Facility Due Diligence Checklist](https://space.schoolstack.ai/guides/school-due-diligence-checklist): The checks to finish before buying or leasing a school building.
+
+## Optional
+
+- [About SchoolStack](https://schoolstack.ai/about): The people behind SchoolStack.
+- [Privacy policy](https://schoolstack.ai/privacy)
+- [Terms of use](https://schoolstack.ai/terms)

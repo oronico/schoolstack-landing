@@ -11,8 +11,8 @@ matching the form, Netlify answers 200 and drops the sign-up.
 
 ## Decisions
 
-1. The form in `index.html` is a four-state machine: `idle`, `submitting`,
-   `failed`, `submitted`. `VIEW[state]` fixes everything visible, so the
+1. The form's script, `js/signup.js`, is a four-state machine: `idle`,
+   `submitting`, `failed`, `submitted`. `VIEW[state]` fixes everything visible, so the
    error and the thank-you can never show together. `ON[state]` lists the
    events each state answers, and `send()` ignores any other, as xstate/fsm
    does. The state is written to `#signup[data-state]`, which verify-form
