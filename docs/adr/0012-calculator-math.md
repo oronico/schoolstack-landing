@@ -31,8 +31,12 @@ tests run the shipped code. (CLAUDE.md §3)
 
 6. Money is held in whole cents, so decimal tuition multiplies exactly:
    $0.10 for 3 students is 0.3, not 0.30000000000000004.
-7. `parseTuition` and `parseAmount` round input to the cent rather than
-   reject a third decimal place: "12.345" becomes 12.35.
+7. Every money field goes through one parser, `parseAmount`: tuition, and
+   the break-even card's expenses and funding per student. Each caller
+   passes only its own empty-field message, limit and example figure, so
+   the rules cannot drift apart (#70). It rounds input to the cent rather
+   than reject a third decimal place: "12.345" becomes 12.35. For the same
+   reason both cards share one `setText` and one `showFieldError`.
 8. `parseCount` accepts a whole number written with a point ("50.0") and
    rejects a true fraction ("50.5") with a whole-number message.
 9. `calculate()` clamps and rounds both percentages through `clampPct`,
