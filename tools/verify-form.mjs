@@ -137,7 +137,7 @@ if (dropped) {
     `after a failed request the button reads "${dropped.label}", expected "${dropped.initialLabel}"`);
 }
 
-const inFlight = await run('pending');
+const inFlight = await run('in-flight');
 if (inFlight) {
   console.log(`In flight: button ${inFlight.disabled ? 'disabled' : 'STILL LIVE'}, label "${inFlight.label}"`);
   check(inFlight.disabled, 'the submit button stays clickable while a submission is in flight - double submits');
