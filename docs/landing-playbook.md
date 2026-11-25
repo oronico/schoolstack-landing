@@ -40,8 +40,8 @@ Next full review: **early 2027** (owner: "Let's refresh in early 2027").
 ## How it applies to SchoolStack
 
 - **Pricing does not apply yet.** Space, Budget and Access are free, and
-  the 2027 platform has no price. Do not build tiers until the owner sets
-  one (CLAUDE.md section 7).
+  platform pricing will be released in 2027 (owner, 25 November 2026). Do
+  not build tiers or name a price before then (CLAUDE.md section 7).
 - **Proof must be real.** Design partners started in November 2026, so
   there is no school quote yet. Until one exists, the proof is the
   founder (a real person with a name, a face and a role) and the funders.

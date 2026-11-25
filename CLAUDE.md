@@ -485,7 +485,9 @@ styles: its five stage colours and answer colours carry meaning.
   schools go first and an accrual cohort follows, but **cash versus accrual
   is internal** (owner, November 2026): never put it on the site.
 - **Design partner schools use the platform today, and it opens to more
-  schools in 2027** (owner, November 2026). Say it that way. Do not write
+  schools in 2027** (owner, November 2026). Say it that way. More design
+  partners are welcome (owner, 25 November 2026): the platform band says
+  so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
   "early access" is the word. `verify-content` fails on the word (`BETA` in
   `tools/lib/copy-rules.mjs`), share text included. The platform band carries the owner's film
@@ -497,7 +499,8 @@ styles: its five stage colours and answer colours carry meaning.
   schools can flourish** (owner, November 2026). Say "free", not
   "complimentary" or "at no cost": it is the word founders search for (owner,
   24 November 2026). Name the three tools whenever you say so: a bare "free"
-  reads as if the platform were free too, and its pricing is not settled. The tools band says it and
+  reads as if the platform were free too. Platform pricing will be released in
+  2027 (owner, 25 November 2026); until then no page names a price. The tools band says it and
   thanks Stand Together Trust and the Beth and Ravenel Curry Foundation.
 - **Gusto is a planned integration.** SchoolStack does not run payroll and
   does not replace QuickBooks or Gusto. Do not claim Gusto is live, name
