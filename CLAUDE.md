@@ -173,7 +173,7 @@ JTBD"). The page now says the job instead:
 | Surface | Reads |
 | --- | --- |
 | `<h1>` | Families and finances, finally together. |
-| Line under it | Run your school, not spreadsheets. |
+| Line under it | Run your school, not spreadsheets. For small schools: recruitment, enrollment, budgeting and accounting in one place, so you can see what comes next. |
 | Platform film, spoken and in its captions (`assets/video/*.vtt`) | This is the back office small schools deserve. |
 
 The film's line is the owner's own narration, and captions must match what
@@ -457,9 +457,10 @@ styles: its five stage colours and answer colours carry meaning.
   audit's scorecard), and a link under the break-even result. It is not a tool
   card and not counted in "three tools". Never call it free. Its logo file
   (`assets/logos/schoolstack-enrollment-logo.svg`) is kept for later use.
-- **Who it is for: schools of 20 to 250 students** (owner, November 2026).
-  The hero, the early list and the FAQ say so. Space, Budget and Access stay
-  open to any school, so the range never reads as a door shut.
+- **Who it is for: small schools** (owner, 25 November 2026: "remove 20-250
+  so we don't cut a customer out"). The hero and the FAQ say "small
+  schools", and no page names a student range. Space, Budget and Access are
+  open to any school.
 - **The goal of the page is sign-ups for early access to the full
   product.** Early access is not open: a school can sign up for it, and
   nothing more yet (owner, November 2026: "Early access is not true. Sign
