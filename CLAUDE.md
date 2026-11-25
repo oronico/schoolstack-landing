@@ -17,9 +17,9 @@ Change both, or the check stops you.
 `/enrollment/`) is Enrollment Audit, a stand-alone tool with its own masthead,
 like Space and Budget, and its own stylesheet, `css/enrollment.css`. It does
 not share the nav and footer, but it meets every other rule: self-hosted
-brand faces through `--font-display` and `--font-body`, no outside origins, `/go/` routes for tool links, the
-planning-only disclaimer, and the content, render and accessibility checks
-(`TOOL_PAGES` in `verify-content`).
+brand faces through `--font-display` and `--font-body`, no outside origins,
+`/go/` routes for tool links, the planning-only disclaimer, and the content,
+render and accessibility checks (`TOOL_PAGES` in `verify-content`).
 
 Read this before changing anything. Every rule below exists because it was
 broken once and cost a round trip.

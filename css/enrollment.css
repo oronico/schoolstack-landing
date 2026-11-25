@@ -172,6 +172,8 @@ a.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 .panel h3{font-size:19px;margin-bottom:6px}
 
 .seat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.seat .field{grid-row:span 2;grid-template-rows:subgrid}
+.seat .field label{align-self:end}
 .seat .full{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
 .counts{grid-column:1/-1;font-size:13.5px}
 .counts summary{cursor:pointer;font-weight:600;padding-block:6px;border-radius:4px}

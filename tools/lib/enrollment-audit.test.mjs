@@ -74,6 +74,23 @@ test('every step of the funnel rounds up, even where rounding off would round do
   assert.deepEqual(m.funnel(m.fill(m.target)), { seats: 10, offers: 16, apps: 20, inq: 40 });
 });
 
+test('a division that comes out even is not pushed up a step by binary fractions', () => {
+  const at = (o) => A.seatMath(A.clean({ ...A.EXAMPLE, current: '0', reRate: '0', ...o }));
+  assert.equal(at({ goal: '21', rYield: '70' }).funnel(21).offers, 30, '21 / 0.7 is 30.000000000000004 in floating point');
+  assert.equal(at({ rApp: '70' }).funnel(84, 1).apps, 120);
+  assert.equal(at({ rInq: '35', rApp: '100' }).funnel(700, 1).inq, 2000);
+});
+
+test('a half rounds up, though 0.58 and 0.575 are stored just under', () => {
+  assert.equal(A.seatMath(A.clean({ ...A.EXAMPLE, current: '25', reRate: '58' })).back, 15);
+  assert.deepEqual(A.ratesFromCount({ lInq: '40', lApp: '23' }, 'lApp'), [['rInq', 58]]);
+});
+
+test('the levers land on whole steps too', () => {
+  const m = A.seatMath(A.clean({ ...A.EXAMPLE, current: '20', reRate: '50', driver: '', goal: '40', rInq: '35', rApp: '50', rYield: '70' }));
+  assert.deepEqual(A.levers(m), { reenroll: 6, yield: 28 });
+});
+
 test('the two levers, worked by hand', () => {
   assert.deepEqual(A.levers(A.seatMath(example())), { reenroll: 16, yield: 18 });
 });
