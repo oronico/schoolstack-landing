@@ -1,4 +1,3 @@
-
 export const ANSWERS = {
   firstName: 'Ada',
   email: 'ada@example.org',
