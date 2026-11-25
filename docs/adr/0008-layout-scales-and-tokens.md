@@ -5,7 +5,7 @@ Status: accepted. Recorded 22 November 2026 from code comments (ADR 0001).
 ## Context
 
 `css/site.css` serves the home, About, Privacy and Terms pages. Enrollment
-Audit keeps its own styles. CLAUDE.md §4 sets the measures and scales; the
+Audit keeps its own styles in `css/enrollment.css`. CLAUDE.md §4 sets the measures and scales; the
 points below are the ones the stylesheet's comments carried.
 
 ## Decisions

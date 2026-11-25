@@ -3,6 +3,96 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-25: One money parser and one set of render helpers (#70, #104)
+- `parseTuition` now calls `parseAmount`, the parser the break-even card
+  already used, so the two cards' money fields follow one set of rules.
+  Each passes its own messages and limit; no message changes.
+- `setOut` and `showFieldError` are written once and shared by both
+  cards, instead of a copy inside each.
+- Nothing a visitor sees moves: every parser, `calculate()` and
+  `breakEven()` give byte-identical results to the code before #104 over
+  a grid of inputs, error messages included.
+
+## 2026-11-25: Seat math lines up, and lands on the exact answer
+- Enrollment Audit's seat math fields line up in every row. A label that
+  wrapped to two lines pushed its input below its neighbour's on phones,
+  tablets and small laptops (46 of 129 widths from 320 to 1600px). The
+  fields now share rows through CSS subgrid, and each label sits just
+  above its own input.
+- The seat math could be off by one. Binary cannot hold 0.7 exactly, so
+  21 new students at 70% yield showed 31 offers, not 30; 25 students at
+  58% re-enrollment showed 14 returning, not 15; and 23 applications from
+  40 inquiries showed 57%, not 58%. The "raise re-enrollment" and "raise
+  yield" lines were off in about 1 case in 20. Each result is now snapped
+  to 9 decimal places before it is rounded, and grids of every
+  whole-number input match exact arithmetic.
+
+## 2026-11-24: No inline styles, so the CSP forbids them too
+- Enrollment Audit's `<style>` block moved to `css/enrollment.css`.
+- Every `style` attribute on the pages became a class. Enrollment Audit's
+  script no longer writes them either: its colours are a `data-tone`
+  attribute, and its bar widths are set through the element's `style`
+  object, which the CSP allows.
+- The calculator's two slider fills start from CSS, as its bar does.
+- `style-src` in `_headers` is now `'self'` only, and `cspFaults()` fails
+  `'unsafe-inline'` there. This finishes #68.
+- No page looks different: every element's computed style matches `main`
+  on all eight pages, at 1440px and 390px, on screen and in print, light
+  and dark, with Enrollment Audit both filled in and cleared.
+
+## 2026-11-24: No inline script, so the CSP forbids it
+- The early list form's script moved from `index.html` to `js/signup.js`,
+  and Enrollment Audit's page script from `enrollment/index.html` to
+  `js/enrollment-page.js`, unchanged byte for byte.
+- `script-src` in `_headers` is now `'self'` only, so an injected
+  `<script>` cannot run. `cspFaults()` fails `'unsafe-inline'` there.
+- `verify-headers` now loads every page in `sitemap.xml` under the real
+  headers, not just `/`, so a script left inline on any page fails it.
+- Styles still allow `'unsafe-inline'`; moving them out is the second half
+  of #68.
+
+## 2026-11-24: verify-content fails, not crashes, on a share card that is not a PNG
+- If `og:image` pointed at a file that is not a PNG, `verify-content`
+  crashed reading its size and skipped every check after it. It now fails
+  with a message naming the file, and the other checks still run.
+- The size check moved to `ogImageSizeFault()` in `tools/lib/page-audit.mjs`,
+  with unit tests.
+
+## 2026-11-24: Two heredocs on one workflow command
+- When one shell command in a workflow opens two heredocs
+  (`cat <<FIRST <<SECOND`), the comment check read a `#` line in the second
+  body as a comment. It now moves to the next heredoc when one closes.
+  Codex found this on #76.
+
+## 2026-11-24: Say "free" for Space, Budget and Access
+- The tools band, the 404 page, the home-screen description, `llms.txt` and
+  the giving guide said "complimentary" or "at no cost". They now say
+  "free", the word founders search for, and still name the three tools.
+  CLAUDE.md section 7 states the rule.
+
+## 2026-11-24: The comment check parses JavaScript with acorn
+Owner approved.
+- `tools/lib/comments.mjs` now finds JavaScript comments with acorn, a
+  devDependency that never reaches a browser, in place of 130 lines that
+  guessed at JavaScript's syntax and missed cases review kept finding.
+- JavaScript that cannot be parsed now fails the check by name. It used to
+  be scanned anyway, and could hide a comment.
+- CSS, HTML, YAML, TOML and the `#` files keep their own rules.
+- Nothing a visitor sees changes.
+
+## 2026-11-24: The home-screen description names the three tools
+- When someone adds the site to a phone's home screen, its description read
+  "Free planning tools ... funding, and financing". "Financing" pointed at
+  Lending Lab, which the site does not promote, and a bare "Free" did not
+  name the tools that cost nothing. It now reads "Space, Budget and Access:
+  planning tools for small-school founders, at no cost."
+
+## 2026-11-23: The repo's own files are no longer served
+- `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `tools/`, `features/` and the other
+  repo files answered 200 on the live site. Each now returns a 404, and the
+  site has a real 404 page (noindex) with the shared nav and footer.
+- robots.txt no longer lists the repo's folders; it disallows `/go/` only.
+
 ## 2026-11-23: A readiness checklist at /ready
 Seven things a school gathers before its first day on SchoolStack: its
 books in QuickBooks Online, reconciled through last month, a chart of

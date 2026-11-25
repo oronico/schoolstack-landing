@@ -133,21 +133,23 @@
   function progress(s){const all=visible(s).length,done=visible(s).filter(i=>s.ans[i.id]).length,need=Math.ceil(all*0.8);return {all,done,need,ready:all>0&&done>=need}}
 
   function n(v,d){const x=parseFloat(v);return isFinite(x)&&x>=0?x:d}
+  const snap=x=>+x.toFixed(9);
   function rateOf(v,lo){const x=parseFloat(v);return isFinite(x)&&x>=0?Math.min(Math.max(x,lo),100)/100:null}
   function seatMath(s){
     const cur=n(s.current,0),re=rateOf(s.reRate,0),drv=n(s.driver,0),goal=n(s.goal,0);
     const ri=rateOf(s.rInq,1),ra=rateOf(s.rApp,1),ry=rateOf(s.rYield,1);
-    const back=re===null?null:Math.round(cur*re);
+    const back=re===null?null:Math.round(snap(cur*re));
     const funnelReady=ri!==null&&ra!==null&&ry!==null;
     const target=goal||drv;
     const fill=t=>Math.max(0,Math.ceil(t-back));
-    const funnel=(seats,yy,rr)=>{const offers=Math.ceil(seats/(yy??ry)),apps=Math.ceil(offers/ra),inq=Math.ceil(apps/ri);return {seats,offers,apps,inq}};
+    const funnel=(seats,yy,rr)=>{const offers=Math.ceil(snap(seats/(yy??ry))),apps=Math.ceil(snap(offers/ra)),inq=Math.ceil(snap(apps/ri));return {seats,offers,apps,inq}};
     return {cur,re,drv,goal,back,target,fill,funnel,ri,ra,ry,funnelReady};
   }
   function levers(m){
+    if(!m.funnelReady||m.re===null)return {reenroll:null,yield:null};
     const seats=m.fill(m.target),f=m.funnel(seats),out={reenroll:null,yield:null};
-    if(m.cur&&m.re<0.96){const back2=Math.round(m.cur*Math.min(m.re+0.05,1)),seats2=Math.max(0,Math.ceil(m.target-back2)),f2=m.funnel(seats2);out.reenroll=f.inq-f2.inq}
-    if(m.ry<0.9){const f3=m.funnel(seats,Math.min(m.ry+0.1,0.99));out.yield=f.inq-f3.inq}
+    if(m.cur&&m.re<0.96){const back2=Math.round(snap(m.cur*Math.min(snap(m.re+0.05),1))),seats2=Math.max(0,Math.ceil(m.target-back2)),f2=m.funnel(seats2);out.reenroll=f.inq-f2.inq}
+    if(m.ry<0.9){const f3=m.funnel(seats,Math.min(snap(m.ry+0.1),0.99));out.yield=f.inq-f3.inq}
     return out;
   }
   function clampRate(id,v){const x=parseFloat(v);if(!isFinite(x))return null;return Math.min(Math.max(x,RATES[id]),100)}
@@ -156,7 +158,7 @@
     FROM_COUNTS.filter(([,top,bottom])=>top===changed||bottom===changed).forEach(([rate,top,bottom])=>{
       const a=parseFloat(s[top]),b=parseFloat(s[bottom]);
       if(!isFinite(a)||!isFinite(b)||a<0||b<=0)return;
-      out.push([rate,Math.min(Math.max(Math.round(a/b*100),RATES[rate]),100)]);
+      out.push([rate,Math.min(Math.max(Math.round(snap(a/b*100)),RATES[rate]),100)]);
     });
     return out;
   }

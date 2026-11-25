@@ -12,8 +12,7 @@ Given('yearly expenses of {float} and {float} per student', function (expenses, 
 });
 
 Then(/^the school needs (.+) to break even$/, function (want) {
-  const n = result(this).students;
-  assert.equal(`${n.toLocaleString('en-US')} ${n === 1 ? 'student' : 'students'}`, want);
+  assert.equal(calc.studentsLabel(result(this).students), want);
 });
 
 Then('at that enrollment it collects {word}', function (want) {

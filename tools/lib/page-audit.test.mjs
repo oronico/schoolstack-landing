@@ -8,6 +8,7 @@ import {
   unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
   formFields, privacyFieldDrift, cookieUse, FORMS,
   faqDrift, retiredAnchorLinks, RETIRED_ANCHORS, assetHashDrift, relativeFileRefs,
+  pngSize, ogImageSizeFault,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -189,4 +190,18 @@ test('assetHashDrift fails a missing or wrong hash and passes a right one', () =
 test('relativeFileRefs catches a page-relative path and leaves root, remote and data paths alone', () => {
   const out = relativeFileRefs('<img src="images/a.png">\n<img src="/images/b.png"><img src="https://x/c.png"><img src="data:x">');
   assert.deepEqual(out, [{ ref: 'images/a.png', line: 1 }]);
+});
+
+test('the share card size is read from the PNG header and compared to the metadata', () => {
+  const png = readFileSync(join(ROOT, 'og-image.png'));
+  const { w, h } = pngSize(png);
+  assert.equal(ogImageSizeFault('og-image.png', png, String(w), String(h)), null);
+  assert.match(ogImageSizeFault('og-image.png', png, String(w + 1), String(h)), /declares .* but og-image\.png is/);
+});
+
+test('a share card that is not a PNG fails by name instead of crashing', () => {
+  const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, ...new Array(40).fill(0)]);
+  assert.equal(pngSize(jpeg), null);
+  assert.match(ogImageSizeFault('og-image.jpg', jpeg, '1200', '630'), /is not a PNG/);
+  assert.match(ogImageSizeFault('og-image.png', Buffer.alloc(3), '1200', '630'), /is not a PNG/);
 });

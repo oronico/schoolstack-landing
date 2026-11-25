@@ -1,17 +1,6 @@
 User-agent: *
 Allow: /
 
-Disallow: /tools/
-
-Disallow: /features/
-Disallow: /node_modules/
-Disallow: /cucumber.mjs
-Disallow: /package.json
-Disallow: /package-lock.json
-Disallow: /LICENSE
-Disallow: /docs/
-Disallow: /.claude/
-
 Disallow: /go/
 
 Sitemap: https://schoolstack.ai/sitemap.xml
