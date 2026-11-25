@@ -165,16 +165,15 @@ platform your school deserves." reached production through two green runs.
 records how many lines carry it, every run prints them, and the check fails
 when the count **rises**.
 
-The count was taken to 0, restored to 8 at the owner's instruction, and
-brought to 1 by the September 2026 homepage redesign, whose hero headline the
-owner specified. **So this section and the live page still disagree on one
-line** - section 2 above retires the word, the page uses it once. Settling
-that is the owner's call, and until they do, the check tracks the page rather
-than the preference. It still catches a second instance nobody meant to add.
+The count was taken to 0, restored to 8 at the owner's instruction, brought
+to 1 by the September 2026 homepage redesign, and taken to 0 again on 25
+November 2026, when the owner retired the hero line ("Deserve isn't a
+JTBD"). The page now says the job instead:
 
 | Surface | Reads |
 | --- | --- |
-| `<h1>` | The back office small schools deserve. Built with the people who run them. |
+| `<h1>` | Families and finances, finally together. |
+| Line under it | Run your school, not spreadsheets. |
 | Platform film, spoken and in its captions (`assets/video/*.vtt`) | This is the back office small schools deserve. |
 
 The film's line is the owner's own narration, and captions must match what

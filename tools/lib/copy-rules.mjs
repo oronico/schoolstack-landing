@@ -72,7 +72,7 @@ export const USER_COUNT = /\b(?:join(?:ed|s)?|trusted by|used by|loved by|servin
 export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
 
 export const KNOWN_DEBT = {
-  entitlement: 1,
+  entitlement: 0,
 };
 
 export function voiceFaults(html) {

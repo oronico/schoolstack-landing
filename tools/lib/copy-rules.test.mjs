@@ -120,22 +120,23 @@ test('the disclaimer counts even when the footer wraps it across lines', () => {
   assert.deepEqual(voiceFaults(wrapped).faults, []);
 });
 
-test('the ratchet records the debt the owner chose to keep', () => {
-  assert.equal(KNOWN_DEBT.entitlement, 1);
+test('the ratchet is paid off: no page may carry entitlement framing', () => {
+  assert.equal(KNOWN_DEBT.entitlement, 0);
 });
 
-test('entitlement framing is reported as debt, not as a fault, while debt remains', () => {
+test('entitlement framing is found and named by line', () => {
   const { faults, debt } = voiceFaults(`${clean}\n<p>the tools you deserve</p>`);
-  assert.deepEqual(faults, []);
   assert.equal(debt.length, 1);
   assert.equal(debt[0].line, 2);
+  assert.equal(faults.length, 1);
+  assert.match(faults[0], /is back, on line\(s\) 2/);
 });
 
 test('the ratchet fails when the count rises above what is recorded', () => {
   const lines = Array.from({ length: KNOWN_DEBT.entitlement + 1 }, () => '<p>you deserve better</p>').join('\n');
   const { faults } = voiceFaults(`${clean}\n${lines}`);
   assert.equal(faults.length, 1);
-  assert.match(faults[0], /up from the recorded/);
+  assert.match(faults[0], /deserves/);
 });
 
 test('ENTITLEMENT_WORDS matches the forms that actually appear', () => {
