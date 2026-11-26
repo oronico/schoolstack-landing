@@ -497,7 +497,9 @@ styles: its five stage colours and answer colours carry meaning.
   engagements, and the page uses the lower figure for schools). Use no
   other count without a source. More design
   partners are welcome (owner, 25 November 2026): the platform band says
-  so, with an "Email Allison" link titled "Design partner". Do not write
+  so, in a two-line QuickBooks Online box with one "Email Allison" link
+  for both design partners and schools moving from another platform
+  (owner, 26 November 2026: "Clean this up"). Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
   "early access" is the word. `verify-content` fails on the word (`BETA` in
   `tools/lib/copy-rules.mjs`), share text included. The hero carries the owner's film, under its

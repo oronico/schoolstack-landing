@@ -554,7 +554,7 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
   border-radius: var(--r-md);
   font-size: var(--step-0);
 }
-.platform-qbo p + p { margin-top: var(--sp-2); color: var(--muted); }
+.platform-qbo p + p { margin-top: var(--sp-2); }
 .platform-qbo a { color: var(--ink); font-weight: 800; }
 .tools-gift { max-width: var(--measure); margin: var(--sp-7) auto 0; padding: var(--sp-4) var(--sp-5); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; font-size: var(--step-0); color: var(--muted); }
 .tools-gift strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); margin-bottom: var(--sp-2); }
