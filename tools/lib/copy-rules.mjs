@@ -69,6 +69,23 @@ export const ACCESS_CLAIM = /\b(?:get early access|early access (?:is )?(?:now )
 
 export const USER_COUNT = /\b(?:join(?:ed|s)?|trusted by|used by|loved by|serving)\s+(?:over\s+|more than\s+)?[\d,]+\+?\s+(?:schools?|founders?|leaders?|users?|customers?)\b/gi;
 
+export const RETIRED_CLAIMS = [
+  { re: /what space fits my school/gi, why: 'Space sizes the space a school needs; it gives no verdict on a building' },
+  { re: /ranked by their effect on enrollment/gi, why: 'the audit ranks by its own weights, not measured effects' },
+  { re: /adds categories that help with Form 990/gi, why: 'the owner\'s guidance is to review whether Advanced helps with Form 990' },
+  { re: /organizations,? and the local zoning office/gi, why: 'Space gives a web search for the zoning office, not the office itself' },
+];
+
+export function retiredClaimFaults(text) {
+  const faults = [];
+  for (const { re, why } of RETIRED_CLAIMS) {
+    for (const hit of locate(text, re)) {
+      faults.push(`line ${hit.line} says "${hit.match}" - retired by docs/claims-standard.md: ${why}`);
+    }
+  }
+  return faults;
+}
+
 export const DISCLAIMER = /are for planning only and are not loan eligibility/i;
 
 export const KNOWN_DEBT = {
@@ -97,6 +114,8 @@ export function voiceFaults(html) {
   for (const hit of locate(copy, ACCESS_CLAIM)) {
     faults.push(`line ${hit.line} says "${hit.match}" - early access is not open yet; say "Sign up for early access" (owner, November 2026)`);
   }
+
+  faults.push(...retiredClaimFaults(copy));
 
   for (const hit of locate(copy, USER_COUNT)) {
     faults.push(`line ${hit.line} claims "${hit.match}" - CLAUDE.md forbids invented user counts`);

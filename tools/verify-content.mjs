@@ -3,7 +3,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
-import { voiceFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
+import { voiceFaults, retiredClaimFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
 import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs, ogImageSizeFault } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
@@ -142,6 +142,10 @@ for (const o of allPages) {
   for (const f of v.faults) fail(`${o.f}: ${f}`);
   if (v.debt.length) fail(`${o.f} carries "deserves" on line(s) ${v.debt.map((d) => d.line).join(', ')} - CLAUDE.md retires it`);
 }
+
+const llmsFaults = retiredClaimFaults(read('llms.txt'));
+console.log(`Retired claims in llms.txt: ${llmsFaults.length || 'none'}`);
+for (const f of llmsFaults) fail(`llms.txt: ${f}`);
 
 if (voice.debt.length) {
   console.log(`  "deserves" on ${voice.debt.length} line(s) - CLAUDE.md retires it:`);
