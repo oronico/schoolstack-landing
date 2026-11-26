@@ -51,6 +51,17 @@ test('grade-specific practices show only for those grades, and for a school that
   assert.equal(A.visible(none).length, A.ITEMS.length);
 });
 
+test('a Not yet counts double a Partly, and wins a tie', () => {
+  const order = (ans) => {
+    const s = A.BLANK();
+    Object.assign(s.ans, ans);
+    return A.ranked(s).map((i) => i.id);
+  };
+  assert.deepEqual(order({ a2: 'partly', a3: 'no' }), ['a3', 'a2']);
+  assert.deepEqual(order({ a2: 'partly', a5: 'no' }), ['a5', 'a2']);
+  assert.deepEqual(order({ a1: 'partly', a5: 'no' }), ['a1', 'a5']);
+});
+
 test('the plan holds nine steps, and a marked force brings its practice in ahead of rank', () => {
   const { plan, rest } = A.planned(example());
   assert.equal(plan.length, A.PLAN_SIZE);
