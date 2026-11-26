@@ -89,7 +89,7 @@ The line under the headline stays as approved on 25 November 2026.
 > We chose to be a nonprofit venture to keep our mission and the schools we serve first. With philanthropy as our partner, we build tools for small schools that larger software companies seldom build, and Space, Budget and Access stay free. It's the honor of a lifetime to help brave school founders run their back office and get time back."
 >
 > **Allison Serafin**, Founder
-> Shaped by work with 200 schools in 2025 and 2026.
+> Shaped by work with more than 150 schools in 2025-26.
 
 ### Funder line (approved)
 

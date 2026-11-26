@@ -411,6 +411,9 @@ styles: its five stage colours and answer colours carry meaning.
 ## 6. Working agreements
 
 - Small draft PRs, one open at a time. The owner marks ready and squash-merges.
+- Report plainly (owner, 26 November 2026: "Don't be a sycophant. Remember
+  that."). No praise for her ideas or messages; say what changed, what is
+  true and what is not, and disagree when the facts call for it.
 - Never invent a product screenshot. A fabricated dashboard image shipped once
   and had to be pulled: it contained hex codes as card titles and gibberish
   table rows. If there is no real screenshot, ship no screenshot.
@@ -489,9 +492,10 @@ styles: its five stage colours and answer colours carry meaning.
   closed design partnership with phased design roll outs but it opens to all
   schools in 2027"). Say "all schools", not "more schools", and keep
   "closed" off the page. The founder note carries a real count: "Shaped by
-  work with 200 schools in 2025 and 2026." (owner, 25 November 2026: "200
-  unique school engagements over 2025 and 2026"). Use no other count
-  without a source. More design
+  work with more than 150 schools in 2025-26." (owner, 26 November 2026:
+  "Let's say more than 150 schools in 2025-26"; she counts 200 school
+  engagements, and the page uses the lower figure for schools). Use no
+  other count without a source. More design
   partners are welcome (owner, 25 November 2026): the platform band says
   so, with an "Email Allison" link titled "Design partner". Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
