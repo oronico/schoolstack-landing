@@ -80,22 +80,25 @@ One pull request at a time:
 
 The line under the headline stays as approved on 25 November 2026.
 
-### Founder note (approved)
+### Founder note (approved, revised 26 November 2026)
+
+The first sentence stays on show; the rest folds behind "Read the full
+story". The visible line names the value (catching the mistakes that put
+a loan at risk) because the playbook's hero rule, say what they get,
+applies to the first thing a reader sees in each band.
 
 > **Why I built SchoolStack**
 >
-> "When I underwrote loans for small schools, I saw the same thing again
-> and again: tuition on one spreadsheet, ESA payments tracked in another
-> system, enrollment and recruitment on two more. Most school finance tools
-> weren't built for schools with several programs, many sources of revenue,
-> payroll, budgeting and accounting. So we built one, and we learned from
-> schools as we did.
+> "When I underwrote loans for small schools, I saw strong schools put a loan at risk with small mistakes nobody had told them about. A timely AI nudge can catch them.
 >
-> Because we're a nonprofit venture, Space, Budget and Access stay free,
-> and what we learn goes back to the whole sector as school options grow
-> faster than the systems that support them."
+> [Read the full story]
+>
+> I built SchoolStack because I saw how hard school leaders work, and how hard it is to keep track of everything while running the back office on a careful budget: tuition on one spreadsheet, ESA payments tracked in another system, and enrollment and recruitment on two more. We don't know what we don't know until someone teaches us.
+>
+> We chose to be a nonprofit venture to keep our mission and the schools we serve first. With philanthropy as our partner, we build tools for small schools that larger software companies seldom build, and Space, Budget and Access stay free. It's the honor of a lifetime to help brave school founders run their back office and get time back."
 >
 > **Allison Serafin**, Founder
+> Shaped by work with more than 150 schools in 2025-26.
 
 ### Funder line (approved)
 

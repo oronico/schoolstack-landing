@@ -411,6 +411,9 @@ styles: its five stage colours and answer colours carry meaning.
 ## 6. Working agreements
 
 - Small draft PRs, one open at a time. The owner marks ready and squash-merges.
+- Report plainly (owner, 26 November 2026: "Don't be a sycophant. Remember
+  that."). No praise for her ideas or messages; say what changed, what is
+  true and what is not, and disagree when the facts call for it.
 - Never invent a product screenshot. A fabricated dashboard image shipped once
   and had to be pulled: it contained hex codes as card titles and gibberish
   table rows. If there is no real screenshot, ship no screenshot.
@@ -481,13 +484,22 @@ styles: its five stage colours and answer colours carry meaning.
   Advanced as required. The owner's guidance for nonprofits: review Advanced
   for the categorization Form 990 preparation needs. The FAQ says so.
 - **The QBO integration rolls out with the design partner pilot** from
-  November 2026 and opens more widely with the platform in 2027. Cash-basis
+  November 2026 and opens to all schools with the platform in 2027. Cash-basis
   schools go first and an accrual cohort follows, but **cash versus accrual
   is internal** (owner, November 2026): never put it on the site.
-- **Design partner schools use the platform today, and it opens to more
-  schools in 2027** (owner, November 2026). Say it that way. More design
+- **Design partner schools use the platform today, it rolls out in phases,
+  and it opens to all schools in 2027** (owner, 25 November 2026: "It's a
+  closed design partnership with phased design roll outs but it opens to all
+  schools in 2027"). Say "all schools", not "more schools", and keep
+  "closed" off the page. The founder note carries a real count: "Shaped by
+  work with more than 150 schools in 2025-26." (owner, 26 November 2026:
+  "Let's say more than 150 schools in 2025-26"; she counts 200 school
+  engagements, and the page uses the lower figure for schools). Use no
+  other count without a source. More design
   partners are welcome (owner, 25 November 2026): the platform band says
-  so, with an "Email Allison" link titled "Design partner". Do not write
+  so, in a two-line QuickBooks Online box with one "Email Allison" link
+  for both design partners and schools moving from another platform
+  (owner, 26 November 2026: "Clean this up"). Do not write
   "closed beta" or "beta" on the site: the owner found it unwelcoming, and
   "early access" is the word. `verify-content` fails on the word (`BETA` in
   `tools/lib/copy-rules.mjs`), share text included. The hero carries the owner's film, under its
