@@ -80,11 +80,20 @@ One pull request at a time:
 
 The line under the headline stays as approved on 25 November 2026.
 
-### Founder note (approved, revised 25 November 2026)
+### Founder note (approved, revised 26 November 2026)
+
+The first sentence stays on show; the rest folds behind "Read the full
+story". The visible line names the value (catching the mistakes that put
+a loan at risk) because the playbook's hero rule, say what they get,
+applies to the first thing a reader sees in each band.
 
 > **Why I built SchoolStack**
 >
-> "I built SchoolStack because I saw how hard school leaders work, and how hard it is to keep track of everything while running the back office on a careful budget. When I underwrote loans for small schools, I saw tuition on one spreadsheet, ESA payments tracked in another system, and enrollment and recruitment on two more. I also saw small mistakes, made without knowing, that could put a loan at risk. A timely AI nudge can catch them. We don't know what we don't know until someone teaches us.
+> "When I underwrote loans for small schools, I saw strong schools put a loan at risk with small mistakes nobody had told them about. A timely AI nudge can catch them.
+>
+> [Read the full story]
+>
+> I built SchoolStack because I saw how hard school leaders work, and how hard it is to keep track of everything while running the back office on a careful budget: tuition on one spreadsheet, ESA payments tracked in another system, and enrollment and recruitment on two more. We don't know what we don't know until someone teaches us.
 >
 > We chose to be a nonprofit venture to keep our mission and the schools we serve first. With philanthropy as our partner, we build tools for small schools that larger software companies seldom build, and Space, Budget and Access stay free. It's the honor of a lifetime to help brave school founders run their back office and get time back."
 >
