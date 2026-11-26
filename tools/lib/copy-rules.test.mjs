@@ -6,6 +6,7 @@ import { ROOT } from './harness.mjs';
 import {
   stripNonCopy, locate, headlines, ctas, shareMeta,
   voiceFaults, KNOWN_DEBT, EM_DASH, USER_COUNT, ENTITLEMENT_WORDS,
+  RETIRED_CLAIMS, retiredClaimFaults,
 } from './copy-rules.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -170,4 +171,19 @@ test('copy that claims early access is open, or offers it, is a voice fault; sig
   assert.ok(voiceFaults(page({ meta: 'Get early access, or use the tools.', p: 'x' })).faults.some((f) => /not open yet/.test(f)));
   assert.ok(!voiceFaults(page({ meta: 'x', p: 'Sign up for early access' })).faults.some((f) => /not open yet/.test(f)));
   assert.ok(!voiceFaults(page({ meta: 'x', p: 'Early access news and product updates' })).faults.some((f) => /not open yet/.test(f)));
+});
+
+test('each claim the November 2026 walk retired is a fault if it comes back', () => {
+  const lines = [
+    'Who are the families near me, and what space fits my school?',
+    'Gaps are ranked by their effect on enrollment and by the forces you marked.',
+    'Advanced is not required; for a nonprofit, it adds categories that help with Form 990.',
+    'census demographics, nearby schools, community organizations and the local zoning office',
+  ];
+  assert.equal(RETIRED_CLAIMS.length, lines.length);
+  for (const line of lines) assert.equal(retiredClaimFaults(line).length, 1, line);
+  const wrap = (p) => `<html><body><p>${p}</p><p>Estimates are for planning only and are not loan eligibility.</p></body></html>`;
+  assert.ok(voiceFaults(wrap(lines[0])).faults.some((f) => /retired/.test(f)));
+  assert.equal(retiredClaimFaults('community organizations, and a web search for the local zoning office').length, 0);
+  assert.equal(retiredClaimFaults('Who lives near my school, and how much space do we need?').length, 0);
 });

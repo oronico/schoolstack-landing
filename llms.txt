@@ -11,7 +11,7 @@ SchoolStack turns a school's books and enrollment into answers to the questions 
 
 ## Tools
 
-- [SchoolStack Space](https://space.schoolstack.ai): Community Intelligence for any address (census demographics, nearby schools, community organizations and the local zoning office), the Space Calculator, the Renovation Estimator and facility guides.
+- [SchoolStack Space](https://space.schoolstack.ai): Community Intelligence for any address (census demographics, nearby schools, community organizations, and a web search for the local zoning office), the Space Calculator, the Renovation Estimator and facility guides.
 - [SchoolStack Budget](https://budget.schoolstack.ai): Build a five-year financial model for a small school, including break-even enrollment.
 - [SchoolStack Access](https://access.schoolstack.ai): Funding and policy guidance for small schools, including the education freedom tax credit.
 

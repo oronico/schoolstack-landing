@@ -654,3 +654,13 @@ how each applies here, the 25 November scorecard, the agreed plan, and the
 approved founder note and funder line. Check a home page change against it.
 Where it disagrees with this file, this file wins: proof and footage stay
 real, and pricing waits for the owner. Next full review: early 2027.
+
+## 11. The claims standard (November 2026)
+
+Every claim on every SchoolStack site must pass the six tests in
+`docs/claims-standard.md` (owner, 26 November 2026: "everything we say an
+app can do, it can do. And if it can't, then we take it off"). It works
+today for a new founder, in the app's own words, every number sourced, no
+outcome we do not control, the founder's job answered honestly, and the YC
+playbook. Walk the page and produce the deliverable; a code search is not
+enough. Legal pages go to counsel.
