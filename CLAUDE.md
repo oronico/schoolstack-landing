@@ -258,6 +258,18 @@ Why each exists:
   a broken emulation cannot pass. With the block removed it fails 171
   controls. The calculator's own tap targets are checked by
   `verify-calculator`.
+- **control edges** — Enrollment Audit drew its fields, grade chips and
+  answer buttons in `--line`, 1.34:1 on paper and 1.44:1 on the dark
+  surface, and an unselected chip is told from the ground only by that
+  edge. WCAG 1.4.11 asks 3:1. Controls now take `--control-edge` (slate
+  `#64748B` light, `#94A3B8` dark, 4.1:1 or more on every ground in both
+  themes) and hairlines keep `--line`. `verify-a11y` reads every visible
+  field, and the label a hidden radio or checkbox draws, on every page,
+  and fails any whose border and fill are both under 3:1 against the
+  ground behind it (`tools/lib/control-edge-audit.mjs`). It runs
+  Enrollment Audit again in the dark theme and fails if the browser did
+  not report it. Before the fix it failed 117 of 149 controls in each
+  theme. Native checkboxes, sliders and text buttons are not measured.
 - **Enrollment Audit's math** lives in `js/enrollment-audit.js`, loaded by
   the page and by `tools/lib/enrollment-audit.test.mjs`, the same pattern
   as the calculator. Before it moved there (November 2026) six PRs in two

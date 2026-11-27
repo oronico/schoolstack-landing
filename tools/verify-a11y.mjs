@@ -3,6 +3,7 @@
 import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { FOCUS_PROBE, ringProblem } from './lib/focus-audit.mjs';
 import { TOUCH_AUDIT } from './lib/touch-audit.mjs';
+import { CONTROL_EDGE_AUDIT, edgeProblem } from './lib/control-edge-audit.mjs';
 
 async function tabWalk() {
   await browser.evaluate('(document.activeElement && document.activeElement.blur(), scrollTo(0, 0), 0)');
@@ -175,6 +176,11 @@ for (const width of VIEWPORTS) {
   for (const u of r.unnamed) fail(`${path} ${width}px  the ${u} field has no label a screen reader can read`);
   for (const c of r.namelessControls) fail(`${path} ${width}px  the "${c}" control has no accessible name`);
 
+  const edges = await browser.evaluate(CONTROL_EDGE_AUDIT);
+  const thin = edges.controls.map((c) => edgeProblem(c)).filter(Boolean);
+  console.log(`${' '.repeat(13)}control edges: ${edges.controls.length} controls, ${thin.length} under 3:1, ${edges.unchecked} not computable`);
+  for (const t of thin) fail(`${path} ${width}px  ${t}`);
+
   const stops = await tabWalk();
   const blind = stops.map((p) => [p, ringProblem(p)]).filter(([, why]) => why);
   console.log(`${' '.repeat(13)}focus: ${stops.length} Tab stops, ${blind.length} without a visible ring`);
@@ -197,6 +203,23 @@ for (const width of VIEWPORTS) {
   }
   await browser.send('Emulation.setTouchEmulationEnabled', { enabled: false });
 }
+
+for (const width of VIEWPORTS) {
+  const where = `/enrollment/ ${width}px dark`;
+  await browser.send('Emulation.setDeviceMetricsOverride',
+    { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
+  await browser.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
+  const navError = await browser.navigate(site.base + '/enrollment/');
+  if (navError) { fail(`${where}  navigation failed: ${navError}`); continue; }
+  await sleep(1000);
+  const edges = await browser.evaluate(CONTROL_EDGE_AUDIT);
+  const thin = edges.controls.map((c) => edgeProblem(c)).filter(Boolean);
+  console.log(`${where}  control edges: ${edges.controls.length} controls, ${thin.length} under 3:1, ${edges.unchecked} not computable`);
+  if (!edges.dark) fail(`${where}  the browser did not report the dark theme, so the dark control-edge check proved nothing`);
+  if (!edges.controls.length) fail(`${where}  no controls found, so the dark control-edge check proved nothing`);
+  for (const t of thin) fail(`${where}  ${t}`);
+}
+await browser.send('Emulation.setEmulatedMedia', { features: [] });
 
 await browser.close();
 site.close();
