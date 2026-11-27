@@ -533,8 +533,10 @@ styles: its five stage colours and answer colours carry meaning.
   Hope Impact Fund (counsel's words; see "Ownership and credit" below), not a
   separate legal or tax-exempt entity, so never put a 501(c)(3) badge next to
   the SchoolStack name alone. "A program of" stays only in the Terms and
-  Privacy legal text. School Harbor is the technology development partner;
-  Daniel leads development through it.
+  Privacy legal text. Daniel Crook is SchoolStack's Chief Technology Officer
+  and leads School Harbor's work as the software engineering partner (owner,
+  27 November 2026), so the About page's "Chief Technology Officer,
+  SchoolStack" is right.
 - **Ownership and credit (SchoolStack suite).** Every SchoolStack app uses
   the same ownership and credit words. The source is
   docs/brand/suite-language.md in the SchoolStack Space repo.
