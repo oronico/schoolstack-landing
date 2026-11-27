@@ -191,7 +191,9 @@ export function pixelFontSizes(css) {
   css.split('\n').forEach((line, i) => {
     if (printDepth === null && /@media\s+print\b/.test(line)) printDepth = depth;
     if (printDepth === null) {
-      for (const m of line.matchAll(/font-size\s*:\s*([\d.]+)px/g)) found.push({ line: i + 1, px: Number(m[1]) });
+      for (const decl of line.matchAll(/font-size\s*:\s*([^;}]*)/g)) {
+        for (const m of decl[1].matchAll(/(?<![\w.-])([\d.]+)px\b/g)) found.push({ line: i + 1, px: Number(m[1]) });
+      }
     }
     for (const ch of line) {
       if (ch === '{') depth += 1;

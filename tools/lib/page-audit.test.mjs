@@ -214,8 +214,10 @@ test('pixelFontSizes finds a px font size on screen and leaves print alone', () 
     '  html { font-size: 15px; }',
     '}',
     '.c { font-size: 12.5px; }',
+    '.d{font-size:clamp(34px,6vw,3.5rem)}',
+    '.e{font-size:clamp(1rem, 0.9rem + 1vw, 1.25rem); margin: 0 12px}',
   ].join('\n');
-  assert.deepEqual(pixelFontSizes(sheet), [{ line: 1, px: 15 }, { line: 6, px: 12.5 }]);
+  assert.deepEqual(pixelFontSizes(sheet), [{ line: 1, px: 15 }, { line: 6, px: 12.5 }, { line: 7, px: 34 }]);
 });
 
 test('no stylesheet sets a screen font size in px, so text follows the browser setting', () => {

@@ -207,7 +207,7 @@ for (const [role, family] of Object.entries(wanted)) {
 
 for (const f of readdirSync(join(ROOT, 'css')).filter((n) => n.endsWith('.css'))) {
   for (const p of pixelFontSizes(readFileSync(join(ROOT, 'css', f), 'utf8'))) {
-    fail(`css/${f}:${p.line} sets font-size: ${p.px}px; use rem (${+(p.px / 16).toFixed(4)}rem) so the text grows when a visitor raises the browser's text size`);
+    fail(`css/${f}:${p.line} has ${p.px}px in a font-size; use rem (${+(p.px / 16).toFixed(4)}rem) so the text grows when a visitor raises the browser's text size`);
   }
 }
 
