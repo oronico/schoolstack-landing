@@ -223,6 +223,15 @@ Why each exists:
   `/` and `/about`, fails if retired words ("Lending Lab", "four tools")
   reach a reader, and fails if a nav link lands its heading under the fixed
   nav.
+- **the phone menu** — `#nav-menu` sits inside the fixed nav, so the page
+  cannot scroll it: until November 2026 its last links were cut off on a
+  short screen, and a tap outside it did nothing. `verify-render` opens it
+  on every page at 390x844, at 390x500 with text at 150%, and on a phone
+  turned sideways (844x340, text at 150%), and fails if the last link
+  cannot be scrolled into view, if a tap on the scrim or the nav bar leaves
+  it open, or if Escape does not close it and return focus to "Menu"
+  (`tools/lib/menu-audit.mjs`). Only the sideways case cut a link off
+  before the fix; all three left the menu open.
 - **verify-calculator** — the durability snapshot's math lives in
   `js/budget-calculator.js`, the one file the page, the unit tests and the
   feature steps all load. A blocked or missing script leaves the
@@ -595,7 +604,7 @@ and to this list, and give the check that covers it a line.
 | Early list form | `js/signup.js` | `#signup[data-state]` | `idle` → `submitting` on SUBMIT; then `submitted` on SUCCEED or `failed` on FAIL; `failed` → `submitting` on SUBMIT | `verify-form`, `features/signup.feature` |
 | Durability snapshot | `js/budget-calculator.js` | `.calc[data-status]`, `[data-stale]`, `[data-ready]` | `ok`, `tight`, `over`; stale while a field is invalid | `verify-calculator`, unit tests |
 | Break-even card | `js/budget-calculator.js` | `[data-stale]`, `[data-ready]` | stale while a field is invalid | `verify-calculator`, `features/break-even.feature` |
-| Phone menu | `js/site.js` | `#nav-menu[open]` | open, closed (the browser keeps it) | `verify-render` checks the id is on every page |
+| Phone menu | `js/site.js` | `#nav-menu[open]` | open, closed (the browser keeps it); a tap on the scrim, the nav bar or a link, or Escape, closes it | `verify-render` checks the id is on every page and drives the menu (`tools/lib/menu-audit.mjs`) |
 
 The early list form shows exactly what `VIEW[state]` says. `ON[state]`
 lists the events each state answers (`SUBMIT`, `SUCCEED`, `FAIL`) and where

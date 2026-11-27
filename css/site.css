@@ -149,10 +149,23 @@ nav {
   box-shadow: 0 -5px 0 var(--ink), 0 5px 0 var(--ink);
 }
 .nav-menu[open] summary { border-color: var(--ink); }
+.nav-menu[open] summary::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  height: calc(100dvh - 100%);
+  background: var(--ink);
+  opacity: 0.5;
+  cursor: default;
+}
 .nav-menu-panel {
   position: absolute;
   top: 100%;
   left: 0; right: 0;
+  max-height: calc(100dvh - 100%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--paper);
   border-bottom: 1px solid var(--line);
   padding: var(--sp-1) var(--gutter) var(--sp-3);

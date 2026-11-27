@@ -4,6 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { RETIRED_ANCHORS } from './lib/page-audit.mjs';
+import { MENU_SCENARIOS, auditPhoneMenu } from './lib/menu-audit.mjs';
 
 const VIEWPORTS = [1440, 820, 390];
 const TOLERANCE = 0.02;
@@ -257,6 +258,23 @@ for (const width of VIEWPORTS) {
   }
 }
 
+for (const path of Object.keys(PAGES).filter((p) => PAGES[p].ids.includes('nav-menu')))
+for (const { width, height, text } of MENU_SCENARIOS) {
+  const where = `${path} ${width}x${height}${text ? ' text ' + text : ''} menu`;
+  await browser.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: true });
+  const navError = await browser.navigate(site.base + path);
+  if (navError) {
+    failures.push(`${where}: navigation failed: ${navError}`);
+    continue;
+  }
+  await sleep(1000);
+  if (text) await browser.evaluate(`(document.documentElement.style.fontSize = '${text}', '0')`);
+  await sleep(300);
+  const menu = await auditPhoneMenu(browser, sleep);
+  console.log(`${where}  ${menu.log}`);
+  for (const p of menu.problems) failures.push(`${where}: ${p}`);
+}
+
 await browser.close();
 site.close();
 
@@ -270,6 +288,11 @@ if (failures.length) {
   if (failures.some((f) => f.includes('text ' + LARGE_TEXT + ':'))) {
     console.log('\nAn image that squashes only at larger text has a height that grows with\n'
       + 'the text while its width is capped. Use max-height in place of height.');
+  }
+  if (failures.some((f) => f.includes(' menu: '))) {
+    console.log('\nThe phone menu sits inside the fixed nav, so the page cannot scroll it into\n'
+      + 'view: the panel needs its own max-height and overflow, and a tap outside it\n'
+      + 'has to close it.');
   }
   if (failures.some((f) => f.includes('dead call to action'))) {
     console.log('\nAdd the missing path to _redirects, or point the link somewhere real.');
