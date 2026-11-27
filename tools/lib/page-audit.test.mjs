@@ -8,7 +8,7 @@ import {
   unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift,
   formFields, privacyFieldDrift, cookieUse, FORMS,
   faqDrift, retiredAnchorLinks, RETIRED_ANCHORS, assetHashDrift, relativeFileRefs,
-  pngSize, ogImageSizeFault,
+  pngSize, ogImageSizeFault, pixelFontSizes,
 } from './page-audit.mjs';
 
 const page = () => readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -204,4 +204,24 @@ test('a share card that is not a PNG fails by name instead of crashing', () => {
   assert.equal(pngSize(jpeg), null);
   assert.match(ogImageSizeFault('og-image.jpg', jpeg, '1200', '630'), /is not a PNG/);
   assert.match(ogImageSizeFault('og-image.png', Buffer.alloc(3), '1200', '630'), /is not a PNG/);
+});
+
+test('pixelFontSizes finds a px font size on screen and leaves print alone', () => {
+  const sheet = [
+    '.a{font-size:15px}',
+    '.b{font-size:0.9375rem}',
+    '@media print {',
+    '  html { font-size: 15px; }',
+    '}',
+    '.c { font-size: 12.5px; }',
+    '.d{font-size:clamp(34px,6vw,3.5rem)}',
+    '.e{font-size:clamp(1rem, 0.9rem + 1vw, 1.25rem); margin: 0 12px}',
+  ].join('\n');
+  assert.deepEqual(pixelFontSizes(sheet), [{ line: 1, px: 15 }, { line: 6, px: 12.5 }, { line: 7, px: 34 }]);
+});
+
+test('no stylesheet sets a screen font size in px, so text follows the browser setting', () => {
+  for (const f of ['css/site.css', 'css/enrollment.css']) {
+    assert.deepEqual(pixelFontSizes(readFileSync(join(ROOT, f), 'utf8')), [], f);
+  }
 });

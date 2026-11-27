@@ -267,6 +267,12 @@ Why each exists:
   a broken emulation cannot pass. With the block removed it fails 171
   controls. The calculator's own tap targets are checked by
   `verify-calculator`.
+- **text sizes in rem** (November 2026) — a size in px ignores the text
+  size a visitor sets in the browser. Enrollment Audit set all 48 of its
+  sizes in px, two of them 11px, under the suite's 12px floor.
+  `verify-content` now fails any screen `font-size` in px in `css/`
+  (`pixelFontSizes` in `tools/lib/page-audit.mjs`); print styles may keep
+  px.
 - **control edges** — Enrollment Audit drew its fields, grade chips and
   answer buttons in `--line`, 1.34:1 on paper and 1.44:1 on the dark
   surface, and an unselected chip is told from the ground only by that
