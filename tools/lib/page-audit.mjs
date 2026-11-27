@@ -183,3 +183,23 @@ export function ogImageSizeFault(path, bytes, width, height) {
   if (String(size.w) !== width || String(size.h) !== height) return `og:image declares ${width}x${height} but ${path} is ${size.w}x${size.h}`;
   return null;
 }
+
+export function pixelFontSizes(css) {
+  const found = [];
+  let depth = 0;
+  let printDepth = null;
+  css.split('\n').forEach((line, i) => {
+    if (printDepth === null && /@media\s+print\b/.test(line)) printDepth = depth;
+    if (printDepth === null) {
+      for (const m of line.matchAll(/font-size\s*:\s*([\d.]+)px/g)) found.push({ line: i + 1, px: Number(m[1]) });
+    }
+    for (const ch of line) {
+      if (ch === '{') depth += 1;
+      else if (ch === '}') {
+        depth -= 1;
+        if (printDepth !== null && depth === printDepth) printDepth = null;
+      }
+    }
+  });
+  return found;
+}

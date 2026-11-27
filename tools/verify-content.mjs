@@ -4,7 +4,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { ROOT } from './lib/harness.mjs';
 import { voiceFaults, retiredClaimFaults, KNOWN_DEBT } from './lib/copy-rules.mjs';
-import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs, ogImageSizeFault } from './lib/page-audit.mjs';
+import { danglingAnchors, unsafeBlankLinks, declaredFontFamilies, servedFontFamilies, chromeDrift, privacyFieldDrift, cookieUse, FORMS, faqDrift, retiredAnchorLinks, assetHashDrift, relativeFileRefs, ogImageSizeFault, pixelFontSizes } from './lib/page-audit.mjs';
 import { createHash } from 'node:crypto';
 import { PAGES as VERSIONED_PAGES, versionDrift, unversionedImages } from './lib/asset-version.mjs';
 import { commentScan, commentDrift } from './lib/comments.mjs';
@@ -203,6 +203,12 @@ for (const u of unsafe) {
 for (const [role, family] of Object.entries(wanted)) {
   check(served.has(family),
     `--font-${role} asks for '${family}' but fonts/fonts.css serves no such @font-face - the page would render in the fallback with every other check green`);
+}
+
+for (const f of readdirSync(join(ROOT, 'css')).filter((n) => n.endsWith('.css'))) {
+  for (const p of pixelFontSizes(readFileSync(join(ROOT, 'css', f), 'utf8'))) {
+    fail(`css/${f}:${p.line} sets font-size: ${p.px}px; use rem (${+(p.px / 16).toFixed(4)}rem) so the text grows when a visitor raises the browser's text size`);
+  }
 }
 
 const { counts: comments, unreadable } = commentScan(ROOT);
