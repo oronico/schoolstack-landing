@@ -361,7 +361,9 @@ margin, padding, gap, font size and colour in it is one of these:
 - **Type:** `--step--1` to `--step-4`, six steps, each a `clamp()` from a
   390px to a 1440px screen (Utopia's method). `--step--1` is held at 15px:
   before the rebuild, 44% of the home page's characters were smaller. The
-  hero `<h1>` is the only `--step-4` text; band headings are `--step-3`.
+  hero `<h1>` and the calculators' two results (`.calc-big`: yearly revenue
+  and the break-even student count) are the only `--step-4` text; band
+  headings are `--step-3`.
 - **Colour:** five tokens, each with one job. `--ink` text and the dark
   bands, `#1E293B`: the navy of the wordmark, the product logos, the
   design kit and all three apps (owner, November 2026; it was `#141E33`,
