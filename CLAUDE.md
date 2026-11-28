@@ -284,7 +284,18 @@ Why each exists:
   ground behind it (`tools/lib/control-edge-audit.mjs`). It runs
   Enrollment Audit again in the dark theme and fails if the browser did
   not report it. Before the fix it failed 117 of 149 controls in each
-  theme. Native checkboxes, sliders and text buttons are not measured.
+  theme. A ticked native checkbox or radio is measured by its
+  `accent-color` (November 2026), which caught a ticked force box at
+  1.15:1 in the dark theme; it now reads 155 controls. Unticked native
+  boxes, sliders and text buttons are not measured.
+- **checkbox states** (November 2026) — the owner's checklist asks every
+  checkbox to look different at rest, on hover, pressed, ticked and
+  disabled. `verify-a11y` hovers, presses, ticks and disables every
+  checkbox on every page, and Enrollment Audit's again in the dark theme,
+  with real mouse events, and fails any two states that look the same
+  (`tools/lib/checkbox-state-audit.mjs`). It puts `localStorage` back, so
+  the next pass still opens on the example audit. With the old styles it
+  failed 130 states in each theme. Focus is left to the focus-ring check.
 - **Enrollment Audit's math** lives in `js/enrollment-audit.js`, loaded by
   the page and by `tools/lib/enrollment-audit.test.mjs`, the same pattern
   as the calculator. Before it moved there (November 2026) six PRs in two
