@@ -17,9 +17,9 @@ table following. This skill clears comments one sort at a time.
 node -e "import('./tools/lib/comments.mjs').then(({ sourceFiles, findComments, kindOf }) => { const fs = require('fs'); for (const f of sourceFiles('.')) for (const c of findComments(fs.readFileSync(f, 'utf8'), kindOf(f))) console.log(f + ':' + c.line + '-' + c.endLine + '  ' + c.text.replace(/\s+/g, ' ').slice(0, 100)); })"
 ```
 
-If `$ARGUMENTS` names a file or folder, keep only those lines.
-`fonts/fonts.css` keeps its header unless asked: `tools/fetch-fonts.mjs`
-writes it, and it names the font licence (ADR 0001).
+If `$ARGUMENTS` names a file or folder, keep only those lines. A comment
+in generated output goes from its generator too, or the next run brings it
+back.
 
 ## 2. Sort each comment
 

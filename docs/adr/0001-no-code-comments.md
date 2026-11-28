@@ -52,9 +52,11 @@ And an excuse makes a shortcut look settled, so the next change copies it.
    may carry none. `verify-content` fails when a count rises, and also when
    it falls but the recorded number stays the same, so the gain cannot be
    spent in another file. Never raise a number to get green.
-5. One comment stays: the header of `fonts/fonts.css`. It says the file is
-   generated and names the font licence (SIL OFL 1.1). `tools/fetch-fonts.mjs`
-   writes it, so removing it means changing that template too.
+5. No comment stays. The last, the header of `fonts/fonts.css`, went in
+   November 2026 at the owner's request, and `tools/fetch-fonts.mjs` no
+   longer writes it. Its rule, do not edit the file by hand, is ADR 0004
+   item 2; where the font licence now travels is ADR 0004 item 12.
+   `COMMENT_DEBT` is empty, so any comment fails `verify-content`.
 6. The `/delete-comment` skill (`.claude/skills/delete-comment/SKILL.md`)
    repeats this sort for any comment that comes back.
 

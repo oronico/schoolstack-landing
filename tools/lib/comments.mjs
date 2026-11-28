@@ -2,9 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { parse } from 'acorn';
 
-export const COMMENT_DEBT = {
-  'fonts/fonts.css': 1,
-};
+export const COMMENT_DEBT = {};
 
 const KIND = [
   [/^llms\.txt$/, null],
