@@ -363,7 +363,9 @@ margin, padding, gap, font size and colour in it is one of these:
 - **Type:** `--step--1` to `--step-4`, six steps, each a `clamp()` from a
   390px to a 1440px screen (Utopia's method). `--step--1` is held at 15px:
   before the rebuild, 44% of the home page's characters were smaller. The
-  hero `<h1>` is the only `--step-4` text; band headings are `--step-3`.
+  hero `<h1>` and the calculators' two results (`.calc-big`: yearly revenue
+  and the break-even student count) are the only `--step-4` text; band
+  headings are `--step-3`.
 - **Colour:** five tokens, each with one job. `--ink` text and the dark
   bands, `#1E293B`: the navy of the wordmark, the product logos, the
   design kit and all three apps (owner, November 2026; it was `#141E33`,
@@ -385,6 +387,15 @@ allow, and two ink bands never touch.
 the footer of every page) is `.btn-primary`: accent ground, ink text. On
 the ink bands its hover turns paper instead of ink, which would vanish into
 the ground (owner, November 2026: "One style"; it was three).
+
+**One card.** Every boxed card (tool cards, the platform jobs and the
+QuickBooks box, the free-tools note, the people on About, the guide cards on
+Ready and Giving) takes `.card`: paper ground, a `--line` hairline,
+`--r-md` corners, `--sp-5` padding. A list of short cards adds
+`.card-compact` (`--sp-4`); there is no third level. A card sets only its
+layout and, if it must stand out, its border colour, never its own border,
+corner or padding (November 2026: six cards had four paddings and two
+corners). Links go last in a card, after the text that informs the click.
 
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no

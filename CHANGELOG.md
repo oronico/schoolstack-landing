@@ -3,6 +3,30 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: CLAUDE.md names every use of the largest type size
+- CLAUDE.md §4 said the hero headline is the only `--step-4` text, but
+  the calculators' two results (yearly revenue and the break-even student
+  count) have used it too. The owner chose to keep the page as it is, so
+  the rule now names both. No page changes.
+
+## 2026-11-28: A "%" stays with its word
+- Enrollment Audit's four rate labels ("Expected re-enrollment %" and the
+  three conversion rates) join the "%" to the word before it with a
+  non-breaking space. On phones from 330 to 380px wide a "%" sat alone on
+  its own line at 9 of 129 widths tried; now it never does.
+
+## 2026-11-28: The voice check reads every link, not a style class
+- `ctas()` picked out link CTAs by class (`btn-*`, `nav-cta`,
+  `tool-link`), so renaming a class for looks would have dropped those
+  links from the "no can't / cannot" check with no warning, against
+  CLAUDE.md §9. It now reads every link. None of the site's 299 links
+  carried one of the words, so no page changes.
+
+## 2026-11-28: ADR 0002 says how repo files are hidden now
+- ADR 0002 still said `robots.txt` blocks `/tools/`, `/docs/` and the
+  other repo folders. Since #89 it blocks only `/go/`, and `_redirects`
+  answers 404 for the repo's own files. Items 3 and 4 and the
+  Consequences line now say so.
 ## 2026-11-28: Footers lose the founder line
 - Every page footer now ends its credit at "SchoolStack is a nonprofit
   venture incubated by Building Hope Impact Fund." The founder line that

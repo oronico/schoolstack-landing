@@ -28,9 +28,11 @@ count rises. (CLAUDE.md §2, §3)
 ### The rules
 
 4. `DEFICIT_WORDS` (can't, cannot, couldn't, won't afford, unable to)
-   applies to `h1` to `h3`, CTAs and share metadata (title, description,
-   `og:`, `twitter:`), because `og:title` is the headline a link preview
-   shows. Body copy may need a negative, so it is exempt. The rule exists to
+   applies to `h1` to `h3`, every button and link, and share metadata
+   (title, description, `og:`, `twitter:`), because `og:title` is the
+   headline a link preview shows. `ctas()` reads every link, not just
+   those styled as buttons: finding them by class broke CLAUDE.md §9, and
+   none of the site's 299 links carried one of the words when it changed. Body copy may need a negative, so it is exempt. The rule exists to
    keep "The back office your school can't afford to hire" from coming
    back. (CLAUDE.md §2)
 5. `ENTITLEMENT_WORDS` matches deserve, deserves and deserved: the word
