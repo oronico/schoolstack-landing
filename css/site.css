@@ -238,13 +238,17 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .btn-secondary { background: var(--paper); color: var(--ink); border-color: var(--ink); }
 .btn-secondary:hover { background: var(--ink); color: var(--paper); }
 
-.stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); margin-top: var(--sp-6); }
-.tool-card {
-  position: relative;
+.card {
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   padding: var(--sp-5);
+}
+.card-compact { padding: var(--sp-4); }
+
+.stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); margin-top: var(--sp-6); }
+.tool-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   transition: border-color 0.2s;
@@ -547,9 +551,6 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
   margin-top: var(--sp-6);
 }
 .platform-jobs li {
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  padding: var(--sp-4) var(--sp-5);
   font-size: var(--step-0);
   color: var(--muted);
 }
@@ -562,15 +563,13 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 }
 .platform-qbo {
   margin-top: var(--sp-5);
-  padding: var(--sp-4) var(--sp-5);
-  border: 1px solid var(--ink);
-  border-radius: var(--r-md);
+  border-color: var(--ink);
   font-size: var(--step-0);
 }
 .platform-qbo p + p { margin-top: var(--sp-2); }
 .platform-qbo a { color: var(--ink); font-weight: 800; }
-.tools-gift { max-width: var(--measure); margin: var(--sp-7) auto 0; padding: var(--sp-4) var(--sp-5); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; font-size: var(--step-0); color: var(--muted); }
-.tools-gift strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); margin-bottom: var(--sp-2); }
+.tools-gift { max-width: var(--measure); margin: var(--sp-7) auto 0; text-align: center; font-size: var(--step-0); color: var(--muted); }
+.tools-gift strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); }
 .hero-film { max-width: var(--measure); margin: var(--sp-6) auto 0; }
 .hero-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--ink); border-radius: var(--r-md); }
 .hero-film figcaption { font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); text-align: center; }
@@ -718,9 +717,6 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 
 .people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-5); }
 .person {
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  padding: var(--sp-6);
   display: flex;
   flex-direction: column;
 }
@@ -810,7 +806,6 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
 .guide-dates span { color: var(--muted); font-size: var(--step--1); }
 
 .guide-cards { list-style: none; display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
-.guide-cards li { border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); }
 .guide-cards strong { display: block; }
 
 .guide-list { margin: var(--sp-3) 0 var(--sp-4) var(--sp-5); }
@@ -884,7 +879,6 @@ footer { background: var(--ink); color: var(--paper); padding: var(--sp-7) 0 var
   .incubator img { width: 88px; }
   .values { grid-template-columns: 1fr; }
   .values li:last-child { grid-column: auto; }
-  .person { padding: var(--sp-5); }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
   .calc-inputs, .calc-results { padding: var(--sp-5) var(--sp-4); }
   .calc-legend li { grid-template-columns: 12px 1fr auto; }

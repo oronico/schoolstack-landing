@@ -384,6 +384,15 @@ the footer of every page) is `.btn-primary`: accent ground, ink text. On
 the ink bands its hover turns paper instead of ink, which would vanish into
 the ground (owner, November 2026: "One style"; it was three).
 
+**One card.** Every boxed card (tool cards, the platform jobs and the
+QuickBooks box, the free-tools note, the people on About, the guide cards on
+Ready and Giving) takes `.card`: paper ground, a `--line` hairline,
+`--r-md` corners, `--sp-5` padding. A list of short cards adds
+`.card-compact` (`--sp-4`); there is no third level. A card sets only its
+layout and, if it must stand out, its border colour, never its own border,
+corner or padding (November 2026: six cards had four paddings and two
+corners). Links go last in a card, after the text that informs the click.
+
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
 other way to colour it. Each product's own colour lives in its logo
