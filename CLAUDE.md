@@ -490,15 +490,18 @@ styles: its five stage colours and answer colours carry meaning.
   back out in November).
 - **Two review bots read every PR: Codex and Cursor Bugbot. A PR is not
   ready until both have reviewed its latest commit and each finding is fixed
-  or answered on its thread.** They skip drafts and start when a PR is
-  marked ready; Bugbot takes about 10 minutes and comments only when it finds
-  something. Between 4 and 17 November 2026 every PR was merged within
-  seconds of being marked ready, so five Bugbot findings landed after the
-  merge and nobody read them; three were live bugs (#31, #35, #39). So:
-  when you open a draft, post one comment, `@codex review`, so Codex reviews
-  the draft. When the owner marks a PR ready, keep watching it until Bugbot
-  has had its 10 minutes, and report what both bots found, or that they
-  found nothing, before the owner merges.
+  or answered on its thread.** Between 4 and 17 November 2026 every PR was
+  merged within seconds of being marked ready, so five Bugbot findings
+  landed after the merge and nobody read them; three were live bugs (#31,
+  #35, #39). Bugbot reviews drafts: on #121 (28 November 2026) it reviewed
+  the draft in under 3 minutes and did not run again when the PR was marked
+  ready. Codex reviews a draft when asked and again when it is marked ready.
+  So judge by the check runs, not the clock. When you open a draft, post one
+  comment, `@codex review`. Then watch the PR until the "Cursor Bugbot"
+  check run has finished on the latest commit and Codex has reviewed that
+  commit, and report what both found, or that they found nothing. A new
+  commit needs both again. Bugbot comments only when it finds something;
+  its check run says when it is done.
 
 ## 7. Product facts copy must not contradict (November 2026)
 
