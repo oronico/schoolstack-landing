@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: A "%" stays with its word
+- Enrollment Audit's four rate labels ("Expected re-enrollment %" and the
+  three conversion rates) join the "%" to the word before it with a
+  non-breaking space. On phones from 330 to 380px wide a "%" sat alone on
+  its own line at 9 of 129 widths tried; now it never does.
+
 ## 2026-11-28: The voice check reads every link, not a style class
 - `ctas()` picked out link CTAs by class (`btn-*`, `nav-cta`,
   `tool-link`), so renaming a class for looks would have dropped those
