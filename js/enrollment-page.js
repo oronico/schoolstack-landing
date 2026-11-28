@@ -152,10 +152,11 @@ document.addEventListener("change",e=>{
 document.addEventListener("input",e=>{
   const t=e.target;
   if(t.id==="schoolName"){S.name=t.value.slice(0,80)}
-  else if(NUMS.includes(t.id)){S[t.id]=t.value}
-  else if(COUNTS.includes(t.id)){
-    S[t.id]=t.value;
-    A.ratesFromCount(S,t.id).forEach(([rate,v])=>{S[rate]=String(v);$(rate).value=v});
+  else if(NUMS.includes(t.id)||COUNTS.includes(t.id)){
+    const v=A.numberText(t.value);
+    if(v!==t.value)t.value=v;
+    S[t.id]=v;
+    if(COUNTS.includes(t.id))A.ratesFromCount(S,t.id).forEach(([rate,r])=>{S[rate]=String(r);$(rate).value=r});
   }
   else return;
   claimExample();save();renderAll();

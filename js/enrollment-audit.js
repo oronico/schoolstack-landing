@@ -152,6 +152,7 @@
     if(m.ry<0.9){const f3=m.funnel(seats,Math.min(snap(m.ry+0.1),0.99));out.yield=f.inq-f3.inq}
     return out;
   }
+  function numberText(v){const [whole,...frac]=String(v).replace(/[^0-9.]/g,"").split(".");return frac.length?whole+"."+frac.join(""):whole}
   function clampRate(id,v){const x=parseFloat(v);if(!isFinite(x))return null;return Math.min(Math.max(x,RATES[id]),100)}
   function ratesFromCount(s,changed){
     const out=[];
@@ -214,6 +215,6 @@
 
   return {STAGES,ITEMS,FORCES,GRADES,MONTHS,MONTHS_LONG,VAL,KEY,NUMS,COUNTS,FROM_COUNTS,RATES,STATES,EXAMPLE,BLANK,
     OLD_GRADE_LABELS,ANSWERS,FILE_TOOL,PLAN_SIZE,clean,gradeLabel,stageOf,shown,visible,scored,optShown,marked,
-    boost,ranked,planned,pct,progress,rateOf,seatMath,levers,clampRate,ratesFromCount,lanes,planText,
+    boost,ranked,planned,pct,progress,rateOf,seatMath,levers,clampRate,numberText,ratesFromCount,lanes,planText,
     fileBody,fileName,readFile};
 });
