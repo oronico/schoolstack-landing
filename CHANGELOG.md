@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: CLAUDE.md names every use of the largest type size
+- CLAUDE.md §4 said the hero headline is the only `--step-4` text, but
+  the calculators' two results (yearly revenue and the break-even student
+  count) have used it too. The owner chose to keep the page as it is, so
+  the rule now names both. No page changes.
+
 ## 2026-11-28: A "%" stays with its word
 - Enrollment Audit's four rate labels ("Expected re-enrollment %" and the
   three conversion rates) join the "%" to the word before it with a
