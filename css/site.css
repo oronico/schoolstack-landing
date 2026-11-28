@@ -237,6 +237,7 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .signup .btn-primary:hover, footer .btn-primary:hover { background: var(--paper); color: var(--ink); }
 .btn-secondary { background: var(--paper); color: var(--ink); border-color: var(--ink); }
 .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+.btn-primary:active, .btn-secondary:active, .copy-btn:active { transform: translateY(1px); }
 
 .stack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); margin-top: var(--sp-6); }
 .tool-card {
@@ -615,6 +616,7 @@ section[id], [id].section, .anchor-alias { scroll-margin-top: var(--sp-8); }
 .form-group select option { background: var(--paper); color: var(--ink); }
 .form-submit { width: 100%; justify-content: center; margin-top: var(--sp-1); }
 .form-submit:disabled, .form-submit:disabled:hover { background: var(--paper); color: var(--muted); cursor: not-allowed; }
+.form-submit:disabled:active { transform: none; }
 .form-help { color: var(--paper); font-size: var(--step--1); text-align: center; }
 .form-help a { color: var(--accent); font-weight: 700; }
 .form-success {

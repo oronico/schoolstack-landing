@@ -3,6 +3,12 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: Buttons move when pressed
+- `.btn-primary`, `.btn-secondary` and `.copy-btn` drop 1px while pressed.
+  Hover already changed their colours, but a tap on a phone shows no hover,
+  so a button gave no sign it had been pressed. A disabled `.form-submit`
+  does not move.
+
 ## 2026-11-28: Footers lose the founder line
 - Every page footer now ends its credit at "SchoolStack is a nonprofit
   venture incubated by Building Hope Impact Fund." The founder line that
