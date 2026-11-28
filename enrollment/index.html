@@ -117,23 +117,23 @@
         <h3>Seat math</h3>
         <p class="note note-lead">Your budget driver is the enrollment you need to break even. Find it in <a href="/go/budget" target="_blank" rel="noopener noreferrer">SchoolStack Budget</a>. Use your own conversion rates; the example numbers are placeholders.</p>
         <div class="seat">
-          <div class="field"><label for="current">Students enrolled now</label><input id="current" type="number" min="0" max="5000" inputmode="numeric"></div>
-          <div class="field"><label for="reRate">Expected re-enrollment&nbsp;%</label><input id="reRate" type="number" min="0" max="100" inputmode="numeric"></div>
-          <div class="field"><label for="driver">Budget driver (break-even students)</label><input id="driver" type="number" min="1" max="5000" inputmode="numeric"></div>
-          <div class="field"><label for="goal">Enrollment goal</label><input id="goal" type="number" min="1" max="5000" inputmode="numeric"></div>
+          <div class="field"><label for="current">Students enrolled now</label><input id="current" type="text" inputmode="numeric" autocomplete="off"></div>
+          <div class="field"><label for="reRate">Expected re-enrollment&nbsp;%</label><input id="reRate" type="text" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><label for="driver">Budget driver (break-even students)</label><input id="driver" type="text" inputmode="numeric" autocomplete="off"></div>
+          <div class="field"><label for="goal">Enrollment goal</label><input id="goal" type="text" inputmode="numeric" autocomplete="off"></div>
           <span class="full">Your conversion rates</span>
           <details class="counts">
             <summary>Work them out from last year's counts</summary>
             <div class="seat">
-              <div class="field"><label for="lInq">Inquiries</label><input id="lInq" type="number" min="0" max="50000" inputmode="numeric"></div>
-              <div class="field"><label for="lApp">Applications</label><input id="lApp" type="number" min="0" max="50000" inputmode="numeric"></div>
-              <div class="field"><label for="lOff">Offers</label><input id="lOff" type="number" min="0" max="50000" inputmode="numeric"></div>
-              <div class="field"><label for="lEnr">New students enrolled</label><input id="lEnr" type="number" min="0" max="50000" inputmode="numeric"></div>
+              <div class="field"><label for="lInq">Inquiries</label><input id="lInq" type="text" inputmode="numeric" autocomplete="off"></div>
+              <div class="field"><label for="lApp">Applications</label><input id="lApp" type="text" inputmode="numeric" autocomplete="off"></div>
+              <div class="field"><label for="lOff">Offers</label><input id="lOff" type="text" inputmode="numeric" autocomplete="off"></div>
+              <div class="field"><label for="lEnr">New students enrolled</label><input id="lEnr" type="text" inputmode="numeric" autocomplete="off"></div>
             </div>
           </details>
-          <div class="field"><label for="rInq">Inquiry to application&nbsp;%</label><input id="rInq" type="number" min="1" max="100" inputmode="numeric"></div>
-          <div class="field"><label for="rApp">Application to offer&nbsp;%</label><input id="rApp" type="number" min="1" max="100" inputmode="numeric"></div>
-          <div class="field"><label for="rYield">Offer to enrolled&nbsp;% (yield)</label><input id="rYield" type="number" min="1" max="100" inputmode="numeric"></div>
+          <div class="field"><label for="rInq">Inquiry to application&nbsp;%</label><input id="rInq" type="text" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><label for="rApp">Application to offer&nbsp;%</label><input id="rApp" type="text" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><label for="rYield">Offer to enrolled&nbsp;% (yield)</label><input id="rYield" type="text" inputmode="decimal" autocomplete="off"></div>
         </div>
         <div class="result" id="result"></div>
         <div class="funnel" id="funnel"></div>

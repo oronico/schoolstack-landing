@@ -204,3 +204,18 @@ test('the storage key and file tag keep their first names', () => {
   assert.equal(A.KEY, 'ss-enrollment-path-v2');
   assert.equal(A.FILE_TOOL, 'schoolstack-enrollment-path');
 });
+
+test('a typed number keeps its digits and one decimal point', () => {
+  assert.equal(A.numberText('1,200'), '1200');
+  assert.equal(A.numberText('82.5'), '82.5');
+  assert.equal(A.numberText('82.5.1'), '82.51');
+  assert.equal(A.numberText('85%'), '85');
+  assert.equal(A.numberText('-3e2'), '32');
+  assert.equal(A.numberText(''), '');
+});
+
+test('seat math reads a count typed with a comma as the whole number', () => {
+  const s = example();
+  s.current = A.numberText('1,200');
+  assert.equal(A.seatMath(s).cur, 1200);
+});
