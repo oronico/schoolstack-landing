@@ -124,3 +124,43 @@ applies to the first thing a reader sees in each band.
 - One comparison page, such as SchoolStack against spreadsheets.
 - Pricing, if the owner has set it by then.
 - Score the page again against the table above.
+- Score it against the features checklist below (owner, 28 November
+  2026: "Let's wait until January").
+
+### Features checklist (owner, 28 November 2026)
+
+The test for a page that walks through what the product does:
+
+1. **Grouping.** Features grouped by the job they help the founder do,
+   not by how the product is built.
+2. **Descriptions.** One or two sentences per feature, saying what the
+   founder can do, not what the system does.
+3. **Visuals.** A screenshot, GIF or short clip of each feature in use.
+4. **Benefits.** Each feature tied to the result it brings.
+5. **Proof per feature.** A school's quote beside the feature it speaks
+   to.
+6. **CTA.** A way to sign up at the bottom, and where it helps, along the
+   way.
+
+Scored against the home page on 28 November 2026 (the site has no
+features page):
+
+| Item | Grade | Gap |
+| --- | --- | --- |
+| Grouping | Passes | Tool cards and platform jobs are founders' questions |
+| Descriptions | Partly | Tool cards carry a question, not what you do there |
+| Visuals | Fails | Only the film and the Enrollment Audit scorecard |
+| Benefits | Partly | Platform jobs name the result; tool cards do not |
+| Proof per feature | Fails | No school quote yet |
+| CTA | Passes | |
+
+The owner chose to wait until January rather than build a features page
+now. A page for the platform would describe work a new founder cannot use
+until it opens in 2027 (claims standard, test 1), and without quotes it
+would be the wall of bullets the checklist warns against.
+
+Stills from the film are real footage and can serve as visuals. Eight
+sampled stills show the daily brief, past-due families, the operating
+forecast, a student's tuition and payment schedule, break-even and cash
+flow, and the AI coach. None showed a board report. The student record
+carries a child's photo: crop it out unless its use is cleared.
