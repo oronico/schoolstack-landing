@@ -64,6 +64,16 @@ long; the film began at screen 3.5 and the founder section at 11.6.
 | FAQ | Passes | |
 | Footer | Mostly | No comparison page |
 
+### Footer, checked again 28 November 2026
+
+The footer took the suite layout that day (CLAUDE.md section 4, "One
+footer for the suite"): the About and Connect columns folded into Free
+tools, Resources and the legal links. Against rule 6 it grades the same,
+"Mostly": Terms and Privacy are there, Space, Budget and Access are linked
+under "Free tools", and there is still no comparison page. The playbook
+says nothing about column names. The owner kept the new footer ("Keep the
+new footer").
+
 ## Agreed plan (owner, 25 November 2026)
 
 One pull request at a time:

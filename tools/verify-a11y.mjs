@@ -46,7 +46,10 @@ const AUDIT = `(async () => {
      Walk up for the first non-transparent background. If anything in that
      chain paints an image or a gradient the ratio is not computable, so the
      element is reported as unchecked rather than guessed at. */
-  const rgb = (s) => (s.match(/[\\d.]+/g) || []).map(Number);
+  const rgb = (s) => {
+    const n = (s.match(/[\\d.]+/g) || []).map(Number);
+    return s.startsWith('color(srgb') ? n.map((v, i) => (i < 3 ? v * 255 : v)) : n;
+  };
   const lum = ([r, g, b]) => {
     const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
     return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);

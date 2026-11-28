@@ -366,6 +366,9 @@ margin, padding, gap, font size and colour in it is one of these:
   hero `<h1>` and the calculators' two results (`.calc-big`: yearly revenue
   and the break-even student count) are the only `--step-4` text; band
   headings are `--step-3`.
+  Two smaller sizes, `--step--2` (14px) and `--step--3` (12px), are for
+  the footer alone (owner, 28 November 2026: every SchoolStack footer
+  uses 14px links and 12px legal lines). No other text may use them.
 - **Colour:** five tokens, each with one job. `--ink` text and the dark
   bands, `#1E293B`: the navy of the wordmark, the product logos, the
   design kit and all three apps (owner, November 2026; it was `#141E33`,
@@ -373,8 +376,10 @@ margin, padding, gap, font size and colour in it is one of these:
   `--muted` secondary text on paper only (2.6:1 on ink fails); `--accent`
   the one primary action, and the "tight" status; `--alert` errors and
   "over 100%". `--line` and `--line-on-ink` mix two tokens for hairlines
-  and are never painted behind text, because the contrast check cannot
-  read a mixed colour.
+  and are never painted behind text. `--text-on-ink` and `--link-on-ink`
+  mix paper into ink (75% and 65%) for the footer's two text tones, the
+  same tones as the three apps' footers; `verify-a11y` reads a mixed
+  colour and measures them (8.4:1 and 6.7:1 on ink).
 
 The home page alternates its ground to break up the scroll (order set by
 the owner, November 2026): the paper hero with the film, free tools, the
@@ -396,6 +401,18 @@ Ready and Giving) takes `.card`: paper ground, a `--line` hairline,
 layout and, if it must stand out, its border colour, never its own border,
 corner or padding (November 2026: six cards had four paddings and two
 corners). Links go last in a card, after the text that informs the click.
+
+**One footer for the suite** (owner, 28 November 2026: "all footers to
+have uniform appearance and organization"). The footer is laid out like
+Space's, Access's and Budget's: four columns (logo, tagline, social icons
+and the "Stay ready." sign-up; Free tools; Resources; Incubated by, with
+the Impact Fund logo as a link, the credit and the contact email), then
+the planning note, the legal links and the copyright line, centred.
+Anything a visitor can click is 14px and 44px tall under 640px; labels
+and the two legal lines are 12px. The spec is section 7 of
+docs/brand/suite-language.md in the Space repo;
+`tools/lib/footer-spec.test.mjs` holds this site to it. Enrollment Audit
+keeps its own small footer.
 
 No gradients and no drop shadows. The one exception is the slider track,
 whose filled part is a hard stop between two flat colours: WebKit has no
@@ -508,8 +525,8 @@ styles: its five stage colours and answer colours carry meaning.
   product.** Early access is not open: a school can sign up for it, and
   nothing more yet (owner, November 2026: "Early access is not true. Sign
   up for early access is true."). "Sign up for early access" is the primary
-  button in the hero, on the form and in every footer; the nav and footer
-  links read "Sign up". Never "Get early access" or "early access open":
+  button in the hero, on the form and in every footer; the nav link
+  reads "Sign up". Never "Get early access" or "early access open":
   `ACCESS_CLAIM` in `tools/lib/copy-rules.mjs` fails both, share text
   included. Words that are true stay ("Early access news", "Early access
   starts with schools on QuickBooks Online"). The free tools
