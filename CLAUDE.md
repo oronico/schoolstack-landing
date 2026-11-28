@@ -50,7 +50,9 @@ file per weight.
 left-aligned, tight gaps, filling ~80% of the box. That geometry is copied
 from Budget's favicon so the products read as one family — the numbers live in
 `tools/build-images.mjs` and should stay in sync with Space and Budget rather
-than drifting to look good alone. SchoolStack is the parent brand, so it
+than drifting to look good alone. The 16px and 32px tab icons are drawn again on whole
+pixels, as Space's is, so the bars do not blur together in a browser tab
+(ADR 0015). SchoolStack is the parent brand, so it
 carries all three founding hues where the product marks each use one.
 
 **The wordmark is owner-supplied artwork.** It lives as outlined paths in
