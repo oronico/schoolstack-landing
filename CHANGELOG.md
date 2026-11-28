@@ -8,8 +8,8 @@ prepared for review; Netlify deploys on merge to `main`.
   site. There are 24, all on Enrollment Audit: five grade chips and 19
   force options. The early list form has had no checkbox since its consent
   box came out on 18 November.
-- A grade chip now changes on hover (a darker edge, or a lighter fill when
-  chosen), shrinks a little while pressed, and fades when disabled. Before,
+- A grade chip now changes on hover (a darker edge, or a grey fill when
+  chosen, with its text at 6:1 or more), shrinks a little while pressed, and fades when disabled. Before,
   hover, pressed and disabled all looked the same as the resting chip.
 - A force option row gets a slate edge on hover, chosen or not, and
   shrinks a little while pressed. Before, a chosen row did not change on

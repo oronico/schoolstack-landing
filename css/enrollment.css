@@ -85,7 +85,7 @@ section.block{padding-block:40px 8px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip input:checked+span{background:var(--cream);color:var(--navy);border-color:var(--cream)}}
 .chip input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
 .chip input:not(:checked):hover+span{background:var(--surface-2);border-color:var(--fg)}
-:root .chip input:checked:hover+span{background:var(--control-edge);border-color:var(--control-edge)}
+:root .chip input:checked:hover+span{background:var(--muted);border-color:var(--muted)}
 .chip input:active+span,.opt:active{transform:scale(.97)}
 .chip input:disabled+span,.opt:has(input:disabled){opacity:.45}
 .share{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:grid;gap:10px}

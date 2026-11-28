@@ -93,10 +93,13 @@ rings on every page; `verify-calculator` checks tap targets and field sizes.
 
 17. Every checkbox has a distinct default, hover, pressed, focused, checked
     and disabled look. Hover darkens an edge to `--fg` or `--control-edge`,
-    the way `.btn:hover` does; a chosen grade chip lightens its fill to
-    `--control-edge` instead, because its edge is already its fill. Pressed
-    is `transform: scale(.97)`: it reads the same in both themes, chosen or
-    not, and needs no new colour. Disabled is `opacity: .45`, the same as a
+    the way `.btn:hover` does; a chosen grade chip turns its fill to
+    `--muted` instead, because its edge is already its fill. That holds its
+    text at 6.05:1 in the light theme and 7.64:1 in the dark;
+    `--control-edge` gave only 4.52:1 in the light. Pressed is
+    `transform: scale(.97)`: it reads the same in both themes, chosen or
+    not, and needs no new colour. The shrink has no transition, so the
+    stylesheet's reduced-motion rule has nothing to stop. Disabled is `opacity: .45`, the same as a
     disabled `.btn`. Nothing on the site disables a checkbox today; the rule is one
     line, so a later one does not ship looking live.
 18. A force option's box is native, so its tick is drawn in
