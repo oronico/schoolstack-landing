@@ -42,6 +42,9 @@ export const CONTROL_EDGE_AUDIT = `JSON.stringify((() => {
 
   const NATIVE = ['radio', 'checkbox', 'range', 'hidden', 'file', 'submit', 'button', 'reset', 'image', 'color'];
   const targets = new Set();
+  const filled = new Map();
+  const controls = [];
+  let unchecked = 0;
   for (const el of document.querySelectorAll('input, select, textarea')) {
     const type = (el.getAttribute('type') || '').toLowerCase();
     if (el.tagName === 'INPUT' && (type === 'radio' || type === 'checkbox') && +getComputedStyle(el).opacity === 0) {
@@ -49,12 +52,21 @@ export const CONTROL_EDGE_AUDIT = `JSON.stringify((() => {
       if (t && shown(t)) targets.add(t);
       continue;
     }
+    if (el.tagName === 'INPUT' && (type === 'radio' || type === 'checkbox') && el.checked && shown(el)) {
+      const accent = rgba(getComputedStyle(el).accentColor);
+      if (opaque(accent)) filled.set(el, accent);
+      continue;
+    }
     if (el.tagName === 'INPUT' && NATIVE.includes(type)) continue;
     if (shown(el)) targets.add(el);
   }
+  for (const [el, accent] of filled) {
+    const on = ground(el);
+    if (!on) { unchecked++; continue; }
+    const r = contrast(accent, on);
+    controls.push({ name: name(el) + ' checked', edge: css(accent), edgeRatio: r, fill: css(accent), fillRatio: r, on: css(on) });
+  }
 
-  const controls = [];
-  let unchecked = 0;
   for (const t of targets) {
     const on = ground(t);
     if (!on) { unchecked++; continue; }

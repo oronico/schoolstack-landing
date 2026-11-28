@@ -4,6 +4,7 @@ import { serveSite, launchBrowser, sleep } from './lib/harness.mjs';
 import { FOCUS_PROBE, ringProblem } from './lib/focus-audit.mjs';
 import { TOUCH_AUDIT } from './lib/touch-audit.mjs';
 import { CONTROL_EDGE_AUDIT, edgeProblem } from './lib/control-edge-audit.mjs';
+import { auditCheckboxStates } from './lib/checkbox-state-audit.mjs';
 
 async function tabWalk() {
   await browser.evaluate('(document.activeElement && document.activeElement.blur(), scrollTo(0, 0), 0)');
@@ -185,6 +186,10 @@ for (const width of VIEWPORTS) {
   const blind = stops.map((p) => [p, ringProblem(p)]).filter(([, why]) => why);
   console.log(`${' '.repeat(13)}focus: ${stops.length} Tab stops, ${blind.length} without a visible ring`);
   for (const [p, why] of blind) fail(`${path} ${width}px  "${p.label}" (${p.tag}): ${why}`);
+
+  const boxes = await auditCheckboxStates(browser);
+  if (boxes.count) console.log(`${' '.repeat(13)}checkbox states: ${boxes.count} checkboxes, ${boxes.problems.length} states that look alike`);
+  for (const b of boxes.problems) fail(`${path} ${width}px  ${b}`);
 }
 
 {
@@ -218,6 +223,10 @@ for (const width of VIEWPORTS) {
   if (!edges.dark) fail(`${where}  the browser did not report the dark theme, so the dark control-edge check proved nothing`);
   if (!edges.controls.length) fail(`${where}  no controls found, so the dark control-edge check proved nothing`);
   for (const t of thin) fail(`${where}  ${t}`);
+  const boxes = await auditCheckboxStates(browser);
+  console.log(`${where}  checkbox states: ${boxes.count} checkboxes, ${boxes.problems.length} states that look alike`);
+  if (!boxes.count) fail(`${where}  no checkboxes found, so the dark checkbox-state check proved nothing`);
+  for (const b of boxes.problems) fail(`${where}  ${b}`);
 }
 await browser.send('Emulation.setEmulatedMedia', { features: [] });
 

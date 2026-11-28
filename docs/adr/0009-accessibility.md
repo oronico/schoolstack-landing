@@ -88,3 +88,25 @@ rings on every page; `verify-calculator` checks tap targets and field sizes.
     visibility changes, so the box is as tall as the longest and nothing
     below moves. The box is `aria-hidden`; screen readers get the polite
     live region.
+
+### Checkbox states
+
+17. Every checkbox has a distinct default, hover, pressed, focused, checked
+    and disabled look. Hover darkens an edge to `--fg` or `--control-edge`,
+    the way `.btn:hover` does; a chosen grade chip lightens its fill to
+    `--control-edge` instead, because its edge is already its fill. Pressed
+    is `transform: scale(.97)`: it reads the same in both themes, chosen or
+    not, and needs no new colour. Disabled is `opacity: .45`, the same as a
+    disabled `.btn`. Nothing on the site disables a checkbox today; the rule is one
+    line, so a later one does not ship looking live.
+18. A force option's box is native, so its tick is drawn in
+    `accent-color: var(--fg)`: navy in the light theme, cream in the dark.
+    The fixed `--navy` it had was 1.15:1 on the dark row.
+19. `checkbox-state-audit.mjs` drives the mouse with real CDP events and a
+    real click, then reads the drawn element (the label's span for a hidden
+    input, the label for a native one). A press that is dragged off before
+    release left Chromium's next press on `<body>`, so each press is
+    released in place and the click is the move to the other state; the
+    second click puts it back. It saves and restores `localStorage`, so
+    the next pass still opens on the example audit.
+

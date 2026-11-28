@@ -3,6 +3,27 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: Enrollment Audit's checkboxes show every state
+- The owner's checkbox checklist was run against every checkbox on the
+  site. There are 24, all on Enrollment Audit: five grade chips and 19
+  force options. The early list form has had no checkbox since its consent
+  box came out on 18 November.
+- A grade chip now changes on hover (a darker edge, or a lighter fill when
+  chosen), shrinks a little while pressed, and fades when disabled. Before,
+  hover, pressed and disabled all looked the same as the resting chip.
+- A force option row gets a slate edge on hover, chosen or not, and
+  shrinks a little while pressed. Before, a chosen row did not change on
+  hover, and pressed looked the same as hover.
+- In the dark theme a ticked force box was navy on a navy row, 1.15:1. It
+  now takes the theme's text colour, cream in the dark and navy in the
+  light, 12:1 or more in both.
+- `verify-a11y` now hovers, presses, ticks and disables every checkbox on
+  every page, in both themes on Enrollment Audit, and fails any two states
+  that look the same (`tools/lib/checkbox-state-audit.mjs`). The
+  control-edge check now measures a ticked native checkbox or radio by its
+  `accent-color`. With the old styles they fail 130 states per theme and
+  six ticked boxes in the dark.
+
 ## 2026-11-28: Footers lose the founder line
 - Every page footer now ends its credit at "SchoolStack is a nonprofit
   venture incubated by Building Hope Impact Fund." The founder line that
