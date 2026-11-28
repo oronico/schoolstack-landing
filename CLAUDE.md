@@ -567,11 +567,14 @@ styles: its five stage colours and answer colours carry meaning.
 - **Ownership and credit (SchoolStack suite).** Every SchoolStack app uses
   the same ownership and credit words. The source is
   docs/brand/suite-language.md in the SchoolStack Space repo.
-  - Credit, word for word, in every page footer: "SchoolStack
-    is a nonprofit venture incubated by Building Hope Impact Fund. Founder &
-    Product Developer: Allison Serafin" (the first sentence is counsel's
-    wording, 2026-10-28). Add nothing to it. Copy that names the owner opens
-    with the same first sentence.
+  - Credit, word for word, in every page footer: "SchoolStack is a
+    nonprofit venture incubated by Building Hope Impact Fund." (counsel's
+    wording, 2026-10-28). Add nothing to it. No footer carries the founder
+    line, "Founder & Product Developer: Allison Serafin" (owner, 28
+    November 2026: "Remove founder line from footer. All footers need to
+    align w general branding"); do not bring it back. The founder note on
+    the home page and the About page still name her. Copy that names the
+    owner opens with the same first sentence.
   - A heading or label over the Building Hope logo reads "Incubated by".
   - Copyright: "© {year} Building Hope Impact Fund. All rights reserved."
     Never name "SchoolStack" as the copyright holder.
@@ -581,8 +584,9 @@ styles: its five stage colours and answer colours carry meaning.
   - Never write "incubated at", "a product of", "built by Allison Serafin",
     "designed and built by", or "Product design by".
   - The footer is copied into each page by hand, so
-    `tools/lib/brand-credit.test.mjs` checks every page carries the credit
-    and the copyright line, and that no old phrase comes back.
+    `tools/lib/brand-credit.test.mjs` checks every page's footer carries
+    the credit and the copyright line and names no founder, and that no old
+    phrase comes back.
 - **Enrollment Audit saves answers in the visitor's browser** (localStorage)
   and sends nothing. Its share-your-numbers block posts to an Airtable form
   and is off (`SHARE_ENABLED=false`). Turning it on needs the owner's

@@ -9,17 +9,28 @@ const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 const flat = (s) => s.replace(/\s+/g, ' ');
 
 const SUPPORT = 'SchoolStack is a nonprofit venture incubated by Building Hope Impact Fund.';
-const CREDIT = `${SUPPORT} Founder &amp; Product Developer: Allison Serafin`;
+const FOUNDER = /Founder (&amp;|&) Product Developer|Allison Serafin/;
 const COPYRIGHT = '&copy; 2026 Building Hope Impact Fund. All rights reserved.';
 const PAGES = ['index.html', 'about.html', 'privacy.html', 'terms.html', 'giving.html', 'ready.html', '404.html', 'enrollment/index.html'];
 const LEGAL = new Set(['privacy.html', 'terms.html']);
 
-test('every page footer carries the credit and the copyright line', () => {
+const footerOf = (f) => {
+  const page = flat(read(f));
+  const from = page.lastIndexOf('<footer');
+  assert.ok(from !== -1, `${f}: has a footer`);
+  return page.slice(from, page.indexOf('</footer>', from));
+};
+
+test('every page footer carries counsel\'s sentence and the copyright line', () => {
   for (const f of PAGES) {
-    const page = flat(read(f));
-    assert.ok(page.includes(CREDIT), `${f}: footer credit`);
-    assert.ok(page.includes(COPYRIGHT), `${f}: copyright line`);
+    const footer = footerOf(f);
+    assert.ok(footer.includes(SUPPORT), `${f}: footer credit`);
+    assert.ok(footer.includes(COPYRIGHT), `${f}: copyright line`);
   }
+});
+
+test('no page footer names a founder', () => {
+  for (const f of PAGES) assert.doesNotMatch(footerOf(f), FOUNDER, `${f}: founder line in the footer`);
 });
 
 test('the home and About pages open their owner copy with counsel\'s sentence', () => {
