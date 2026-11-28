@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: The voice check reads every link, not a style class
+- `ctas()` picked out link CTAs by class (`btn-*`, `nav-cta`,
+  `tool-link`), so renaming a class for looks would have dropped those
+  links from the "no can't / cannot" check with no warning, against
+  CLAUDE.md §9. It now reads every link. None of the site's 299 links
+  carried one of the words, so no page changes.
+
 ## 2026-11-28: ADR 0002 says how repo files are hidden now
 - ADR 0002 still said `robots.txt` blocks `/tools/`, `/docs/` and the
   other repo folders. Since #89 it blocks only `/go/`, and `_redirects`
