@@ -9,6 +9,52 @@ prepared for review; Netlify deploys on merge to `main`.
   so a button gave no sign it had been pressed. A disabled `.form-submit`
   does not move.
 
+## 2026-11-28: One footer layout for every SchoolStack site
+- Owner request: "all footers to have uniform appearance and
+  organization." She chose the Space and Access layout, 14px links and
+  12px legal lines. The footer on all seven pages now has four columns:
+  logo, tagline, social icons and "Stay ready."; Free tools; Resources;
+  Incubated by. Under them, centred: the planning note, Privacy, Terms and
+  Contact us, and the copyright line.
+- The About and Connect columns are gone. "The platform" and "About Us"
+  moved to Resources, the social icons to the first column, "Contact us"
+  to the legal links. The text link to Building Hope Impact Fund became
+  the Impact Fund logo, which links to the same site, with the credit and
+  the contact email under it. The separate "Sign up" link went; the "Sign
+  up for early access" button stays.
+- Links are 14px (they were 15px) and 44px tall on a phone. Column labels
+  and the two legal lines are 12px. Two type sizes, `--step--2` and
+  `--step--3`, were added for the footer alone.
+- A printed guide still ends with the credit, the email, the planning
+  note and the copyright line.
+- `verify-a11y` now reads colours the browser reports as
+  `color(srgb ...)`, so the footer's two mixed text tones are measured:
+  8.4:1 and 6.7:1 on the navy ground.
+
+## 2026-11-28: CLAUDE.md names every use of the largest type size
+- CLAUDE.md §4 said the hero headline is the only `--step-4` text, but
+  the calculators' two results (yearly revenue and the break-even student
+  count) have used it too. The owner chose to keep the page as it is, so
+  the rule now names both. No page changes.
+
+## 2026-11-28: A "%" stays with its word
+- Enrollment Audit's four rate labels ("Expected re-enrollment %" and the
+  three conversion rates) join the "%" to the word before it with a
+  non-breaking space. On phones from 330 to 380px wide a "%" sat alone on
+  its own line at 9 of 129 widths tried; now it never does.
+
+## 2026-11-28: The voice check reads every link, not a style class
+- `ctas()` picked out link CTAs by class (`btn-*`, `nav-cta`,
+  `tool-link`), so renaming a class for looks would have dropped those
+  links from the "no can't / cannot" check with no warning, against
+  CLAUDE.md §9. It now reads every link. None of the site's 299 links
+  carried one of the words, so no page changes.
+
+## 2026-11-28: ADR 0002 says how repo files are hidden now
+- ADR 0002 still said `robots.txt` blocks `/tools/`, `/docs/` and the
+  other repo folders. Since #89 it blocks only `/go/`, and `_redirects`
+  answers 404 for the repo's own files. Items 3 and 4 and the
+  Consequences line now say so.
 ## 2026-11-28: Footers lose the founder line
 - Every page footer now ends its credit at "SchoolStack is a nonprofit
   venture incubated by Building Hope Impact Fund." The founder line that

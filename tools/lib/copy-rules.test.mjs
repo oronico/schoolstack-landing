@@ -51,9 +51,14 @@ test('headlines reads h1 to h3 and flattens inner markup', () => {
   assert.deepEqual(out, [{ where: '<h1>', text: 'The back office' }]);
 });
 
-test('ctas reads buttons and link CTAs, not ordinary links', () => {
-  const out = ctas('<button>Send</button><a class="btn-primary" href="#">Go</a><a href="#">plain</a>');
-  assert.deepEqual(out.map((c) => c.text), ['Send', 'Go']);
+test('ctas reads every button and link, whatever its style class', () => {
+  const out = ctas('<button>Send</button><a class="btn-primary" href="#">Go</a><a class="btn-renamed" href="#">Renamed</a><a href="#">plain</a>');
+  assert.deepEqual(out.map((c) => c.text), ['Send', 'Go', 'Renamed', 'plain']);
+});
+
+test('a deficit word in a link that is not styled as a button still fails', () => {
+  const page = '<p>Estimates are for planning only and are not loan eligibility.</p><a class="cta-new" href="/#early-access">The back office you can\'t afford</a>';
+  assert.ok(voiceFaults(page).faults.some((f) => f.startsWith('<a> says "can\'t"')));
 });
 
 test('shareMeta reads the fields a reader meets before the page', () => {

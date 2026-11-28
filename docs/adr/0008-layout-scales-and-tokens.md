@@ -102,3 +102,17 @@ points below are the ones the stylesheet's comments carried.
 23. In `enrollment/index.html` the sticky `.prog` strip appears below 980px,
     the same width where `.score` stops being sticky and drops under the
     practices, so progress stays in view. Keep the two widths together.
+24. The footer follows the suite footer spec (owner, 28 November 2026: "all
+    footers to have uniform appearance and organization"; section 7 of
+    docs/brand/suite-language.md in the Space repo). Four columns at
+    1024px and wider, `1.6fr 1fr 1fr 1.6fr`; narrower, two, with the brand
+    and "Incubated by" columns spanning both. Those two widths (1024px and
+    640px) are the apps' breakpoints, not this site's 900px, so the four
+    footers change shape at the same widths. `--step--2` and `--step--3`
+    exist for the footer alone. `--text-on-ink` and `--link-on-ink` are
+    opaque mixes of paper into ink, not paper with alpha, so the contrast
+    check can measure them. The social icons sit in a 44px square, pulled
+    left by half the difference between the square and the 24px glyph so
+    the glyph lines up with the text above it. On a printed guide the
+    columns are hidden except the credit and the email.
+    (CLAUDE.md §4)
