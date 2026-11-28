@@ -34,8 +34,8 @@ export function ctas(html) {
   for (const m of copy.matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/gi)) {
     out.push({ where: '<button>', text: text(m[1]) });
   }
-  for (const m of copy.matchAll(/<a\b[^>]*class="[^"]*\b(?:btn-\w+|nav-cta|tool-link)\b[^"]*"[^>]*>([\s\S]*?)<\/a>/gi)) {
-    out.push({ where: '<a> CTA', text: text(m[1]) });
+  for (const m of copy.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/gi)) {
+    out.push({ where: '<a>', text: text(m[1]) });
   }
   return out;
 }
