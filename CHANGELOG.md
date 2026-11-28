@@ -3,6 +3,15 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: Footers lose the founder line
+- Every page footer now ends its credit at "SchoolStack is a nonprofit
+  venture incubated by Building Hope Impact Fund." The founder line that
+  followed it is gone (owner, 28 November 2026: "Remove founder line from
+  footer. All footers need to align w general branding"). Enrollment
+  Audit's footer follows. The copyright line and the contact email stay.
+- `brand-credit.test.mjs` now reads each page's footer and fails if one
+  names a founder.
+
 ## 2026-11-25: The headline says the job
 - The home page headline is "Families and finances, finally together.",
   with "Run your school, not spreadsheets." under it (owner, 25 November
