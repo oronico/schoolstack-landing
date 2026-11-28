@@ -3,6 +3,11 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: ADR 0002 says how repo files are hidden now
+- ADR 0002 still said `robots.txt` blocks `/tools/`, `/docs/` and the
+  other repo folders. Since #89 it blocks only `/go/`, and `_redirects`
+  answers 404 for the repo's own files. Items 3 and 4 and the
+  Consequences line now say so.
 ## 2026-11-28: Footers lose the founder line
 - Every page footer now ends its credit at "SchoolStack is a nonprofit
   venture incubated by Building Hope Impact Fund." The founder line that
