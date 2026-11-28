@@ -11,9 +11,15 @@ load. (CLAUDE.md §3)
 
 ## Decisions
 
-1. The mark's geometry (a 40-unit box, bars at x=4, 7 tall, widths 20, 27
-   and 32) matches the Space and Budget favicons, so the products read as
-   one family; keep it in step with them. The parent mark carries all three
+1. The mark's geometry matches Space's product icon and Budget's favicon
+   (a 240-unit box with a corner of 40, bars at x=24, 48 tall, 6 apart,
+   widths 108, 153 and 192), so the products read as one family; keep it in
+   step with them. The tab icons are drawn again for their size, as Space's
+   is, because the large drawing shrunk to 16px gives bars 3.2px tall and
+   gaps of 0.4px, which blur together: `px16` is Space's 16px favicon (bars
+   3px tall, 1px apart) and is also `favicon.svg`; `px32` has bars 6px tall,
+   1px apart. Every edge falls on a whole pixel. (November 2026; it was a
+   40-unit box with bars 7 tall and 3 apart, shrunk to every size.) The parent mark carries all three
    hues. Its amber is `#F59E0B`, darker than the `#FBBF24` used on dark
    grounds, because the lighter one washes out on `#FAF9F7` at 16px.
    (CLAUDE.md §1)

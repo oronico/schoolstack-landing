@@ -10,32 +10,30 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const GROUND = '#FAF9F7';
-const BOX = 40;
-const CORNER = 9;
-const BAR_H = 7;
-const BAR_X = 4;
-const BARS = [
-  { y: 6, w: 20, fill: '#38BDF8' },
-  { y: 16, w: 27, fill: '#34D399' },
-  { y: 26, w: 32, fill: '#F59E0B' },
-];
+const HUES = ['#38BDF8', '#34D399', '#F59E0B'];
 
-function markGroup(scale = 1) {
-  const bars = BARS.map(
-    (b) =>
-      `<rect x="${BAR_X}" y="${b.y}" width="${b.w}" height="${BAR_H}" rx="${BAR_H / 2}" fill="${b.fill}"></rect>`,
+const DRAWINGS = {
+  full: { box: 240, corner: 40, x: 24, h: 48, ys: [42, 96, 150], ws: [108, 153, 192] },
+  px32: { box: 32, corner: 5, x: 3, h: 6, ys: [6, 13, 20], ws: [14, 20, 26] },
+  px16: { box: 16, corner: 3, x: 1, h: 3, ys: [2, 6, 10], ws: [8, 11, 14] },
+};
+
+function markGroup(d, scale = 1) {
+  const bars = HUES.map(
+    (fill, i) =>
+      `<rect x="${d.x}" y="${d.ys[i]}" width="${d.ws[i]}" height="${d.h}" rx="${d.h / 2}" fill="${fill}"></rect>`,
   ).join('');
   if (scale === 1) return bars;
-  const c = BOX / 2;
+  const c = d.box / 2;
   return `<g transform="translate(${c} ${c}) scale(${scale}) translate(${-c} ${-c})">${bars}</g>`;
 }
 
-function iconSvg(variant) {
-  const radius = variant === 'rounded' ? CORNER : 0;
+function iconSvg(variant, d = DRAWINGS.full) {
+  const radius = variant === 'rounded' ? d.corner : 0;
   const scale = variant === 'maskable' ? 0.72 : 1;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${BOX} ${BOX}" width="${BOX}" height="${BOX}">`
-    + `<rect width="${BOX}" height="${BOX}" rx="${radius}" fill="${GROUND}"></rect>`
-    + markGroup(scale)
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${d.box} ${d.box}" width="${d.box}" height="${d.box}">`
+    + `<rect width="${d.box}" height="${d.box}" rx="${radius}" fill="${GROUND}"></rect>`
+    + markGroup(d, scale)
     + `</svg>`;
 }
 
@@ -85,11 +83,11 @@ async function shoot(htmlPath, outPath, width, height, expectFonts) {
   writeFileSync(outPath, Buffer.from(data, 'base64'));
 }
 
-async function renderIcon(variant, size, outName) {
+async function renderIcon(variant, size, outName, drawing) {
   const html = `<!DOCTYPE html><meta charset="utf-8">
 <style>html,body{margin:0;padding:0;width:${size}px;height:${size}px;overflow:hidden}
 svg{display:block;width:${size}px;height:${size}px}</style>
-${iconSvg(variant)}`;
+${iconSvg(variant, drawing)}`;
   const htmlPath = join(work, `icon-${outName}.html`);
   writeFileSync(htmlPath, html);
   await shoot(htmlPath, join(ROOT, outName), size, size);
@@ -98,11 +96,11 @@ ${iconSvg(variant)}`;
 
 const built = [];
 
-writeFileSync(join(ROOT, 'favicon.svg'), iconSvg('rounded') + '\n');
+writeFileSync(join(ROOT, 'favicon.svg'), iconSvg('rounded', DRAWINGS.px16) + '\n');
 built.push('favicon.svg');
 
-built.push(await renderIcon('rounded', 32, 'favicon-32.png'));
-built.push(await renderIcon('rounded', 16, 'favicon-16.png'));
+built.push(await renderIcon('rounded', 32, 'favicon-32.png', DRAWINGS.px32));
+built.push(await renderIcon('rounded', 16, 'favicon-16.png', DRAWINGS.px16));
 built.push(await renderIcon('square', 180, 'apple-touch-icon.png'));
 built.push(await renderIcon('maskable', 192, 'icon-192.png'));
 built.push(await renderIcon('maskable', 512, 'icon-512.png'));
