@@ -3,6 +3,13 @@
 Changes to schoolstack.ai, newest first. Dates are when the change was
 prepared for review; Netlify deploys on merge to `main`.
 
+## 2026-11-28: No comments left in the code
+- The last one, the header of `fonts/fonts.css`, is gone, and
+  `tools/fetch-fonts.mjs` no longer writes it. `COMMENT_DEBT` is empty,
+  so any new comment fails `verify-content`.
+- Its "do not edit by hand" rule was already ADR 0004 item 2. The font
+  licence it named travels in each `.woff2` file's own metadata
+  (copyright line and licence address); ADR 0004 item 12 records that.
 ## 2026-11-28: Buttons move when pressed
 - `.btn-primary`, `.btn-secondary` and `.copy-btn` drop 1px while pressed.
   Hover already changed their colours, but a tap on a phone shows no hover,

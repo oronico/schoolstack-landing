@@ -43,3 +43,8 @@ it. (CLAUDE.md §1)
     against `fonts/`, as the browser does, not against the repo root.
 11. `tools/og-image.html` loads the fonts by relative path, because the
     render sandbox cannot reach Google Fonts. (CLAUDE.md §3)
+12. Quicksand and Inter are under the SIL Open Font License 1.1. Each
+    `.woff2` in `fonts/` carries its own copyright line and the licence's
+    address in its name table, which the OFL accepts in place of a
+    separate notice. `fonts/fonts.css` once named the licence in a header
+    comment; the comment ban took it out in November 2026 (ADR 0001).
